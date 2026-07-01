@@ -1,18 +1,17 @@
-import { useEffect, useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { useEffect, useState, user  } from "react";
+import { NavLink } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
 import logo from "../assets/icons/logo.png";
 import "./MarketingNav.css";
 
 /**
- * Nav bar for logged-out / marketing pages (Home, Home2, Stories, etc).
- * Transparent over a hero image, turns solid once the user scrolls.
- * Always fades in gently on load (no prop needed — it's just how
- * this nav behaves everywhere it's used).
+ * MarketingNav — now accepts onLogin / onRegister props so clicking
+ * those actions opens the slide-in panel instead of navigating away.
+ * If the user is already logged in, shows Profile / Users / Log out
+ * as before (no panel needed).
  */
-export default function MarketingNav() {
-  const { token, logout } = useAuth();
-  const navigate = useNavigate();
+export default function MarketingNav({ onLogin, onRegister }) {
+  const { token, logout, user } = useAuth();
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -26,7 +25,7 @@ export default function MarketingNav() {
 
   function handleLogout() {
     logout();
-    navigate("/");
+    window.location.href = "/";
   }
 
   const headerClass = [
@@ -51,26 +50,29 @@ export default function MarketingNav() {
         <NavLink to="/Home2" className="main-nav__link">Home2</NavLink>
         <NavLink to="/Home3" className="main-nav__link">Home3</NavLink>
         <NavLink to="/Home4" className="main-nav__link">Home4</NavLink>
-        
+        <NavLink to="/home5" className="main-nav__link">Home5</NavLink>
+
         <NavLink to="/about" className="main-nav__link">About</NavLink>
-        {/* <NavLink to="/stories" className="main-nav__link">Stories</NavLink> */}
+        <NavLink to="/community" className="main-nav__link">Community</NavLink>
         <NavLink to="/resources" className="main-nav__link">Resources</NavLink>
         <NavLink to="/faq" className="main-nav__link">FAQ</NavLink>
-        {/* <NavLink to="/community" className="main-nav__link">Community</NavLink> */}
       </nav>
 
       <div className="site-header__actions">
         {token ? (
           <>
-
             <NavLink to="/profile" className="nav-link-soft">Profile</NavLink>
-            <NavLink to="admin/users" className="main-nav__link">Users</NavLink>
+            {user?.role_id <= 99 && (
+              <NavLink to="/admin/users" className="main-nav__link">Users</NavLink>
+            )}
             <button className="nav-button" onClick={handleLogout}>Log out</button>
           </>
+          
         ) : (
           <>
-            <NavLink to="/login" className="nav-link-soft">Log In</NavLink>
-            <NavLink to="/register" className="nav-button">Join Community</NavLink>
+            {/* Use buttons instead of NavLinks — no navigation, panel opens */}
+            <button className="nav-link-soft" onClick={onLogin}>Log In</button>
+            <button className="nav-button" onClick={onRegister}>Join Community</button>
           </>
         )}
       </div>
