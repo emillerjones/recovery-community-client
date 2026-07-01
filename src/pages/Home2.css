@@ -142,6 +142,34 @@
   box-shadow: 0 12px 36px rgba(0, 0, 0, 0.22);
 }
 
+.hero-page__button {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: "Inter", sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+
+  background: rgba(246, 242, 234, 0.95);
+  color: var(--forest-deep);
+  border: none;
+  padding: 16px 30px;
+  border-radius: 40px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.18);
+
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  opacity: 0;
+  animation: riseIn 1.4s ease 0.9s forwards;
+}
+
+.hero-page__button:hover {
+  background: var(--forest-deep);
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.22);
+}
+
 /* Shared fade/rise animation used by the title, subtitle, and button.
    Each one just starts at a slightly different time (see the
    "animation: riseIn ... 0.3s/0.6s/0.9s ..." delays above) so they

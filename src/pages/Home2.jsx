@@ -1,5 +1,6 @@
 import heroPhoto from "../assets/images/hero-lake.jpg";
 // import MarketingNav from "../layout/MarketingNav";
+import { Link, useOutletContext } from "react-router-dom";
 import "./Home2.css";
 
 /**
@@ -14,6 +15,7 @@ import "./Home2.css";
  * photo is visible for a moment before the nav and text appear.
  */
 export default function Home2() {
+  const { onRegister } = useOutletContext();
   return (
     // "hero-page" wraps the whole screen so it can be exactly 100vh tall
     <div className="hero-page">
@@ -49,18 +51,12 @@ export default function Home2() {
         {/* This is a placeholder link for now (href="#").
             Later, swap this for a real route, e.g. to="/register"
             using a React Router <Link> instead of a plain <a>. */}
-        <a href="#" className="hero-page__button">
-          Enter the Community
+        <button onClick={onRegister} className="hero-page__button">
+          Join the community
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <path
-              d="M3 8h10M9 4l4 4-4 4"
-              stroke="currentColor"
-              strokeWidth="1.4"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
+            <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
-        </a>
+        </button>  
       </div>
     </div>
   );
