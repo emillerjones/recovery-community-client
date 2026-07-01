@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState } from "react";
 
 const API = import.meta.env.VITE_API;
 
@@ -29,6 +29,8 @@ export function AuthProvider({ children }) {
       throw Error(result.message);
     }
     setToken(result.token);
+    localStorage.setItem("token", result.token);
+    setUser(result.user);
   };
 
 
@@ -57,34 +59,10 @@ export function AuthProvider({ children }) {
     localStorage.removeItem("token");
   };
 
-  useEffect(() => {
-    if (!token) return;
 
-    const sendHeartbeat = async () => {
-      await fetch(API + "/api/users/heartbeat", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-    };
-
-    sendHeartbeat();
-
-    const interval = setInterval(() => {
-      sendHeartbeat();
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, [token]);
-
-
-
-  // const value = { token, register, login, logout };
   const value = { token, user, register, login, logout };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
-
 
 
 

@@ -1,44 +1,54 @@
 import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
+import Home2 from "./pages/Home2";
+import Home3 from "./pages/Home3";
+import Home4 from "./pages/Home4";
+import Home5 from "./pages/Home5";
+import Community from "./pages/Community";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import Layout from "./layout/Layout";
-import Games from "./pages/games";
-import GameReviews from "./pages/Reviews/gamereviews";
-import GameReviewDetails from "./pages/Reviews/gamereviewdetails";
-import GameDetails from "./pages/gamedetails";
-import Profile from "./pages/profile";
-import Sessions from "./pages/sessions";
-import SessionDetails from "./pages/sessiondetails";
-import WriteReviews from "./pages/Reviews/writeReviews";
-import FriendsList from "./pages/FriendsList";
-import MyNotifications from "./pages/mynotifications";
-import RaidHelper from "./pages/raidhelperevents";
-import RaidHelperUpcoming from "./pages/raidhelpereventsupcoming";
+
+import UserManagement from "./pages/admin/UserManagement";
+import RequireRole from "./components/RequireRole";
+import MarketingLayout from "./layout/MarketingLayout";
+import AppLayout from "./layout/AppLayout";
+import About from "./pages/About";
+import Resources from "./pages/Resources";
+import FAQ from "./pages/FAQ";
+
+
+
 
 export default function App() {
   return (
     <Routes>
-      <Route path="/" element={<Layout />}>
-        <Route path="/" element={<Home />} />
-        <Route path="login" element={<Login />} /> 
-        <Route path="games" element={<Games />} /> 
-        <Route path="profile" element={<Profile />} /> 
-        <Route path="sessions" element={<Sessions />} /> 
-        <Route path="writeReviews" element={<WriteReviews />} />
-        <Route path="game-reviews/:id" element={<GameReviewDetails />} />
-        <Route path="friends" element={<FriendsList />} />
-        <Route path="mynotifications" element={<MyNotifications />} />
-        <Route path="game-reviews" element={<GameReviews />} /> 
-        <Route path="/game-reviews/:id" element={<GameReviewDetails />} />
-        <Route path="/games/:gameId" element={<GameDetails />} />
-        <Route path="sessions" element={<Sessions />} />        
-        <Route path="raidhelper" element={<RaidHelper />} />   
-        <Route path="raidhelperupcoming" element={<RaidHelperUpcoming />} />  
-        <Route path="/sessions/:sessionId" element={<SessionDetails />} />
-        <Route path="register" element={<Register />} /> 
+      {/* Marketing/logged-out routes — transparent hero nav */}
+      <Route path="/" element={<MarketingLayout />}>
+        <Route index element={<Home />} />
+        <Route path="home2" element={<Home2 />} />
+        <Route path="home3" element={<Home3 />} />
+        <Route path="home4" element={<Home4 />} />
+        <Route path="home5" element={<Home5 />} />
+        <Route path="community" element={<Community />} />
+        <Route path="about" element={<About />} />
+        <Route path="resources" element={<Resources />} />
+        <Route path="faq" element={<FAQ />} />
+        {/* <Route path="login" element={<Login />} />
+        <Route path="register" element={<Register />} /> */}
+      </Route>
+
+      {/* App/logged-in routes — solid utility nav */}
+      <Route element={<AppLayout />}>
+        <Route
+          path="/admin/users"
+          element={
+            <RequireRole maxRoleId={9}>
+              <UserManagement />
+            </RequireRole>
+          }
+        />
+        {/* future: /community, /chat, /journal, /profile */}
       </Route>
     </Routes>
   );
 }
-

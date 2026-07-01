@@ -1,0 +1,167 @@
+/* ============================================================
+   Home2 — hero-only splash page
+   ============================================================
+   Layout overview:
+   .hero-page            -> full-screen wrapper, holds everything
+     .hero-page__photo   -> the background image (absolutely positioned)
+     .hero-page__overlay -> dark tint on top of the photo, for readability
+     .hero-page__content -> the text + button, sits on top of everything
+   ============================================================ */
+
+.hero-page {
+  /* Local CSS variables (colors) used just on this page.
+     Keeping them here means this file can be read on its own
+     without needing to know about Home.css's variables. */
+  --forest: #2c3a2d;
+  --forest-deep: #1e2a1f;
+
+  position: relative;
+  height: 100vh; /* fill the full screen height */
+  min-height: 640px;
+  overflow: hidden; /* keep the zooming photo from spilling out */
+}
+
+/* ---------- Background photo ---------- */
+
+.hero-page__photo {
+  position: absolute;
+  inset: 0; /* shorthand for top/right/bottom/left: 0 */
+  background-size: cover;
+  /* background-position: center; */
+  background-position: calc(50% - 9px) center;
+  background-repeat: no-repeat;
+
+  /* Slight zoom animation so the photo feels gently alive
+     instead of a totally static image. */
+  transform: scale(1.04);
+  animation: heroBreathe 24s ease-in-out infinite;
+}
+
+@keyframes heroBreathe {
+  0%,
+  100% {
+    transform: scale(1.04);
+  }
+  50% {
+    transform: scale(1.08);
+  }
+}
+
+/* ---------- Dark overlay for text readability ---------- */
+
+.hero-page__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(10, 16, 12, 0.2) 0%,
+    rgba(10, 16, 12, 0.1) 35%,
+    rgba(10, 16, 12, 0.35) 100%
+  );
+}
+
+/* ---------- Content (text + button) ---------- */
+
+.hero-page__content {
+  /* position: relative + a higher z-index puts this above the
+     photo and overlay (which are position: absolute) */
+  position: relative;
+  z-index: 5;
+
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 0 24px;
+  margin-top: -60px; /* nudges the text block up slightly */
+
+  color: #fff;
+}
+
+.hero-page__title {
+  font-family: "Fraunces", serif;
+  font-weight: 500;
+  font-size: clamp(2.6rem, 6vw, 4.6rem);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  margin-bottom: 22px;
+  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.18);
+
+  /* Fade-in on load. "opacity: 0" + the animation below means it
+     starts invisible and animates to visible after a short delay. */
+  opacity: 0;
+  animation: riseIn 1.4s ease 0.3s forwards;
+}
+
+.hero-page__subtitle {
+  font-family: "Inter", sans-serif;
+  font-size: clamp(1rem, 1.6vw, 1.2rem);
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.92);
+  max-width: 560px;
+  margin: 0 auto 36px;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.12);
+
+  opacity: 0;
+  animation: riseIn 1.4s ease 0.6s forwards; /* starts later than title */
+}
+
+.hero-page__button {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+
+  font-family: "Inter", sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+
+  /* Solid forest green button, white text */
+  background: var(--forest);
+  color: #fff;
+
+  padding: 16px 30px;
+  border-radius: 40px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.18);
+
+  transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+
+  opacity: 0;
+  animation: riseIn 1.4s ease 0.9s forwards; /* starts later than subtitle */
+}
+
+.hero-page__button:hover {
+  background: var(--forest-deep);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.22);
+}
+
+/* Shared fade/rise animation used by the title, subtitle, and button.
+   Each one just starts at a slightly different time (see the
+   "animation: riseIn ... 0.3s/0.6s/0.9s ..." delays above) so they
+   appear one after another instead of all at once. */
+@keyframes riseIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Respect users who've asked their OS/browser to reduce motion */
+@media (prefers-reduced-motion: reduce) {
+  .hero-page * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,0 +1,138 @@
+/* ============================================================
+   Navbar — default behavior: transparent over a hero, solidifies
+   on scroll. Pages without a hero should add the "page--flat"
+   class to their top-level wrapper to force the solid look
+   immediately (no transparent phase).
+   ============================================================ */
+
+.site-header {
+  --nav-ink: #1b221c;
+  --nav-cream: #f6f2ea;
+  --nav-forest: #2c3a2d;
+  --nav-forest-deep: #1e2a1f;
+  --nav-line: rgba(27, 34, 28, 0.12);
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 5vw;
+  background: transparent;
+  transition: background 0.4s ease, padding 0.4s ease, box-shadow 0.4s ease;
+}
+
+/* Solid state: reached either by scrolling, or forced on flat pages */
+.site-header--scrolled,
+.page--flat .site-header {
+  background: rgba(246, 242, 234, 0.9);
+  backdrop-filter: blur(10px);
+  padding: 14px 5vw;
+  box-shadow: 0 1px 0 var(--nav-line);
+}
+
+/* ---- Logo ---- */
+.site-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #fff;
+  text-decoration: none;
+  transition: color 0.4s ease;
+}
+.site-header--scrolled .site-logo,
+.page--flat .site-logo {
+  color: var(--nav-ink);
+}
+.site-logo__mark {
+  height: 34px;
+  width: 34px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+.site-logo__text {
+  font-family: "Fraunces", serif;
+  font-size: 14px;
+  line-height: 1.25;
+}
+
+/* ---- Center links ---- */
+.main-nav {
+  display: flex;
+  align-items: center;
+  gap: 34px;
+}
+.main-nav__link {
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.88);
+  text-decoration: none;
+  transition: color 0.4s ease, opacity 0.2s ease;
+}
+.site-header--scrolled .main-nav__link,
+.page--flat .main-nav__link {
+  color: var(--nav-ink);
+  opacity: 0.78;
+}
+.main-nav__link:hover {
+  opacity: 1;
+}
+.main-nav__link.active {
+  font-weight: 600;
+}
+
+/* ---- Right-side actions ---- */
+.site-header__actions {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+.nav-link-soft {
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.88);
+  text-decoration: none;
+  transition: color 0.4s ease, opacity 0.2s ease;
+}
+.site-header--scrolled .nav-link-soft,
+.page--flat .nav-link-soft {
+  color: var(--nav-ink);
+  opacity: 0.78;
+}
+.nav-link-soft:hover {
+  opacity: 1;
+}
+
+.nav-button {
+  font-family: "Inter", sans-serif;
+  background: var(--nav-cream);
+  color: var(--nav-forest-deep);
+  border: none;
+  padding: 10px 20px;
+  border-radius: 30px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+.site-header--scrolled .nav-button,
+.page--flat .nav-button {
+  background: var(--nav-forest);
+  color: var(--nav-cream);
+}
+.nav-button:hover {
+  transform: translateY(-1px);
+}
+
+/* ---- Mobile ---- */
+@media (max-width: 880px) {
+  .main-nav {
+    display: none;
+  }
+}

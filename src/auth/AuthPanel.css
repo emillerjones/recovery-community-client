@@ -1,0 +1,286 @@
+/* ============================================================
+   AuthPanel.css — slide-in auth panel over the current page
+   ============================================================
+   The panel slides in from the right as a fixed overlay.
+   The page behind it stays fully visible — Layout adds a
+   subtle blur via .layout-blurred when the panel is open.
+   ============================================================ */
+
+/* ── Layout blur (applied to the Outlet wrapper in Layout.jsx) ── */
+.layout-blurred {
+  filter: blur(2px);
+  transition: filter 0.35s ease;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ── Backdrop — dark scrim behind the panel ── */
+.ap-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  background: rgba(10, 16, 12, 0.38);
+  animation: apFadeIn 0.3s ease forwards;
+  cursor: pointer;
+}
+
+@keyframes apFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ── Panel ── */
+.ap-panel {
+  --ink:         #1b221c;
+  --cream:       #f6f2ea;
+  --forest:      #2c3a2d;
+  --forest-deep: #1e2a1f;
+  --sage:        #8fa88a;
+  --amber:       #e8b873;
+
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 100;
+  width: min(420px, 92vw);
+  background: var(--cream);
+  display: flex;
+  flex-direction: column;
+  padding: 3rem 2.5rem 2.5rem;
+  overflow-y: auto;
+  font-family: "Inter", sans-serif;
+  -webkit-font-smoothing: antialiased;
+
+  /* Slide in from right */
+  animation: apSlideIn 0.38s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+
+  /* Subtle left edge shadow */
+  box-shadow: -8px 0 48px rgba(10, 16, 12, 0.16);
+}
+
+@keyframes apSlideIn {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(0); }
+}
+
+/* ── Close button ── */
+.ap-close {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid rgba(27, 34, 28, 0.14);
+  background: transparent;
+  color: rgba(27, 34, 28, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.18s ease, color 0.18s ease;
+  font-family: inherit;
+}
+
+.ap-close:hover {
+  background: rgba(27, 34, 28, 0.06);
+  color: var(--forest-deep);
+}
+
+/* ── Icon ── */
+.ap-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(44, 58, 45, 0.22);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+}
+
+/* ── Heading ── */
+.ap-title {
+  font-family: "Fraunces", serif;
+  font-size: clamp(1.7rem, 4vw, 2.1rem);
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  color: var(--forest-deep);
+  margin: 0 0 6px;
+  line-height: 1.05;
+}
+
+.ap-sub {
+  font-size: 14px;
+  color: rgba(27, 34, 28, 0.45);
+  margin: 0 0 2rem;
+}
+
+/* ── Form ── */
+.ap-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.ap-label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: rgba(27, 34, 28, 0.62);
+}
+
+.ap-input {
+  width: 100%;
+  box-sizing: border-box;
+  height: 46px;
+  padding: 0 16px;
+  border-radius: 10px;
+  border: 1px solid rgba(44, 58, 45, 0.16);
+  background: #ffffff;
+  color: var(--ink);
+  font-size: 14px;
+  font-family: "Inter", sans-serif;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ap-input::placeholder { color: rgba(27, 34, 28, 0.22); }
+
+.ap-input:focus {
+  border-color: rgba(44, 58, 45, 0.44);
+  box-shadow: 0 0 0 3px rgba(143, 168, 138, 0.2);
+}
+
+.ap-forgot {
+  align-self: flex-end;
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 12px;
+  color: rgba(27, 34, 28, 0.36);
+  cursor: pointer;
+  font-family: "Inter", sans-serif;
+  margin-top: -6px;
+  transition: color 0.18s ease;
+}
+
+.ap-forgot:hover { color: var(--forest); }
+
+.ap-button {
+  width: 100%;
+  height: 48px;
+  margin-top: 4px;
+  border: none;
+  border-radius: 10px;
+  background: var(--forest);
+  color: var(--cream);
+  font-family: "Inter", sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: 0.01em;
+  transition: background 0.2s ease, transform 0.18s ease, box-shadow 0.2s ease;
+  box-shadow: 0 6px 20px rgba(30, 42, 31, 0.2);
+}
+
+.ap-button:hover:not(:disabled) {
+  background: var(--forest-deep);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 26px rgba(30, 42, 31, 0.26);
+}
+
+.ap-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.ap-error {
+  font-size: 13px;
+  color: #a3472f;
+  margin: 0;
+}
+
+/* ── Divider ── */
+.ap-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 1.5rem 0 1.25rem;
+  color: rgba(27, 34, 28, 0.28);
+}
+
+.ap-divider span {
+  flex: 1;
+  height: 1px;
+  background: rgba(27, 34, 28, 0.1);
+}
+
+.ap-divider p {
+  margin: 0;
+  font-size: 11.5px;
+}
+
+/* ── Secondary / switch button ── */
+.ap-switch-btn {
+  width: 100%;
+  height: 46px;
+  border-radius: 10px;
+  background: transparent;
+  border: 1px solid rgba(44, 58, 45, 0.2);
+  color: var(--forest-deep);
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.18s ease;
+}
+
+.ap-switch-btn:hover {
+  background: rgba(44, 58, 45, 0.04);
+  border-color: rgba(44, 58, 45, 0.34);
+  transform: translateY(-1px);
+}
+
+/* ── Footer switch text ── */
+.ap-footer {
+  margin-top: 1.25rem;
+  font-size: 13px;
+  color: rgba(27, 34, 28, 0.4);
+  text-align: center;
+}
+
+.ap-footer button {
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: "Inter", sans-serif;
+  font-size: inherit;
+  font-weight: 700;
+  color: var(--forest);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.ap-footer button:hover { color: var(--forest-deep); }
+
+/* ── Mobile ── */
+@media (max-width: 480px) {
+  .ap-panel {
+    width: 100vw;
+    padding: 3rem 1.5rem 2rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ap-panel,
+  .ap-backdrop,
+  .layout-blurred {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

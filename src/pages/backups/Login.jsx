@@ -2,8 +2,14 @@ import { useState } from "react";
 import { useAuth } from "../auth/AuthContext";
 import { useNavigate } from "react-router-dom";
 import heroPhoto from "../assets/images/hero-lake.jpg";
-import "../auth/Auth.css";
+import "../auth/auth.css";
 
+/**
+ * Login — full-bleed lake photo background, floating form card.
+ * The photo fills the entire viewport. Brand + headline sit
+ * bottom-left. The form card floats center-right.
+ * On mobile: photo becomes background, card fills the screen.
+ */
 export default function Login() {
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -24,45 +30,53 @@ export default function Login() {
   return (
     <main className="auth-page">
 
-      {/* Full-bleed lake photo */}
-      <div className="auth-bg" style={{ backgroundImage: `url(${heroPhoto})` }} />
+      {/* Full-bleed background photo */}
+      <div
+        className="auth-bg"
+        style={{ backgroundImage: `url(${heroPhoto})` }}
+      />
 
-      {/* Atmospheric depth */}
-      <div className="auth-atmosphere" />
+      {/* Layered atmospheric overlays */}
+      <div className="auth-overlay" />
 
-      {/* ── Left: hero text over photo ── */}
-      <div className="auth-photo-side">
-        <div className="auth-hero__logo">
-          <div className="auth-hero__mark">
-            <svg viewBox="0 0 24 24" fill="none" width="17" height="17">
+      {/* Brand + headline — bottom left */}
+      <div className="auth-brand" aria-hidden="true">
+        <div className="auth-brand__logo">
+          <div className="auth-brand__mark">
+            <svg viewBox="0 0 24 24" fill="none" width="18" height="18">
               <path
                 d="M12 22C12 22 6 16 6 10a6 6 0 0112 0c0 6-6 12-6 12z"
                 stroke="rgba(246,242,234,0.88)"
                 strokeWidth="1.5"
               />
-              <path d="M12 22V10" stroke="rgba(246,242,234,0.5)" strokeWidth="1.1" />
+              <path
+                d="M12 22V10"
+                stroke="rgba(246,242,234,0.5)"
+                strokeWidth="1.1"
+              />
             </svg>
+          </div>
+          <div className="auth-brand__name">
+            Recovery With<br />The Exit Drug
           </div>
         </div>
 
-        <div className="auth-hero__body">
-          <h1 className="auth-hero__headline">
-            You're not<br />alone.
-          </h1>
-          <div className="auth-hero__rule" />
-          <p className="auth-hero__sub">
-            A community built on acceptance, not judgment.<br />
-            We'll be here whenever you're ready.
-          </p>
-        </div>
+        <h1 className="auth-brand__headline">
+          You're not<br />alone.
+        </h1>
 
-        <div className="auth-hero__footer">
-          <p className="auth-hero__since">Peer-led since 2013</p>
-        </div>
+        <div className="auth-brand__rule" />
+
+        <p className="auth-brand__sub">
+          A community built on acceptance, not judgment.<br />
+          We'll be here whenever you're ready.
+        </p>
+
+        <p className="auth-brand__since">Peer-led since 2013</p>
       </div>
 
-      {/* ── Right: card floating over photo ── */}
-      <div className="auth-form-side">
+      {/* Floating form card — center right */}
+      <div className="auth-card-wrap">
         <div className="auth-card">
 
           <div className="auth-card__icon" aria-hidden="true">
@@ -116,11 +130,17 @@ export default function Login() {
               Log in
             </button>
 
-            {error && <p className="auth-error" role="alert">{error}</p>}
+            {error && (
+              <p className="auth-error" role="alert">
+                {error}
+              </p>
+            )}
           </form>
 
           <div className="auth-divider">
-            <span /><p>or</p><span />
+            <span />
+            <p>or</p>
+            <span />
           </div>
 
           <button
@@ -139,7 +159,6 @@ export default function Login() {
           </p>
         </div>
       </div>
-
     </main>
   );
 }

@@ -1,179 +1,18 @@
+/* Global resets only — page/component-specific styles live in
+   their own .css files (Home.css, Navbar.css, Auth.css, etc.) */
+
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
-  background:
-    radial-gradient(circle at 20% 20%, rgba(79, 124, 255, 0.14), transparent 40%),
-    radial-gradient(circle at 80% 25%, rgba(109, 94, 252, 0.12), transparent 38%),
-    linear-gradient(180deg, #070b16, #0a1020 55%, #09101d);
-  color: white;
   min-height: 100vh;
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: "Inter", system-ui, sans-serif;
 }
 
 #root {
   min-height: 100vh;
-}
-
-.app-shell {
-  max-width: 1480px;
-  margin: 20px auto;
-  padding: 0 18px 24px;
-}
-
-
- .app-frame {
-  border: 1.5px solid rgba(255, 255, 255, 0.11);
-  border-radius: 8px;
-  overflow: visible;
-  background:
-    linear-gradient(180deg, rgba(18, 22, 38, 0.72), rgba(9, 13, 28, 0.58));
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.035),
-    0 28px 80px rgba(0, 0, 0, 0.48);
-  backdrop-filter: blur(14px);
-}
-
-/* nav */
-.site-header {
-  background:
-    linear-gradient(180deg, rgba(18, 24, 48, 0.85), rgba(10, 14, 30, 0.75));
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-
-  box-shadow:
-    0 8px 30px rgba(0, 0, 0, 0.35),
-    inset 0 1px rgba(255, 255, 255, 0.04);
-
-  backdrop-filter: blur(12px);
-  border-top-left-radius: 6px;
-  border-top-right-radius: 6px;
-  overflow: hidden;
-}
-
-
-.site-header__inner {
-  max-width: 1360px;
-  height: 40px;
-  margin: 0 auto;
-  padding: 0.25rem 0rem 0.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.site-header__left,
-.site-header__right,
-.main-nav,
-.auth-nav,
-.site-logo {
-  display: flex;
-  align-items: center;
-}
-
-.site-header__left {
-  gap: 34px;
-}
-
-.site-logo {
-  gap: 10px;
-  text-decoration: none;
-  color: white;
-}
-
-.site-logo__image {
-  height: 50px;
-  width: auto;
-  display: block;
-}
-
-.site-logo__text {
-  font-size: 1rem;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  color: #f4f7ff;
-}
-
-.main-nav {
-  gap: 2rem;
-}
-
-.main-nav__link,
-.auth-nav__link,
-.account-link {
-  text-decoration: none;
-  color: #a4abc4;
-  font-size: 0.92rem;
-  font-weight: 400;
-  letter-spacing: 0.01em;
-}
-
-.main-nav__link:hover,
-.auth-nav__link:hover,
-.account-link:hover {
-  color: white;
-}
-
-.main-nav__link.active {
-  color: white;
-  position: relative;
-  font-weight: 500;
-}
-
-.main-nav__link.active::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: -10px;
-  width: 100%;
-  height: 2px;
-  border-radius: 999px;
-  background: #5f7cff;
-}
-
-.auth-nav {
-  gap: 14px;
-}
-
-.account-link {
-  margin-right: 12px;
-}
-
-.auth-nav__button,
-.logout-button {
-  padding: 8px 16px;
-  border-radius: 999px;
-  border: none;
-  color: white;
-  cursor: pointer;
-  
-}
-
-/* .auth-nav__button {
-  text-decoration: none;
-  background: linear-gradient(90deg, #4f7cff, #6d5efc);
-} */
-
-.logout-button {
-  background: #1b233d;
-  margin-right: 18px;  
-}
-
-.dashboard-homepage,
-.dashboard-navbar,
-.dashboard-hero-billboard,
-.live-lobby-card,
-.sidebar-profile-card,
-.sidebar-friends-card,
-.sidebar-recommendation-item-card,
-button {
-  user-select: none;
-}
-
-.hero-title,
-.hero-subtitle,
-.section-title-label,
-.card-game-title-text,
-.card-lobby-description-text,
-.profile-card-username {
-  user-select: none;
 }
 
 img {
