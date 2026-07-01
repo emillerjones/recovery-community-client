@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useAuth } from "../auth/AuthContext";
 import { useNavigate } from "react-router-dom";
-import "../auth/auth.css";
+import "../auth/Auth.css";
+
 /** A form that allows users to register for a new account */
 export default function Register() {
   const { register } = useAuth();
