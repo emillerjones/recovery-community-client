@@ -24,7 +24,7 @@ export default function App() {
     <Routes>
       {/* Marketing/logged-out routes — transparent hero nav */}
       <Route path="/" element={<MarketingLayout />}>
-        <Route index element={<Home />} />
+        <Route index element={<Home5 />} />
         <Route path="home2" element={<Home2 />} />
         <Route path="home3" element={<Home3 />} />
         <Route path="home4" element={<Home4 />} />
