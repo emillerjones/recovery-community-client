@@ -194,7 +194,7 @@
   max-width: 760px;
   padding: 0 24px;
   color: #fff;
-  margin-top: -100px;
+  margin-top: -200px;
 }
 .h5-hero__content h1 {
   font-size: clamp(2.6rem, 6vw, 4.6rem);
@@ -481,7 +481,8 @@
   .h5-final-cta { padding: 110px 6vw; }
   .h5-what__grid { grid-template-columns: 1fr; }
   .h5-resources__grid { grid-template-columns: 1fr; }
-  .h5-scroll-cue { bottom: 125px; }
+  .h5-scroll-cue { bottom: 150px; }
+  .h5-hero__content { margin-top: -125px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
