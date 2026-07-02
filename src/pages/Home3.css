@@ -1,3 +1,9 @@
+
+
+
+
+
+
 .home3 {
   --ink: #172017;
   --cream: #f7f1e7;
@@ -84,6 +90,9 @@
   background-size: 72px 72px;
   mask-image: linear-gradient(90deg, black, transparent 78%);
 }
+
+
+
 
 .home3-hero__shell {
   width: min(1180px, calc(100% - 48px));
@@ -613,6 +622,36 @@
   opacity: 1;
   transform: translateY(0);
 }
+
+
+.home3 .home3-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 50px;
+  padding: 0 24px;
+  border: none;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 750;
+  font-family: "Inter", sans-serif;
+  cursor: pointer;
+  background: var(--cream);
+  color: #253628;
+  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.24);
+  transition: transform 220ms ease, box-shadow 220ms ease, background 220ms ease;
+}
+
+.home3 .home3-cta:hover {
+  transform: translateY(-2px);
+}
+
+.home3-final .home3-cta {
+  background: var(--forest);
+  color: #fff;
+}
+
 
 @keyframes home3Breath {
   0%,

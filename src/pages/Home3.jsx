@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import heroPhoto from "../assets/images/hero-lake.jpg";
 import "./Home3.css";
+import { Link, useOutletContext } from "react-router-dom";
 
 const COMMUNITY_POSTS = [
   {
@@ -90,6 +91,7 @@ export default function Home3() {
   const [communityRef, communityVisible] = useReveal();
   const [journalRef, journalVisible] = useReveal();
   const [resourcesRef, resourcesVisible] = useReveal();
+  const { onRegister } = useOutletContext();
 
   return (
     <main className="home3">
@@ -113,10 +115,12 @@ export default function Home3() {
             </p>
 
             <div className="home3-actions">
-              <a className="home3-button home3-button--primary" href="#community">
-                Enter the Community
-                <span aria-hidden="true">→</span>
-              </a>
+              <button onClick={onRegister} className="home3-cta">
+                Join the community
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>    
               <a className="home3-button home3-button--ghost" href="#path">
                 Learn the approach
               </a>
@@ -242,10 +246,12 @@ export default function Home3() {
         <LeafMark />
         <h2>Come as you are.</h2>
         <p>You do not need a perfect plan to take the next step.</p>
-        <a className="home3-button home3-button--primary" href="#community">
+        <button onClick={onRegister} className="home3-cta">
           Join the community
-          <span aria-hidden="true">→</span>
-        </a>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </button>   
       </section>
     </main>
   );

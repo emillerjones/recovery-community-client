@@ -153,7 +153,7 @@ export default function Home5() {
                   <Link to="/resources" className="h5-card-link">Browse resources →</Link>
                 )}
                 {item.id === "community" && (
-                  <a href="#community" className="h5-card-link">See the community →</a>
+                  <a href="/community" className="h5-card-link">See the community →</a>
                 )}
               </div>
             ))}

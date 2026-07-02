@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { useOutletContext } from "react-router-dom";
 import heroPhoto from "../assets/images/hero-lake.jpg";
 import "./Home4.css";
 
@@ -111,7 +110,6 @@ function StoryReel() {
 }
 
 export default function Home3() {
-  const { onRegister } = useOutletContext();
   const [pullRef, pullVisible] = useReveal(0.2);
   const [statsRef, statsVisible] = useReveal(0.2);
   const [storiesRef, storiesVisible] = useReveal(0.1);
@@ -138,12 +136,12 @@ export default function Home3() {
             alcohol, opioids, and other harmful substances.
           </p>
           <p className="h3-hero__since">Est. 2013 &nbsp;·&nbsp; Peer-led</p>
-          <button onClick={onRegister} className="h3-hero__cta">
-            Join the community
+          <a href="#" className="h3-hero__cta">
+            Enter the community
             <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
               <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
-          </button>
+          </a>
         </div>
 
         <div className="h3-hero__scroll">
@@ -226,12 +224,12 @@ export default function Home3() {
             Real conversations. No algorithms deciding who gets seen. Just
             people who understand where you're standing.
           </p>
-          <button onClick={onRegister} className="h3-community__cta">
+          <a href="#" className="h3-community__cta">
             Join the conversation
             <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
               <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
-          </button>
+          </a>
         </div>
       </section>
 
@@ -263,9 +261,9 @@ export default function Home3() {
         >
           <h2 className="h3-cta__h">Whenever you're ready.</h2>
           <p className="h3-cta__body">This is your space. We'll be here.</p>
-          <button onClick={onRegister} className="h3-cta__link">
-            Join the community
-          </button>
+          <a href="#" className="h3-cta__link">
+            Enter the community
+          </a>
         </div>
       </section>
 
