@@ -481,7 +481,7 @@
   .h5-final-cta { padding: 110px 6vw; }
   .h5-what__grid { grid-template-columns: 1fr; }
   .h5-resources__grid { grid-template-columns: 1fr; }
-  .h5-scroll-cue { bottom: 75px; }
+  .h5-scroll-cue { bottom: 175px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
