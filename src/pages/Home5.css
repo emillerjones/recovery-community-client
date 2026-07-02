@@ -482,7 +482,7 @@
   .h5-what__grid { grid-template-columns: 1fr; }
   .h5-resources__grid { grid-template-columns: 1fr; }
   .h5-scroll-cue { bottom: 150px; }
-  .h5-hero__content { margin-top: -125px; }
+  .h5-hero__content { margin-top: -200px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
