@@ -6,12 +6,14 @@ import "./MarketingNav.css";
 
 const PUBLIC_LINKS = [
   { to: "/", label: "Home" },
+  { to: "/Home1", label: "Home1" },
   { to: "/Home2", label: "Home2" },
   { to: "/Home3", label: "Home3" },
   { to: "/Home4", label: "Home4" },
-  { to: "/Home5", label: "Home5" },
+  // { to: "/Home5", label: "Home5" },
   { to: "/About", label: "About" },
   { to: "/community", label: "Community" },
+  { to: "/communityhome", label: "Community Home" },
   { to: "/resources", label: "Resources" },
   { to: "/faq", label: "FAQ" },
 ];
