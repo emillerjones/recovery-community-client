@@ -4,6 +4,7 @@ import Home2 from "./pages/Home2";
 import Home3 from "./pages/Home3";
 import Home4 from "./pages/Home4";
 import Home5 from "./pages/Home5";
+import Home6 from "./pages/Home6";
 import Community from "./pages/Community";
 import CommunityHome from "./pages/CommunityHome";
 import Login from "./pages/Login";
@@ -31,6 +32,7 @@ export default function App() {
         <Route path="home3" element={<Home3 />} />
         <Route path="home4" element={<Home4 />} />
         <Route path="home5" element={<Home5 />} />
+        <Route path="home6" element={<Home6 />} />
         <Route path="community" element={<Community />} />
         <Route path="communityhome" element={<CommunityHome />} />
         <Route path="about" element={<About />} />

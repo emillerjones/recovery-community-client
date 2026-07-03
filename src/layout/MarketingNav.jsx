@@ -4,19 +4,46 @@ import { useAuth } from "../auth/AuthContext";
 import logo from "../assets/icons/logo.png";
 import "./MarketingNav.css";
 
-const PUBLIC_LINKS = [
+const HOME_LINKS = [
   { to: "/", label: "Home" },
   { to: "/Home1", label: "Home1" },
   { to: "/Home2", label: "Home2" },
   { to: "/Home3", label: "Home3" },
   { to: "/Home4", label: "Home4" },
-  // { to: "/Home5", label: "Home5" },
+];
+
+const COMMUNITY_LINKS = [
+  { to: "/community", label: "Community Public View" },
+  { to: "/communityhome", label: "Community Logged In View" },
+];
+
+const OTHER_LINKS = [
   { to: "/About", label: "About" },
-  { to: "/community", label: "Community" },
-  { to: "/communityhome", label: "Community Home" },
   { to: "/resources", label: "Resources" },
   { to: "/faq", label: "FAQ" },
 ];
+
+const ALL_LINKS = [...HOME_LINKS, ...COMMUNITY_LINKS, ...OTHER_LINKS];
+
+function NavDropdown({ label, links, closeMenu }) {
+  return (
+    <div className="main-nav__dropdown">
+      <button type="button" className="main-nav__link main-nav__link--trigger">
+        {label}
+        <svg className="main-nav__chevron" width="10" height="10" viewBox="0 0 10 10">
+          <path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" strokeWidth="1.4" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      </button>
+      <div className="main-nav__dropdown-panel">
+        {links.map((link) => (
+          <NavLink key={link.to} to={link.to} className="main-nav__dropdown-link" onClick={closeMenu}>
+            {link.label}
+          </NavLink>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export default function MarketingNav({ onLogin, onRegister }) {
   const { token, logout, user } = useAuth();
@@ -77,7 +104,9 @@ export default function MarketingNav({ onLogin, onRegister }) {
       </NavLink>
 
       <nav className="main-nav" aria-label="Primary navigation">
-        {PUBLIC_LINKS.map((link) => (
+        <NavDropdown label="Home" links={HOME_LINKS} closeMenu={closeMenu} />
+        <NavDropdown label="Community" links={COMMUNITY_LINKS} closeMenu={closeMenu} />
+        {OTHER_LINKS.map((link) => (
           <NavLink key={link.to} to={link.to} className="main-nav__link">
             {link.label}
           </NavLink>
@@ -115,7 +144,7 @@ export default function MarketingNav({ onLogin, onRegister }) {
 
       <div className="mobile-nav-panel" aria-hidden={!menuOpen}>
         <nav className="mobile-nav" aria-label="Mobile navigation">
-          {PUBLIC_LINKS.map((link) => (
+          {ALL_LINKS.map((link) => (
             <NavLink key={link.to} to={link.to} className="mobile-nav__link" onClick={closeMenu}>
               {link.label}
             </NavLink>

@@ -25,7 +25,6 @@
   transition: background 0.4s ease, padding 0.4s ease, box-shadow 0.4s ease;
 }
 
-/* Solid state: reached either by scrolling, or forced on flat pages */
 .site-header--scrolled,
 .page--flat .site-header {
   background: rgba(246, 242, 234, 0.9);
@@ -34,8 +33,6 @@
   box-shadow: 0 1px 0 var(--nav-line);
 }
 
-/* Optional: fade the whole bar in on load (used on hero pages so the
-   photo is visible a beat before any UI appears on top of it) */
 .site-header--fade-in {
   opacity: 0;
   animation: navFadeIn 1.2s ease 0.2s forwards;
@@ -51,7 +48,6 @@
   }
 }
 
-/* ---- Logo ---- */
 .site-logo {
   display: flex;
   align-items: center;
@@ -59,6 +55,8 @@
   color: #fff;
   text-decoration: none;
   transition: color 0.4s ease;
+  position: relative;
+  z-index: 102;
 }
 .site-header--scrolled .site-logo,
 .page--flat .site-logo {
@@ -76,7 +74,6 @@
   line-height: 1.25;
 }
 
-/* ---- Center links ---- */
 .main-nav {
   display: flex;
   align-items: center;
@@ -102,11 +99,12 @@
   font-weight: 600;
 }
 
-/* ---- Right-side actions ---- */
 .site-header__actions {
   display: flex;
   align-items: center;
   gap: 18px;
+  position: relative;
+  z-index: 102;
 }
 .nav-link-soft {
   font-family: "Inter", sans-serif;
@@ -114,10 +112,10 @@
   font-weight: 500;
   color: rgba(255, 255, 255, 0.88);
   text-decoration: none;
-  background: none;      /* ← add */
-  border: none;          /* ← add */
-  padding: 0;            /* ← add */
-  cursor: pointer;       /* ← add */
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
   transition: color 0.4s ease, opacity 0.2s ease;
 }
 .site-header--scrolled .nav-link-soft,
@@ -151,9 +149,229 @@
   transform: translateY(-1px);
 }
 
-/* ---- Mobile ---- */
-@media (max-width: 880px) {
+.mobile-menu-button {
+  display: none;
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.12);
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 5px;
+  padding: 0;
+}
+.mobile-menu-button span {
+  display: block;
+  width: 17px;
+  height: 2px;
+  border-radius: 999px;
+  background: #fff;
+  transition: transform 0.25s ease, opacity 0.2s ease, background 0.25s ease;
+}
+.site-header--scrolled .mobile-menu-button,
+.page--flat .mobile-menu-button {
+  border-color: rgba(27, 34, 28, 0.16);
+  background: rgba(44, 58, 45, 0.08);
+}
+.site-header--scrolled .mobile-menu-button span,
+.page--flat .mobile-menu-button span {
+  background: var(--nav-ink);
+}
+.site-header--menu-open .mobile-menu-button span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+.site-header--menu-open .mobile-menu-button span:nth-child(2) {
+  opacity: 0;
+}
+.site-header--menu-open .mobile-menu-button span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+
+
+.main-nav__dropdown { position: relative; }
+
+.main-nav__link--trigger {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+}
+
+.main-nav__dropdown-panel {
+  position: absolute;
+  top: calc(100% + 14px);
+  left: 50%;
+  transform: translate(-50%, 4px);
+  min-width: 190px;
+  background: var(--nav-cream);
+  border-radius: 16px;
+  padding: 6px;
+  box-shadow: 0 20px 40px rgba(27, 34, 28, 0.2);
+  z-index: 200;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+}
+
+.main-nav__dropdown-link {
+  display: block;
+  padding: 10px 16px;
+  border-radius: 10px;
+  color: var(--nav-ink);
+  opacity: 0.75;
+  font-family: "Fraunces", serif;
+  font-size: 15px;
+  text-decoration: none;
+  transition: background 0.15s ease, opacity 0.15s ease;
+}
+
+.main-nav__dropdown-link:hover {
+  background: rgba(27, 34, 28, 0.06);
+  opacity: 1;
+}
+
+.main-nav__dropdown:hover .main-nav__dropdown-panel {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
+}
+
+.mobile-nav-panel {
+  display: none;
+}
+
+.main-nav__dropdown-link.active {
+  background: var(--nav-forest);
+  color: var(--nav-cream);
+  opacity: 1;
+}
+.main-nav__dropdown-panel::before {
+  content: "";
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  width: 12px;
+  height: 12px;
+  background: var(--nav-cream);
+  border-radius: 2px;
+}
+
+@media (max-width: 980px) {
   .main-nav {
+    gap: 22px;
+  }
+}
+
+@media (max-width: 880px) {
+  body.mobile-nav-open {
+    overflow: hidden;
+  }
+
+  .site-header {
+    padding: 16px 6vw;
+  }
+
+  .main-nav,
+  .nav-action-login {
     display: none;
+  }
+
+  .site-header__actions {
+    gap: 10px;
+  }
+
+  .nav-button {
+    padding: 10px 16px;
+    font-size: 13px;
+  }
+
+  .mobile-menu-button {
+    display: flex;
+  }
+
+  .mobile-nav-panel {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 92px 6vw 28px;
+    background: rgba(246, 242, 234, 0.96);
+    backdrop-filter: blur(14px);
+    box-shadow: 0 18px 45px rgba(27, 34, 28, 0.18);
+    transform: translateY(-110%);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.3s ease, opacity 0.25s ease;
+    z-index: 101;
+  }
+
+  .site-header--menu-open .mobile-nav-panel {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .mobile-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .mobile-nav__link,
+  .mobile-nav__link-button {
+    width: 100%;
+    display: block;
+    padding: 16px 0;
+    border: none;
+    border-bottom: 1px solid rgba(27, 34, 28, 0.1);
+    background: none;
+    color: var(--nav-ink);
+    font-family: "Inter", sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    text-align: left;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .mobile-nav__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding-top: 18px;
+  }
+
+  .mobile-nav__button {
+    width: 100%;
+    border: none;
+    border-radius: 999px;
+    padding: 14px 18px;
+    background: var(--nav-forest);
+    color: var(--nav-cream);
+    font-family: "Inter", sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+}
+
+@media (max-width: 480px) {
+  .site-logo__text {
+    font-size: 13px;
+  }
+
+  .site-logo__mark {
+    height: 32px;
+    width: 32px;
+  }
+
+  .nav-button {
+    padding: 9px 14px;
   }
 }
