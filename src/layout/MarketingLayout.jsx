@@ -3,6 +3,7 @@ import { Outlet, useLocation } from "react-router-dom";
 import MarketingNav from "./MarketingNav";
 import AuthPanel from "../auth/AuthPanel";
 import MarketingFooter from "./MarketingFooter";
+import ScrollToTop from "./ScrollToTop";
 
 /**
  * Layout — wraps every marketing page.
@@ -37,6 +38,7 @@ export default function MarketingLayout() {
 
   return (
     <>
+      <ScrollToTop /> 
       <MarketingNav onLogin={openLogin} onRegister={openRegister} />
 
       {/* Page content — blurs slightly when panel is open */}
