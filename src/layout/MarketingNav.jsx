@@ -44,7 +44,7 @@ const OTHER_LINKS = [
 
 
 
-const ALL_LINKS = [...HOME_LINKS, ...COMMUNITY_LINKS, ...OTHER_LINKS];
+const ALL_LINKS = [...HOME_LINKS, ...COMMUNITY_LINKS, ...LEARN_LINKS, ...SUPPORT_LINKS, ...ABOUT_LINKS];
 
 function NavDropdown({ label, links, closeMenu }) {
   return (
@@ -198,10 +198,21 @@ export default function MarketingNav({ onLogin, onRegister }) {
 
       <div className="mobile-nav-panel" aria-hidden={!menuOpen}>
         <nav className="mobile-nav" aria-label="Mobile navigation">
-          {ALL_LINKS.map((link) => (
-            <NavLink key={link.to} to={link.to} className="mobile-nav__link" onClick={closeMenu}>
-              {link.label}
-            </NavLink>
+          {[
+            { label: "Home", links: HOME_LINKS },
+            { label: "Community", links: COMMUNITY_LINKS },
+            { label: "Learn", links: LEARN_LINKS },
+            { label: "Support", links: SUPPORT_LINKS },
+            { label: "About", links: ABOUT_LINKS },
+          ].map((group) => (
+            <div key={group.label}>
+              <span className="mobile-nav__group-label">{group.label}</span>
+              {group.links.map((link) => (
+                <NavLink key={link.to} to={link.to} className="mobile-nav__link" onClick={closeMenu}>
+                  {link.label}
+                </NavLink>
+              ))}
+            </div>
           ))}
 
           <div className="mobile-nav__actions">
@@ -222,6 +233,7 @@ export default function MarketingNav({ onLogin, onRegister }) {
           </div>
         </nav>
       </div>
+
     </header>
   );
 }

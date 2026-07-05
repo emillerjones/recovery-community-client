@@ -36,13 +36,6 @@
     box-shadow 0.4s ease;
 }
 
-/* 
-   Solid nav state.
-   This happens when:
-   1. User scrolls
-   2. Mobile menu opens
-   3. Current page is listed as solid in MarketingNav.jsx
-*/
 .site-header--scrolled,
 .site-header--solid {
   background: rgba(246, 242, 234, 0.9);
@@ -51,7 +44,6 @@
   box-shadow: 0 1px 0 var(--nav-line);
 }
 
-/* Optional entrance animation */
 .site-header--fade-in {
   opacity: 0;
   animation: navFadeIn 1.2s ease 0.2s forwards;
@@ -60,12 +52,10 @@
 @keyframes navFadeIn {
   from {
     opacity: 0;
-    transform: translateY(-8px);
   }
 
   to {
     opacity: 1;
-    transform: translateY(0);
   }
 }
 
@@ -388,12 +378,17 @@
     top: 0;
     left: 0;
     right: 0;
+    bottom: 0;
+    height: 100vh;
 
-    padding: 92px 6vw 28px;
+    padding: 70px 6vw 28px;
 
     background: rgba(246, 242, 234, 0.96);
     backdrop-filter: blur(14px);
     box-shadow: 0 18px 45px rgba(27, 34, 28, 0.18);
+
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 
     transform: translateY(-110%);
     opacity: 0;
@@ -416,12 +411,29 @@
     gap: 2px;
   }
 
+  .mobile-nav__group-label {
+    display: block;
+    margin: 18px 0 4px;
+    font-family: "Inter", sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--nav-ink);
+    opacity: 0.45;
+  }
+
+  .mobile-nav > div:first-child .mobile-nav__group-label {
+    margin-top: 0;
+  }
+
   .mobile-nav__link,
   .mobile-nav__link-button {
     width: 100%;
     display: block;
 
-    padding: 16px 0;
+    padding: 14px 0;
+    padding-left: 25px;
 
     border: none;
     border-bottom: 1px solid rgba(27, 34, 28, 0.1);
@@ -430,7 +442,7 @@
     color: var(--nav-ink);
 
     font-family: "Inter", sans-serif;
-    font-size: 18px;
+    font-size: 17px;
     font-weight: 600;
     text-align: left;
     text-decoration: none;
@@ -442,7 +454,7 @@
     display: flex;
     flex-direction: column;
     gap: 14px;
-    padding-top: 18px;
+    padding-top: 22px;
   }
 
   .mobile-nav__button {
