@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
 import logo from "../assets/icons/logo.png";
 import "./MarketingNav.css";
@@ -70,6 +70,30 @@ export default function MarketingNav({ onLogin, onRegister }) {
   const { token, logout, user } = useAuth();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const location = useLocation();
+
+  /*
+    Nav theme by page.
+
+    transparent = white text, clear background
+    solid       = dark text, cream/glass background
+
+    Add more routes here later as you build pages.
+  */
+  const solidNavPages = [
+    "/about",
+    "/contact",
+    "/resources",
+    "/faq",
+    "/donate",
+    "/merch",
+    "/discountlinks",
+    "/guidelines",
+    "/stories",
+  ];
+
+  const pageWantsSolidNav = solidNavPages.includes(location.pathname);
+
 
   useEffect(() => {
     function onScroll() {
@@ -109,7 +133,13 @@ export default function MarketingNav({ onLogin, onRegister }) {
   const headerClass = [
     "site-header",
     "site-header--fade-in",
+
+    // Force solid nav on light-background pages.
+    pageWantsSolidNav ? "site-header--solid" : "",
+
+    // Still turn solid after scrolling on transparent hero pages.
     scrolled || menuOpen ? "site-header--scrolled" : "",
+
     menuOpen ? "site-header--menu-open" : "",
   ]
     .filter(Boolean)
