@@ -43,7 +43,7 @@
   position: absolute;
   inset: 0;
   background-size: cover;
-  background-position: center 60%;
+  background-position: center 65%;
   transform: scale(1.04);
 }
 .resources-hero__overlay {
