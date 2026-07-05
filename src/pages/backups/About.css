@@ -27,14 +27,11 @@
 }
 
 /* ---------- Hero ---------- */
-/* Shorter than Home's hero — this page isn't the front door, so it
-   doesn't need the full 100vh treatment, just enough to set a calm
-   tone before the reading begins. */
 
 .about-hero {
   position: relative;
-  height: 46vh;
-  min-height: 360px;
+  height: 75vh;
+  min-height: 460px;
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -45,7 +42,7 @@
   position: absolute;
   inset: 0;
   background-size: cover;
-  background-position: center 65%;
+  background-position: center 60%;
   transform: scale(1.04);
 }
 .about-hero__overlay {
@@ -77,14 +74,12 @@
 }
 
 /* ---------- Shared section/prose styling ---------- */
-/* Reading-focused: a fairly narrow measure (max-width), generous
-   line-height, no boxed cards, no icon grids. */
 
 .about-section {
   padding: 90px 6vw;
 }
 .about-section__inner {
-  max-width: 640px;
+  max-width: 760px;
   margin: 0 auto;
 }
 
@@ -93,14 +88,44 @@
   background: var(--cream-dim);
 }
 
+/* Eyebrow now includes a small colored icon. One icon per section —
+   never repeated into a grid — so it stays a quiet accent rather
+   than becoming a templated "values row." */
 .eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   font-size: 13px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--forest);
   font-weight: 600;
-  opacity: 0.7;
-  margin-bottom: 18px;
+  margin-bottom: 22px;
+}
+.eyebrow__icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.eyebrow__icon svg {
+  width: 16px;
+  height: 16px;
+}
+.eyebrow__icon--leaf {
+  background: rgba(143, 168, 138, 0.22);
+  color: #4f6b4a;
+}
+.eyebrow__icon--heart {
+  background: rgba(232, 184, 115, 0.25);
+  color: #8a5f1f;
+}
+.eyebrow__icon--shield {
+  background: rgba(44, 58, 45, 0.12);
+  color: #2c3a2d;
 }
 
 .about-section p {
@@ -125,11 +150,21 @@
   font-weight: 500;
   font-size: clamp(1.4rem, 2.6vw, 1.9rem);
   color: var(--forest-deep);
-  text-align: center;
   line-height: 1.4;
-  margin: 0 auto 32px;
+  margin: 0 0 32px;
   max-width: 520px;
   border: none;
+}
+
+/* Two-column layout for sections that have two related paragraphs
+   side by side, instead of stacking everything in one long column */
+.about-two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 48px;
+}
+.about-two-col p {
+  margin-bottom: 0;
 }
 
 /* ---------- Reveal animation ---------- */
@@ -145,24 +180,35 @@
 }
 
 /* ---------- Closing CTA ---------- */
-/* Deliberately quiet — no stat block, no shouting. Just a short
-   closing line and one button. */
 
 .about-cta {
   background: linear-gradient(160deg, #46564a 0%, #2b3830 60%, #1b231c 100%);
   color: #fff;
   text-align: center;
-  padding: 110px 6vw;
+  padding: 100px 6vw 64px;
 }
 .about-cta__text {
   font-family: "Fraunces", serif;
   font-weight: 500;
-  font-size: clamp(1.4rem, 2.8vw, 1.9rem);
+  font-size: clamp(1.3rem, 2.6vw, 1.8rem);
   line-height: 1.5;
   color: #fff;
   max-width: 560px;
-  margin: 0 auto 36px;
+  margin: 0 auto 8px;
 }
+
+/* The warmer, second line — different font treatment (italic serif,
+   amber tone) so it reads like a softer aside under the more formal
+   welcome line above it */
+.about-cta__script {
+  font-family: "Fraunces", serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(1.1rem, 2vw, 1.4rem);
+  color: var(--amber);
+  margin-bottom: 36px;
+}
+
 .about-cta__button {
   display: inline-flex;
   align-items: center;
@@ -182,13 +228,45 @@
   box-shadow: 0 12px 36px rgba(0, 0, 0, 0.22);
 }
 
+/* ---------- Footnote ---------- */
+/* Small, quiet, separate from the main reading flow — a dated
+   acknowledgment line, not a call to action. */
+
+.about-footnote {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 22px 6vw 40px;
+  color: rgba(27, 34, 28, 0.45);
+}
+.about-footnote__icon {
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+  margin-top: 2px;
+}
+.about-footnote__icon svg {
+  width: 14px;
+  height: 14px;
+}
+.about-footnote p {
+  font-size: 12.5px;
+  line-height: 1.6;
+}
+
 /* ---------- Responsive ---------- */
 
-@media (max-width: 600px) {
+@media (max-width: 700px) {
+  .about-two-col {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
   .about-section {
     padding: 64px 7vw;
   }
   .about-cta {
-    padding: 80px 7vw;
+    padding: 80px 7vw 50px;
   }
 }

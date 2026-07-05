@@ -6,22 +6,43 @@ import "./MarketingNav.css";
 
 const HOME_LINKS = [
   { to: "/", label: "Home" },
-  { to: "/Home1", label: "Home1" },
-  { to: "/Home2", label: "Home2" },
-  { to: "/Home3", label: "Home3" },
-  { to: "/Home4", label: "Home4" },
+  // { to: "/Home1", label: "Home1" },
+  // { to: "/Home2", label: "Home2" },
+  // { to: "/Home3", label: "Home3" },
+  // { to: "/Home4", label: "Home4" },
 ];
 
 const COMMUNITY_LINKS = [
-  { to: "/community", label: "Community Public View" },
-  { to: "/communityhome", label: "Community Logged In View" },
+  { to: "/community", label: "Features" },
+  { to: "/guidelines", label: "Culture" },
+  { to: "/stories", label: "Stories" },
+  // { to: "/communityhome", label: "Community Logged In View" },
 ];
 
-const OTHER_LINKS = [
-  { to: "/About", label: "About" },
+const LEARN_LINKS = [
   { to: "/resources", label: "Resources" },
   { to: "/faq", label: "FAQ" },
 ];
+
+const SUPPORT_LINKS = [
+  { to: "/donate", label: "Donate" },
+  { to: "/merch", label: "Merch" },
+  { to: "/discountlinks", label: "Discount" },
+];
+
+const ABOUT_LINKS = [
+  { to: "/about", label: "Our Mission" },
+  { to: "/mystory", label: "My Story" },
+  { to: "/contact", label: "Contact Us" },
+];
+
+
+const OTHER_LINKS = [
+  { to: "/about", label: "Our Mission" },
+  { to: "/mystory", label: "My Story" },
+];
+
+
 
 const ALL_LINKS = [...HOME_LINKS, ...COMMUNITY_LINKS, ...OTHER_LINKS];
 
@@ -106,11 +127,14 @@ export default function MarketingNav({ onLogin, onRegister }) {
       <nav className="main-nav" aria-label="Primary navigation">
         <NavDropdown label="Home" links={HOME_LINKS} closeMenu={closeMenu} />
         <NavDropdown label="Community" links={COMMUNITY_LINKS} closeMenu={closeMenu} />
-        {OTHER_LINKS.map((link) => (
+        <NavDropdown label="Learn" links={LEARN_LINKS} closeMenu={closeMenu} />
+        <NavDropdown label="Support" links={SUPPORT_LINKS} closeMenu={closeMenu} />
+        <NavDropdown label="About" links={ABOUT_LINKS} closeMenu={closeMenu} />
+        {/* {OTHER_LINKS.map((link) => (
           <NavLink key={link.to} to={link.to} className="main-nav__link">
             {link.label}
           </NavLink>
-        ))}
+        ))} */}
       </nav>
 
       <div className="site-header__actions">

@@ -1,0 +1,60 @@
+.guidelines {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 3rem 1.25rem 4rem;
+}
+
+.guidelines__title {
+  font-family: "Fraunces", serif;
+  font-size: 2rem;
+  color: var(--ink, #1a2e22);
+  margin-bottom: 0.75rem;
+}
+
+.guidelines__intro {
+  font-family: "Inter", sans-serif;
+  font-size: 1rem;
+  color: var(--ink, #1a2e22);
+  margin-bottom: 2rem;
+}
+
+.guidelines__list {
+  font-family: "Inter", sans-serif;
+  font-size: 0.98rem;
+  line-height: 1.7;
+  color: var(--ink, #1a2e22);
+  padding-left: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.guidelines__list li::marker {
+  color: var(--forest-deep, #1f3d2b);
+  font-weight: 600;
+}
+
+.guidelines__sublist {
+  margin-top: 0.6rem;
+  padding: 0.75rem 1rem;
+  background: var(--cream, #faf6ef);
+  border-left: 3px solid var(--forest-deep, #1f3d2b);
+  border-radius: 4px;
+}
+
+.guidelines__contact {
+  font-family: "Inter", sans-serif;
+  margin-top: 2.5rem;
+  color: var(--ink, #1a2e22);
+}
+
+.guidelines__disclaimer {
+  font-family: "Inter", sans-serif;
+  font-size: 0.9rem;
+  font-style: italic;
+  color: var(--ink, #1a2e22);
+  opacity: 0.8;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line, #ddd6c9);
+}

@@ -7,8 +7,16 @@ import Home5 from "./pages/Home5";
 import Home6 from "./pages/Home6";
 import Community from "./pages/Community";
 import CommunityHome from "./pages/CommunityHome";
+import DiscountLinks from "./pages/DiscountLinks";
+import Guidelines from "./pages/Guidelines";
+import Stories from "./pages/Stories";
+import MyStory from "./pages/MyStory";
+import Contact from "./pages/Contact";
+
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+
+
 
 import UserManagement from "./pages/admin/UserManagement";
 import RequireRole from "./components/RequireRole";
@@ -33,8 +41,13 @@ export default function App() {
         <Route path="home4" element={<Home4 />} />
         <Route path="home5" element={<Home5 />} />
         <Route path="home6" element={<Home6 />} />
+        <Route path="stories" element={<Stories />} />
+        <Route path="mystory" element={<MyStory />} />
         <Route path="community" element={<Community />} />
+        <Route path="guidelines" element={<Guidelines />} />
+        <Route path="contact" element={<Contact />} />
         <Route path="communityhome" element={<CommunityHome />} />
+        <Route path="discountlinks" element={<DiscountLinks />} />
         <Route path="about" element={<About />} />
         <Route path="resources" element={<Resources />} />
         <Route path="faq" element={<FAQ />} />
