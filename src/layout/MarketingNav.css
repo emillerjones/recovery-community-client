@@ -327,6 +327,46 @@
   transform: translateY(-7px) rotate(-45deg);
 }
 
+
+
+/* ---------- Footer Brand ---------- */
+
+.marketing-footer__logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+
+  text-decoration: none;
+  color: #203024;
+
+  margin-bottom: 18px;
+}
+
+.marketing-footer__logo:hover {
+  opacity: .9;
+}
+
+.marketing-footer__logo-mark {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.marketing-footer__logo-text {
+  font-family: "Fraunces", serif;
+  font-size: 24px;
+  line-height: 1.15;
+  font-weight: 600;
+
+  color: #203024;
+}
+
+
+
+
+
+
 /* Mobile nav */
 
 .mobile-nav-panel {

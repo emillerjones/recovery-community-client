@@ -1,0 +1,172 @@
+.marketing-footer {
+  background: #f6f2ea;
+  border-top: 1px solid rgba(44, 58, 45, 0.08);
+  padding: 40px 5vw 20px;
+}
+
+.marketing-footer__inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 60px;
+  align-items: start;
+}
+
+/* Footer logo — mirrors the navbar brand */
+.marketing-footer__logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+
+  color: #203024;
+  text-decoration: none;
+}
+
+.marketing-footer__logo:hover {
+  opacity: 0.9;
+}
+
+.marketing-footer__logo-mark {
+  width: 46px;
+  height: 46px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.marketing-footer__logo-text {
+  font-family: "Fraunces", serif;
+  font-size: 22px;
+  line-height: 1.15;
+  font-weight: 600;
+  color: #203024;
+}
+
+.marketing-footer__brand p {
+  max-width: 32rem;
+  margin: 0;
+
+  font-family: "Inter", sans-serif;
+  font-size: 15px;
+  line-height: 1.75;
+  color: rgba(32, 48, 36, 0.72);
+}
+
+.marketing-footer__links {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.marketing-footer__links h3 {
+  margin: 0 0 10px;
+  font-family: "Inter", sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #203024;
+}
+
+.marketing-footer__links a {
+  display: block;
+  margin-bottom: 8px;
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  color: rgba(32, 48, 36, 0.72);
+  text-decoration: none;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.marketing-footer__links a:hover {
+  color: #56705d;
+  transform: translateX(2px);
+}
+
+.marketing-footer__bottom {
+  max-width: 1400px;
+  margin: 28px auto 0;
+  padding-top: 16px;
+  border-top: 1px solid rgba(44, 58, 45, 0.08);
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.marketing-footer__bottom p {
+  margin: 0;
+  font-family: "Inter", sans-serif;
+  font-size: 13px;
+  color: rgba(32, 48, 36, 0.58);
+}
+
+.marketing-footer__social {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.marketing-footer__social a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  font-family: "Inter", sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+
+  color: #203024;
+  text-decoration: none;
+
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.marketing-footer__social a:hover {
+  opacity: 0.75;
+  transform: translateY(-1px);
+}
+
+.marketing-footer__social svg {
+  font-size: 15px;
+}
+
+@media (max-width: 1000px) {
+  .marketing-footer__inner {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .marketing-footer__links {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .marketing-footer {
+    padding: 32px 20px 16px;
+  }
+
+  .marketing-footer__logo-mark {
+    width: 40px;
+    height: 40px;
+  }
+
+  .marketing-footer__logo-text {
+    font-size: 20px;
+  }
+
+  .marketing-footer__links {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .marketing-footer__bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+}

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import MarketingNav from "./MarketingNav";
 import AuthPanel from "../auth/AuthPanel";
+import MarketingFooter from "./MarketingFooter";
 
 /**
  * Layout — wraps every marketing page.
@@ -41,6 +42,7 @@ export default function MarketingLayout() {
       {/* Page content — blurs slightly when panel is open */}
       <div className={authMode ? "layout-blurred" : ""}>
         <Outlet context={{ onRegister: openRegister, onLogin: openLogin }} />
+        <MarketingFooter />
       </div>
 
       {/* Slide-in auth panel */}
