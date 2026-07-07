@@ -38,7 +38,7 @@ const ABOUT_LINKS = [
 
 
 const OTHER_LINKS = [
-  { to: "/about", label: "Our Mission" },
+  { to: "/about", label: "Our Philosophy" },
   { to: "/mystory", label: "My Story" },
 ];
 
