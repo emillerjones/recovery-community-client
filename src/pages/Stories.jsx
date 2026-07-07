@@ -59,8 +59,8 @@ export default function Stories() {
 
           <blockquote className="stories-hero-quote">
             <span>“</span>
-            Someone I had never met answered my post. That was the first night I
-            believed recovery might actually be possible.
+              The fire will fade, but embers remain,
+              Return to the bonfire, and rekindle the flame . . .
             <span>”</span>
           </blockquote>
         </div>
