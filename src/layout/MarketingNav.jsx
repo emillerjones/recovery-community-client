@@ -13,7 +13,7 @@ const HOME_LINKS = [
 ];
 
 const COMMUNITY_LINKS = [
-  { to: "/community", label: "Features" },
+  { to: "/community", label: "Inside the Community" },
   { to: "/guidelines", label: "Culture" },
   { to: "/stories", label: "Stories" },
   // { to: "/communityhome", label: "Community Logged In View" },
@@ -83,7 +83,7 @@ export default function MarketingNav({ onLogin, onRegister }) {
   const solidNavPages = [
     "/about",
     "/contact",
-    // "/resources",
+    "/community",
     // "/faq",
     "/donate",
     "/merch",

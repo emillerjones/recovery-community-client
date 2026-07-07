@@ -2,162 +2,209 @@ import { useEffect, useRef, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import "./Community.css";
 
-const SNAPSHOTS = [
-  { text: "Today is six months. I didn't think I'd make it past six days." },
-  { text: "I had a rough week but didn't go back. That's new for me." },
-  { text: "Does anyone have experience with high-CBD strains for anxiety? Looking for guidance." },
-  { text: "One year. I came here broken. I'm still here." },
-  { text: "First time posting. I don't know where else to say this but I think it's working." },
-  { text: "Mornings are still hard. But they're getting shorter." },
+const MOMENTS = [
+  {
+    title: "The first honest post",
+    text: "For the person who is tired, scared, curious, or just ready to say the quiet part out loud.",
+  },
+  {
+    title: "The hard night",
+    text: "For the moments when cravings, grief, anxiety, or loneliness hit harder than expected.",
+  },
+  {
+    title: "The small win",
+    text: "For the day someone makes it through, tells the truth, asks for help, or starts again.",
+  },
 ];
 
-const CHANNELS = [
-  { name: "First steps", desc: "For people just starting out. No judgment, no pressure." },
-  { name: "Alcohol recovery", desc: "Conversations specific to leaving alcohol behind." },
-  { name: "Opioid recovery", desc: "Support for people navigating opioid recovery." },
-  { name: "Cannabis info", desc: "Questions, research, and real talk about the plant." },
-  { name: "Milestones", desc: "A place to mark the days that matter." },
-  { name: "Hard nights", desc: "For when you need someone at 2am." },
-  { name: "Research & resources", desc: "Links, studies, and tools the community has found useful." },
+const PLANNED_SPACES = [
+  {
+    name: "Discussion spaces",
+    desc: "Organized conversations around recovery, cannabis, substance dependence, setbacks, and progress.",
+  },
+  {
+    name: "Live community chat",
+    desc: "A more immediate place to talk when a full post feels like too much.",
+  },
+  {
+    name: "Milestones",
+    desc: "A place to mark meaningful days — one day, one week, six months, one year, or starting over.",
+  },
+  {
+    name: "Hard nights",
+    desc: "A space for the moments people usually face alone.",
+  },
+  {
+    name: "Recovery journals",
+    desc: "Private or shared reflections to help members notice patterns, progress, and triggers.",
+  },
+  {
+    name: "Resources",
+    desc: "Community-centered tools, links, research, and practical support gathered in one place.",
+  },
 ];
 
 function useReveal(threshold = 0.15) {
   const ref = useRef(null);
   const [visible, setVisible] = useState(false);
+
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
+
     const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setVisible(true); },
+      ([entry]) => {
+        if (entry.isIntersecting) setVisible(true);
+      },
       { threshold }
     );
+
     observer.observe(el);
     return () => observer.disconnect();
-  }, []);
+  }, [threshold]);
+
   return [ref, visible];
 }
 
 export default function Community() {
   const { onRegister } = useOutletContext();
-  const [introRef, introVisible] = useReveal(0.1);
-  const [snapshotsRef, snapshotsVisible] = useReveal(0.1);
-  const [channelsRef, channelsVisible] = useReveal(0.1);
-  const [ctaRef, ctaVisible] = useReveal(0.3);
+
+  const [heroRef, heroVisible] = useReveal(0.1);
+  const [momentsRef, momentsVisible] = useReveal(0.1);
+  const [spacesRef, spacesVisible] = useReveal(0.1);
+  const [cultureRef, cultureVisible] = useReveal(0.1);
+  const [ctaRef, ctaVisible] = useReveal(0.25);
 
   return (
-    <div className="comm page--flat">
-
-      {/* ── INTRO ── */}
-      <section className="comm-section comm-intro">
-        <div className="comm-inner">
-          <div
-            className={`comm-intro__text comm-reveal ${introVisible ? "comm-in" : ""}`}
-            ref={introRef}
-          >
-            <div className="comm-eyebrow">The community</div>
-            <h1>A place people actually use.</h1>
-            <p className="comm-intro__lead">
-              Not a hotline. Not a chatbot. Not a forum full of strangers
-              who don't get it. A peer-led community of people who've chosen
-              the same path and want to walk it with others.
-            </p>
-            <p className="comm-intro__body">
-              Recovery With The Exit Drug has been running since 2013. The
-              community is the core of it — always has been. People come
-              here when they have nowhere else to say the things they need
-              to say.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* ── SNAPSHOTS ── */}
-      <section className="comm-section comm-snapshots">
-        <div className="comm-inner">
-          <div
-            className={`comm-snapshots__head comm-reveal ${snapshotsVisible ? "comm-in" : ""}`}
-            ref={snapshotsRef}
-          >
-            <div className="comm-eyebrow">What it sounds like</div>
-            <h2>The kind of thing people actually say here.</h2>
-            <p>These aren't testimonials. They're the kinds of posts you'll find on any given day.</p>
-          </div>
-          <div className="comm-snapshots__grid">
-            {SNAPSHOTS.map((s, i) => (
-              <div
-                className="comm-snapshot comm-reveal comm-in"
-                key={i}
-                style={{ transitionDelay: `${i * 60}ms` }}
-              >
-                <p>"{s.text}"</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── CHANNELS ── */}
-      <section className="comm-section comm-channels">
-        <div className="comm-inner">
-          <div
-            className={`comm-channels__head comm-reveal ${channelsVisible ? "comm-in" : ""}`}
-            ref={channelsRef}
-          >
-            <div className="comm-eyebrow">Where conversations happen</div>
-            <h2>Organized around what you're actually going through.</h2>
-          </div>
-          <div className="comm-channels__list">
-            {CHANNELS.map((ch, i) => (
-              <div
-                className="comm-channel comm-reveal comm-in"
-                key={ch.name}
-                style={{ transitionDelay: `${i * 50}ms` }}
-              >
-                <div className="comm-channel__name">{ch.name}</div>
-                <div className="comm-channel__desc">{ch.desc}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── WHO'S HERE ── */}
-      <section className="comm-section comm-who">
-        <div className="comm-inner">
-          <div className="comm-eyebrow">Who's here</div>
-          <h2>Peers. Not professionals.</h2>
-          <p>
-            Everyone in this community is here because they've been where
-            you are, or they're still in it. There are no counselors
-            running the show, no algorithms deciding what you see. Just
-            people being honest with each other.
-          </p>
-          <p>
-            It's free. It's peer-led. It has been since 2013.
-          </p>
-        </div>
-      </section>
-
-      {/* ── CTA ── */}
-      <section className="comm-cta-section">
+    <main className="community-page page--flat">
+      {/* HERO */}
+      <section className="community-hero">
         <div
-          className={`comm-inner comm-cta__inner comm-reveal ${ctaVisible ? "comm-in" : ""}`}
-          ref={ctaRef}
+          ref={heroRef}
+          className={`community-inner community-reveal ${
+            heroVisible ? "community-in" : ""
+          }`}
         >
-          <h2>Ready to be part of it?</h2>
-          <p>Joining is free. Always has been.</p>
-          <button onClick={onRegister} className="comm-cta-btn">
+          <p className="community-eyebrow">Inside the community</p>
+
+          <h1>Recovery is easier when you stop doing it alone.</h1>
+
+          <p className="community-hero__lead">
+            We’re building a peer-led recovery community for people who need a
+            safer place to talk honestly about cannabis, substance dependence,
+            progress, setbacks, and starting again.
+          </p>
+
+          <p className="community-hero__note">
+            The logged-in community is still being shaped with the owner’s
+            approval. This page explains the experience we’re building toward.
+          </p>
+
+          <div className="community-hero__actions">
+            <button onClick={onRegister} className="community-btn">
+              Join the community
+            </button>
+            <a href="/guidelines" className="community-link">
+              Read the culture guidelines
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* MOMENTS */}
+      <section className="community-section community-moments">
+        <div
+          ref={momentsRef}
+          className={`community-inner community-reveal ${
+            momentsVisible ? "community-in" : ""
+          }`}
+        >
+          <p className="community-eyebrow">What it’s for</p>
+          <h2>A place for the moments people usually carry alone.</h2>
+
+          <div className="community-card-grid">
+            {MOMENTS.map((item) => (
+              <article className="community-card" key={item.title}>
+                <h3>{item.title}</h3>
+                <p>{item.text}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* PLANNED SPACES */}
+      <section className="community-section community-spaces">
+        <div
+          ref={spacesRef}
+          className={`community-inner community-reveal ${
+            spacesVisible ? "community-in" : ""
+          }`}
+        >
+          <p className="community-eyebrow">What we’re building</p>
+          <h2>Community spaces designed around real recovery.</h2>
+
+          <div className="community-space-list">
+            {PLANNED_SPACES.map((space) => (
+              <article className="community-space" key={space.name}>
+                <h3>{space.name}</h3>
+                <p>{space.desc}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CULTURE */}
+      <section className="community-section community-culture">
+        <div
+          ref={cultureRef}
+          className={`community-inner community-reveal ${
+            cultureVisible ? "community-in" : ""
+          }`}
+        >
+          <p className="community-eyebrow">How it stays safe</p>
+          <h2>Peer-led does not mean anything goes.</h2>
+
+          <p>
+            The community is being built around privacy, kindness, honesty, and
+            clear boundaries. Members will be expected to follow guidelines that
+            protect the group from spam, judgment, illegal activity, harassment,
+            and unsafe advice.
+          </p>
+
+          <p>
+            This is not a replacement for medical care, therapy, detox, or
+            emergency support. It is a place for peer connection, shared
+            experience, and practical encouragement.
+          </p>
+
+          <a href="/guidelines" className="community-text-link">
+            View community culture and guidelines →
+          </a>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="community-cta-section">
+        <div
+          ref={ctaRef}
+          className={`community-inner community-cta community-reveal ${
+            ctaVisible ? "community-in" : ""
+          }`}
+        >
+          <p className="community-eyebrow">Be part of what comes next</p>
+          <h2>Help shape a recovery community that feels human.</h2>
+          <p>
+            The goal is simple: build a place where people can show up honestly,
+            find support, and keep moving.
+          </p>
+
+          <button onClick={onRegister} className="community-btn">
             Join the community
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
           </button>
         </div>
       </section>
-
-      <footer className="comm-footer">
-        Recovery With The Exit Drug — A peer-led community since 2013. Not a substitute for professional medical treatment.
-      </footer>
-    </div>
+    </main>
   );
 }

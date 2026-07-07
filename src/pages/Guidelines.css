@@ -1,60 +1,201 @@
-.guidelines {
-  max-width: 720px;
-  margin: 0 auto;
-  padding: 6rem 1.25rem 4rem;
+.guidelines-page {
+  background: #fbfaf7;
+  color: #10281f;
+  min-height: 100vh;
 }
 
-.guidelines__title {
+.guidelines-inner {
+  width: min(1120px, 90vw);
+  margin: 0 auto;
+}
+
+.guidelines-hero {
+  padding: 120px 0 44px;
+  background:
+    radial-gradient(circle at top left, rgba(217, 180, 111, 0.22), transparent 34%),
+    #fbfaf7;
+}
+
+.guidelines-eyebrow {
+  margin: 0 0 14px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #6f7f57;
+}
+
+.guidelines-title {
+  margin: 0;
+  font-family: "Fraunces", serif;
+  font-size: clamp(4rem, 9vw, 7.5rem);
+  line-height: 0.95;
+  color: #10281f;
+}
+
+.guidelines-intro {
+  max-width: 720px;
+  margin: 26px 0 0;
+  font-size: 1.25rem;
+  line-height: 1.65;
+}
+
+.guidelines-body {
+  padding: 30px 0 70px;
+}
+
+.guidelines-layout {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 34px;
+  align-items: start;
+}
+
+.guidelines-side-card {
+  position: sticky;
+  top: 110px;
+  padding: 34px 26px;
+  border-radius: 22px;
+  background: linear-gradient(180deg, #183828, #10281f);
+  color: #fffaf0;
+  box-shadow: 0 24px 60px rgba(16, 40, 31, 0.18);
+}
+
+.guidelines-side-card__icon {
+  font-size: 2.2rem;
+  margin-bottom: 28px;
+}
+
+.guidelines-side-card h2 {
+  margin: 0;
   font-family: "Fraunces", serif;
   font-size: 2rem;
-  color: var(--ink, #1a2e22);
-  margin-bottom: 0.75rem;
+  line-height: 1.12;
 }
 
-.guidelines__intro {
-  font-family: "Inter", sans-serif;
-  font-size: 1rem;
-  color: var(--ink, #1a2e22);
-  margin-bottom: 2rem;
+.guidelines-side-card p {
+  margin: 24px 0 0;
+  line-height: 1.65;
+  color: rgba(255, 250, 240, 0.88);
 }
 
-.guidelines__list {
-  font-family: "Inter", sans-serif;
-  font-size: 0.98rem;
-  line-height: 1.7;
-  color: var(--ink, #1a2e22);
-  padding-left: 1.25rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
+.guidelines-list {
+  display: grid;
+  gap: 14px;
 }
 
-.guidelines__list li::marker {
-  color: var(--forest-deep, #1f3d2b);
-  font-weight: 600;
+.guideline-card {
+  display: grid;
+  grid-template-columns: 118px 1fr;
+  gap: 24px;
+  padding: 24px;
+  border: 1px solid rgba(165, 129, 63, 0.28);
+  border-radius: 18px;
+  background: rgba(255, 252, 246, 0.82);
+  box-shadow: 0 18px 45px rgba(32, 43, 34, 0.06);
 }
 
-.guidelines__sublist {
-  margin-top: 0.6rem;
-  padding: 0.75rem 1rem;
-  background: var(--cream, #faf6ef);
-  border-left: 3px solid var(--forest-deep, #1f3d2b);
-  border-radius: 4px;
+.guideline-card__meta {
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  gap: 12px;
+  padding-right: 22px;
+  border-right: 1px solid rgba(40, 59, 45, 0.14);
 }
 
-.guidelines__contact {
-  font-family: "Inter", sans-serif;
-  margin-top: 2.5rem;
-  color: var(--ink, #1a2e22);
+.guideline-card__number {
+  font-family: "Fraunces", serif;
+  font-size: 2.4rem;
+  font-weight: 800;
+  line-height: 1;
+  color: #22412d;
 }
 
-.guidelines__disclaimer {
-  font-family: "Inter", sans-serif;
-  font-size: 0.9rem;
-  font-style: italic;
-  color: var(--ink, #1a2e22);
-  opacity: 0.8;
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--line, #ddd6c9);
+.guideline-card__icon {
+  font-size: 1.8rem;
+}
+
+.guideline-card__content p {
+  margin: 0;
+  font-size: 1.02rem;
+  line-height: 1.65;
+}
+
+.guideline-card__content strong {
+  color: #10281f;
+}
+
+.guideline-card__callout {
+  margin-top: 18px;
+  padding: 18px 20px;
+  border: 1px solid rgba(111, 127, 87, 0.28);
+  border-left: 4px solid #6f7f57;
+  border-radius: 14px;
+  background: #f3efe6;
+  line-height: 1.6;
+}
+
+.guidelines-contact-card {
+  padding: 22px 24px;
+  border: 1px solid rgba(111, 127, 87, 0.28);
+  border-radius: 16px;
+  background: #f3efe6;
+  line-height: 1.6;
+}
+
+.guidelines-disclaimer-section {
+  padding: 0 0 80px;
+}
+
+.guidelines-disclaimer {
+  display: grid;
+  grid-template-columns: 84px 1fr;
+  gap: 26px;
+  align-items: center;
+  padding: 28px 32px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #10281f, #25442f);
+  color: #fffaf0;
+  box-shadow: 0 24px 60px rgba(16, 40, 31, 0.2);
+}
+
+.guidelines-disclaimer__icon {
+  font-size: 2.4rem;
+  text-align: center;
+}
+
+.guidelines-disclaimer p {
+  margin: 0;
+  line-height: 1.65;
+  color: rgba(255, 250, 240, 0.92);
+}
+
+@media (max-width: 850px) {
+  .guidelines-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .guidelines-side-card {
+    position: relative;
+    top: auto;
+  }
+
+  .guideline-card {
+    grid-template-columns: 1fr;
+  }
+
+  .guideline-card__meta {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    border-right: 0;
+    border-bottom: 1px solid rgba(40, 59, 45, 0.12);
+    padding-right: 0;
+    padding-bottom: 14px;
+  }
+
+  .guidelines-disclaimer {
+    grid-template-columns: 1fr;
+  }
 }

@@ -1,0 +1,47 @@
+.stories {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 6rem 1.25rem 4rem;
+}
+
+.stories__title {
+  font-family: "Fraunces", serif;
+  font-size: 2rem;
+  color: var(--ink, #1a2e22);
+  margin-bottom: 0.5rem;
+}
+
+.stories__intro {
+  font-family: "Inter", sans-serif;
+  color: var(--ink, #1a2e22);
+  margin-bottom: 2.5rem;
+}
+
+.stories__list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.stories__card {
+  margin: 0;
+  padding: 1.5rem;
+  background: var(--cream, #faf6ef);
+  border-left: 3px solid var(--forest-deep, #1f3d2b);
+  border-radius: 6px;
+}
+
+.stories__text {
+  font-family: "Fraunces", serif;
+  font-size: 1.1rem;
+  font-style: italic;
+  color: var(--ink, #1a2e22);
+  line-height: 1.6;
+  margin: 0 0 0.75rem;
+}
+
+.stories__name {
+  font-family: "Inter", sans-serif;
+  font-size: 0.85rem;
+  color: var(--forest-deep, #1f3d2b);
+}
