@@ -10,6 +10,10 @@ const HOME_LINKS = [
   { to: "/Home2", label: "Home2" },
   { to: "/Home3", label: "Home3" },
   { to: "/Home4", label: "Home4" },
+  { to: "/Home7", label: "Home7" },
+  { to: "/Home8", label: "Home8" },
+  { to: "/Home9", label: "Home9" },
+  { to: "/Home10", label: "Home10" },
 ];
 
 const COMMUNITY_LINKS = [

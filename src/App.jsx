@@ -5,6 +5,10 @@ import Home3 from "./pages/Home3";
 import Home4 from "./pages/Home4";
 import Home5 from "./pages/Home5";
 import Home6 from "./pages/Home6";
+import Home7 from "./pages/Home7";
+import Home8 from "./pages/Home8";
+import Home9 from "./pages/Home9";
+import Home10 from "./pages/Home10";
 import Community from "./pages/Community";
 import CommunityHome from "./pages/CommunityHome";
 import DiscountLinks from "./pages/DiscountLinks";
@@ -41,6 +45,10 @@ export default function App() {
         <Route path="home4" element={<Home4 />} />
         <Route path="home5" element={<Home5 />} />
         <Route path="home6" element={<Home6 />} />
+        <Route path="home7" element={<Home7 />} />
+        <Route path="home8" element={<Home8 />} />
+        <Route path="home9" element={<Home9 />} />
+        <Route path="home10" element={<Home10 />} />
         <Route path="stories" element={<Stories />} />
         <Route path="mystory" element={<MyStory />} />
         <Route path="community" element={<Community />} />
