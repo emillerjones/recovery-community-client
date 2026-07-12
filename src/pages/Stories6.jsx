@@ -1,0 +1,4 @@
+import { PUBLIC_STORIES, SHAWN_MEMORIAL } from "../data/publicStories";
+import { StoriesConceptBody } from "./StoriesConceptBody";
+import "./Stories6.css";
+export default function Stories6(){return <main className="s6"><section className="s6-hall"><div className="s6-copy"><p>Portraits of recovery</p><h1>Every window holds a way forward.</h1><span>Ten living stories selected with care. One founding member remembered.</span></div><div className="s6-windows">{PUBLIC_STORIES.map((s,i)=><a className={i===0?"featured":""} href={`#full-${s.slug}`} key={s.slug}><img src={s.photo} alt={s.name}/><span><b>{s.name}</b><small>{i===0?"Public success story":"Selected story"}</small></span></a>)}<a className="memorial" href="#full-shawn"><img src={SHAWN_MEMORIAL.photo} alt="Shawn"/><span><b>Shawn</b><small>In memoriam · 2017</small></span></a></div><a href="#collection" className="s6-cue">Walk into the gallery ↓</a></section><StoriesConceptBody/></main>}

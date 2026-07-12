@@ -9,11 +9,22 @@ import Home7 from "./pages/Home7";
 import Home8 from "./pages/Home8";
 import Home9 from "./pages/Home9";
 import Home10 from "./pages/Home10";
+import Home11 from "./pages/Home11";
+import Home12 from "./pages/Home12";
 import Community from "./pages/Community";
 import CommunityHome from "./pages/CommunityHome";
 import DiscountLinks from "./pages/DiscountLinks";
 import Guidelines from "./pages/Guidelines";
 import Stories from "./pages/Stories";
+import Stories2 from "./pages/Stories2";
+import Stories3 from "./pages/Stories3";
+import Stories4 from "./pages/Stories4";
+import Stories5 from "./pages/Stories5";
+import Stories6 from "./pages/Stories6";
+import Stories7 from "./pages/Stories7";
+import Stories8 from "./pages/Stories8";
+import Stories9 from "./pages/Stories9";
+import Stories10 from "./pages/Stories10";
 import MyStory from "./pages/MyStory";
 import Contact from "./pages/Contact";
 
@@ -49,7 +60,18 @@ export default function App() {
         <Route path="home8" element={<Home8 />} />
         <Route path="home9" element={<Home9 />} />
         <Route path="home10" element={<Home10 />} />
+        <Route path="home11" element={<Home11 />} />
+        <Route path="home12" element={<Home12 />} />
         <Route path="stories" element={<Stories />} />
+        <Route path="stories2" element={<Stories2 />} />
+        <Route path="stories3" element={<Stories3 />} />
+        <Route path="stories4" element={<Stories4 />} />
+        <Route path="stories5" element={<Stories5 />} />
+        <Route path="stories6" element={<Stories6 />} />
+        <Route path="stories7" element={<Stories7 />} />
+        <Route path="stories8" element={<Stories8 />} />
+        <Route path="stories9" element={<Stories9 />} />
+        <Route path="stories10" element={<Stories10 />} />
         <Route path="mystory" element={<MyStory />} />
         <Route path="community" element={<Community />} />
         <Route path="guidelines" element={<Guidelines />} />

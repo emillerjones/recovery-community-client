@@ -1,0 +1,204 @@
+.home11-hero__section {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.home11-hero__photo {
+  position: absolute;
+  inset: 0;
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.home11-hero__eyebrow,
+.home11-hero__title,
+.home11-hero__subheading,
+.home11-hero__button {
+  position: relative;
+  z-index: 1;
+  margin-left: 5rem;
+}
+
+.home11-hero__eyebrow {
+  padding-top: 12rem;
+  color: white;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15rem;
+}
+
+.home11-hero__title {
+  margin-top: 1rem;
+  color: white;
+  font-size: 3.5rem;
+  font-weight: 700;
+  max-width: 700px;
+}
+
+.home11-hero__subheading {
+  margin-top: 1.5rem;
+  color: white;
+  font-size: 1.2rem;
+  line-height: 1.6;
+  max-width: 650px;
+}
+
+.home11-hero__button {
+  margin-top: 2rem;
+  padding: 0.9rem 2rem;
+
+  background: white;
+  color: #1b3d2f;
+
+  border: none;
+  border-radius: 999px;
+
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.home11-hero__scroll {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+
+  color: white;
+  font-size: 0.8rem;
+  letter-spacing: 0.15rem;
+  text-transform: uppercase;
+
+  z-index: 2;
+}
+
+.home11-hero__arrow {
+  width: 16px;
+  height: 16px;
+
+  border-right: 2px solid white;
+  border-bottom: 2px solid white;
+
+  transform: rotate(45deg);
+
+  animation: home11-arrow-bounce 2s infinite;
+}
+
+@keyframes home11-arrow-bounce {
+  0%,
+  100% {
+    transform: rotate(45deg) translate(0, 0);
+  }
+
+  50% {
+    transform: rotate(45deg) translate(6px, 6px);
+  }
+}
+
+
+.home11-philosophy__section {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 6rem 2rem;
+
+  text-align: center;
+}
+
+.home11-philosophy__eyebrow {
+  margin-bottom: 1rem;
+
+  color: #5d7a67;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15rem;
+}
+
+.home11-philosophy__title {
+  margin-bottom: 1.5rem;
+
+  color: #1f2d23;
+  font-size: 2.5rem;
+  font-weight: 700;
+}
+
+.home11-philosophy__text {
+  max-width: 700px;
+  margin: 0 auto;
+
+  color: #5f5f5f;
+  font-size: 1.1rem;
+  line-height: 1.8;
+}
+
+.home11-story__section {
+  padding: 6rem 2rem;
+  background: #f3eee5;
+}
+
+.home11-story__eyebrow {
+  max-width: 1100px;
+  margin: 0 auto 1rem;
+
+  color: #5d7a67;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15rem;
+}
+
+.home11-story__title {
+  max-width: 1100px;
+  margin: 0 auto 2.5rem;
+
+  color: #1f2d23;
+  font-size: 2.5rem;
+  font-weight: 700;
+}
+
+.home11-story__track {
+  display: flex;
+  gap: 1rem;
+
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+
+  max-width: 1100px;
+  margin: 0 auto;
+  padding-bottom: 1rem;
+}
+
+.home11-story__card {
+  flex: 0 0 300px;
+  scroll-snap-align: start;
+
+  padding: 1.5rem;
+  background: white;
+  border-radius: 12px;
+}
+
+.home11-story__name {
+  font-weight: 700;
+  color: #1f2d23;
+}
+
+.home11-story__detail {
+  margin-top: 0.25rem;
+
+  color: #777;
+  font-size: 0.9rem;
+}
+
+.home11-story__quote {
+  margin-top: 1.25rem;
+
+  color: #444;
+  font-size: 1rem;
+  line-height: 1.6;
+}

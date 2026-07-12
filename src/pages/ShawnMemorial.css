@@ -1,0 +1,33 @@
+.smem{position:relative;overflow:hidden;padding:92px 0;background:linear-gradient(145deg,#22241f,#10130f);color:#eee7da;scroll-margin-top:80px}
+.smem::before{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 38%,rgba(218,177,104,.035) 50%,transparent 62%),radial-gradient(circle at 23% 45%,rgba(214,168,93,.15),transparent 33%)}
+.smem::after{content:"";position:absolute;inset:22px;border:1px solid rgba(238,231,218,.055);pointer-events:none}
+.smem__year{position:absolute;right:-2vw;top:-62px;color:transparent;font:450 clamp(11rem,28vw,25rem)/1 "Fraunces",serif;-webkit-text-stroke:1px rgba(238,231,218,.07)}
+.smem__arch{position:absolute;left:max(1vw,calc((100vw - 1300px)/2));top:50%;width:510px;height:610px;translate:0 -50%;fill:none;stroke:rgba(212,174,106,.13);stroke-width:1;stroke-dasharray:1;stroke-dashoffset:1;animation:smem-draw 2.4s ease-out .2s forwards}
+.smem__inner{position:relative;width:min(1300px,92vw);margin:auto;display:grid;grid-template-columns:minmax(470px,500px) minmax(0,1fr);align-items:stretch;column-gap:clamp(46px,5vw,68px);row-gap:52px}
+.smem__visual{display:flex;align-self:stretch}
+.smem__portrait{position:relative;width:100%;height:100%;min-height:560px;margin:0 auto;padding:11px;border:1px solid rgba(212,174,106,.48);box-shadow:0 28px 80px rgba(0,0,0,.3),0 0 0 7px rgba(212,174,106,.025)}
+.smem__portrait::before,.smem__portrait::after{content:"";position:absolute;width:34px;height:34px;border-color:#d4ae6a;opacity:.72}
+.smem__portrait::before{left:-5px;top:-5px;border-left:1px solid;border-top:1px solid}.smem__portrait::after{right:-5px;bottom:-5px;border-right:1px solid;border-bottom:1px solid}
+.smem__portrait img{display:block;width:100%;height:100%;object-fit:cover;object-position:center;filter:grayscale(1) brightness(.78)}
+.smem__portrait span{position:absolute;left:19px;bottom:19px;padding:8px 10px;background:rgba(17,20,15,.9);color:#d4ae6a;font-size:.58rem;font-weight:800;letter-spacing:.13em;text-transform:uppercase}
+.smem__plaque{grid-column:1/-1;width:min(560px,90vw);justify-self:center;padding:28px clamp(20px,3vw,34px);border:1px solid rgba(215,173,104,.22);background:linear-gradient(165deg,rgba(255,255,255,.03),rgba(255,255,255,.01));text-align:center;box-shadow:inset 0 0 45px rgba(215,173,104,.018)}
+.smem__plaque p{margin:0}
+.smem__plaque-line1,.smem__plaque-line2{color:rgba(247,242,233,.6);font-size:.68rem;font-weight:800;letter-spacing:.28em;text-transform:uppercase}
+.smem__plaque-line2{margin-top:2px!important}
+.smem__plaque-body{margin-top:16px!important;color:#f7ead4;font-family:"Fraunces",serif;font-size:clamp(.92rem,1.25vw,1.08rem);line-height:1.55;white-space:nowrap}
+.smem__plaque-rule{width:42px;height:1px;margin:22px auto;background:rgba(215,173,104,.4)}
+.smem__plaque-motto{color:#e3c088;font-size:.74rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
+.smem__plaque-translation{margin-top:5px!important;color:rgba(247,242,233,.4);font-family:"Fraunces",serif;font-size:.8rem;font-style:italic}
+.smem__words>p{margin:0;color:#d4ae6a;font-size:.62rem;font-weight:800;letter-spacing:.15em;text-transform:uppercase}
+.smem h2{margin:12px 0 0;font:450 clamp(4rem,7vw,7.2rem)/.82 "Fraunces",serif}
+.smem blockquote{margin:24px 0 22px;padding-left:20px;border-left:1px solid #b78f50;color:#d4ae6a;font:450 clamp(1.12rem,1.7vw,1.38rem)/1.45 "Fraunces",serif}
+.smem__words>div:not(.smem__dedication){max-width:720px;columns:1}
+.smem__words>div:not(.smem__dedication) p{margin:0 0 12px;color:rgba(238,231,218,.67);font-size:.92rem;line-height:1.62}
+.smem__words>strong{display:block;margin-top:18px;color:#d4ae6a;font-family:"Fraunces",serif}
+.smem__dedication{display:flex;align-items:center;gap:12px;margin-top:19px;color:rgba(238,231,218,.42);font-size:.55rem;font-weight:750;letter-spacing:.16em;text-transform:uppercase}
+.smem__dedication i{width:42px;height:1px;background:linear-gradient(90deg,transparent,rgba(212,174,106,.52))}.smem__dedication i:last-child{rotate:180deg}.smem__dedication span{color:#d4ae6a;font-size:.42rem}
+@keyframes smem-draw{to{stroke-dashoffset:0}}
+@media(prefers-reduced-motion:reduce){.smem__arch{animation:none;stroke-dashoffset:0}}
+@media(max-width:1100px){.smem{padding:74px 0}.smem__inner{grid-template-columns:minmax(360px,440px) minmax(0,1fr);gap:38px}.smem__words>div:not(.smem__dedication){columns:1}}
+@media(max-width:900px){.smem__inner{grid-template-columns:1fr;row-gap:38px}.smem__visual{width:min(500px,86vw);margin:0 auto}.smem__portrait{min-height:0;height:auto}.smem__portrait img{height:auto;object-fit:contain}.smem__plaque-body{font-size:clamp(.78rem,2.4vw,1rem)}}
+@media(max-width:760px){.smem{padding:68px 0}.smem__inner{grid-template-columns:1fr}.smem__visual{width:min(560px,86vw)}.smem__portrait{width:100%}.smem__plaque{padding:25px 12px}.smem__plaque-body{font-size:clamp(.72rem,3.2vw,.98rem)}.smem__arch{left:50%;width:105vw;translate:-50% -50%}.smem__dedication{gap:8px;font-size:.48rem}.smem__dedication i{flex:1}}

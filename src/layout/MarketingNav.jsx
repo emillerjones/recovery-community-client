@@ -14,12 +14,23 @@ const HOME_LINKS = [
   { to: "/Home8", label: "Home8" },
   { to: "/Home9", label: "Home9" },
   { to: "/Home10", label: "Home10" },
+  { to: "/Home11", label: "Home11" },
+  { to: "/Home12", label: "Home12" },
 ];
 
 const COMMUNITY_LINKS = [
   { to: "/community", label: "Inside the Community" },
   { to: "/guidelines", label: "Culture" },
   { to: "/stories", label: "Stories" },
+  { to: "/stories2", label: "Stories 2" },
+  { to: "/stories3", label: "Stories 3" },
+  { to: "/stories4", label: "Stories 4" },
+  { to: "/stories5", label: "Stories 5" },
+  { to: "/stories6", label: "Stories 6" },
+  { to: "/stories7", label: "Stories 7" },
+  { to: "/stories8", label: "Stories 8" },
+  { to: "/stories9", label: "Stories 9" },
+  { to: "/stories10", label: "Stories 10" },
   // { to: "/communityhome", label: "Community Logged In View" },
 ];
 
@@ -93,7 +104,7 @@ export default function MarketingNav({ onLogin, onRegister }) {
     "/merch",
     "/discountlinks",
     "/guidelines",
-    "/stories",
+    // "/stories",
   ];
 
   const pageWantsSolidNav = solidNavPages.includes(location.pathname);
