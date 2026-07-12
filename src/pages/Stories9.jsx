@@ -5,6 +5,7 @@ import StoryReader from "./StoryReader";
 import ShawnMemorial from "./ShawnMemorial";
 import "./Stories2.css";
 import "./Stories9Redux.css";
+import "./Stories9Minimal.css";
 
 const ORBIT_STORIES = PUBLIC_STORIES.map((story, index) => ({
   ...story,
@@ -150,16 +151,14 @@ export default function Stories9() {
         </div>
 
         <div className={`s2-feed ${tossing ? "s2-feed--tossing" : ""}`}>
-          <div className="s2-feed__header"><span className="s2-feed__icon" aria-hidden="true"><Flame size={18} strokeWidth={2.2} /></span><div><strong>Leave a light by the fire</strong><span>Write something you are proud of. It becomes a card in the circle.</span></div></div>
+          <div className="s2-feed__header"><span className="s2-feed__icon" aria-hidden="true"><Flame size={15} strokeWidth={2} /></span><div><strong>Add a light</strong></div></div>
           <form className="s2-feed__form s9-offering" onSubmit={tossLog}>
             <label className="s9-offering__polaroid" htmlFor="quick-story-9">
-              <span className="s9-offering__photo" aria-hidden="true"><i /><Flame size={18} strokeWidth={1.8} /><small>Your light</small></span>
-              <input id="quick-story-9" type="text" value={quickStory} maxLength={48} placeholder="What are you proud of today?" aria-label="What are you proud of today?" onChange={(event) => setQuickStory(event.target.value)} />
+              <span className="s9-offering__photo" aria-hidden="true"><i /><Flame size={15} strokeWidth={1.8} /></span>
+              <input id="quick-story-9" type="text" value={quickStory} maxLength={48} placeholder="Something you’re proud of…" aria-label="Something you are proud of" onChange={(event) => setQuickStory(event.target.value)} />
             </label>
             <div className="s9-offering__kindling">
-              <span className="s9-offering__logs" aria-hidden="true"><i /><i /></span>
-              <button ref={tossButtonRef} type="submit" disabled={!quickStory.trim() || tossing}>Add my light <Flame size={14} strokeWidth={2.4} aria-hidden="true" /></button>
-              <small>Just for you. Nothing is posted.</small>
+              <button ref={tossButtonRef} type="submit" disabled={!quickStory.trim() || tossing}>Add <Flame size={13} strokeWidth={2.2} aria-hidden="true" /></button>
             </div>
           </form>
         </div>

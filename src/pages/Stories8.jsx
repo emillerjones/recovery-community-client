@@ -1,4 +1,0 @@
-import { PUBLIC_STORIES, SHAWN_MEMORIAL } from "../data/publicStories";
-import { StoriesConceptBody } from "./StoriesConceptBody";
-import "./Stories8.css";
-export default function Stories8(){return <main className="s8"><section className="s8-hero"><div className="s8-copy"><p>A living tapestry</p><h1>Different lives. Different paths. Held together here.</h1></div><div className="s8-quilt">{PUBLIC_STORIES.map((s,i)=><a href={`#full-${s.slug}`} className={`p${i+1}`} key={s.slug}><img src={s.photo} alt=""/><span>{s.name}</span><small>“{s.line}”</small></a>)}<a href="#full-shawn" className="memorial"><img src={SHAWN_MEMORIAL.photo} alt=""/><span>Shawn</span><small>In memoriam · 2017</small></a></div><a href="#collection" className="s8-cue">Unfold every story ↓</a></section><StoriesConceptBody/></main>}

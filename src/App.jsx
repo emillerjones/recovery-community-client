@@ -16,13 +16,10 @@ import CommunityHome from "./pages/CommunityHome";
 import DiscountLinks from "./pages/DiscountLinks";
 import Guidelines from "./pages/Guidelines";
 import Stories from "./pages/Stories";
-import Stories2 from "./pages/Stories2";
 import Stories3 from "./pages/Stories3";
 import Stories4 from "./pages/Stories4";
 import Stories5 from "./pages/Stories5";
 import Stories6 from "./pages/Stories6";
-import Stories7 from "./pages/Stories7";
-import Stories8 from "./pages/Stories8";
 import Stories9 from "./pages/Stories9";
 import Stories10 from "./pages/Stories10";
 import MyStory from "./pages/MyStory";
@@ -63,13 +60,10 @@ export default function App() {
         <Route path="home11" element={<Home11 />} />
         <Route path="home12" element={<Home12 />} />
         <Route path="stories" element={<Stories />} />
-        <Route path="stories2" element={<Stories2 />} />
         <Route path="stories3" element={<Stories3 />} />
         <Route path="stories4" element={<Stories4 />} />
         <Route path="stories5" element={<Stories5 />} />
         <Route path="stories6" element={<Stories6 />} />
-        <Route path="stories7" element={<Stories7 />} />
-        <Route path="stories8" element={<Stories8 />} />
         <Route path="stories9" element={<Stories9 />} />
         <Route path="stories10" element={<Stories10 />} />
         <Route path="mystory" element={<MyStory />} />

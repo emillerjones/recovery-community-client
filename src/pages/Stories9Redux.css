@@ -250,6 +250,113 @@
   }
 }
 
+/* Final minimal composer: one label, one thought, one action. */
+.s9-redux .s2-feed {
+  width: min(440px, 36vw);
+}
+
+.s9-redux .s2-feed__header {
+  margin: 0 0 7px 3px;
+}
+
+.s9-redux .s2-feed__icon {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  rotate: 0deg;
+  box-shadow: 0 5px 16px rgba(217, 130, 55, 0.22);
+}
+
+.s9-redux .s2-feed__header strong {
+  color: rgba(247, 242, 233, 0.86);
+  font-family: "Inter", sans-serif;
+  font-size: 0.78rem;
+  font-weight: 650;
+  letter-spacing: 0.01em;
+}
+
+.s9-redux .s9-offering {
+  grid-template-columns: minmax(0, 1fr) 72px;
+  gap: 9px;
+}
+
+.s9-redux .s9-offering__polaroid {
+  grid-template-columns: 43px minmax(0, 1fr);
+  gap: 9px;
+  min-height: 58px;
+  padding: 6px 12px 6px 6px;
+  rotate: -0.5deg;
+  border-color: rgba(255, 255, 255, 0.54);
+  background: rgba(248, 245, 237, 0.94);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.2);
+}
+
+.s9-redux .s9-offering__photo {
+  width: 43px;
+  height: 43px;
+  background: linear-gradient(155deg, #29392d, #17231b);
+}
+
+.s9-redux .s9-offering__polaroid input {
+  min-height: 36px;
+  font-family: "Inter", sans-serif;
+  font-size: 0.76rem;
+  font-style: normal;
+}
+
+.s9-redux .s9-offering__kindling {
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  padding: 0;
+}
+
+.s9-redux .s9-offering__kindling button {
+  min-width: 72px;
+  min-height: 38px;
+  padding: 8px 12px;
+  border-color: rgba(232, 169, 89, 0.24);
+  background: rgba(125, 70, 36, 0.72);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  font-size: 0.68rem;
+}
+
+.s9-redux .s9-offering__kindling button::before {
+  display: none;
+}
+
+@media (max-width: 680px) {
+  .s9-redux .s2-feed {
+    width: auto;
+  }
+
+  .s9-redux .s2-feed__header {
+    margin-bottom: 5px;
+  }
+
+  .s9-redux .s9-offering {
+    grid-template-columns: minmax(0, 1fr) 64px;
+    gap: 7px;
+  }
+
+  .s9-redux .s9-offering__polaroid {
+    grid-template-columns: 39px minmax(0, 1fr);
+    min-height: 52px;
+    padding: 5px 9px 5px 5px;
+  }
+
+  .s9-redux .s9-offering__photo {
+    width: 39px;
+    height: 39px;
+  }
+
+  .s9-redux .s9-offering__kindling button {
+    min-width: 64px;
+    min-height: 36px;
+    padding: 7px 9px;
+  }
+}
+
 @media (max-width: 760px) {
   .s9-redux .smem--compact .smem__inner {
     grid-template-columns: 1fr;

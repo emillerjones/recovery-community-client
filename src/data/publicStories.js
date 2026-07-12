@@ -172,6 +172,5 @@ export const SHAWN_MEMORIAL = {
     "Shawn believed that cannabis could help people struggling with harmful substance use. He was a pioneer in creating a safe space for support for those using cannabis in recovery.",
     "Shawn is the first ever member of our community that began in 2013. We honor him as a pioneer and trailblazer of the first ever established support community @recoverywiththeexitdrug.",
     "This picture is a reminder of the inevitable destruction all around us. But, with one’s continued bravery, we can create a solid foundation for us to rebuild wherever we are.",
-    "Rest In Peace, Shawn.",
   ],
 };
