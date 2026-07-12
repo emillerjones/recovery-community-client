@@ -15,10 +15,14 @@ const ORBIT_STORIES = PUBLIC_STORIES.map((story, index) => ({
 
 function StoryFire({ warmth, flare, fireRef }) {
   return (
+    <div className="s2-fire-anchor" ref={fireRef}>
     <div
-      ref={fireRef}
       className={`s2-fire ${warmth ? "s2-fire--fed" : ""} ${flare ? "s2-fire--flare" : ""}`}
       style={{
+        position: "relative",
+        left: 0,
+        top: 0,
+        translate: "none",
         "--fire-growth": 1 + Math.min(warmth, 4) * 0.08,
         "--fire-brightness": 1 + Math.min(warmth, 4) * 0.08,
         "--outer-growth": `${Math.min(warmth, 4) * 7}px`,
@@ -40,6 +44,7 @@ function StoryFire({ warmth, flare, fireRef }) {
       <a className="s2-fire__memorial" href="#stories9-shawn">
         <span><small>In loving memory</small><strong>Shawn · Remembered {SHAWN_MEMORIAL.year}</strong></span>
       </a>
+    </div>
     </div>
   );
 }

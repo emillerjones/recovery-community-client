@@ -7,9 +7,12 @@
 }
 
 .s9-redux .s2-gathering__rings,
-.s9-redux .s2-fire,
 .s9-redux .s2-orbit {
   top: 47%;
+}
+
+.s9-redux .s2-fire-anchor {
+  top: calc(47% - 129px);
 }
 
 .s9-redux .s2-feed {
@@ -179,9 +182,13 @@
 
 @media (max-width: 900px) {
   .s9-redux .s2-gathering__rings,
-  .s9-redux .s2-fire,
   .s9-redux .s2-orbit {
     top: 60%;
+  }
+
+  .s9-redux .s2-fire-anchor {
+    left: calc(50% - 129px);
+    top: calc(60% - 129px);
   }
 
   .s9-redux .s2-gathering__copy {
@@ -217,9 +224,12 @@
   }
 
   .s9-redux .s2-gathering__rings,
-  .s9-redux .s2-fire,
   .s9-redux .s2-orbit {
     top: 49%;
+  }
+
+  .s9-redux .s2-fire-anchor {
+    top: calc(49% - 129px);
   }
 
   .s9-redux .s2-feed {
@@ -479,16 +489,19 @@
   }
 
   .s9-redux .s2-gathering__rings,
-  .s9-redux .s2-fire,
   .s9-redux .s2-orbit {
     top: 51%;
+  }
+
+  .s9-redux .s2-fire-anchor {
+    top: calc(51% - 129px);
   }
 
   .s9-redux .s2-gathering__rings {
     width: 88vw;
   }
 
-  .s9-redux .s2-fire {
+  .s9-redux .s2-fire-anchor {
     scale: 0.64;
   }
 

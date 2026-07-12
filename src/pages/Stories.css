@@ -59,6 +59,16 @@
 
 .stories-gathering__rings::after { inset: 31%; border-color: rgba(215, 173, 104, 0.1); }
 
+.stories-fire-anchor {
+  position: absolute;
+  left: calc(70% - 129px);
+  top: calc(43% - 129px);
+  z-index: 6;
+  width: 258px;
+  height: 258px;
+  transform: none;
+}
+
 .stories-fire {
   position: absolute;
   left: 70%;
@@ -70,6 +80,14 @@
   opacity: 0;
   transform: translateY(24px) scale(0.72);
   animation: stories-fire-arrive 0.85s cubic-bezier(0.2, 0.8, 0.2, 1) 0.08s forwards;
+}
+
+.stories-fire-anchor > .stories-fire {
+  position: relative;
+  left: 0;
+  top: 0;
+  z-index: auto;
+  translate: none;
 }
 
 .stories-fire__aura {
@@ -401,8 +419,8 @@
 @media (min-width: 761px) and (max-width: 1100px) {
   .stories-gathering { min-height: max(100svh, 1000px); }
   .stories-gathering__rings,
-  .stories-fire,
   .stories-orbit { left: 50%; top: 60%; }
+  .stories-fire-anchor { left: calc(50% - 129px); top: calc(60% - 129px); }
   .stories-gathering__rings { width: min(650px, 80vw); }
   .stories-orbit { --orbit-radius: min(var(--radius), 34vw); }
   .stories-gathering__copy { top: 120px; width: 88vw; max-width: 620px; }
@@ -414,7 +432,7 @@
 @media (max-width: 760px) {
   .stories-gathering { min-height: max(100svh, 900px); }
   .stories-gathering__rings { left: 50%; top: 51%; width: 94vw; }
-  .stories-fire { left: 50%; top: 51%; transform-origin: center; scale: 0.72; }
+  .stories-fire-anchor { left: calc(50% - 129px); top: calc(51% - 129px); transform-origin: center; scale: 0.72; }
   .stories-orbit { left: 50%; top: 51%; --orbit-radius: min(var(--radius), 43vw); }
   .stories-orbit__card:not(.stories-orbit__card--visitor) {
     width: 54px;

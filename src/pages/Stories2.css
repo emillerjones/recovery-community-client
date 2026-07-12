@@ -95,6 +95,16 @@
 .s2-gathering__rings::after { inset: 31%; border-color: rgba(215, 173, 104, 0.1); }
 
 /* Fire */
+.s2-fire-anchor {
+  position: absolute;
+  left: calc(70% - 129px);
+  top: calc(43% - 129px);
+  z-index: 6;
+  width: 258px;
+  height: 258px;
+  transform: none;
+}
+
 .s2-fire {
   position: absolute;
   left: 70%;
@@ -106,6 +116,14 @@
   opacity: 0;
   transform: translateY(24px) scale(0.72);
   animation: s2-fire-arrive 0.85s cubic-bezier(0.2, 0.8, 0.2, 1) 0.08s forwards;
+}
+
+.s2-fire-anchor > .s2-fire {
+  position: relative;
+  left: 0;
+  top: 0;
+  z-index: auto;
+  translate: none;
 }
 
 .s2-fire__aura {
@@ -504,7 +522,8 @@
 
 @media (min-width: 761px) and (max-width: 1100px) {
   .s2-gathering { min-height: max(100svh, 1020px); }
-  .s2-gathering__rings, .s2-fire, .s2-orbit { left: 50%; top: 58%; }
+  .s2-gathering__rings, .s2-orbit { left: 50%; top: 58%; }
+  .s2-fire-anchor { left: calc(50% - 129px); top: calc(58% - 129px); }
   .s2-gathering__rings { width: min(650px, 80vw); }
   .s2-orbit { --orbit-radius: min(var(--radius), 34vw); }
   .s2-gathering__copy { top: 110px; left: 6vw; width: 88vw; max-width: 620px; }
@@ -522,7 +541,7 @@
 @media (max-width: 760px) {
   .s2-gathering { min-height: max(100svh, 940px); }
   .s2-gathering__rings { left: 50%; top: 46%; width: 94vw; }
-  .s2-fire { left: 50%; top: 46%; transform-origin: center; scale: 0.72; }
+  .s2-fire-anchor { left: calc(50% - 129px); top: calc(46% - 129px); transform-origin: center; scale: 0.72; }
   .s2-orbit { left: 50%; top: 46%; --orbit-radius: min(var(--radius), 40vw); }
   .s2-orbit__card:not(.s2-orbit__card--visitor) { width: 52px; min-height: 52px; display: block; padding: 3px; border-color: rgba(247, 242, 233, 0.24); border-radius: 50%; background: rgba(247, 242, 233, 0.1); box-shadow: 0 8px 24px rgba(0, 0, 0, 0.34), 0 0 16px rgba(215, 173, 104, 0.08); }
   .s2-orbit__card:not(.s2-orbit__card--visitor) img { width: 46px; height: 46px; border-radius: 50%; }

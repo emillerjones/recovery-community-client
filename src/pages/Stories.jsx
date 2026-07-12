@@ -12,9 +12,14 @@ const ORBIT_STORIES = PUBLIC_STORIES.map((story, index) => ({
 
 function StoryFire({ warmth }) {
   return (
+    <div className="stories-fire-anchor">
     <div
       className={`stories-fire ${warmth ? "stories-fire--fed" : ""}`}
       style={{
+        position: "relative",
+        left: 0,
+        top: 0,
+        translate: "none",
         "--fire-growth": 1 + Math.min(warmth, 4) * 0.08,
         "--fire-brightness": 1 + Math.min(warmth, 4) * 0.08,
         "--outer-growth": `${Math.min(warmth, 4) * 7}px`,
@@ -42,6 +47,7 @@ function StoryFire({ warmth }) {
           <strong>Shawn · Remembered {SHAWN_MEMORIAL.year}</strong>
         </span>
       </a>
+    </div>
     </div>
   );
 }
