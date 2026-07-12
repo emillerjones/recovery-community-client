@@ -203,8 +203,12 @@ export default function Stories3() {
             <span className="s3-flame-monument__glow" aria-hidden="true" />
             <span className="s3-flame-monument__flame" aria-hidden="true">
               <span className="s3-flame-monument__outer" />
+              <span className="s3-flame-monument__middle" />
               <span className="s3-flame-monument__inner" />
               <span className="s3-flame-monument__core" />
+            </span>
+            <span className="s3-flame-monument__embers" aria-hidden="true">
+              {[1, 2, 3, 4, 5, 6, 7].map((ember) => <i className={`s3-flame-monument__ember s3-flame-monument__ember--${ember}`} key={ember} />)}
             </span>
             <span className="s3-flame-monument__plinth" aria-hidden="true">
               <span className="s3-flame-monument__plinth-top" />

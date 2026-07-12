@@ -10,3 +10,4 @@
 .s9-redux .s9-offering__kindling button{min-width:72px;min-height:38px;padding:8px 12px;border-color:rgba(232,169,89,.24);background:rgba(125,70,36,.72);box-shadow:0 6px 16px rgba(0,0,0,.2);font-size:.68rem}
 .s9-redux .s9-offering__kindling button::before{display:none}
 @media(max-width:680px){.s9-redux .s2-feed{width:auto}.s9-redux .s2-feed__header{margin-bottom:5px}.s9-redux .s9-offering{grid-template-columns:minmax(0,1fr) 64px;gap:7px}.s9-redux .s9-offering__polaroid{grid-template-columns:39px minmax(0,1fr);min-height:52px;padding:5px 9px 5px 5px}.s9-redux .s9-offering__photo{width:39px;height:39px}.s9-redux .s9-offering__kindling button{min-width:64px;min-height:36px;padding:7px 9px}}
+@media(max-width:680px){.s9-redux .s2-mobile-instruction{top:calc(51% + min(34vw,170px) + 90px)}}

@@ -18,13 +18,12 @@ const HOME_LINKS = [
 const COMMUNITY_LINKS = [
   { to: "/community", label: "Inside the Community" },
   { to: "/guidelines", label: "Culture" },
-  { to: "/stories", label: "Stories 1" },
-  { to: "/stories9", label: "Stories 1b" },
+  // { to: "/stories", label: "Stories 1" },
+  { to: "/stories9", label: "Stories 1" },
   { to: "/stories3", label: "Stories 3" },
   { to: "/stories4", label: "Stories 4" },
   { to: "/stories5", label: "Stories 5" },
   { to: "/stories10", label: "Stories 5b" },
-  { to: "/stories6", label: "Stories 6" },
 
 
   // { to: "/communityhome", label: "Community Logged In View" },
@@ -190,7 +189,7 @@ export default function MarketingNav({ onLogin, onRegister }) {
         ) : (
           <>
             <button className="nav-link-soft nav-action-login" onClick={handleLogin}>Log In</button>
-            <button className="nav-button" onClick={handleRegister}>Join Community</button>
+            <button className="nav-button nav-action-register" onClick={handleRegister}>Join Community</button>
           </>
         )}
 

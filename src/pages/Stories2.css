@@ -320,6 +320,7 @@
 .s2-feed__count { color: rgba(247, 242, 233, 0.42); font-size: 0.68rem; }
 
 .s2-gathering__cue { position: absolute; left: 50%; bottom: 22px; z-index: 8; display: flex; gap: 12px; translate: -50% 0; color: rgba(247, 242, 233, 0.52); font-size: 0.66rem; font-weight: 750; letter-spacing: 0.11em; text-decoration: none; text-transform: uppercase; opacity: 0; animation: s2-copy-arrive 0.7s ease 1.05s forwards; }
+.s2-mobile-instruction { display: none; }
 
 @keyframes s2-fire-arrive { to { opacity: 1; transform: translateY(0) scale(1); } }
 @keyframes s2-rings-arrive { to { opacity: 1; } }
@@ -551,12 +552,16 @@
   .s2-orbit__card--visitor strong { font-size: 0.56rem; }
   .s2-orbit__card--visitor small { max-height: 2.4em; font-size: 0.56rem; }
   .s2-gathering__copy { left: 6vw; top: 96px; width: auto; right: 6vw; }
-  .s2-gathering__copy h1 { font-size: clamp(2.6rem, 13vw, 3.9rem); }
-  .s2-gathering__copy > span { font-size: 0.86rem; }
-  .s2-feed { left: 5vw; right: 5vw; bottom: 22px; width: auto; padding: 16px 16px 14px; }
+  .s2-gathering__copy h1 { font-size: clamp(2rem, 8.2vw, 2.7rem); white-space: nowrap; }
+  .s2-gathering__copy > span { display: none; }
+  /* Mobile intentionally omits the optional feed-the-fire composer. */
+  .s2-feed { display: none; }
   .s2-feed__form { flex-direction: column; }
   .s2-feed__form button { justify-content: center; }
   .s2-gathering__cue { display: none; }
+  .s2-mobile-instruction { position: absolute; z-index: 8; left: 50%; top: 76%; display: flex; align-items: center; gap: 10px; width: max-content; max-width: 86vw; translate: -50% 0; color: rgba(247, 242, 233, 0.46); font-size: 0.58rem; font-weight: 750; letter-spacing: 0.1em; text-align: center; text-transform: uppercase; }
+  .s2-mobile-instruction i { width: 24px; height: 1px; background: linear-gradient(90deg, transparent, rgba(215, 173, 104, 0.42)); }
+  .s2-mobile-instruction i:last-child { rotate: 180deg; }
 
   .s2-intro { padding: 130px 0 70px; }
   .s2-intro__grid { grid-template-columns: 1fr; gap: 32px; }

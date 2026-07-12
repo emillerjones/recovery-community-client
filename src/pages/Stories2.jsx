@@ -172,6 +172,8 @@ export default function Stories2() {
         <div className="s2-gathering__rings" aria-hidden="true" />
         <StoryFire2 warmth={visitorStories.length} flare={flare} />
 
+        <p className="s2-mobile-instruction"><i />Tap a portrait to read their story<i /></p>
+
         {ORBIT_STORIES.map((story, index) => (
           <div
             className="s2-orbit"

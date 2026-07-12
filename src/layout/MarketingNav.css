@@ -380,6 +380,7 @@
 }
 
 @media (max-width: 880px) {
+  .nav-action-register { display: none; }
   body.mobile-nav-open {
     overflow: hidden;
   }

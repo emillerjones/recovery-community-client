@@ -149,6 +149,7 @@
 }
 
 .s3-flame-monument__outer,
+.s3-flame-monument__middle,
 .s3-flame-monument__inner,
 .s3-flame-monument__core {
   position: absolute;
@@ -165,7 +166,16 @@
   translate: -50% 0;
   background: linear-gradient(150deg, #ffe6a3 4%, #e2933f 50%, #a5401f 100%);
   filter: drop-shadow(0 0 14px rgba(255, 190, 96, 0.4));
-  animation: s3-eternal-sway 4.2s ease-in-out infinite alternate;
+  animation: s3-hero-flame-outer 1.85s ease-in-out infinite alternate;
+}
+
+.s3-flame-monument__middle {
+  width: 36px;
+  height: 82px;
+  translate: -42% 0;
+  background: linear-gradient(145deg, #fff0b0, #eea146 52%, #b84a25 100%);
+  filter: drop-shadow(0 0 9px rgba(255, 174, 76, 0.38));
+  animation: s3-hero-flame-middle 1.42s ease-in-out 0.12s infinite alternate;
 }
 
 .s3-flame-monument__inner {
@@ -173,7 +183,7 @@
   height: 66px;
   translate: -50% 0;
   background: linear-gradient(150deg, #fff8d6, #f0b657 55%, #cf5f2e);
-  animation: s3-eternal-sway 3.4s ease-in-out 0.15s infinite alternate;
+  animation: s3-hero-flame-inner 1.2s ease-in-out 0.08s infinite alternate;
 }
 
 .s3-flame-monument__core {
@@ -181,8 +191,12 @@
   height: 38px;
   translate: -50% 0;
   background: linear-gradient(180deg, white, #ffe6a0 65%, rgba(240, 182, 87, 0));
-  animation: s3-eternal-flicker 2.1s ease-in-out infinite alternate;
+  animation: s3-hero-flame-core 0.92s ease-in-out infinite alternate;
 }
+
+.s3-flame-monument__embers { position: absolute; z-index: 2; left: 50%; top: 18px; width: 100px; height: 125px; translate: -50% 0; pointer-events: none; }
+.s3-flame-monument__ember { position: absolute; left: 50%; bottom: 0; width: 3px; height: 3px; border-radius: 50%; background: #ffd18a; box-shadow: 0 0 8px 2px rgba(239, 137, 53, 0.58); opacity: 0; animation: s3-hero-ember var(--ember-speed,2.2s) ease-out var(--ember-delay,0s) infinite; }
+.s3-flame-monument__ember--1{--ember-x:-28px;--ember-speed:2.1s;--ember-delay:.1s}.s3-flame-monument__ember--2{--ember-x:20px;--ember-speed:2.55s;--ember-delay:.48s}.s3-flame-monument__ember--3{--ember-x:-7px;--ember-speed:1.8s;--ember-delay:.85s}.s3-flame-monument__ember--4{--ember-x:35px;--ember-speed:2.35s;--ember-delay:1.15s}.s3-flame-monument__ember--5{--ember-x:-39px;--ember-speed:2.7s;--ember-delay:1.52s}.s3-flame-monument__ember--6{--ember-x:8px;--ember-speed:2s;--ember-delay:1.9s}.s3-flame-monument__ember--7{--ember-x:27px;--ember-speed:2.4s;--ember-delay:2.2s}
 
 .s3-flame-monument__plinth {
   position: absolute;
@@ -325,6 +339,11 @@
 @keyframes s3-rise-in { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
 @keyframes s3-flame-ignite { 0% { opacity: 0; transform: scale(0.85); } 55% { opacity: 1; } 75% { transform: scale(1.04); } 100% { opacity: 1; transform: scale(1); } }
 @keyframes s3-glow-breathe { 50% { transform: scale(1.08); opacity: 0.85; } }
+@keyframes s3-hero-flame-outer { to { transform: translateX(-5px) scaleX(.82) scaleY(1.19) skewX(-7deg) rotate(-3deg); } }
+@keyframes s3-hero-flame-middle { to { transform: translateX(7px) scaleX(1.12) scaleY(1.22) skewX(6deg) rotate(5deg); } }
+@keyframes s3-hero-flame-inner { to { transform: translateX(-4px) scaleX(.9) scaleY(1.25) rotate(-4deg); opacity:.9; } }
+@keyframes s3-hero-flame-core { to { transform: translateX(3px) scaleX(1.12) scaleY(1.3); opacity:.78; } }
+@keyframes s3-hero-ember { 0% { opacity:0; transform:translate(0,0) scale(.45) } 14% { opacity:1 } 70% { opacity:.65 } 100% { opacity:0; transform:translate(var(--ember-x),-118px) scale(1.15) } }
 @keyframes s3-eternal-sway { to { transform: scaleX(0.92) scaleY(1.05) skewX(-3deg); } }
 @keyframes s3-eternal-flicker { to { transform: scaleY(1.14) translateX(1px); opacity: 0.85; } }
 
@@ -853,9 +872,22 @@
 }
 
 @media (max-width: 760px) {
-  .s3-monument-hero { padding: 150px 6vw 56px; }
+  .s3-monument-hero { padding: 110px 6vw 56px; }
+  .s3-monument-hero__glow {
+    top: -96px;
+    width: 100vw;
+    max-width: none;
+    height: 650px;
+    aspect-ratio: auto;
+    background:
+      radial-gradient(ellipse at 50% 8%, rgba(224, 168, 108, 0.16), transparent 68%),
+      linear-gradient(90deg, transparent 18%, rgba(224, 168, 108, 0.035) 50%, transparent 82%);
+  }
   .s3-monument-hero__plaque { font-size: clamp(1.5rem, 6.4vw, 2rem); }
-  .s3-flame-monument { margin-top: 44px; scale: 0.86; }
+  .s3-flame-monument { margin-top: 44px; scale: 1; }
+  .s3-flame-monument__flame { scale: 1.08; }
+  .s3-flame-monument__glow { filter: brightness(1.22); }
+  .s3-flame-monument__ember { width: 4px; height: 4px; box-shadow: 0 0 10px 3px rgba(239, 137, 53, 0.7); }
   .s3-honor-roll-list { margin-top: 30px; gap: 16px 12px; }
   .s3-medallion { width: 64px; }
   .s3-medallion__ring { width: 52px; height: 52px; }

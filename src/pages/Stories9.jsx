@@ -114,6 +114,8 @@ export default function Stories9() {
         <div className="s2-gathering__rings" aria-hidden="true" />
         <StoryFire warmth={visitorStories.length} flare={flare} fireRef={fireRef} />
 
+        <p className="s2-mobile-instruction"><i />Tap a portrait to read their story<i /></p>
+
         {flyingLog && (
           <span
             className="s9-flying-log"

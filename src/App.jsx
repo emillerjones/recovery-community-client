@@ -16,7 +16,6 @@ import Stories from "./pages/Stories";
 import Stories3 from "./pages/Stories3";
 import Stories4 from "./pages/Stories4";
 import Stories5 from "./pages/Stories5";
-import Stories6 from "./pages/Stories6";
 import Stories9 from "./pages/Stories9";
 import Stories10 from "./pages/Stories10";
 import MyStory from "./pages/MyStory";
@@ -57,7 +56,6 @@ export default function App() {
         <Route path="stories3" element={<Stories3 />} />
         <Route path="stories4" element={<Stories4 />} />
         <Route path="stories5" element={<Stories5 />} />
-        <Route path="stories6" element={<Stories6 />} />
         <Route path="stories9" element={<Stories9 />} />
         <Route path="stories10" element={<Stories10 />} />
         <Route path="mystory" element={<MyStory />} />
