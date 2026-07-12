@@ -130,17 +130,17 @@
 }
 
 .s9-redux .s2-fire__ghost {
-  opacity: 0.56;
-  -webkit-mask-image: radial-gradient(circle, #000 12%, rgba(0, 0, 0, 0.8) 32%, rgba(0, 0, 0, 0.4) 50%, rgba(0, 0, 0, 0.12) 64%, transparent 76%);
-  mask-image: radial-gradient(circle, #000 12%, rgba(0, 0, 0, 0.8) 32%, rgba(0, 0, 0, 0.4) 50%, rgba(0, 0, 0, 0.12) 64%, transparent 76%);
+  opacity: 0.72;
+  -webkit-mask-image: radial-gradient(circle, #000 28%, rgba(0, 0, 0, 0.9) 46%, rgba(0, 0, 0, 0.58) 63%, rgba(0, 0, 0, 0.2) 78%, transparent 92%);
+  mask-image: radial-gradient(circle, #000 28%, rgba(0, 0, 0, 0.9) 46%, rgba(0, 0, 0, 0.58) 63%, rgba(0, 0, 0, 0.2) 78%, transparent 92%);
 }
 
 .s9-redux .s2-fire__ghost::after {
-  background: radial-gradient(circle, transparent 14%, rgba(15, 24, 17, 0.45) 45%, rgba(15, 24, 17, 0.82) 75%);
+  background: radial-gradient(circle, transparent 32%, rgba(15, 24, 17, 0.2) 58%, rgba(15, 24, 17, 0.68) 88%);
 }
 
 .s9-redux .s2-fire__ghost img {
-  filter: grayscale(1) contrast(1.08) brightness(1.2) blur(1.1px);
+  filter: grayscale(1) contrast(1.08) brightness(1.12) blur(0.35px);
   object-position: center;
 }
 

@@ -201,6 +201,7 @@ export default function Stories3() {
         <div className="s3-hero-scene" ref={heroSceneRef}>
           <div className="s3-flame-monument">
             <span className="s3-flame-monument__glow" aria-hidden="true" />
+            <span className="s3-flame-monument__ghost" aria-hidden="true"><img src={SHAWN_MEMORIAL.photo} alt="" /></span>
             <span className="s3-flame-monument__flame" aria-hidden="true">
               <span className="s3-flame-monument__outer" />
               <span className="s3-flame-monument__middle" />
@@ -212,6 +213,7 @@ export default function Stories3() {
             </span>
             <span className="s3-flame-monument__plinth" aria-hidden="true">
               <span className="s3-flame-monument__plinth-top" />
+              <span className="s3-flame-monument__inscription"><small>In loving memory</small><strong>Shawn · 2017</strong></span>
             </span>
           </div>
 
