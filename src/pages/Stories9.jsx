@@ -4,8 +4,7 @@ import { PUBLIC_STORIES, SHAWN_MEMORIAL } from "../data/publicStories";
 import StoryReader from "./StoryReader";
 import ShawnMemorial from "./ShawnMemorial";
 import "./Stories2.css";
-import "./Stories9Redux.css";
-import "./Stories9Minimal.css";
+import "./Stories9.css";
 
 const ORBIT_STORIES = PUBLIC_STORIES.map((story, index) => ({
   ...story,

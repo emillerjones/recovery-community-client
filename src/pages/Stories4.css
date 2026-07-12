@@ -189,8 +189,8 @@
 
 .s4-gallery-story__portrait { position: relative; opacity: 0; transform: translateY(20px); transition: opacity 0.9s ease, transform 0.9s ease; }
 .s4-gallery-story.is-entered .s4-gallery-story__portrait { opacity: 1; transform: none; }
-.s4-gallery-story__portrait::before { content: ""; position: absolute; inset: -17px 17px 17px -17px; border: 1px solid rgba(117,92,53,0.34); }
-.s4-gallery-story__portrait img { position: relative; display: block; width: 100%; aspect-ratio: 4 / 5; object-fit: cover; filter: saturate(0.7) contrast(0.98); box-shadow: 0 30px 70px rgba(45,43,35,0.16); }
+.s4-gallery-story__portrait::before { content: none; }
+.s4-gallery-story__portrait img { position: relative; display: block; box-sizing: border-box; width: 100%; aspect-ratio: 4 / 5; border: 1px solid rgba(117,92,53,0.34); object-fit: cover; filter: saturate(0.7) contrast(0.98); box-shadow: 0 30px 70px rgba(45,43,35,0.16); }
 .s4-gallery-story__portrait > p { margin-top: 22px; font-family: "Fraunces", serif; font-size: 1.15rem; letter-spacing: 0.06em; text-align: center; text-transform: uppercase; }
 .s4-gallery-story__index { position: absolute; z-index: 2; top: -30px; right: -18px; color: rgba(117,92,53,0.3); font-family: "Fraunces", serif; font-size: 4.5rem; line-height: 1; }
 .s4-gallery-story__words { position: relative; opacity: 0; transform: translateY(20px); transition: opacity 0.9s ease 0.12s, transform 0.9s ease 0.12s; }

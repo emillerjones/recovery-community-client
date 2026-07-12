@@ -14,7 +14,9 @@ import DiscountLinks from "./pages/DiscountLinks";
 import Guidelines from "./pages/Guidelines";
 import Stories from "./pages/Stories";
 import Stories3 from "./pages/Stories3";
+import Stories3b from "./pages/Stories3b";
 import Stories4 from "./pages/Stories4";
+import Stories4b from "./pages/Stories4b";
 import Stories5 from "./pages/Stories5";
 import Stories9 from "./pages/Stories9";
 import Stories10 from "./pages/Stories10";
@@ -54,7 +56,9 @@ export default function App() {
         <Route path="home12" element={<Home12 />} />
         <Route path="stories" element={<Stories />} />
         <Route path="stories3" element={<Stories3 />} />
+        <Route path="stories3b" element={<Stories3b />} />
         <Route path="stories4" element={<Stories4 />} />
+        <Route path="stories4b" element={<Stories4b />} />
         <Route path="stories5" element={<Stories5 />} />
         <Route path="stories9" element={<Stories9 />} />
         <Route path="stories10" element={<Stories10 />} />
