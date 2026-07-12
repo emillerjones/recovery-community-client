@@ -5,6 +5,7 @@ import StoryReader from "./StoryReader";
 import ShawnMemorial from "./ShawnMemorial";
 import "./Stories10.css";
 import "./Stories10Fix.css";
+import "./Stories10Mobile.css";
 
 export default function Stories10() {
   const { onRegister } = useOutletContext();

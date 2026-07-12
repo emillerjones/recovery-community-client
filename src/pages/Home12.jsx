@@ -3,8 +3,7 @@ import { Link, useOutletContext } from "react-router-dom";
 import heroPhoto from "../assets/images/hero-lake.jpg";
 import { PUBLIC_STORIES } from "../data/publicStories";
 import "./Home12.css";
-
-const FEATURED_STORIES = PUBLIC_STORIES.slice(0, 7);
+import "./Home12Refine.css";
 
 export default function Home12() {
   const { onRegister } = useOutletContext();
@@ -12,12 +11,8 @@ export default function Home12() {
 
   function moveStories(direction) {
     const reel = reelRef.current;
-    if (!reel) return;
-    const card = reel.querySelector(".home12-story-card");
-    reel.scrollBy({
-      left: direction * ((card?.offsetWidth || 340) + 18),
-      behavior: "smooth",
-    });
+    const card = reel?.querySelector(".home12-story-card");
+    reel?.scrollBy({ left: direction * ((card?.offsetWidth || 360) + 16), behavior: "smooth" });
   }
 
   return (
@@ -25,97 +20,82 @@ export default function Home12() {
       <section className="home12-hero">
         <div className="home12-hero__photo" style={{ backgroundImage: `url(${heroPhoto})` }} />
         <div className="home12-hero__veil" />
+        <svg className="home12-hero__line-art" viewBox="0 0 620 300" aria-hidden="true"><path d="M8 251C96 209 145 224 222 177c82-51 125-32 199-86 58-42 112-41 191-76"/><path d="M34 278c91-37 160-20 239-70 72-46 123-31 192-74 48-30 89-36 139-36"/></svg>
         <div className="home12-hero__content">
-          <p className="home12-eyebrow home12-eyebrow--light">Recovery With The Exit Drug</p>
-          <h1>You are not alone in finding another way.</h1>
-          <p className="home12-hero__intro">
-            A peer-led community for people exploring cannabis as a path away from
-            alcohol, opioids, and other harmful substances.
-          </p>
+          <p className="home12-hero__eyebrow">Peer-led · Established 2013</p>
+          <h1>You&rsquo;re not alone.</h1>
+          <p className="home12-hero__intro">A community for people exploring cannabis as a path away from alcohol, opioids, and other harmful substances.</p>
           <div className="home12-hero__actions">
-            <button type="button" onClick={onRegister}>Join the community</button>
+            <button type="button" onClick={onRegister}>Join the community <span>→</span></button>
             <Link to="/stories">Read real stories</Link>
           </div>
         </div>
-        <a className="home12-hero__scroll" href="#stories">Real people. Real paths. <span>↓</span></a>
+        <a className="home12-hero__scroll" href="#belief" aria-label="Continue to our philosophy"><span /></a>
       </section>
 
-      <section className="home12-belief">
+      <section className="home12-belief" id="belief">
+        <svg className="home12-belief__mark" viewBox="0 0 300 300" aria-hidden="true"><path d="M151 281c-7-70-3-135 0-211M150 163c-42-12-73-39-91-81M151 129c40-17 69-44 86-82M151 218c-47-3-85 12-116 44M152 204c44 3 81 20 112 51"/><path d="M59 82c26 0 46 12 60 35M237 47c-24 2-43 14-57 36M35 262c24-3 45 5 62 24M264 255c-24-4-45 3-63 21"/></svg>
         <p className="home12-eyebrow">Our philosophy</p>
-        <h2>Recovery looks different for everyone—and that’s okay.</h2>
-        <p>
-          There is no single right way forward. This community makes room for honest
-          questions, lived experience, practical support, and the choices that help
-          each person build a healthier life.
-        </p>
+        <h2>Recovery looks different for everyone—and that&rsquo;s okay.</h2>
+        <p>There is no single right way forward. This community makes room for honest questions, lived experience, practical support, and the choices that help each person build a healthier life.</p>
       </section>
 
       <section className="home12-stories" id="stories">
-        <div className="home12-stories__head">
+        <div className="home12-stories__contours" aria-hidden="true"><i/><i/><i/></div>
+        <header className="home12-stories__head">
           <div>
             <p className="home12-eyebrow">Public success stories</p>
-            <h2>People who found their way through.</h2>
-            <p className="home12-stories__intro">
-              These stories are shared publicly with permission. Every path is personal;
-              every voice is its own.
-            </p>
+            <h2>Real people.<br />Different paths.</h2>
+            <p>Shared publicly and with purpose, so someone else might recognize a way forward.</p>
           </div>
           <div className="home12-reel-controls" aria-label="Story navigation">
             <button type="button" onClick={() => moveStories(-1)} aria-label="Previous story">←</button>
             <button type="button" onClick={() => moveStories(1)} aria-label="Next story">→</button>
           </div>
-        </div>
+        </header>
 
         <div className="home12-story-reel" ref={reelRef}>
-          {FEATURED_STORIES.map((story) => (
-            <Link className="home12-story-card" to={`/stories#${story.slug}`} key={story.slug}>
-              <div className="home12-story-card__photo-wrap">
+          {PUBLIC_STORIES.map((story, index) => (
+            <Link className={`home12-story-card ${index === 0 ? "home12-story-card--featured" : ""}`} to={`/stories#${story.slug}`} key={story.slug}>
+              <div className="home12-story-card__photo">
                 <img src={story.photo} alt={`Portrait of ${story.name}`} />
-                <span>{story.path}</span>
+                {index === 0 && <span>Public success story</span>}
               </div>
               <div className="home12-story-card__body">
-                <p className="home12-story-card__quote">“{story.line}”</p>
-                <p className="home12-story-card__preview">{story.preview}</p>
-                <div><strong>{story.name}</strong><span>Read their story →</span></div>
+                <blockquote>“{story.line}”</blockquote>
+                <p>{story.preview}</p>
+                <footer><strong>{story.name}</strong><span>Read story →</span></footer>
               </div>
             </Link>
           ))}
           <Link className="home12-story-card home12-story-card--all" to="/stories">
-            <span>More voices</span>
-            <h3>Every story deserves the space to be heard.</h3>
-            <p>Meet more people from the community and read their public stories.</p>
-            <strong>View all stories →</strong>
+            <span>Continue listening</span>
+            <h3>Every voice deserves room.</h3>
+            <p>Visit the full public story collection.</p>
+            <strong>All stories →</strong>
           </Link>
         </div>
-        <p className="home12-swipe-hint">Swipe to explore <span>→</span></p>
+        <p className="home12-swipe-hint">Swipe to meet the people <span>→</span></p>
       </section>
 
       <section className="home12-community">
-        <div className="home12-community__copy">
-          <p className="home12-eyebrow home12-eyebrow--light">Beyond the public stories</p>
-          <h2>A private place for the rest of the conversation.</h2>
-          <p>
-            Members can ask questions, share milestones, talk through difficult days,
-            and tell stories they do not want posted publicly. The community is built
-            for support—not performance.
-          </p>
-          <button type="button" onClick={onRegister}>Come inside</button>
+        <svg className="home12-community__orbit" viewBox="0 0 500 500" aria-hidden="true"><circle cx="250" cy="250" r="190"/><circle cx="250" cy="250" r="122"/><circle cx="250" cy="250" r="48"/><path d="M250 60v380M60 250h380"/></svg>
+        <div>
+          <p className="home12-eyebrow home12-eyebrow--light">Inside the community</p>
+          <h2>The public stories are only the doorway.</h2>
         </div>
-        <div className="home12-community__notes" aria-label="Community preview">
-          <article><span>Milestone</span><p>“A month ago, today felt impossible.”</p></article>
-          <article><span>Support</span><p>“You don’t have to explain everything here.”</p></article>
-          <article><span>Private reflection</span><p>Some things can stay yours.</p></article>
+        <div className="home12-community__copy">
+          <p>Inside, people can ask questions, share a milestone, talk through a difficult day, or simply listen. Private stories stay private. You never have to perform your recovery here.</p>
+          <button type="button" onClick={onRegister}>Join the conversation <span>→</span></button>
         </div>
       </section>
 
       <section className="home12-final">
-        <p className="home12-eyebrow">Whenever you’re ready</p>
+        <div className="home12-final__arch" aria-hidden="true" />
+        <p className="home12-eyebrow">Whenever you&rsquo;re ready</p>
         <h2>You do not need a perfect plan to begin.</h2>
         <p>Come as you are. Read for a while, or join the conversation.</p>
-        <div>
-          <button type="button" onClick={onRegister}>Join the community</button>
-          <Link to="/stories">Start with a story</Link>
-        </div>
+        <div><button type="button" onClick={onRegister}>Join the community</button><Link to="/stories">Start with a story</Link></div>
       </section>
     </main>
   );

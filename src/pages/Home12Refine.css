@@ -1,0 +1,19 @@
+/* Spatial correction and a quiet visual signature for each chapter. */
+.home12-hero__content,.home12-belief,.home12-final{margin-inline:auto}
+.home12-hero__content{position:relative;z-index:2}
+.home12-hero__line-art{position:absolute;z-index:1;right:-5vw;bottom:5vh;width:min(650px,48vw);fill:none;stroke:rgba(255,255,255,.13);stroke-width:1;pointer-events:none}
+.home12-hero__line-art path{stroke-dasharray:1;stroke-dashoffset:1;animation:h12-refine-draw 2.2s ease 1.15s forwards}
+.home12-belief{position:relative}
+.home12-belief__mark{position:absolute;right:-18vw;top:50%;width:min(390px,38vw);translate:0 -50%;fill:none;stroke:rgba(58,83,61,.14);stroke-width:1.2;pointer-events:none}
+.home12-stories{position:relative;isolation:isolate;overflow:hidden}
+.home12-stories__contours{position:absolute;z-index:-1;right:-180px;top:-210px;width:620px;height:620px}
+.home12-stories__contours i{position:absolute;inset:var(--inset,0);border:1px solid rgba(68,86,68,.09);border-radius:48% 52% 44% 56%}
+.home12-stories__contours i:nth-child(2){--inset:70px}.home12-stories__contours i:nth-child(3){--inset:140px}
+.home12-community{position:relative;isolation:isolate;overflow:hidden}
+.home12-community__orbit{position:absolute;z-index:-1;right:-100px;top:50%;width:520px;translate:0 -50%;fill:none;stroke:rgba(247,242,233,.055);stroke-width:1}
+.home12-final{position:relative}
+.home12-final__arch{position:absolute;z-index:0;left:50%;top:65px;width:min(680px,86vw);height:220px;translate:-50% 0;border:1px solid rgba(36,54,41,.1);border-bottom:0;border-radius:50% 50% 0 0/100% 100% 0 0;pointer-events:none}
+.home12-final>*:not(.home12-final__arch){position:relative;z-index:1}
+@keyframes h12-refine-draw{to{stroke-dashoffset:0}}
+@media(max-width:760px){.home12-hero__line-art{right:-30vw;bottom:10vh;width:100vw;opacity:.65}.home12-belief__mark{right:-42vw;width:78vw;opacity:.7}.home12-community__orbit{right:-65vw;width:110vw}.home12-final__arch{top:45px}}
+@media(prefers-reduced-motion:reduce){.home12-hero__line-art path{animation:none;stroke-dashoffset:0}}

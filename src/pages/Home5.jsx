@@ -70,7 +70,7 @@ export default function Home5() {
         <div className="h5-mist h5-mist-3" />
 
         <div className="h5-hero__content">
-          <h1>You're not alone.</h1>
+          <h1>You're not alone</h1>
           <p>
             A safe, welcoming community for people exploring cannabis as a path to
             freedom from alcohol, opioids, and other harmful substances.

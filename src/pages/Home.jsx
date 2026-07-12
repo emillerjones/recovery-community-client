@@ -180,7 +180,7 @@ export default function Home() {
         <div className="mist mist-3" />
 
         <div className="hero-content">
-          <h1>You're not alone.</h1>
+          <h1>You're not alone Home1.</h1>
           <p>
             A safe, welcoming community for people exploring cannabis as a path to
             freedom from alcohol, opioids, and other harmful substances.

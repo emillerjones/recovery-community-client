@@ -6,28 +6,27 @@ import "./MarketingNav.css";
 
 const HOME_LINKS = [
   { to: "/", label: "Home" },
-  { to: "/Home1", label: "Home1" },
-  { to: "/Home2", label: "Home2" },
+  // { to: "/Home1", label: "Home1" },
   { to: "/Home3", label: "Home3" },
   { to: "/Home4", label: "Home4" },
   { to: "/Home7", label: "Home7" },
   { to: "/Home8", label: "Home8" },
-  { to: "/Home9", label: "Home9" },
   { to: "/Home10", label: "Home10" },
-  { to: "/Home11", label: "Home11" },
   { to: "/Home12", label: "Home12" },
 ];
 
 const COMMUNITY_LINKS = [
   { to: "/community", label: "Inside the Community" },
   { to: "/guidelines", label: "Culture" },
-  { to: "/stories", label: "Stories" },
+  { to: "/stories", label: "Stories 1" },
+  { to: "/stories9", label: "Stories 1b" },
   { to: "/stories3", label: "Stories 3" },
   { to: "/stories4", label: "Stories 4" },
   { to: "/stories5", label: "Stories 5" },
+  { to: "/stories10", label: "Stories 5b" },
   { to: "/stories6", label: "Stories 6" },
-  { to: "/stories9", label: "Stories 9" },
-  { to: "/stories10", label: "Stories 10" },
+
+
   // { to: "/communityhome", label: "Community Logged In View" },
 ];
 
