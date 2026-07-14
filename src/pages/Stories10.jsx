@@ -4,8 +4,6 @@ import { PUBLIC_STORIES, SHAWN_MEMORIAL } from "../data/publicStories";
 import StoryReader from "./StoryReader";
 import ShawnMemorial from "./ShawnMemorial";
 import "./Stories10.css";
-import "./Stories10Fix.css";
-import "./Stories10Mobile.css";
 
 export default function Stories10() {
   const { onRegister } = useOutletContext();
@@ -14,7 +12,7 @@ export default function Stories10() {
   return (
     <main className="s10-archive">
       <section className="s10-archive__room">
-        <div className="s10-archive__copy"><p>The living archive</p><h1>Open one story at a time.</h1><span>Each photograph is an entrance. Close the story to return to this room.</span></div>
+        <div className="s10-archive__copy"><p>Stories of Recovery</p><h1>Stories preserved because they may help someone survive.</h1><span>Chosen from hundreds of accounts, each story is presented in the storyteller's own words.  They are not instructions or promises.  They are records of courage, offered openly and held here with care.</span></div>
         <div className="s10-archive__desk">
           <button className="s10-archive__dee" onClick={() => setActive({ story: dee, memorial: false })}><img src={dee.photo} alt="Dee"/><span>Public success story · Dee</span><blockquote>“{dee.line}”</blockquote></button>
           <div className="s10-archive__prints">{PUBLIC_STORIES.slice(1).map((story) => <button onClick={() => setActive({ story, memorial: false })} key={story.slug}><img src={story.photo} alt=""/><span>{story.name}</span></button>)}</div>

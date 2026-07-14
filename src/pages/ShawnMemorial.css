@@ -8,7 +8,7 @@
 .smem__portrait{position:relative;width:100%;height:100%;min-height:560px;margin:0 auto;padding:11px;border:1px solid rgba(212,174,106,.48);box-shadow:0 28px 80px rgba(0,0,0,.3),0 0 0 7px rgba(212,174,106,.025)}
 .smem__portrait::before,.smem__portrait::after{content:"";position:absolute;width:34px;height:34px;border-color:#d4ae6a;opacity:.72}
 .smem__portrait::before{left:-5px;top:-5px;border-left:1px solid;border-top:1px solid}.smem__portrait::after{right:-5px;bottom:-5px;border-right:1px solid;border-bottom:1px solid}
-.smem__portrait img{display:block;width:100%;height:100%;object-fit:cover;object-position:center;filter:grayscale(1) brightness(.78)}
+.smem__portrait img{display:block;width:100%;height:100%;object-fit:cover;object-position:center}
 .smem__portrait span{position:absolute;left:19px;bottom:19px;padding:8px 10px;background:rgba(17,20,15,.9);color:#d4ae6a;font-size:.58rem;font-weight:800;letter-spacing:.13em;text-transform:uppercase}
 .smem__plaque{grid-column:1/-1;width:min(560px,90vw);justify-self:center;padding:28px clamp(20px,3vw,34px);border:1px solid rgba(215,173,104,.22);background:linear-gradient(165deg,rgba(255,255,255,.03),rgba(255,255,255,.01));text-align:center;box-shadow:inset 0 0 45px rgba(215,173,104,.018)}
 .smem__plaque p{margin:0}

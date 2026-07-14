@@ -29,14 +29,14 @@ export default function ShawnMemorial({ id, compact = false }) {
           <strong>Rest in peace, Shawn.</strong>
           <div className="smem__dedication" aria-label="A life remembered, a light that remains"><i />A life remembered <span>◆</span> A light that remains<i /></div>
         </div>
-        <div className="smem__plaque">
+        {/* <div className="smem__plaque">
           <p className="smem__plaque-line1">In memory</p>
           <p className="smem__plaque-line2">of</p>
           <p className="smem__plaque-body">Shawn — who fought a longer, harder road<br />than most will ever know,<br />and still left light behind<br />for those who came after.</p>
           <div className="smem__plaque-rule" aria-hidden="true" />
           <p className="smem__plaque-motto">One day at a time</p>
           <p className="smem__plaque-translation">(the road that brought eleven of us home)</p>
-        </div>
+        </div> */}
       </div>
     </section>
   );

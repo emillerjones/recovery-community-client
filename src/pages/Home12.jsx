@@ -5,6 +5,25 @@ import { PUBLIC_STORIES } from "../data/publicStories";
 import "./Home12.css";
 import "./Home12Refine.css";
 
+const CONSTELLATION_NODES = [
+  { x: 80, y: 190, r: 5 },
+  { x: 220, y: 110, r: 7 },
+  { x: 150, y: 50, r: 3 },
+  { x: 380, y: 170, r: 4 },
+  { x: 470, y: 70, r: 8 },
+  { x: 610, y: 150, r: 5 },
+  { x: 700, y: 55, r: 6 },
+  { x: 830, y: 160, r: 4 },
+  { x: 940, y: 85, r: 7 },
+  { x: 1010, y: 35, r: 3 },
+  { x: 1090, y: 180, r: 5 },
+];
+
+const CONSTELLATION_EDGES = [
+  [0, 1], [1, 2], [1, 3], [3, 4], [4, 5], [4, 6],
+  [5, 7], [6, 8], [8, 9], [7, 10], [8, 10],
+];
+
 export default function Home12() {
   const { onRegister } = useOutletContext();
   const reelRef = useRef(null);
@@ -91,11 +110,32 @@ export default function Home12() {
       </section>
 
       <section className="home12-final">
-        <div className="home12-final__arch" aria-hidden="true" />
-        <p className="home12-eyebrow">Whenever you&rsquo;re ready</p>
-        <h2>You do not need a perfect plan to begin.</h2>
-        <p>Come as you are. Read for a while, or join the conversation.</p>
-        <div><button type="button" onClick={onRegister}>Join the community</button><Link to="/stories">Start with a story</Link></div>
+        <div className="home12-final__glow" aria-hidden="true" />
+        <div className="home12-final__scene" aria-hidden="true">
+          <svg className="home12-final__constellation" viewBox="0 0 1200 260" preserveAspectRatio="xMidYMid slice">
+            {CONSTELLATION_EDGES.map(([from, to], i) => {
+              const a = CONSTELLATION_NODES[from];
+              const b = CONSTELLATION_NODES[to];
+              const d = `M${a.x} ${a.y} L${b.x} ${b.y}`;
+              return (
+                <g key={`${from}-${to}`}>
+                  <path className="home12-final__edge" d={d} />
+                  <path className="home12-final__edge home12-final__edge--signal" d={d} pathLength="1" style={{ "--delay": `${i * 0.55}s` }} />
+                </g>
+              );
+            })}
+            {CONSTELLATION_NODES.map((node, i) => (
+              <circle key={i} className="home12-final__node" cx={node.x} cy={node.y} r={node.r} style={{ "--delay": `${i * 0.35}s` }} />
+            ))}
+          </svg>
+        </div>
+        <div className="home12-final__content">
+          <p className="home12-final__caption">Every point of light began exactly where you are.</p>
+          <p className="home12-eyebrow home12-eyebrow--light">Whenever you&rsquo;re ready</p>
+          <h2>You do not need a perfect plan to begin.</h2>
+          <p>Come as you are. Read for a while, or join the conversation.</p>
+          <div><button type="button" onClick={onRegister}>Join the community</button><Link to="/stories">Start with a story</Link></div>
+        </div>
       </section>
     </main>
   );
