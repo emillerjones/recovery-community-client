@@ -18,16 +18,7 @@ const HOME_LINKS = [
 const COMMUNITY_LINKS = [
   { to: "/community", label: "Inside the Community" },
   { to: "/guidelines", label: "Culture" },
-  // { to: "/stories", label: "Stories 1" },
-  { to: "/stories9", label: "Stories 1" },
-  { to: "/stories3", label: "Stories 3" },
-  { to: "/stories3b", label: "Stories 3b" },
-  { to: "/stories4", label: "Stories 4" },
-  { to: "/stories4b", label: "Stories 4b" },
-  { to: "/stories5", label: "Stories 5" },
-  { to: "/stories10", label: "Stories 5b" },
-
-
+  { to: "/stories", label: "Stories" },
   // { to: "/communityhome", label: "Community Logged In View" },
 ];
 

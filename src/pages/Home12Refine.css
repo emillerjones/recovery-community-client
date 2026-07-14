@@ -1,8 +1,8 @@
 /* Spatial correction and a quiet visual signature for each chapter. */
 .home12-hero__content,.home12-belief{margin-inline:auto}
 .home12-hero__content{position:relative;z-index:2}
-.home12-hero__line-art{position:absolute;z-index:1;right:-5vw;bottom:5vh;width:min(650px,48vw);fill:none;stroke:rgba(255,255,255,.34);stroke-width:1.4;pointer-events:none}
-.home12-hero__line-art path{stroke-dasharray:1;stroke-dashoffset:1;animation:h12-refine-draw 2.2s ease 1.15s forwards,h12-line-pulse 6s ease-in-out 3.4s infinite}
+.home12-hero__fireflies{position:absolute;inset:0;z-index:1;pointer-events:none}
+.home12-hero__fireflies canvas{display:block;width:100%!important;height:100%!important}
 .home12-belief{position:relative}
 .home12-belief::before{content:"";position:absolute;z-index:-1;right:-12vw;top:50%;width:min(460px,42vw);aspect-ratio:1;translate:0 -50%;background:radial-gradient(circle,rgba(215,173,104,.16),transparent 68%)}
 .home12-belief__mark{position:absolute;right:-18vw;top:50%;width:min(390px,38vw);translate:0 -50%;fill:none;stroke:rgba(58,83,61,.36);stroke-width:1.6;pointer-events:none}
@@ -23,18 +23,14 @@
 .home12-final__node{fill:var(--cream);filter:drop-shadow(0 0 5px rgba(215,173,104,.6));transform-box:fill-box;transform-origin:center;animation:h12-node-pulse 4.4s ease-in-out infinite;animation-delay:var(--delay,0s)}
 .home12-final__caption{margin:0 0 26px!important;color:rgba(247,242,233,.52);font-size:.75rem;font-style:italic;letter-spacing:.02em}
 
-@keyframes h12-refine-draw{to{stroke-dashoffset:0}}
-@keyframes h12-line-pulse{0%,100%{opacity:.75}50%{opacity:1}}
 @keyframes h12-orbit-spin{to{rotate:360deg}}
 @keyframes h12-glow-breathe{0%,100%{opacity:.65}50%{opacity:1}}
 @keyframes h12-signal{from{stroke-dashoffset:1}to{stroke-dashoffset:-1}}
 @keyframes h12-node-pulse{0%,100%{opacity:.55;transform:scale(1)}50%{opacity:1;transform:scale(1.25)}}
 
 @media(max-width:760px){
-  .home12-hero__line-art{right:-30vw;bottom:10vh;width:100vw;opacity:.65}
   .home12-belief__mark{right:-42vw;width:78vw;opacity:.7}
   .home12-community__orbit{right:-65vw;width:110vw}
   .home12-final__edge--signal{display:none}
   .home12-final__glow{height:55%}
 }
-@media(prefers-reduced-motion:reduce){.home12-hero__line-art path{animation:none;stroke-dashoffset:0}}

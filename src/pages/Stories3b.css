@@ -1,5 +1,0 @@
-.s3b-page .s3-monument-hero{min-height:100svh}
-.s3b-medallion-button{padding:0;border:0;background:transparent;font:inherit;cursor:pointer}
-.s3b-medallion-button:focus-visible{outline:1px solid rgba(215,173,104,.8);outline-offset:7px;border-radius:4px}
-.s3b-page .smem{scroll-margin-top:72px}
-@media(max-width:760px){.s3b-page .s3-monument-hero__cue{display:flex;bottom:20px}}

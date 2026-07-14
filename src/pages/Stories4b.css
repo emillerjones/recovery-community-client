@@ -1,8 +1,0 @@
-.s4b-page .s4-chamber{min-height:100svh}
-.s4b-story-button{width:100%;padding:0;border:0;color:inherit;font:inherit;text-align:left;cursor:pointer}
-.s4b-register-button{min-width:0;display:grid;justify-items:center;gap:7px;padding:7px 3px 5px;border:0;border-bottom:1px solid transparent;background:transparent;color:inherit;font:inherit;cursor:pointer;transition:border-color .2s ease,background .2s ease}
-.s4b-register-button:hover,.s4b-register-button:focus-visible{border-bottom-color:#a9864f;background:rgba(230,223,208,.035)}
-.s4b-register-button img{width:42px;height:42px;border:1px solid rgba(210,178,114,.24);border-radius:50%;object-fit:cover;filter:saturate(.68)}
-.s4b-register-button span{max-width:86px;overflow:hidden;color:rgba(230,223,208,.58);font-size:.55rem;text-align:center;text-overflow:ellipsis;white-space:nowrap}
-.s4b-page .smem{scroll-margin-top:72px}
-@media(max-width:560px){.s4b-story-button{grid-template-columns:1fr}.s4b-page .s4-exhibit__register>div{grid-template-columns:repeat(3,1fr)}}

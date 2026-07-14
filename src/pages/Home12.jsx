@@ -1,9 +1,15 @@
-import { useRef } from "react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { Link, useOutletContext } from "react-router-dom";
 import heroPhoto from "../assets/images/hero-lake.jpg";
 import { PUBLIC_STORIES } from "../data/publicStories";
+import { usePrefersReducedMotion, supportsWebGL } from "./motionSupport";
 import "./Home12.css";
 import "./Home12Refine.css";
+
+// Lazy-loaded: pulls in three.js/R3F/three.quarks. Deferred until the browser
+// is idle after first paint (see `fireflyReady` below) so it never competes
+// with the hero photo/fonts for bandwidth on first load.
+const HeroFireflies = lazy(() => import("./HeroFireflies"));
 
 const CONSTELLATION_NODES = [
   { x: 80, y: 190, r: 5 },
@@ -27,6 +33,20 @@ const CONSTELLATION_EDGES = [
 export default function Home12() {
   const { onRegister } = useOutletContext();
   const reelRef = useRef(null);
+  const reduced = usePrefersReducedMotion();
+  const [canRender3D] = useState(() => typeof window !== "undefined" && supportsWebGL());
+  const [fireflyReady, setFireflyReady] = useState(false);
+
+  useEffect(() => {
+    if (reduced || !canRender3D) return;
+    const run = () => setFireflyReady(true);
+    if (window.requestIdleCallback) {
+      const id = window.requestIdleCallback(run, { timeout: 2000 });
+      return () => window.cancelIdleCallback(id);
+    }
+    const id = window.setTimeout(run, 400);
+    return () => window.clearTimeout(id);
+  }, [reduced, canRender3D]);
 
   function moveStories(direction) {
     const reel = reelRef.current;
@@ -39,7 +59,14 @@ export default function Home12() {
       <section className="home12-hero">
         <div className="home12-hero__photo" style={{ backgroundImage: `url(${heroPhoto})` }} />
         <div className="home12-hero__veil" />
-        <svg className="home12-hero__line-art" viewBox="0 0 620 300" aria-hidden="true"><path d="M8 251C96 209 145 224 222 177c82-51 125-32 199-86 58-42 112-41 191-76"/><path d="M34 278c91-37 160-20 239-70 72-46 123-31 192-74 48-30 89-36 139-36"/></svg>
+
+        {/* Experimental — remove this Suspense block to take the ambient particle layer back out. */}
+        {fireflyReady && (
+          <Suspense fallback={null}>
+            <HeroFireflies reduced={reduced} />
+          </Suspense>
+        )}
+
         <div className="home12-hero__content">
           <p className="home12-hero__eyebrow">Peer-led · Established 2013</p>
           <h1>You&rsquo;re not alone.</h1>

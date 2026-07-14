@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import "./StoryReader.css";
 
-export default function StoryReader({ story, memorial = false, returnLabel, onClose }) {
+export default function StoryReader({ story, returnLabel, onClose }) {
   const [leaving, setLeaving] = useState(false);
 
   function leave() {
@@ -21,15 +21,15 @@ export default function StoryReader({ story, memorial = false, returnLabel, onCl
   });
 
   return (
-    <section className={`sr-room ${memorial ? "sr-room--memorial" : ""} ${leaving ? "is-leaving" : ""}`} role="dialog" aria-modal="true" aria-label={`${story.name}'s complete story`}>
+    <section className={`sr-room ${leaving ? "is-leaving" : ""}`} role="dialog" aria-modal="true" aria-label={`${story.name}'s complete story`}>
       <div className="sr-room__image"><img src={story.photo} alt={`Portrait of ${story.name}`} /></div>
       <div className="sr-room__words">
-        <p>{memorial ? "In memoriam · 2017" : story.path}</p>
+        <p>{story.path}</p>
         <h1>{story.name}</h1>
         <blockquote>{story.line}</blockquote>
         {story.contentNote && <aside>Content note: {story.contentNote}</aside>}
         <div>{story.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div>
-        <strong>{memorial ? "Rest in peace, Shawn." : `— ${story.name}`}</strong>
+        <strong>— {story.name}</strong>
       </div>
       <button type="button" className="sr-room__return" onClick={leave}><span aria-hidden="true">←</span> {returnLabel}</button>
     </section>

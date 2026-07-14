@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import heroPhoto from "../assets/images/hero-lake.jpg";
+import { useOutletContext } from "react-router-dom";
 import "./Resources.css";
 
 /**
@@ -166,24 +166,68 @@ const ORGANIZATIONS = [
   },
 ];
 
+const RESOURCE_TOPICS = [
+  { label: "Harm reduction", target: "resource-substitution", x: 18, y: 25 },
+  { label: "Alcohol", target: "resource-alcohol", x: 51, y: 14 },
+  { label: "Opioids", target: "resource-opioid", x: 82, y: 30 },
+  { label: "Personal accounts", target: "resource-personal", x: 75, y: 72 },
+  { label: "Research & safety", target: "resource-research", x: 35, y: 82 },
+  { label: "Find support", target: "find-support", x: 13, y: 62 },
+];
+
+const RESOURCE_PATHS = [
+  "M18 25L51 14L82 30L75 72L35 82L13 62Z",
+  "M18 25L35 82M51 14L75 72M13 62L75 72",
+];
+
+const GROUP_IDS = {
+  "Substitution & Harm Reduction": "resource-substitution",
+  "Alcohol-Specific": "resource-alcohol",
+  "Opioid-Specific": "resource-opioid",
+  "Personal Accounts": "resource-personal",
+  "Research & Safety": "resource-research",
+};
+
+function TopicMark({ index }) {
+  const paths = [
+    "M8 63C30 58 34 28 58 20C50 43 64 55 88 58M57 20C57 47 44 67 25 84",
+    "M25 12V45C25 62 39 76 57 76S89 62 89 45V12M16 33H98M45 76V91M31 91H71",
+    "M9 54C24 22 46 22 58 50S83 79 98 45M20 73C39 54 55 55 75 75",
+    "M12 68C24 25 44 16 59 36C72 54 62 73 44 80M59 36C77 22 91 36 86 55",
+    "M12 80L31 57L47 66L68 28L96 41M20 19H85M20 27H65",
+  ];
+  return <svg className="resource-topic-mark" viewBox="0 0 110 100" aria-hidden="true"><path d={paths[index]} /></svg>;
+}
+
 export default function Resources() {
+  const { onRegister } = useOutletContext();
   const [learnRef, learnVisible] = useReveal();
   const [supportRef, supportVisible] = useReveal();
 
   return (
     <div className="resources">
       <section className="resources-hero">
-        <div
-          className="resources-hero__photo"
-          style={{ backgroundImage: `url(${heroPhoto})` }}
-        />
-        <div className="resources-hero__overlay" />
-        <div className="resources-hero__content">
-          <h1>Knowledge, options, and people who can help.</h1>
-          <p>
-            Research, articles, and organizations for anyone exploring
-            cannabis as part of their recovery.
-          </p>
+        <div className="resources-hero__light" aria-hidden="true" />
+        <div className="resources-hero__inner">
+          <div className="resources-hero__content">
+            <p className="resources-kicker">The recovery field guide</p>
+            <h1>Information for finding your own way.</h1>
+            <p>Research, lived experience, and outside support—collected carefully so the next useful direction is easier to find.</p>
+            <a href="#learn" className="resources-hero__start">Open the field guide <span>↓</span></a>
+          </div>
+          <div className="resources-map" aria-label="Browse the resource field guide by topic">
+            <div className="resources-map__paper" aria-hidden="true" />
+            <p className="resources-map__label">Index of paths</p>
+            <svg viewBox="0 0 100 100" aria-hidden="true">
+              {RESOURCE_PATHS.map((path) => <path d={path} key={path} />)}
+            </svg>
+            {RESOURCE_TOPICS.map((topic, index) => (
+              <a href={`#${topic.target}`} className="resources-map__node" style={{ left: `${topic.x}%`, top: `${topic.y}%`, "--i": index }} key={topic.label}>
+                <i aria-hidden="true" /><span>{topic.label}</span>
+              </a>
+            ))}
+            <small>Choose a point to begin</small>
+          </div>
         </div>
       </section>
 
@@ -193,7 +237,7 @@ export default function Resources() {
           className={`resources-section__inner reveal ${learnVisible ? "in" : ""}`}
           ref={learnRef}
         >
-          <div className="eyebrow">
+          <div className="eyebrow resources-eyebrow">
             <span className="eyebrow__icon eyebrow__icon--book"><BookIcon /></span>
             Learn
           </div>
@@ -203,9 +247,19 @@ export default function Resources() {
             over the years.
           </p>
 
+          <div className="resources-starting-points">
+            <p>Three places to begin</p>
+            {LEARN_GROUPS.slice(0, 3).map((group) => (
+              <a href={group.links[0].url} target="_blank" rel="noreferrer" key={group.title}>
+                <small>{group.title}</small><strong>{group.links[0].text}</strong><span>↗</span>
+              </a>
+            ))}
+          </div>
+
           <div className="learn-groups">
-            {LEARN_GROUPS.map((group) => (
-              <div className="learn-group" key={group.title}>
+            {LEARN_GROUPS.map((group, index) => (
+              <article className="learn-group" id={GROUP_IDS[group.title]} key={group.title}>
+                <TopicMark index={index} />
                 <h3 className="learn-group__title">{group.title}</h3>
                 <ul className="learn-group__list">
                   {group.links.map((link) => (
@@ -217,7 +271,7 @@ export default function Resources() {
                     </li>
                   ))}
                 </ul>
-              </div>
+              </article>
             ))}
           </div>
         </div>
@@ -229,7 +283,7 @@ export default function Resources() {
           className={`resources-section__inner reveal ${supportVisible ? "in" : ""}`}
           ref={supportRef}
         >
-          <div className="eyebrow">
+          <div className="eyebrow resources-eyebrow">
             <span className="eyebrow__icon eyebrow__icon--compass"><CompassIcon /></span>
             Find Support
           </div>
@@ -247,7 +301,10 @@ export default function Resources() {
                   <h3 className="org-card__name">{org.name}</h3>
                   <span className="org-card__type">{org.type}</span>
                 </div>
-                <blockquote className="org-card__quote">"{org.quote}"</blockquote>
+                <details className="org-card__details">
+                  <summary>Read their description</summary>
+                  <blockquote className="org-card__quote">“{org.quote}”</blockquote>
+                </details>
                 <a href={org.url} className="org-card__link" target="_blank" rel="noreferrer">
                   Visit site →
                 </a>
@@ -263,7 +320,7 @@ export default function Resources() {
           Looking for more than information?
         </p>
         <p className="resources-cta__script">The community is here too.</p>
-        <a href="#" className="resources-cta__button">
+        <button type="button" onClick={onRegister} className="resources-cta__button">
           Enter the Community
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
             <path
@@ -274,7 +331,7 @@ export default function Resources() {
               strokeLinejoin="round"
             />
           </svg>
-        </a>
+        </button>
       </section>
     </div>
   );
