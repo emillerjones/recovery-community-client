@@ -132,10 +132,11 @@ export default function Community2() {
   const { onRegister } = useOutletContext();
 
   const heroRef = useRef(null);
+  const stackRef = useRef(null);
   const [momentsRef, momentsVisible] = useReveal(0.1);
-  const [spacesRef, spacesVisible] = useReveal(0.1);
   const [cultureRef, cultureVisible] = useReveal(0.1);
   const [ctaRef, ctaVisible] = useReveal(0.25);
+  const [activeSpace, setActiveSpace] = useState(0);
 
   useEffect(() => {
     const hero = heroRef.current;
@@ -156,6 +157,40 @@ export default function Community2() {
     }, hero);
 
     return () => context.revert();
+  }, []);
+
+  useEffect(() => {
+    const stack = stackRef.current;
+    if (!stack) return undefined;
+
+    const cards = [...stack.querySelectorAll("[data-community-space]")];
+    let frame = null;
+
+    const updateActiveCard = () => {
+      frame = null;
+      const focusLine = window.innerHeight * 0.38;
+      let nextActive = 0;
+
+      cards.forEach((card, index) => {
+        if (card.getBoundingClientRect().top <= focusLine) nextActive = index;
+      });
+
+      setActiveSpace((current) => current === nextActive ? current : nextActive);
+    };
+
+    const requestUpdate = () => {
+      if (frame === null) frame = window.requestAnimationFrame(updateActiveCard);
+    };
+
+    updateActiveCard();
+    window.addEventListener("scroll", requestUpdate, { passive: true });
+    window.addEventListener("resize", requestUpdate);
+
+    return () => {
+      window.removeEventListener("scroll", requestUpdate);
+      window.removeEventListener("resize", requestUpdate);
+      if (frame !== null) window.cancelAnimationFrame(frame);
+    };
   }, []);
 
   return (
@@ -213,25 +248,59 @@ export default function Community2() {
       </section>
 
       {/* PLANNED SPACES */}
-      <section className="community-section community-spaces">
-        <div
-          ref={spacesRef}
-          className={`community-inner community-reveal ${
-            spacesVisible ? "community-in" : ""
-          }`}
-        >
-          <p className="community-eyebrow">What we’re building</p>
-          <h2>Community spaces designed around real recovery.</h2>
+      <section className="community-section community-spaces community2-stack-section">
+        <div className="community-inner">
+          <div className="community2-stack-intro">
+            <div>
+              <p className="community-eyebrow">What we’re building</p>
+              <h2>Community spaces designed around real recovery.</h2>
+            </div>
+            <p className="community2-stack-intro__note">
+              Six spaces. Each one built for a different part of the journey.
+            </p>
+          </div>
 
-          <div className="community-space-list">
+          <div className="community2-stack" ref={stackRef}>
             {PLANNED_SPACES.map((space, index) => {
               const SpaceIcon = space.icon;
+              const depth = Math.max(0, activeSpace - index);
               return (
-              <article className="community-space" key={space.name}>
-                <span className="community-space__number">0{index + 1}</span>
-                <span className="community-space__icon"><SpaceIcon /></span>
-                <div><h3>{space.name}</h3><p>{space.desc}</p></div>
-              </article>
+                <article
+                  className={`community2-stack-card ${index === activeSpace ? "is-active" : ""} ${index < activeSpace ? "is-behind" : ""}`}
+                  data-community-space
+                  key={space.name}
+                  style={{
+                    "--stack-order": index + 10,
+                    "--stack-step": `${index * 13}px`,
+                    "--stack-step-tablet": `${index * 8}px`,
+                    "--stack-step-mobile": `${index * 6}px`,
+                    "--stack-scale": Math.max(0.86, 1 - depth * 0.035),
+                    "--stack-shift": `${depth * -10}px`,
+                    "--stack-z": `${depth * -48}px`,
+                    "--stack-pitch": `${depth * 0.55}deg`,
+                    "--stack-rotate": `${depth * (index % 2 ? -0.42 : 0.42)}deg`,
+                  }}
+                >
+                  <div className="community2-stack-card__line" aria-hidden="true" />
+                  <header>
+                    <span>Community space</span>
+                    <strong>{String(index + 1).padStart(2, "0")} / 06</strong>
+                  </header>
+
+                  <div className="community2-stack-card__body">
+                    <span className="community2-stack-card__icon"><SpaceIcon /></span>
+                    <div>
+                      <h3>{space.name}</h3>
+                      <p>{space.desc}</p>
+                    </div>
+                  </div>
+
+                  <footer>
+                    <span>Private by design</span>
+                    <i aria-hidden="true" />
+                    <span>Peer-led</span>
+                  </footer>
+                </article>
               );
             })}
           </div>
