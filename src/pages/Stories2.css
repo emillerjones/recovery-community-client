@@ -30,7 +30,37 @@
   border-left: 1px solid rgba(209, 166, 95, 0.34);
 }
 
+.stories2-catalog {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 20px;
+  margin: 36px 0 30px;
+  padding: 15px 0;
+  border-top: 1px solid rgba(245, 235, 216, 0.13);
+  border-bottom: 1px solid rgba(245, 235, 216, 0.13);
+  color: rgba(245, 235, 216, 0.46);
+  font-size: 0.61rem;
+  font-weight: 750;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.stories2-catalog strong {
+  margin-right: 5px;
+  color: #d1a65f;
+  font: 450 0.78rem "Fraunces", serif;
+}
+
+.stories2-catalog i {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #d1a65f;
+}
+
 .stories2-study .stories__desk {
+  position: relative;
   padding: clamp(24px, 4vw, 54px);
   border: 1px solid rgba(209, 166, 95, 0.2);
   background:
@@ -41,11 +71,34 @@
     inset 0 0 80px rgba(0, 0, 0, 0.18);
 }
 
+.stories2-desk-label {
+  position: absolute;
+  z-index: 3;
+  left: 28px;
+  top: 0;
+  translate: 0 -50%;
+  padding: 6px 10px;
+  border: 1px solid rgba(209, 166, 95, 0.22);
+  background: #1a241c;
+  color: rgba(245, 235, 216, 0.56);
+  font-size: 0.56rem;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
 .stories2-study .stories__dee,
 .stories2-study .stories__prints button,
 .stories2-study .stories__shawn {
   outline: 1px solid rgba(245, 235, 216, 0.13);
   outline-offset: 6px;
+  transition: outline-color 220ms ease, outline-offset 220ms ease;
+}
+
+.stories2-study .stories__dee:hover,
+.stories2-study .stories__shawn:hover {
+  outline-color: rgba(209, 166, 95, 0.4);
+  outline-offset: 9px;
 }
 
 .stories2-study .stories__prints button {
@@ -63,6 +116,17 @@
   border-bottom: 1px solid rgba(209, 166, 95, 0.22);
 }
 
+.stories2-study ::selection {
+  background: rgba(209, 166, 95, 0.32);
+  color: #171d18;
+}
+
+.stories2-study a:focus-visible,
+.stories2-study button:focus-visible {
+  outline: 2px solid #d1a65f;
+  outline-offset: 3px;
+}
+
 @media (max-width: 720px) {
   .stories2-study .stories__copy {
     padding-left: 18px;
@@ -70,6 +134,15 @@
 
   .stories2-study .stories__desk {
     padding: 22px 18px;
+  }
+
+  .stories2-catalog {
+    gap: 9px 12px;
+    margin-top: 28px;
+  }
+
+  .stories2-catalog i {
+    display: none;
   }
 
   .stories2-study .stories__dee,

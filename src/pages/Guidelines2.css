@@ -25,6 +25,64 @@
   box-shadow: 0 28px 70px rgba(40, 47, 40, 0.11);
 }
 
+.guidelines2-index {
+  display: grid;
+  margin-top: 28px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(38, 52, 40, 0.13);
+}
+
+.guidelines2-index a {
+  display: grid;
+  grid-template-columns: 27px 1fr;
+  gap: 9px;
+  padding: 8px 0;
+  color: rgba(31, 43, 33, 0.58);
+  font-size: 0.63rem;
+  font-weight: 700;
+  line-height: 1.35;
+  text-decoration: none;
+  transition: color 180ms ease, translate 180ms ease;
+}
+
+.guidelines2-index a span {
+  color: #9a7238;
+  font: 450 0.68rem "Fraunces", serif;
+}
+
+.guidelines2-index a:hover {
+  color: #1d2c20;
+  translate: 4px 0;
+}
+
+.guidelines2-index a.is-active {
+  color: #1d2c20;
+}
+
+.guidelines2-index a.is-active span {
+  position: relative;
+}
+
+.guidelines2-index a.is-active span::after {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  border: 1px solid #b68b48;
+  border-radius: 50%;
+}
+
+.guidelines2-study ::selection {
+  background: rgba(182, 139, 72, 0.32);
+  color: #17221a;
+}
+
+.guidelines2-study a:focus-visible,
+.guidelines2-study summary:focus-visible,
+.guidelines2-study button:focus-visible {
+  outline: 2px solid #b68b48;
+  outline-offset: 3px;
+}
+
 .guidelines2-study .guidelines-charter {
   position: relative;
   border-color: rgba(117, 92, 54, 0.24);
@@ -41,6 +99,7 @@
 
 .guidelines2-study .guideline-card {
   position: relative;
+  scroll-margin-top: 100px;
 }
 
 .guidelines2-study .guideline-card::before {
@@ -75,5 +134,36 @@
 
   .guidelines2-study .guidelines-charter::after {
     inset: 9px;
+  }
+
+  .guidelines2-index {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .guidelines2-index {
+    display: flex;
+    overflow-x: auto;
+    gap: 8px;
+    margin-inline: -2px;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+  }
+
+  .guidelines2-index::-webkit-scrollbar {
+    display: none;
+  }
+
+  .guidelines2-index a {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    min-height: 36px;
+    padding: 0 11px;
+    border: 1px solid rgba(38, 52, 40, 0.13);
+    border-radius: 999px;
+    background: rgba(255, 252, 245, 0.5);
+    white-space: nowrap;
   }
 }

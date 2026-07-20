@@ -13,6 +13,59 @@
   filter: drop-shadow(0 28px 60px rgba(0, 0, 0, 0.2));
 }
 
+.discount2-index {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px 18px;
+  max-width: 660px;
+  margin-top: 28px;
+}
+
+.discount2-index a {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(211, 173, 105, 0.28);
+  color: rgba(244, 237, 224, 0.63);
+  font-size: 0.58rem;
+  font-weight: 750;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: border-color 180ms ease, color 180ms ease;
+}
+
+.discount2-index a span {
+  color: #d3ad69;
+  font: 450 0.7rem "Fraunces", serif;
+}
+
+.discount2-index a:hover {
+  border-color: #d3ad69;
+  color: #fff8eb;
+}
+
+.discount2-index a.is-active {
+  border-color: #d3ad69;
+  color: #fff8eb;
+}
+
+.discount2-index a.is-active span {
+  color: #fff8eb;
+}
+
+.discount2-study ::selection {
+  background: rgba(211, 173, 105, 0.32);
+  color: #1d2c20;
+}
+
+.discount2-study a:focus-visible,
+.discount2-study button:focus-visible {
+  outline: 2px solid #d3ad69;
+  outline-offset: 3px;
+}
+
 .discount2-study .discount-section {
   background:
     linear-gradient(rgba(48, 61, 49, 0.025) 1px, transparent 1px),
@@ -24,6 +77,7 @@
   position: relative;
   padding-left: 28px;
   border-left: 1px solid rgba(134, 104, 60, 0.18);
+  scroll-margin-top: 100px;
 }
 
 .discount2-study .discount-category__number {
@@ -60,6 +114,15 @@
 @media (max-width: 700px) {
   .discount2-study .discount-hero__copy {
     padding-left: 18px;
+  }
+
+  .discount2-index {
+    gap: 4px 13px;
+    margin-top: 22px;
+  }
+
+  .discount2-index a {
+    font-size: 0.52rem;
   }
 
   .discount2-study .discount-category {

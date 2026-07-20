@@ -1,12 +1,42 @@
+import { useEffect, useRef } from "react";
 import "./MyStory2.css";
 import heroPhoto from "../assets/images/mystory.jpg";
 // PLACEHOLDER COPY — replace with Lainie's real story. Tone is intentionally
 // silly/joking per request until real content is provided.
 
 export default function MyStory2() {
+  const pageRef = useRef(null);
+
+  useEffect(() => {
+    const page = pageRef.current;
+    if (!page) return undefined;
+
+    const marks = page.querySelectorAll(".mystory2-chapter-mark");
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (reducedMotion || !("IntersectionObserver" in window)) {
+      marks.forEach((mark) => mark.classList.add("is-in"));
+      return undefined;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add("is-in");
+          observer.unobserve(entry.target);
+        });
+      },
+      { threshold: 0.4 }
+    );
+
+    marks.forEach((mark) => observer.observe(mark));
+    return () => observer.disconnect();
+  }, []);
+
   return (
 
-    <div className="mystory mystory2-study">
+    <div className="mystory mystory2-study" ref={pageRef}>
       <div
         className="mystory-hero__photo"
         style={{ backgroundImage: `url(${heroPhoto})` }}
@@ -19,6 +49,8 @@ export default function MyStory2() {
         <br />
         <span>to my story.</span>
       </h1>
+
+      <div className="mystory2-chapter-mark" aria-hidden="true"><span>I</span><i /></div>
 
       <p className="mystory__opening">
         This...
@@ -53,7 +85,7 @@ export default function MyStory2() {
         Funny how names can become monsters if you hear them often enough.
       </p>
 
-      <hr className="mystory__divider" />
+      <div className="mystory2-chapter-mark" aria-hidden="true"><span>II</span><i /></div>
 
       <p>
         So I summoned up the courage, and protected by my loyal guardian, the pilgrimage began.
@@ -110,7 +142,7 @@ export default function MyStory2() {
         one story at a time ...
       </p>
 
-      <hr className="mystory__divider" />
+      <div className="mystory2-chapter-mark" aria-hidden="true"><span>III</span><i /></div>
 
 
 

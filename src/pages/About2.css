@@ -4,6 +4,83 @@
   border-bottom: 1px solid rgba(205, 164, 95, 0.24);
 }
 
+.about2-chapter-nav {
+  position: relative;
+  z-index: 4;
+  border-bottom: 1px solid rgba(205, 164, 95, 0.22);
+  background: #171a15;
+}
+
+.about2-chapter-nav .philosophy-inner {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.about2-chapter-nav a {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-height: 62px;
+  padding-inline: 18px;
+  border-left: 1px solid rgba(238, 232, 220, 0.08);
+  color: rgba(238, 232, 220, 0.56);
+  font-size: 0.65rem;
+  font-weight: 750;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: background 180ms ease, color 180ms ease;
+}
+
+.about2-chapter-nav a:last-child {
+  border-right: 1px solid rgba(238, 232, 220, 0.08);
+}
+
+.about2-chapter-nav a span {
+  color: #cda45f;
+  font: 450 0.76rem "Fraunces", serif;
+}
+
+.about2-chapter-nav a:hover {
+  background: rgba(205, 164, 95, 0.07);
+  color: #eee8dc;
+}
+
+.about2-chapter-nav a.is-active {
+  position: relative;
+  background: rgba(205, 164, 95, 0.11);
+  color: #f3ecdf;
+}
+
+.about2-chapter-nav a.is-active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  background: #cda45f;
+}
+
+.about2-study ::selection {
+  background: rgba(205, 164, 95, 0.32);
+  color: #18241b;
+}
+
+.about2-study a:focus-visible,
+.about2-study summary:focus-visible,
+.about2-study button:focus-visible {
+  outline: 2px solid #cda45f;
+  outline-offset: 3px;
+}
+
+.about2-study #about2-purpose,
+.about2-study #about2-beliefs,
+.about2-study #about2-support,
+.about2-study #about2-welcome {
+  scroll-margin-top: 90px;
+}
+
 .about2-study .philosophy-hero__copy {
   padding-left: 28px;
   border-left: 1px solid rgba(205, 164, 95, 0.34);
@@ -74,5 +151,28 @@
     border-right: 0;
     border-left: 0;
     box-shadow: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .about2-chapter-nav {
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .about2-chapter-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .about2-chapter-nav .philosophy-inner {
+    width: max-content;
+    min-width: 100%;
+    grid-template-columns: repeat(4, minmax(112px, 1fr));
+  }
+
+  .about2-chapter-nav a {
+    min-height: 54px;
+    padding-inline: 13px;
+    font-size: 0.56rem;
   }
 }

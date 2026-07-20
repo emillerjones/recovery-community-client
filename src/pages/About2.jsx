@@ -1,5 +1,30 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./About2.css";
+
+const CHAPTER_IDS = ["about2-purpose", "about2-beliefs", "about2-support", "about2-welcome"];
+
+function useActiveChapter(ids) {
+  const [active, setActive] = useState(ids[0]);
+
+  useEffect(() => {
+    const sections = ids.map((id) => document.getElementById(id)).filter(Boolean);
+    if (!sections.length || !("IntersectionObserver" in window)) return undefined;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setActive(entry.target.id);
+        });
+      },
+      { rootMargin: "-35% 0px -55% 0px", threshold: 0 }
+    );
+
+    sections.forEach((section) => observer.observe(section));
+    return () => observer.disconnect();
+  }, [ids]);
+
+  return active;
+}
 
 const BELIEFS = [
   {
@@ -66,6 +91,7 @@ function BeliefRoot({ belief, index }) {
 
 export default function About2() {
   const pageRef = useRef(null);
+  const activeChapter = useActiveChapter(CHAPTER_IDS);
 
   useEffect(() => {
     const page = pageRef.current;
@@ -111,7 +137,27 @@ export default function About2() {
         </div>
       </section>
 
-      <section className="philosophy-foundation">
+      <nav className="about2-chapter-nav" aria-label="Our mission chapters">
+        <div className="philosophy-inner">
+          {[
+            ["about2-purpose", "01", "Purpose"],
+            ["about2-beliefs", "02", "Beliefs"],
+            ["about2-support", "03", "Support"],
+            ["about2-welcome", "04", "Welcome"],
+          ].map(([id, number, label]) => (
+            <a
+              href={`#${id}`}
+              key={id}
+              className={activeChapter === id ? "is-active" : undefined}
+              aria-current={activeChapter === id ? "true" : undefined}
+            >
+              <span>{number}</span>{label}
+            </a>
+          ))}
+        </div>
+      </nav>
+
+      <section className="philosophy-foundation" id="about2-purpose">
         <div className="philosophy-inner">
           <p className="philosophy-eyebrow">Our founding purpose</p>
           <blockquote>The mission of Maintaining My Recovery with Cannabis is to develop a recovery support community of people who use cannabis as a form of harm-reduction therapy from dangerous or addictive substances.</blockquote>
@@ -119,7 +165,7 @@ export default function About2() {
         </div>
       </section>
 
-      <section className="mission-beliefs">
+      <section className="mission-beliefs" id="about2-beliefs">
         <div className="philosophy-inner">
           <div className="mission-beliefs__head">
             <p className="philosophy-eyebrow">What we are rooted in</p>
@@ -130,7 +176,7 @@ export default function About2() {
         </div>
       </section>
 
-      <section className="mission-growth">
+      <section className="mission-growth" id="about2-support">
         <div className="mission-growth__light" aria-hidden="true" />
         <div className="philosophy-inner">
           <div className="mission-growth__head">
@@ -148,7 +194,7 @@ export default function About2() {
         </div>
       </section>
 
-      <section className="philosophy-welcome">
+      <section className="philosophy-welcome" id="about2-welcome">
         <div className="philosophy-inner philosophy-welcome__inner">
           <div className="philosophy-welcome__mark" aria-hidden="true"><i /><i /><i /></div>
           <div><p className="philosophy-eyebrow">Welcome</p><h2>No single path is required here.</h2></div>

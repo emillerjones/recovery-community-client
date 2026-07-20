@@ -82,6 +82,52 @@ function useReveal(threshold = 0.15) {
   return [ref, visible];
 }
 
+function CommunityNetworkArt() {
+  const nodes = [
+    { x: 90, y: 190, r: 5 },
+    { x: 205, y: 90, r: 6 },
+    { x: 350, y: 58, r: 4 },
+    { x: 465, y: 155, r: 6 },
+    { x: 430, y: 305, r: 4 },
+    { x: 270, y: 350, r: 6 },
+    { x: 120, y: 310, r: 4 },
+    { x: 280, y: 210, r: 12 },
+  ];
+  const edges = [
+    [0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 0],
+    [0, 7], [1, 7], [3, 7], [4, 7], [5, 7],
+  ];
+
+  return (
+    <div className="community2-network" aria-hidden="true">
+      <svg viewBox="0 0 560 410">
+        <path className="community2-network__orbit" d="M50 210C50 94 148 25 282 25c138 0 229 69 229 187 0 116-94 173-232 173S50 326 50 210Z" />
+        {edges.map(([from, to], index) => {
+          const start = nodes[from];
+          const end = nodes[to];
+          const d = `M${start.x} ${start.y}L${end.x} ${end.y}`;
+          return (
+            <g key={d}>
+              <path className="community2-network__edge" d={d} />
+              <path className="community2-network__signal" d={d} pathLength="1" style={{ "--edge-delay": `${index * 0.32}s` }} />
+            </g>
+          );
+        })}
+        {nodes.map((node, index) => (
+          <circle
+            className={index === nodes.length - 1 ? "community2-network__node community2-network__node--center" : "community2-network__node"}
+            cx={node.x}
+            cy={node.y}
+            r={node.r}
+            key={`${node.x}-${node.y}`}
+          />
+        ))}
+      </svg>
+      <p>One conversation can reach further than we know.</p>
+    </div>
+  );
+}
+
 export default function Community2() {
   const { onRegister } = useOutletContext();
 
@@ -139,6 +185,7 @@ export default function Community2() {
               </Link>
             </div>
           </div>
+          <CommunityNetworkArt />
         </div>
       </section>
 

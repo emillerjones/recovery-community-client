@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import "./FAQ2.css";
 
@@ -103,9 +104,35 @@ function ConversationArt() {
   );
 }
 
+function useActiveChapter(ids) {
+  const [active, setActive] = useState(ids[0]);
+
+  useEffect(() => {
+    const sections = ids.map((id) => document.getElementById(id)).filter(Boolean);
+    if (!sections.length || !("IntersectionObserver" in window)) return undefined;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setActive(entry.target.id);
+        });
+      },
+      { rootMargin: "-30% 0px -60% 0px", threshold: 0 }
+    );
+
+    sections.forEach((section) => observer.observe(section));
+    return () => observer.disconnect();
+  }, [ids]);
+
+  return active;
+}
+
+const CHAPTER_IDS = FAQ_GROUPS.map((group) => groupId(group.title));
+
 export default function FAQ2() {
   const { onRegister } = useOutletContext();
   const questionCount = FAQ_GROUPS.reduce((total, group) => total + group.items.length, 0);
+  const activeChapter = useActiveChapter(CHAPTER_IDS);
 
   return (
     <main className="faq2">
@@ -120,12 +147,20 @@ export default function FAQ2() {
               privacy, and finding your place here.
             </p>
             <nav className="faq2-hero__nav" aria-label="FAQ categories">
-              {FAQ_GROUPS.map((group, index) => (
-                <a href={`#${groupId(group.title)}`} key={group.title}>
-                  <span>0{index + 1}</span>
-                  {group.shortTitle}
-                </a>
-              ))}
+              {FAQ_GROUPS.map((group, index) => {
+                const id = groupId(group.title);
+                return (
+                  <a
+                    href={`#${id}`}
+                    key={group.title}
+                    className={activeChapter === id ? "is-active" : undefined}
+                    aria-current={activeChapter === id ? "true" : undefined}
+                  >
+                    <span>0{index + 1}</span>
+                    {group.shortTitle}
+                  </a>
+                );
+              })}
             </nav>
           </div>
           <ConversationArt />
@@ -137,12 +172,20 @@ export default function FAQ2() {
           <aside className="faq2-index">
             <p className="faq2-index__label">On this page</p>
             <nav aria-label="FAQ contents">
-              {FAQ_GROUPS.map((group, index) => (
-                <a href={`#${groupId(group.title)}`} key={group.title}>
-                  <span>0{index + 1}</span>
-                  {group.shortTitle}
-                </a>
-              ))}
+              {FAQ_GROUPS.map((group, index) => {
+                const id = groupId(group.title);
+                return (
+                  <a
+                    href={`#${id}`}
+                    key={group.title}
+                    className={activeChapter === id ? "is-active" : undefined}
+                    aria-current={activeChapter === id ? "true" : undefined}
+                  >
+                    <span>0{index + 1}</span>
+                    {group.shortTitle}
+                  </a>
+                );
+              })}
             </nav>
             <div className="faq2-index__count">
               <strong>{questionCount}</strong>
@@ -152,7 +195,7 @@ export default function FAQ2() {
 
           <div className="faq2-chapters">
             {FAQ_GROUPS.map((group, groupIndex) => (
-              <section className="faq2-chapter" id={groupId(group.title)} key={group.title}>
+              <section className="faq2-chapter" id={groupId(group.title)} data-chapter={`0${groupIndex + 1}`} key={group.title}>
                 <header className="faq2-chapter__header">
                   <div className="faq2-chapter__mark">
                     <CategoryIcon type={group.icon} />

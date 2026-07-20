@@ -27,9 +27,29 @@
   align-items: start;
 }
 
-.resources2-study .learn-group__title {
+.resources2-group-heading {
   position: sticky;
   top: 112px;
+}
+
+.resources2-group-heading > span {
+  display: block;
+  margin-bottom: 11px;
+  color: #8d6c39;
+  font-size: 0.55rem;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.resources2-group-heading > small {
+  display: block;
+  margin-top: 13px;
+  color: rgba(27, 34, 28, 0.4);
+  font-size: 0.61rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
 }
 
 .resources2-study .learn-group__list {
@@ -51,8 +71,34 @@
 }
 
 .resources2-study .org-card {
+  position: relative;
   border-top: 3px solid rgba(128, 103, 63, 0.5);
   box-shadow: 0 23px 58px rgba(45, 46, 39, 0.09);
+}
+
+.resources2-org-number {
+  position: absolute;
+  right: 24px;
+  top: 20px;
+  color: rgba(93, 74, 45, 0.22);
+  font: 450 2.1rem "Fraunces", serif;
+  transition: color 220ms ease;
+}
+
+.resources2-study .org-card:hover .resources2-org-number {
+  color: rgba(93, 74, 45, 0.4);
+}
+
+.resources2-study ::selection {
+  background: rgba(208, 167, 97, 0.32);
+  color: #1b221c;
+}
+
+.resources2-study a:focus-visible,
+.resources2-study summary:focus-visible,
+.resources2-study button:focus-visible {
+  outline: 2px solid #d0a761;
+  outline-offset: 3px;
 }
 
 @media (max-width: 850px) {
@@ -65,7 +111,7 @@
     gap: 20px;
   }
 
-  .resources2-study .learn-group__title {
+  .resources2-group-heading {
     position: static;
   }
 

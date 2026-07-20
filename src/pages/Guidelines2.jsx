@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   Ban,
@@ -110,7 +111,34 @@ const GUIDELINES = [
   },
 ];
 
+function useActiveGuideline(ids) {
+  const [active, setActive] = useState(ids[0]);
+
+  useEffect(() => {
+    const sections = ids.map((id) => document.getElementById(id)).filter(Boolean);
+    if (!sections.length || !("IntersectionObserver" in window)) return undefined;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setActive(entry.target.id);
+        });
+      },
+      { rootMargin: "-30% 0px -60% 0px", threshold: 0 }
+    );
+
+    sections.forEach((section) => observer.observe(section));
+    return () => observer.disconnect();
+  }, [ids]);
+
+  return active;
+}
+
+const GUIDELINE_IDS = GUIDELINES.map((item) => `guidelines2-${item.number}`);
+
 export default function Guidelines2() {
+  const activeGuideline = useActiveGuideline(GUIDELINE_IDS);
+
   return (
     <main className="guidelines-page guidelines2-study">
       <section className="guidelines-hero">
@@ -150,6 +178,22 @@ export default function Guidelines2() {
               These guidelines protect our community and help everyone feel
               safe, supported, and able to be honest.
             </p>
+            <nav className="guidelines2-index" aria-label="Guideline index">
+              {GUIDELINES.map((item) => {
+                const id = `guidelines2-${item.number}`;
+                return (
+                  <a
+                    href={`#${id}`}
+                    key={item.number}
+                    className={activeGuideline === id ? "is-active" : undefined}
+                    aria-current={activeGuideline === id ? "true" : undefined}
+                  >
+                    <span>{item.number}</span>
+                    {item.title}
+                  </a>
+                );
+              })}
+            </nav>
           </aside>
 
           <div className="guidelines-charter">
@@ -161,7 +205,7 @@ export default function Guidelines2() {
               {GUIDELINES.map((item) => {
                 const ItemIcon = item.icon;
                 return (
-                  <article className="guideline-card" key={item.number}>
+                  <article className="guideline-card" id={`guidelines2-${item.number}`} key={item.number}>
                     <div className="guideline-card__meta">
                       <span className="guideline-card__number">{item.number}</span>
                       <span className="guideline-card__icon"><ItemIcon /></span>

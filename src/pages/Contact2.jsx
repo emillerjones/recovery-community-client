@@ -82,6 +82,20 @@ export default function Contact2() {
         </p>
       </section>
 
+      <div className="contact2-message-path" aria-label="How the contact form works">
+        <div className={submitState === "idle" || submitState === "error" ? "is-current" : "is-done"}>
+          <span>01</span><p>Write your message</p>
+        </div>
+        <i aria-hidden="true" className={submitState !== "idle" && submitState !== "error" ? "is-done" : undefined} />
+        <div className={submitState === "sending" ? "is-current" : submitState === "success" ? "is-done" : undefined}>
+          <span>02</span><p>It reaches the team inbox</p>
+        </div>
+        <i aria-hidden="true" className={submitState === "success" ? "is-done" : undefined} />
+        <div className={submitState === "success" ? "is-current" : undefined}>
+          <span>03</span><p>A real person replies</p>
+        </div>
+      </div>
+
       <section className="contact__primary">
         <form className="contact__form" onSubmit={handleSubmit}>
           <h2><span className="contact__heading-icon"><FiSend /></span>Send a message</h2>

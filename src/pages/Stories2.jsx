@@ -18,7 +18,15 @@ export default function Stories2() {
     <main className="stories stories2-study">
       <section className="stories__room">
         <div className="stories__copy"><p>Stories of Recovery</p><h1>Stories preserved because they may help someone survive.</h1><span>Chosen from hundreds of accounts, each story is presented in the storyteller's own words.  They are not instructions or promises.  They are records of courage, offered openly and held here with care.</span></div>
+        <div className="stories2-catalog" aria-label="Archive contents">
+          <span><strong>{PUBLIC_STORIES.length}</strong> public stories</span>
+          <i aria-hidden="true" />
+          <span><strong>01</strong> memorial held here</span>
+          <i aria-hidden="true" />
+          <span>Shared with permission</span>
+        </div>
         <div className="stories__desk">
+          <span className="stories2-desk-label" aria-hidden="true">The public archive</span>
           <button className="stories__dee" onClick={() => setActive({ story: dee })}><img src={dee.photo} alt="Dee"/><span>Public success story · Dee</span><blockquote>“{dee.line}”</blockquote></button>
           <div className="stories__prints">{PUBLIC_STORIES.slice(1).map((story) => <button onClick={() => setActive({ story })} key={story.slug}><img src={story.photo} alt=""/><span>{story.name}</span></button>)}</div>
           <a className="stories__shawn" href="#stories-shawn"><img src={SHAWN_MEMORIAL.photo} alt="Shawn"/><span>In memoriam · 2017<strong>Shawn</strong></span></a>

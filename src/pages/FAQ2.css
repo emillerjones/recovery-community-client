@@ -132,6 +132,11 @@
   color: white;
 }
 
+.faq2-hero__nav a.is-active {
+  border-color: var(--faq2-gold);
+  color: white;
+}
+
 .faq2-hero__art {
   width: min(520px, 41vw);
   overflow: visible;
@@ -254,6 +259,28 @@
   color: var(--faq2-ink);
 }
 
+.faq2-index a.is-active {
+  color: var(--faq2-ink);
+}
+
+.faq2-index a.is-active span {
+  border-color: var(--faq2-gold);
+  background: var(--faq2-gold);
+  color: var(--faq2-deep);
+}
+
+.faq2 ::selection {
+  background: rgba(212, 170, 101, 0.32);
+  color: var(--faq2-ink);
+}
+
+.faq2 a:focus-visible,
+.faq2 summary:focus-visible,
+.faq2 button:focus-visible {
+  outline: 2px solid var(--faq2-gold);
+  outline-offset: 3px;
+}
+
 .faq2-index__count {
   display: flex;
   align-items: center;
@@ -279,9 +306,21 @@
 }
 
 .faq2-chapter {
+  position: relative;
   padding: 74px 0;
   border-top: 1px solid var(--faq2-rule);
   scroll-margin-top: 95px;
+}
+
+.faq2-chapter::after {
+  content: attr(data-chapter);
+  position: absolute;
+  z-index: 0;
+  right: 0;
+  top: 30px;
+  color: rgba(23, 34, 25, 0.04);
+  font: 450 8rem/1 "Fraunces", serif;
+  pointer-events: none;
 }
 
 .faq2-chapter:first-child {
@@ -345,10 +384,14 @@
 }
 
 .faq2-list {
+  position: relative;
+  z-index: 1;
   overflow: hidden;
   border: 1px solid var(--faq2-rule);
   background: rgba(251, 248, 241, 0.6);
-  box-shadow: 0 24px 65px rgba(40, 47, 39, 0.07);
+  box-shadow:
+    0 24px 65px rgba(40, 47, 39, 0.07),
+    inset 0 0 0 7px rgba(130, 99, 53, 0.025);
 }
 
 .faq2-item {
@@ -427,6 +470,10 @@
   gap: 17px;
   padding: 0 70px 29px 25px;
   background: rgba(255, 253, 247, 0.82);
+}
+
+.faq2-item[open] .faq2-item__answer {
+  animation: faq2-answer-in 280ms ease both;
 }
 
 .faq2-item__answer::before {
@@ -574,6 +621,18 @@
   to {
     scale: 1.07;
     opacity: 0.72;
+  }
+}
+
+@keyframes faq2-answer-in {
+  from {
+    opacity: 0;
+    translate: 0 -6px;
+  }
+
+  to {
+    opacity: 1;
+    translate: none;
   }
 }
 

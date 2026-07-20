@@ -30,8 +30,79 @@
   grid-column: 1;
 }
 
+.home2-study .home2-hero-proof {
+  grid-column: 2;
+  grid-row: 1 / 5;
+  align-self: end;
+  display: grid;
+  gap: 0;
+  margin: 0 0 4px auto;
+  border-top: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+.home2-hero-proof span {
+  display: grid;
+  grid-template-columns: 27px 1fr;
+  gap: 10px;
+  min-width: 180px;
+  padding: 12px 4px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.56);
+  font-size: 0.62rem;
+  font-weight: 750;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  transition: color 180ms ease, padding-left 180ms ease;
+}
+
+.home2-hero-proof span:hover {
+  padding-left: 6px;
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.home2-hero-proof i {
+  color: var(--gold);
+  font: 450 0.72rem "Fraunces", serif;
+}
+
+.home2-study ::selection {
+  background: rgba(215, 173, 104, 0.32);
+  color: #17221a;
+}
+
+.home2-study a:focus-visible,
+.home2-study button:focus-visible {
+  outline: 2px solid #d7ad68;
+  outline-offset: 3px;
+}
+
 .home2-study .home-belief {
+  position: relative;
   padding-block: 145px;
+}
+
+.home2-section-number,
+.home2-stories-number {
+  position: absolute;
+  color: rgba(23, 34, 25, 0.07);
+  font: 450 clamp(7rem, 14vw, 13rem)/1 "Fraunces", serif;
+  pointer-events: none;
+}
+
+.home2-section-number {
+  left: -4vw;
+  top: 42px;
+}
+
+.home2-stories-number {
+  z-index: 0;
+  right: 2vw;
+  top: 42px;
+}
+
+.home2-study .home-stories__head {
+  position: relative;
+  z-index: 1;
 }
 
 .home2-study .home-belief::after {
@@ -84,6 +155,27 @@
     display: block;
   }
 
+  .home2-study .home2-hero-proof {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 15px;
+    margin: 30px 0 0;
+    border-top: 0;
+  }
+
+  .home2-hero-proof span {
+    min-width: 0;
+    grid-template-columns: 1fr;
+    gap: 2px;
+    padding: 0;
+    border-bottom: 0;
+    font-size: 0.54rem;
+  }
+
+  .home2-hero-proof i {
+    font-size: 0.62rem;
+  }
+
   .home2-study .home-hero::after {
     right: -42vw;
     bottom: -18vw;
@@ -98,6 +190,11 @@
     right: auto;
     left: 0;
     bottom: 58px;
+  }
+
+  .home2-section-number,
+  .home2-stories-number {
+    font-size: 7rem;
   }
 
   .home2-study .home-stories__head {

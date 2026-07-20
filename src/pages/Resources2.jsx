@@ -268,7 +268,11 @@ export default function Resources2() {
             {LEARN_GROUPS.map((group, index) => (
               <article className="learn-group" id={GROUP_IDS[group.title]} key={group.title}>
                 <TopicMark index={index} />
-                <h3 className="learn-group__title">{group.title}</h3>
+                <div className="resources2-group-heading">
+                  <span>Field note 0{index + 1}</span>
+                  <h3 className="learn-group__title">{group.title}</h3>
+                  <small>{group.links.length} selected resources</small>
+                </div>
                 <ul className="learn-group__list">
                   {group.links.map((link) => (
                     <li key={link.text} className="learn-link">
@@ -303,8 +307,9 @@ export default function Resources2() {
           </p>
 
           <div className="org-list">
-            {ORGANIZATIONS.map((org) => (
+            {ORGANIZATIONS.map((org, index) => (
               <div className="org-card" key={org.name}>
+                <span className="resources2-org-number">0{index + 1}</span>
                 <div className="org-card__header">
                   <h3 className="org-card__name">{org.name}</h3>
                   <span className="org-card__type">{org.type}</span>
