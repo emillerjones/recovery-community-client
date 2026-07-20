@@ -166,20 +166,6 @@ const ORGANIZATIONS = [
   },
 ];
 
-const RESOURCE_TOPICS = [
-  { label: "Harm reduction", target: "resource-substitution", x: 18, y: 25 },
-  { label: "Alcohol", target: "resource-alcohol", x: 51, y: 14 },
-  { label: "Opioids", target: "resource-opioid", x: 82, y: 30 },
-  { label: "Personal accounts", target: "resource-personal", x: 75, y: 72 },
-  { label: "Research & safety", target: "resource-research", x: 35, y: 82 },
-  { label: "Find support", target: "find-support", x: 13, y: 62 },
-];
-
-const RESOURCE_PATHS = [
-  "M18 25L51 14L82 30L75 72L35 82L13 62Z",
-  "M18 25L35 82M51 14L75 72M13 62L75 72",
-];
-
 const GROUP_IDS = {
   "Substitution & Harm Reduction": "resource-substitution",
   "Alcohol-Specific": "resource-alcohol",
@@ -187,6 +173,49 @@ const GROUP_IDS = {
   "Personal Accounts": "resource-personal",
   "Research & Safety": "resource-research",
 };
+
+function FieldGuideArt() {
+  return (
+    <div className="resources-field-art" aria-hidden="true">
+      <svg viewBox="0 0 620 520">
+        <g className="resources-field-art__contours">
+          <path d="M68 199C98 103 202 45 318 57c128 13 226 111 231 229 5 105-67 176-170 190-112 15-248-16-302-111-28-49-27-110-9-166Z" />
+          <path d="M105 211c28-73 112-119 207-112 104 8 187 83 197 174 11 91-50 149-133 160-94 12-203-15-243-84-24-41-44-92-28-138Z" />
+          <path d="M146 225c25-51 89-82 159-78 76 5 139 57 151 121 13 66-32 111-91 121-69 11-149-8-179-56-20-32-54-72-40-108Z" />
+        </g>
+
+        <g className="resources-field-art__branches">
+          <path pathLength="1" d="M310 405c-4-59 6-111 2-163-3-43-20-82-42-115" />
+          <path pathLength="1" d="M311 306c-49-10-86-37-111-78" />
+          <path pathLength="1" d="M312 273c45-12 82-40 108-83" />
+          <path pathLength="1" d="M311 346c53 1 96-16 132-50" />
+          <path pathLength="1" d="M270 127c-13 27-7 49 18 65-29-1-47-17-53-46 8-12 20-19 35-19Z" />
+          <path pathLength="1" d="M200 228c6-24 22-37 48-39-9 26-25 40-48 39Z" />
+          <path pathLength="1" d="M420 190c-2 27-15 45-40 54 1-27 14-45 40-54Z" />
+          <path pathLength="1" d="M443 296c-17 23-39 31-67 23 17-22 39-30 67-23Z" />
+          <circle cx="270" cy="127" r="5" />
+          <circle cx="200" cy="228" r="4" />
+          <circle cx="420" cy="190" r="5" />
+          <circle cx="443" cy="296" r="4" />
+        </g>
+
+        <g className="resources-field-art__book">
+          <path d="M310 414c-43-30-99-37-170-20v-91c68-17 124-9 170 24v87Z" />
+          <path d="M310 414c43-30 99-37 170-20v-91c-68-17-124-9-170 24v87Z" />
+          <path d="M310 327v87" />
+          <path d="M161 329c57-11 101-4 132 19M161 353c53-10 94-4 123 14M459 329c-57-11-101-4-132 19M459 353c-53-10-94-4-123 14" />
+          <path className="resources-field-art__gold-line" pathLength="1" d="M140 394c71-17 127-10 170 20 43-30 99-37 170-20" />
+        </g>
+
+        <g className="resources-field-art__marks">
+          <circle cx="99" cy="112" r="3" />
+          <circle cx="512" cy="118" r="3" />
+          <path d="M91 112h16M99 104v16M504 118h16M512 110v16" />
+        </g>
+      </svg>
+    </div>
+  );
+}
 
 function TopicMark({ index }) {
   const paths = [
@@ -215,19 +244,7 @@ export default function Resources() {
             <p>Research, lived experience, and outside support—collected carefully so the next useful direction is easier to find.</p>
             <a href="#learn" className="resources-hero__start">Open the field guide <span>↓</span></a>
           </div>
-          <div className="resources-map" aria-label="Browse the resource field guide by topic">
-            <div className="resources-map__paper" aria-hidden="true" />
-            <p className="resources-map__label">Index of paths</p>
-            <svg viewBox="0 0 100 100" aria-hidden="true">
-              {RESOURCE_PATHS.map((path) => <path d={path} key={path} />)}
-            </svg>
-            {RESOURCE_TOPICS.map((topic, index) => (
-              <a href={`#${topic.target}`} className="resources-map__node" style={{ left: `${topic.x}%`, top: `${topic.y}%`, "--i": index }} key={topic.label}>
-                <i aria-hidden="true" /><span>{topic.label}</span>
-              </a>
-            ))}
-            <small>Choose a point to begin</small>
-          </div>
+          <FieldGuideArt />
         </div>
       </section>
 
@@ -246,15 +263,6 @@ export default function Resources() {
             are articles, studies, and videos members have found useful
             over the years.
           </p>
-
-          <div className="resources-starting-points">
-            <p>Three places to begin</p>
-            {LEARN_GROUPS.slice(0, 3).map((group) => (
-              <a href={group.links[0].url} target="_blank" rel="noreferrer" key={group.title}>
-                <small>{group.title}</small><strong>{group.links[0].text}</strong><span>↗</span>
-              </a>
-            ))}
-          </div>
 
           <div className="learn-groups">
             {LEARN_GROUPS.map((group, index) => (

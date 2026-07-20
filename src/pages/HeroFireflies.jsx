@@ -85,7 +85,7 @@ function Fireflies({ reduced }) {
 // ─────────────────────────────────────────────────────────────────────────
 // Experimental: a sparse field of ambient light particles drifting over the
 // hero photo. Self-contained — remove the <HeroFireflies /> usage in
-// Home12.jsx to take it out, nothing else depends on this file.
+// Home.jsx to take it out, nothing else depends on this file.
 // ─────────────────────────────────────────────────────────────────────────
 export default function HeroFireflies({ reduced }) {
   const containerRef = useRef(null);
@@ -96,7 +96,7 @@ export default function HeroFireflies({ reduced }) {
   }
 
   return (
-    <div ref={containerRef} className="home12-hero__fireflies" aria-hidden="true">
+    <div ref={containerRef} className="home-hero__fireflies" aria-hidden="true">
       <Canvas camera={{ position: [0, 0, 5], fov: 45 }} dpr={[1, 1.5]} gl={{ antialias: false, alpha: true }} onCreated={handleCreated}>
         <Fireflies reduced={reduced} />
       </Canvas>

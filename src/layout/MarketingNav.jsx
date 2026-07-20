@@ -6,20 +6,12 @@ import "./MarketingNav.css";
 
 const HOME_LINKS = [
   { to: "/", label: "Home" },
-  // { to: "/Home1", label: "Home1" },
-  { to: "/Home3", label: "Home3" },
-  { to: "/Home4", label: "Home4" },
-  // { to: "/Home7", label: "Home7" },
-  // { to: "/Home8", label: "Home8" },
-  // { to: "/Home10", label: "Home10" },
-  { to: "/Home12", label: "Home12" },
 ];
 
 const COMMUNITY_LINKS = [
   { to: "/community", label: "Inside the Community" },
   { to: "/guidelines", label: "Culture" },
   { to: "/stories", label: "Stories" },
-  // { to: "/communityhome", label: "Community Logged In View" },
 ];
 
 const LEARN_LINKS = [

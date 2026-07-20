@@ -1,15 +1,6 @@
 import { Routes, Route } from "react-router-dom";
-import Home1 from "./pages/Home";
-import Home3 from "./pages/Home3";
-import Home4 from "./pages/Home4";
-import Home5 from "./pages/Home5";
-import Home6 from "./pages/Home6";
-import Home7 from "./pages/Home7";
-import Home8 from "./pages/Home8";
-import Home10 from "./pages/Home10";
-import Home12 from "./pages/Home12";
+import Home from "./pages/Home";
 import Community from "./pages/Community";
-import CommunityHome from "./pages/CommunityHome";
 import DiscountLinks from "./pages/DiscountLinks";
 import Guidelines from "./pages/Guidelines";
 import Stories from "./pages/Stories";
@@ -37,22 +28,12 @@ export default function App() {
     <Routes>
       {/* Marketing/logged-out routes — transparent hero nav */}
       <Route path="/" element={<MarketingLayout />}>
-        <Route index element={<Home5 />} />
-        <Route path="home1" element={<Home1 />} />
-        <Route path="home3" element={<Home3 />} />
-        <Route path="home4" element={<Home4 />} />
-        <Route path="home5" element={<Home5 />} />
-        <Route path="home6" element={<Home6 />} />
-        <Route path="home7" element={<Home7 />} />
-        <Route path="home8" element={<Home8 />} />
-        <Route path="home10" element={<Home10 />} />
-        <Route path="home12" element={<Home12 />} />
+        <Route index element={<Home />} />
         <Route path="stories" element={<Stories />} />
         <Route path="mystory" element={<MyStory />} />
         <Route path="community" element={<Community />} />
         <Route path="guidelines" element={<Guidelines />} />
         <Route path="contact" element={<Contact />} />
-        <Route path="communityhome" element={<CommunityHome />} />
         <Route path="discountlinks" element={<DiscountLinks />} />
         <Route path="about" element={<About />} />
         <Route path="resources" element={<Resources />} />
