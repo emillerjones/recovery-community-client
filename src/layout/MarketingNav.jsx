@@ -85,7 +85,6 @@ export default function MarketingNav({ onLogin, onRegister }) {
   */
   const solidNavPages = [
     "/about",
-    "/contact",
     "/community",
     // "/faq",
     "/donate",

@@ -85,16 +85,16 @@ const FAQ_GROUPS = [
     items: [
       {
         q: "Who is this community for?",
-        a: "Anyone using cannabis to reduce or replace their use of alcohol, opioids, or other dangerous substances — or anyone curious whether this approach might help them. There's no single right way to recover here, and no one is asked to follow a specific plan.",
+        a: "Anyone using cannabis to reduce or replace their use of alcohol, opioids, or other dangerous substances — or anyone curious whether this approach might help them. There's no single right way to recover here, and no one is asked to follow a specific program.",
       },
       {
         q: "Is this replacing AA, NA, or other recovery programs?",
-        a: "No. Many of our members use cannabis substitution alongside other paths — Alcoholics Anonymous, Narcotics Anonymous, HAMS, SMART Recovery, Moderation Management, Refuge Recovery, Celebrate Recovery, medication-assisted treatment, or paths of their own making. This isn't a replacement for those — it's another option that can work alongside them.",
+        a: "No. Many of our members use cannabis substitution as a medication-assisted-treatment (MAT) alongside other programs such as Alcoholics Anonymous, Narcotics Anonymous, 12-Step Groups, HAMS, SMART Recovery, Moderation Management, Refuge Recovery, Celebrate Recovery, etc or other alternative paths of their own making. — This isn’t a replacement for those — it's another option that can work alongside them.",
       },
       {
         q: "Do I have to use cannabis to be part of this community?",
         a: "No. This community exists for people exploring cannabis as part of their recovery, but you don't have to be actively using it to belong here — many people are simply researching whether this approach is right for them.",
-        needsReview: true,
+        needsReview: false,
       },
     ],
   },
@@ -110,7 +110,7 @@ const FAQ_GROUPS = [
       {
         q: "Is cannabis substitution legal?",
         a: "Cannabis laws vary by state and country. We encourage members to understand the laws where they live. This community does not provide legal advice.",
-        needsReview: true,
+        needsReview: false,
       },
       {
         q: "Is my information private?",
@@ -126,22 +126,15 @@ const FAQ_GROUPS = [
     items: [
       {
         q: "Is this free?",
-        a: "Yes, joining Recovery With The Exit Drug is free.",
+        a: "We do not actively ask for donations, but we gratefully accept them thru our 'Donation' page to help support and sustain our organization.",
         needsReview: true,
       },
       {
         q: "What happened to the Facebook group?",
-        a: "What used to live in our Facebook group now lives here, built specifically for this community. The Facebook group's history goes back to 2013 — this site is the next chapter, not a replacement of what came before.",
+        a: "Our Facebook group called 'Maintaining My Recovery With Cannabis: Support Group' will continue to be available indefinitely.  Our hope is to fully transition the support group over to this website for better safety, moderation control, and easier access for our members.",
       },
     ],
   },
-];
-
-const QUESTION_WHISPERS = [
-  { text: "Does my path count?", x: 4, y: 25 },
-  { text: "Will I be judged?", x: 67, y: 16 },
-  { text: "Is this medical advice?", x: 70, y: 68 },
-  { text: "Can I simply listen?", x: 0, y: 77 },
 ];
 
 const groupId = (title) => `faq-${title.toLowerCase().replaceAll(" ", "-").replaceAll("&", "and")}`;
@@ -153,30 +146,17 @@ export default function FAQ() {
   return (
     <div className="faq">
       <section className="faq-hero">
-        <div className="faq-hero__light" aria-hidden="true" />
+        <span className="faq-hero__mark" aria-hidden="true">?</span>
         <div className="faq-hero__inner">
           <div className="faq-hero__content">
-            <p className="faq-kicker">Before you step inside</p>
-            <h1>You are allowed to ask.</h1>
-            <p>Honest answers for the questions people often carry quietly before joining.</p>
-            <a href="#faq-about-this-community">Enter the questions <span>↓</span></a>
+            <p className="faq-kicker">Frequently asked questions</p>
+            <h1>Questions are welcome here.</h1>
+            <p>Clear answers about the community, cannabis substitution, privacy, and getting involved.</p>
           </div>
-          <div className="faq-threshold" aria-label="A quiet doorway surrounded by common questions">
-            <svg viewBox="0 0 500 540" aria-hidden="true">
-              <path className="faq-threshold__outer" d="M68 505V235C68 112 145 36 250 36S432 112 432 235V505" />
-              <path className="faq-threshold__middle" d="M111 505V240C111 143 169 83 250 83S389 143 389 240V505" />
-              <path className="faq-threshold__inner" d="M158 505V249C158 178 195 132 250 132S342 178 342 249V505" />
-              <path className="faq-threshold__floor" d="M31 505H469M79 524H421" />
-            </svg>
-            <div className="faq-threshold__opening"><span>There is room for<br/>your question.</span></div>
-            {QUESTION_WHISPERS.map((question, index) => (
-              <span className="faq-whisper" style={{ left: `${question.x}%`, top: `${question.y}%`, "--i": index }} key={question.text}>{question.text}</span>
-            ))}
-          </div>
+          {/* <nav className="faq-hero__nav" aria-label="FAQ categories">
+            {FAQ_GROUPS.map((group) => <a href={`#${groupId(group.title)}`} key={group.title}>{group.title}</a>)}
+          </nav> */}
         </div>
-        <nav className="faq-hero__nav" aria-label="FAQ categories">
-          {FAQ_GROUPS.map((group) => <a href={`#${groupId(group.title)}`} key={group.title}>{group.title}</a>)}
-        </nav>
       </section>
 
       <section className="faq-section">
@@ -223,7 +203,7 @@ export default function FAQ() {
           Join the community and ask in a space where you'll be understood.
         </p>
         <button type="button" onClick={onRegister} className="faq-cta__button">
-          Enter the Community
+          Join the Community
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
             <path
               d="M3 8h10M9 4l4 4-4 4"
@@ -236,7 +216,7 @@ export default function FAQ() {
         </button>
       </section>
 
-      <div className="faq-footnote">
+      {/* <div className="faq-footnote">
         <span className="faq-footnote__icon">
           <LeafIcon />
         </span>
@@ -245,7 +225,7 @@ export default function FAQ() {
           Recovery with Cannabis (MMRC). Thank you to everyone who has been
           part of this community from the very beginning.
         </p>
-      </div>
+      </div> */}
     </div>
   );
 }
