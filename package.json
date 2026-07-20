@@ -25,6 +25,7 @@
     "react-router-dom": "^7.14.2",
     "react-toastify": "^11.1.0",
     "three": "^0.185.1",
+    "three-gpu-pathtracer": "^0.0.24",
     "three-mesh-bvh": "^0.9.11",
     "three.quarks": "^0.17.1"
   },
