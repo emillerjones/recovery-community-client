@@ -1,29 +1,16 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useOutletContext } from "react-router-dom";
 import gsap from "gsap";
+import {
+  BookOpen,
+  Library,
+  Medal,
+  MessageCircleMore,
+  MoonStar,
+  NotebookPen,
+  ShieldCheck,
+} from "lucide-react";
 import "./Community.css";
-
-const COMMUNITY_NODES = [
-  { label: "You", note: "Come exactly as you are.", x: 50, y: 49, home: true },
-  { label: "An honest post", note: "I need to say this somewhere.", x: 15, y: 24 },
-  { label: "Someone listens", note: "You do not have to explain everything.", x: 48, y: 15 },
-  { label: "A kind reply", note: "I have been there too.", x: 83, y: 29 },
-  { label: "The hard night", note: "Stay for the next few minutes.", x: 82, y: 72 },
-  { label: "A small win", note: "Today counted.", x: 49, y: 84 },
-  { label: "Begin again", note: "Starting over still means starting.", x: 16, y: 69 },
-];
-
-const COMMUNITY_PATHS = [
-  "M50 49 C38 39 27 29 15 24",
-  "M50 49 C49 35 48 25 48 15",
-  "M50 49 C63 40 72 33 83 29",
-  "M50 49 C64 58 73 65 82 72",
-  "M50 49 C50 64 49 74 49 84",
-  "M50 49 C37 58 27 65 16 69",
-  "M15 24 C25 12 36 12 48 15",
-  "M83 29 C91 43 90 59 82 72",
-  "M49 84 C36 86 25 80 16 69",
-];
 
 const MOMENTS = [
   {
@@ -43,26 +30,32 @@ const MOMENTS = [
 const PLANNED_SPACES = [
   {
     name: "Discussion spaces",
+    icon: MessageCircleMore,
     desc: "Organized conversations around recovery, cannabis, substance dependence, setbacks, and progress.",
   },
   {
     name: "Live community chat",
+    icon: BookOpen,
     desc: "A more immediate place to talk when a full post feels like too much.",
   },
   {
     name: "Milestones",
+    icon: Medal,
     desc: "A place to mark meaningful days — one day, one week, six months, one year, or starting over.",
   },
   {
     name: "Hard nights",
+    icon: MoonStar,
     desc: "A space for the moments people usually face alone.",
   },
   {
     name: "Recovery journals",
+    icon: NotebookPen,
     desc: "Private or shared reflections to help members notice patterns, progress, and triggers.",
   },
   {
     name: "Resources",
+    icon: Library,
     desc: "Community-centered tools, links, research, and practical support gathered in one place.",
   },
 ];
@@ -105,7 +98,7 @@ export default function Community() {
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const context = gsap.context(() => {
       if (reducedMotion) {
-        gsap.set("[data-community-intro], .community-network__path, .community-network__node", {
+        gsap.set("[data-community-intro]", {
           opacity: 1,
           clearProps: "transform",
         });
@@ -113,9 +106,7 @@ export default function Community() {
       }
 
       gsap.timeline({ defaults: { ease: "power3.out" } })
-        .fromTo("[data-community-intro]", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.9, stagger: 0.11 })
-        .fromTo(".community-network__path", { opacity: 0, strokeDashoffset: 1 }, { opacity: 1, strokeDashoffset: 0, duration: 1.15, stagger: 0.07 }, "-=0.55")
-        .fromTo(".community-network__node", { opacity: 0, scale: 0.82 }, { opacity: 1, scale: 1, duration: 0.65, stagger: 0.09 }, "-=0.65");
+        .fromTo("[data-community-intro]", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.9, stagger: 0.11 });
     }, hero);
 
     return () => context.revert();
@@ -148,37 +139,6 @@ export default function Community() {
               </Link>
             </div>
           </div>
-
-          <div className="community-network" aria-label="A message moving through a connected support community">
-            <div className="community-network__halo" aria-hidden="true" />
-            <svg className="community-network__lines" viewBox="0 0 100 100" aria-hidden="true">
-              {COMMUNITY_PATHS.map((path, index) => (
-                <g key={path}>
-                  <path className="community-network__path" d={path} pathLength="1" />
-                  <path
-                    className="community-network__signal"
-                    d={path}
-                    pathLength="1"
-                    style={{ "--signal-delay": `${index * -0.72}s` }}
-                  />
-                </g>
-              ))}
-            </svg>
-            {COMMUNITY_NODES.map((node, index) => (
-              <button
-                className={`community-network__node ${node.home ? "community-network__node--home" : ""}`}
-                type="button"
-                style={{ left: `${node.x}%`, top: `${node.y}%`, "--node-delay": `${index * -0.63}s` }}
-                key={node.label}
-                aria-label={`${node.label}: ${node.note}`}
-              >
-                <i aria-hidden="true" />
-                <span>{node.label}</span>
-                <em>{node.note}</em>
-              </button>
-            ))}
-            <p className="community-network__caption">One person reaches out. Someone answers.</p>
-          </div>
         </div>
       </section>
 
@@ -193,9 +153,10 @@ export default function Community() {
           <p className="community-eyebrow">What it’s for</p>
           <h2>A place for the moments people usually carry alone.</h2>
 
-          <div className="community-card-grid">
-            {MOMENTS.map((item) => (
+          <div className="community-card-grid community-moments__board">
+            {MOMENTS.map((item, index) => (
               <article className="community-card" key={item.title}>
+                <span className="community-card__number">0{index + 1}</span>
                 <h3>{item.title}</h3>
                 <p>{item.text}</p>
               </article>
@@ -216,12 +177,16 @@ export default function Community() {
           <h2>Community spaces designed around real recovery.</h2>
 
           <div className="community-space-list">
-            {PLANNED_SPACES.map((space) => (
+            {PLANNED_SPACES.map((space, index) => {
+              const SpaceIcon = space.icon;
+              return (
               <article className="community-space" key={space.name}>
-                <h3>{space.name}</h3>
-                <p>{space.desc}</p>
+                <span className="community-space__number">0{index + 1}</span>
+                <span className="community-space__icon"><SpaceIcon /></span>
+                <div><h3>{space.name}</h3><p>{space.desc}</p></div>
               </article>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
@@ -234,25 +199,28 @@ export default function Community() {
             cultureVisible ? "community-in" : ""
           }`}
         >
-          <p className="community-eyebrow">How it stays safe</p>
-          <h2>Peer-led does not mean anything goes.</h2>
+          <div className="community-culture__mark"><ShieldCheck /></div>
+          <div className="community-culture__copy">
+            <p className="community-eyebrow">How it stays safe</p>
+            <h2>Peer-led does not mean anything goes.</h2>
 
-          <p>
-            The community is being built around privacy, kindness, honesty, and
-            clear boundaries. Members will be expected to follow guidelines that
-            protect the group from spam, judgment, illegal activity, harassment,
-            and unsafe advice.
-          </p>
+            <p>
+              The community is being built around privacy, kindness, honesty, and
+              clear boundaries. Members will be expected to follow guidelines that
+              protect the group from spam, judgment, illegal activity, harassment,
+              and unsafe advice.
+            </p>
 
-          <p>
-            This is not a replacement for medical care, therapy, detox, or
-            emergency support. It is a place for peer connection, shared
-            experience, and practical encouragement.
-          </p>
+            <p>
+              This is not a replacement for medical care, therapy, detox, or
+              emergency support. It is a place for peer connection, shared
+              experience, and practical encouragement.
+            </p>
 
-          <a href="/guidelines" className="community-text-link">
-            View community culture and guidelines →
-          </a>
+            <Link to="/guidelines" className="community-text-link">
+              View community culture and guidelines →
+            </Link>
+          </div>
         </div>
       </section>
 

@@ -1,9 +1,21 @@
+import { Link } from "react-router-dom";
+import {
+  Ban,
+  Heart,
+  LockKeyhole,
+  Mail,
+  MegaphoneOff,
+  MessageCircle,
+  ScrollText,
+  ShieldCheck,
+  UsersRound,
+} from "lucide-react";
 import "./Guidelines.css";
 
 const GUIDELINES = [
   {
     number: "01",
-    icon: "🔒",
+    icon: LockKeyhole,
     title: "Confidentiality",
     text: (
       <>
@@ -16,7 +28,7 @@ const GUIDELINES = [
   },
   {
     number: "02",
-    icon: "🚫",
+    icon: Ban,
     title: "No Illegal Activity",
     text: (
       <>
@@ -32,7 +44,7 @@ const GUIDELINES = [
   },
   {
     number: "03",
-    icon: "♡",
+    icon: Heart,
     title: "Acceptance",
     text: (
       <>
@@ -43,7 +55,7 @@ const GUIDELINES = [
   },
   {
     number: "04",
-    icon: "💬",
+    icon: MessageCircle,
     title: "Stay On Topic",
     text: (
       <>
@@ -55,7 +67,7 @@ const GUIDELINES = [
   },
   {
     number: "05",
-    icon: "👥",
+    icon: UsersRound,
     title: "Sharing",
     text: <>Focus on the person sharing and do not offer unsolicited advice.</>,
     callout: (
@@ -69,7 +81,7 @@ const GUIDELINES = [
   },
   {
     number: "06",
-    icon: "📣",
+    icon: MegaphoneOff,
     title: "No Spamming, Advertisements, Trolling",
     text: (
       <>
@@ -83,7 +95,7 @@ const GUIDELINES = [
   },
   {
     number: "07",
-    icon: "🛡️",
+    icon: ShieldCheck,
     title: "Admins/Moderators",
     text: (
       <>
@@ -102,20 +114,31 @@ export default function Guidelines() {
   return (
     <main className="guidelines-page">
       <section className="guidelines-hero">
-        <div className="guidelines-inner">
-          <p className="guidelines-eyebrow">Our community culture</p>
-          <h1 className="guidelines-title">Guidelines</h1>
-          <p className="guidelines-intro">
-            All members must agree to follow these guidelines and acknowledge
-            the disclaimer below:
-          </p>
+        <div className="guidelines-inner guidelines-hero__inner">
+          <div className="guidelines-hero__copy">
+            <p className="guidelines-eyebrow">Our community culture</p>
+            <h1 className="guidelines-title">Guidelines</h1>
+            <p className="guidelines-intro">
+              All members must agree to follow these guidelines and acknowledge
+              the disclaimer below:
+            </p>
+          </div>
+          <svg className="guidelines-hero__art" viewBox="0 0 460 360" aria-hidden="true">
+            <path className="guidelines-hero__orbit" d="M38 180C38 85 117 28 232 28c118 0 190 58 190 153 0 97-76 151-193 151S38 276 38 180Z" />
+            <path className="guidelines-hero__paper" d="M126 65h174l55 55v173H126Z" />
+            <path className="guidelines-hero__fold" d="M300 65v55h55" />
+            <path className="guidelines-hero__rule" d="M169 145h143M169 177h143M169 209h103M169 241h125" />
+            <path className="guidelines-hero__shield" d="M112 221l43 17v37c0 33-20 57-43 69-23-12-43-36-43-69v-37Z" />
+            <path className="guidelines-hero__check" d="m92 276 14 14 27-31" />
+          </svg>
         </div>
       </section>
 
       <section className="guidelines-body">
         <div className="guidelines-inner guidelines-layout">
           <aside className="guidelines-side-card">
-            <div className="guidelines-side-card__icon">🛡️</div>
+            <div className="guidelines-side-card__icon"><ShieldCheck /></div>
+            <span className="guidelines-side-card__label">What holds us together</span>
             <h2>
               Trust.
               <br />
@@ -129,32 +152,40 @@ export default function Guidelines() {
             </p>
           </aside>
 
-          <div className="guidelines-list">
-            {GUIDELINES.map((item) => (
-              <article className="guideline-card" key={item.number}>
-                <div className="guideline-card__meta">
-                  <span className="guideline-card__number">{item.number}</span>
-                  <span className="guideline-card__icon">{item.icon}</span>
-                </div>
-
-                <div className="guideline-card__content">
-                  <p>
-                    <strong>{item.title}:</strong> {item.text}
-                  </p>
-
-                  {item.callout && (
-                    <div className="guideline-card__callout">
-                      {item.callout}
-                    </div>
-                  )}
-                </div>
-              </article>
-            ))}
-
-            <div className="guidelines-contact-card">
-              Please contact our founder, <strong>Ruth</strong>, for any
-              questions, concerns, or kudos.
+          <div className="guidelines-charter">
+            <div className="guidelines-charter__heading">
+              <ScrollText />
+              <span>Community charter</span>
             </div>
+            <div className="guidelines-list">
+              {GUIDELINES.map((item) => {
+                const ItemIcon = item.icon;
+                return (
+                  <article className="guideline-card" key={item.number}>
+                    <div className="guideline-card__meta">
+                      <span className="guideline-card__number">{item.number}</span>
+                      <span className="guideline-card__icon"><ItemIcon /></span>
+                    </div>
+
+                    <div className="guideline-card__content">
+                      <h2>{item.title}</h2>
+                      <p>{item.text}</p>
+
+                      {item.callout && (
+                        <div className="guideline-card__callout">
+                          {item.callout}
+                        </div>
+                      )}
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+
+            <Link className="guidelines-contact-card" to="/contact">
+              <Mail />
+              <span>Please contact our founder, <strong>Ruth</strong>, for any questions, concerns, or kudos.</span>
+            </Link>
           </div>
         </div>
       </section>
@@ -162,7 +193,7 @@ export default function Guidelines() {
       <section className="guidelines-disclaimer-section">
         <div className="guidelines-inner">
           <div className="guidelines-disclaimer">
-            <div className="guidelines-disclaimer__icon">🛡️</div>
+            <div className="guidelines-disclaimer__icon"><ShieldCheck /></div>
             <p>
               <strong>Disclaimer:</strong> Recovery With The Exit Drug is a
               volunteer support group sharing practical information. This is not

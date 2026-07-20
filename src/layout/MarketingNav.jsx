@@ -84,14 +84,11 @@ export default function MarketingNav({ onLogin, onRegister }) {
     Add more routes here later as you build pages.
   */
   const solidNavPages = [
-    "/about",
-    "/community",
+    // "/about",
     // "/faq",
     "/donate",
     "/merch",
     "/discountlinks",
-    "/guidelines",
-    // "/stories",
   ];
 
   const pageWantsSolidNav = solidNavPages.includes(location.pathname);
