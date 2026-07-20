@@ -107,6 +107,56 @@
   letter-spacing: 0.08em;
 }
 
+.discount2-card {
+  position: relative;
+}
+
+.discount2-card-link {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.discount2-card > .discount-card__logo,
+.discount2-card > .discount-card__body {
+  position: relative;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.discount2-code-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.discount2-copy {
+  position: relative;
+  z-index: 3;
+  pointer-events: auto;
+  border: 1px solid rgba(134, 104, 60, 0.32);
+  background: rgba(251, 248, 241, 0.7);
+  color: #6b5230;
+  font-size: 0.58rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 4px 9px;
+  cursor: pointer;
+  transition: background 160ms ease, border-color 160ms ease, color 160ms ease;
+}
+
+.discount2-copy:hover {
+  border-color: #9b753d;
+  color: #4a3819;
+}
+
+.discount2-copy.is-copied {
+  border-color: #4c7a52;
+  background: rgba(76, 122, 82, 0.14);
+  color: #2e5233;
+}
+
 .discount2-study .discount-disclaimer {
   border-top: 2px solid rgba(160, 119, 53, 0.5);
 }

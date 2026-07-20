@@ -213,6 +213,73 @@
   text-transform: uppercase;
 }
 
+.faq2-index__label:not(:first-child) {
+  margin-top: 26px !important;
+}
+
+.faq2-search {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.faq2-search input {
+  width: 100%;
+  min-height: 40px;
+  padding: 0 30px 0 12px;
+  border: 1px solid var(--faq2-rule);
+  background: rgba(251, 248, 241, 0.7);
+  color: var(--faq2-ink);
+  font: 0.78rem "Inter", sans-serif;
+  transition: border-color 180ms ease;
+}
+
+.faq2-search input::placeholder {
+  color: rgba(23, 34, 25, 0.4);
+}
+
+.faq2-search input:focus-visible {
+  outline: none;
+  border-color: var(--faq2-gold);
+}
+
+.faq2-search input::-webkit-search-cancel-button {
+  display: none;
+}
+
+.faq2-search button {
+  position: absolute;
+  right: 6px;
+  display: grid;
+  width: 22px;
+  height: 22px;
+  place-items: center;
+  border: 0;
+  background: none;
+  color: #7d6845;
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.faq2-search button:hover {
+  color: var(--faq2-ink);
+}
+
+.faq2-search__count {
+  margin-top: 10px !important;
+  color: rgba(23, 34, 25, 0.5);
+  font-size: 0.68rem;
+  font-weight: 700;
+}
+
+.faq2-chapter__empty {
+  padding: 22px 25px;
+  border: 1px dashed var(--faq2-rule);
+  color: rgba(23, 34, 25, 0.5);
+  font-size: 0.85rem;
+}
+
 .faq2-index nav {
   position: relative;
   display: grid;

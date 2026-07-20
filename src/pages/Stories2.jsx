@@ -12,8 +12,16 @@ const CommunityBonfire = lazy(() => import("./CommunityBonfire"));
 
 export default function Stories2() {
   const { onRegister } = useOutletContext();
-  const [active, setActive] = useState(null);
+  const [activeIndex, setActiveIndex] = useState(null);
   const dee = PUBLIC_STORIES[0];
+
+  function openStory(story) {
+    const index = PUBLIC_STORIES.findIndex((candidate) => candidate.slug === story.slug);
+    if (index !== -1) setActiveIndex(index);
+  }
+
+  const activeStory = activeIndex === null ? null : PUBLIC_STORIES[activeIndex];
+
   return (
     <main className="stories stories2-study">
       <section className="stories__room">
@@ -27,8 +35,8 @@ export default function Stories2() {
         </div>
         <div className="stories__desk">
           <span className="stories2-desk-label" aria-hidden="true">The public archive</span>
-          <button className="stories__dee" onClick={() => setActive({ story: dee })}><img src={dee.photo} alt="Dee"/><span>Public success story · Dee</span><blockquote>“{dee.line}”</blockquote></button>
-          <div className="stories__prints">{PUBLIC_STORIES.slice(1).map((story) => <button onClick={() => setActive({ story })} key={story.slug}><img src={story.photo} alt=""/><span>{story.name}</span></button>)}</div>
+          <button className="stories__dee" onClick={() => openStory(dee)}><img src={dee.photo} alt="Dee"/><span>Public success story · Dee</span><blockquote>“{dee.line}”</blockquote></button>
+          <div className="stories__prints">{PUBLIC_STORIES.slice(1).map((story) => <button onClick={() => openStory(story)} key={story.slug}><img src={story.photo} alt=""/><span>{story.name}</span></button>)}</div>
           <a className="stories__shawn" href="#stories-shawn"><img src={SHAWN_MEMORIAL.photo} alt="Shawn"/><span>In memoriam · 2017<strong>Shawn</strong></span></a>
         </div>
         <div className="stories__join"><span>When you are ready, there is room inside the community.</span><button onClick={onRegister}>Join the community</button></div>
@@ -36,9 +44,18 @@ export default function Stories2() {
       <ShawnMemorial id="stories-shawn" />
 
       {/* Experimental — comment out the line below to disable/remove the 3D bonfire section. */}
-      <Suspense fallback={null}><CommunityBonfire onSelectStory={(story) => setActive({ story })} /></Suspense>
+      <Suspense fallback={null}><CommunityBonfire onSelectStory={openStory} /></Suspense>
 
-      {active && <StoryReader {...active} returnLabel="Return to the archive" onClose={() => setActive(null)} />}
+      {activeStory && (
+        <StoryReader
+          story={activeStory}
+          returnLabel="Return to the archive"
+          onClose={() => setActiveIndex(null)}
+          onNext={() => setActiveIndex((index) => (index + 1) % PUBLIC_STORIES.length)}
+          onPrev={() => setActiveIndex((index) => (index - 1 + PUBLIC_STORIES.length) % PUBLIC_STORIES.length)}
+          position={{ index: activeIndex + 1, total: PUBLIC_STORIES.length }}
+        />
+      )}
     </main>
   );
 }

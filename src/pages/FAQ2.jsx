@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import "./FAQ2.css";
 
@@ -133,6 +133,25 @@ export default function FAQ2() {
   const { onRegister } = useOutletContext();
   const questionCount = FAQ_GROUPS.reduce((total, group) => total + group.items.length, 0);
   const activeChapter = useActiveChapter(CHAPTER_IDS);
+  const [query, setQuery] = useState("");
+  const normalizedQuery = query.trim().toLowerCase();
+
+  const filteredGroups = useMemo(() => {
+    if (!normalizedQuery) return FAQ_GROUPS;
+    return FAQ_GROUPS.map((group) => ({
+      ...group,
+      items: group.items.filter(
+        (item) =>
+          item.q.toLowerCase().includes(normalizedQuery) ||
+          item.a.toLowerCase().includes(normalizedQuery)
+      ),
+    }));
+  }, [normalizedQuery]);
+
+  const matchCount = useMemo(
+    () => filteredGroups.reduce((total, group) => total + group.items.length, 0),
+    [filteredGroups]
+  );
 
   return (
     <main className="faq2">
@@ -170,6 +189,27 @@ export default function FAQ2() {
       <section className="faq2-body">
         <div className="faq2-container faq2-layout">
           <aside className="faq2-index">
+            <p className="faq2-index__label">Search</p>
+            <div className="faq2-search">
+              <input
+                type="search"
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+                placeholder="Search questions…"
+                aria-label="Search frequently asked questions"
+              />
+              {query && (
+                <button type="button" onClick={() => setQuery("")} aria-label="Clear search">
+                  ×
+                </button>
+              )}
+            </div>
+            {normalizedQuery && (
+              <p className="faq2-search__count">
+                {matchCount} {matchCount === 1 ? "result" : "results"} for “{query.trim()}”
+              </p>
+            )}
+
             <p className="faq2-index__label">On this page</p>
             <nav aria-label="FAQ contents">
               {FAQ_GROUPS.map((group, index) => {
@@ -194,7 +234,7 @@ export default function FAQ2() {
           </aside>
 
           <div className="faq2-chapters">
-            {FAQ_GROUPS.map((group, groupIndex) => (
+            {filteredGroups.map((group, groupIndex) => (
               <section className="faq2-chapter" id={groupId(group.title)} data-chapter={`0${groupIndex + 1}`} key={group.title}>
                 <header className="faq2-chapter__header">
                   <div className="faq2-chapter__mark">
@@ -207,32 +247,36 @@ export default function FAQ2() {
                   <span>{group.items.length} questions</span>
                 </header>
 
-                <div className="faq2-list">
-                  {group.items.map((item, itemIndex) => (
-                    <details
-                      className={`faq2-item ${item.needsReview ? "faq2-item--review" : ""}`}
-                      key={item.q}
-                      open={groupIndex === 0 && itemIndex === 0}
-                    >
-                      <summary>
-                        <span className="faq2-item__number">
-                          {String(itemIndex + 1).padStart(2, "0")}
-                        </span>
-                        <span className="faq2-item__question">{item.q}</span>
-                        <i aria-hidden="true" />
-                      </summary>
-                      <div className="faq2-item__answer">
-                        <span className="faq2-item__answer-mark">A</span>
-                        <div>
-                          {item.needsReview && (
-                            <span className="faq2-item__tag">Needs owner review</span>
-                          )}
-                          <p>{item.a}</p>
+                {group.items.length === 0 ? (
+                  <p className="faq2-chapter__empty">No questions in this chapter match “{query.trim()}”.</p>
+                ) : (
+                  <div className="faq2-list">
+                    {group.items.map((item, itemIndex) => (
+                      <details
+                        className={`faq2-item ${item.needsReview ? "faq2-item--review" : ""}`}
+                        key={item.q}
+                        open={normalizedQuery ? true : groupIndex === 0 && itemIndex === 0}
+                      >
+                        <summary>
+                          <span className="faq2-item__number">
+                            {String(itemIndex + 1).padStart(2, "0")}
+                          </span>
+                          <span className="faq2-item__question">{item.q}</span>
+                          <i aria-hidden="true" />
+                        </summary>
+                        <div className="faq2-item__answer">
+                          <span className="faq2-item__answer-mark">A</span>
+                          <div>
+                            {item.needsReview && (
+                              <span className="faq2-item__tag">Needs owner review</span>
+                            )}
+                            <p>{item.a}</p>
+                          </div>
                         </div>
-                      </div>
-                    </details>
-                  ))}
-                </div>
+                      </details>
+                    ))}
+                  </div>
+                )}
               </section>
             ))}
           </div>

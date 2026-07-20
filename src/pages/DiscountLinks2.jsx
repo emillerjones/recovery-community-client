@@ -106,6 +106,30 @@ function useActiveCategory(ids) {
   return active;
 }
 
+function CopyCodeButton({ code }) {
+  const [copied, setCopied] = useState(false);
+
+  function handleCopy(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    navigator.clipboard?.writeText(code).then(() => {
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1600);
+    });
+  }
+
+  return (
+    <button
+      type="button"
+      className={`discount2-copy ${copied ? "is-copied" : ""}`}
+      onClick={handleCopy}
+      aria-label={`Copy code ${code}`}
+    >
+      {copied ? "Copied" : "Copy"}
+    </button>
+  );
+}
+
 export default function DiscountLinks2() {
   const activeCategory = useActiveCategory(CATEGORY_IDS);
 
@@ -163,13 +187,14 @@ export default function DiscountLinks2() {
 
               <div className="discount-grid">
                 {category.links.map((link) => (
-                  <a
-                    key={link.name}
-                    href={link.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="discount-card"
-                  >
+                  <div key={link.name} className="discount-card discount2-card">
+                    <a
+                      href={link.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="discount2-card-link"
+                      aria-label={link.name}
+                    />
                     <img
                       src={link.logo}
                       alt=""
@@ -186,8 +211,9 @@ export default function DiscountLinks2() {
 
                       <div className="discount-card__bottom">
                         {link.code ? (
-                          <span className="discount-code">
+                          <span className="discount-code discount2-code-row">
                             Code: <strong>{link.code}</strong>
+                            <CopyCodeButton code={link.code} />
                           </span>
                         ) : (
                           <span className="discount-code discount-code--none">
@@ -197,7 +223,7 @@ export default function DiscountLinks2() {
                         <span className="discount-arrow"><ExternalLink /></span>
                       </div>
                     </div>
-                  </a>
+                  </div>
                 ))}
               </div>
             </section>

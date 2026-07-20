@@ -102,6 +102,31 @@
   padding-top: 76px;
 }
 
+.contact2-field-error {
+  display: block;
+  margin-top: 6px;
+  color: #a3402f;
+  font-size: 0.72rem;
+  font-weight: 650;
+}
+
+.contact2-study input[aria-invalid="true"] {
+  border-color: #a3402f !important;
+}
+
+.contact2-counter {
+  display: block;
+  margin-top: 6px;
+  color: rgba(31, 43, 33, 0.42);
+  font-size: 0.68rem;
+  font-weight: 650;
+  text-align: right;
+}
+
+.contact2-counter.is-near-limit {
+  color: #a3402f;
+}
+
 .contact2-study .contact__form {
   position: relative;
   border-radius: 0;

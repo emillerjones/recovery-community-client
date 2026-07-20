@@ -27,6 +27,7 @@ export default function Contact2() {
   });
   const [submitState, setSubmitState] = useState("idle");
   const [submitMessage, setSubmitMessage] = useState("");
+  const [emailError, setEmailError] = useState("");
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -34,10 +35,28 @@ export default function Contact2() {
       setSubmitState("idle");
       setSubmitMessage("");
     }
+    if (e.target.name === "email" && emailError) {
+      setEmailError("");
+    }
+  };
+
+  const handleEmailBlur = (e) => {
+    const value = e.target.value.trim();
+    if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+      setEmailError("Enter a valid email address.");
+    } else {
+      setEmailError("");
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) {
+      setEmailError("Enter a valid email address.");
+      return;
+    }
+
     setSubmitState("sending");
     setSubmitMessage("");
 
@@ -107,7 +126,22 @@ export default function Contact2() {
 
           <label>
             Email
-            <input type="email" name="email" value={form.email} onChange={handleChange} maxLength={254} required />
+            <input
+              type="email"
+              name="email"
+              value={form.email}
+              onChange={handleChange}
+              onBlur={handleEmailBlur}
+              maxLength={254}
+              aria-invalid={emailError ? "true" : undefined}
+              aria-describedby={emailError ? "contact2-email-error" : undefined}
+              required
+            />
+            {emailError && (
+              <span className="contact2-field-error" id="contact2-email-error" role="alert">
+                {emailError}
+              </span>
+            )}
           </label>
 
           <label>
@@ -123,6 +157,9 @@ export default function Contact2() {
           <label>
             Message
             <textarea name="message" rows={6} value={form.message} onChange={handleChange} maxLength={4000} required />
+            <span className={`contact2-counter ${form.message.length > 3600 ? "is-near-limit" : ""}`}>
+              {form.message.length} / 4000
+            </span>
           </label>
 
           <div className="contact__website" aria-hidden="true">
