@@ -88,7 +88,6 @@ export default function MarketingNav({ onLogin, onRegister }) {
     // "/faq",
     "/donate",
     "/merch",
-    "/discountlinks",
   ];
 
   const pageWantsSolidNav = solidNavPages.includes(location.pathname);

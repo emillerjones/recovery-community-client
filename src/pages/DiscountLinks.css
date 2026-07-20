@@ -1,227 +1,383 @@
 .discount-page {
   min-height: 100vh;
-  background: #fbfaf7;
-  color: #10281f;
+  overflow: hidden;
+  background: #e9e2d6;
+  color: #1d3024;
 }
 
 .discount-inner {
-  width: min(1120px, 90vw);
+  width: min(1160px, 90vw);
   margin: 0 auto;
 }
 
+/* ---------- Dark offers hero ---------- */
+
 .discount-hero {
-  padding: 130px 0 70px;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: 150px 0 92px;
   background:
-    radial-gradient(circle at top left, rgba(217, 180, 111, 0.22), transparent 34%),
-    #fbfaf7;
+    radial-gradient(circle at 77% 35%, rgba(203, 166, 98, 0.17), transparent 31%),
+    linear-gradient(145deg, #2c392f, #18241c 66%, #111a14);
+  color: #f3ecdf;
+}
+
+.discount-hero::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background:
+    linear-gradient(rgba(243, 236, 223, 0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(243, 236, 223, 0.018) 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image: linear-gradient(90deg, transparent, #000 48%, #000);
+}
+
+.discount-hero__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 670px) 1fr;
+  align-items: center;
+  gap: clamp(45px, 8vw, 110px);
+}
+
+.discount-hero__copy {
+  position: relative;
+  z-index: 1;
 }
 
 .discount-eyebrow {
-  margin: 0 0 14px;
-  font-size: 0.78rem;
+  margin: 0 0 17px;
+  color: #d4b271;
+  font-size: 0.72rem;
   font-weight: 800;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.17em;
   text-transform: uppercase;
-  color: #6f7f57;
 }
 
 .discount-hero h1 {
-  max-width: 860px;
+  max-width: 760px;
   margin: 0;
+  color: #fffaf0;
   font-family: "Fraunces", serif;
-  font-size: clamp(3.4rem, 7vw, 6.5rem);
-  line-height: 0.98;
+  font-size: clamp(4rem, 7.5vw, 7rem);
+  font-weight: 500;
+  letter-spacing: -0.045em;
+  line-height: 0.93;
+  text-wrap: balance;
 }
 
 .discount-intro {
-  max-width: 720px;
-  margin: 28px 0 0;
-  font-size: 1.18rem;
-  line-height: 1.7;
-  color: #405044;
+  max-width: 650px;
+  margin: 26px 0 0;
+  color: rgba(255, 250, 240, 0.7);
+  font-size: 1.06rem;
+  line-height: 1.72;
 }
 
+.discount-hero__art {
+  width: min(37vw, 455px);
+  overflow: visible;
+  animation: discount-art-float 9s ease-in-out infinite;
+}
+
+.discount-hero__art path,
+.discount-hero__art circle {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.discount-hero__orbit {
+  stroke: rgba(255, 250, 240, 0.08);
+  stroke-dasharray: 5 11;
+}
+
+.discount-hero__tag,
+.discount-hero__fold {
+  stroke: rgba(255, 250, 240, 0.25);
+  stroke-width: 1.5;
+  stroke-dasharray: 1;
+  animation: discount-line-draw 1.5s ease both;
+}
+
+.discount-hero__tag {
+  fill: rgba(255, 250, 240, 0.018) !important;
+}
+
+.discount-hero__hole {
+  stroke: rgba(212, 178, 113, 0.52);
+  stroke-width: 1.5;
+}
+
+.discount-hero__percent {
+  stroke: rgba(212, 178, 113, 0.72);
+  stroke-width: 1.8;
+  stroke-dasharray: 1;
+  animation: discount-line-draw 1.25s ease 0.35s both;
+}
+
+.discount-hero__thread {
+  stroke: rgba(255, 250, 240, 0.14);
+  stroke-width: 1.2;
+  stroke-dasharray: 4 7;
+}
+
+@keyframes discount-line-draw { from { stroke-dashoffset: 1; } }
+@keyframes discount-art-float { 50% { transform: translateY(-7px); } }
+
+/* ---------- Partner directory ---------- */
+
 .discount-section {
-  padding: 40px 0 80px;
+  padding: 76px 0 88px;
 }
 
 .discount-category-list {
   display: grid;
-  gap: 70px;
+  gap: 76px;
 }
 
 .discount-category {
   display: grid;
-  grid-template-columns: 280px 1fr;
-  gap: 38px;
+  grid-template-columns: 255px minmax(0, 1fr);
+  gap: clamp(34px, 5vw, 62px);
   align-items: start;
 }
 
 .discount-category__head {
   position: sticky;
-  top: 110px;
+  top: 108px;
+  padding: 27px 24px 25px;
+  border: 1px solid rgba(212, 178, 113, 0.46);
+  border-radius: 4px;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.017) 1px, transparent 1px),
+    linear-gradient(145deg, #2b3b2f, #17251c);
+  background-size: 100% 9px, auto;
+  color: #fffaf0;
+  box-shadow: 0 24px 55px rgba(29, 39, 31, 0.17);
+}
+
+.discount-category__number {
+  display: block;
+  margin-bottom: 22px;
+  color: rgba(255, 250, 240, 0.42);
+  font: 500 0.67rem "Inter", sans-serif;
+  letter-spacing: 0.16em;
+}
+
+.discount-category__icon {
+  width: 43px;
+  height: 43px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 24px;
+  border: 1px solid rgba(212, 178, 113, 0.5);
+  border-radius: 50%;
+  color: #d4b271;
+}
+
+.discount-category__icon svg {
+  width: 20px;
+  height: 20px;
+  stroke-width: 1.6;
 }
 
 .discount-category__head h2 {
   margin: 0;
+  color: #fffaf0;
   font-family: "Fraunces", serif;
-  font-size: clamp(1.8rem, 3vw, 2.6rem);
-  line-height: 1.05;
-  color: #10281f;
+  font-size: clamp(1.65rem, 2.6vw, 2.2rem);
+  font-weight: 500;
+  line-height: 1.08;
 }
 
 .discount-category__head p {
   margin: 16px 0 0;
-  line-height: 1.65;
-  color: #405044;
+  color: rgba(255, 250, 240, 0.64);
+  font-size: 0.88rem;
+  line-height: 1.68;
 }
 
 .discount-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 14px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  overflow: hidden;
+  border: 1px solid rgba(73, 83, 68, 0.17);
+  border-radius: 5px;
+  background: #fbf7ee;
+  box-shadow: 0 28px 70px rgba(36, 45, 35, 0.1);
 }
 
 .discount-card {
-  min-height: 150px;
+  min-width: 0;
+  min-height: 172px;
   display: flex;
-  flex-direction: row;
   align-items: center;
-  gap: 16px;
-  padding: 18px 22px;
-  border-radius: 18px;
-  background: rgba(255, 252, 246, 0.92);
-  border: 1px solid rgba(40, 59, 45, 0.1);
-  box-shadow: 0 16px 42px rgba(32, 43, 34, 0.06);
+  gap: 17px;
+  padding: 23px;
+  border-right: 1px solid rgba(73, 83, 68, 0.13);
+  border-bottom: 1px solid rgba(73, 83, 68, 0.13);
+  background: transparent;
   color: inherit;
   text-decoration: none;
-  transition:
-    transform 180ms ease,
-    box-shadow 180ms ease,
-    border-color 180ms ease;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
 }
 
-.discount-card:hover {
-  transform: translateY(-3px);
-  border-color: rgba(217, 180, 111, 0.55);
-  box-shadow: 0 22px 56px rgba(32, 43, 34, 0.1);
-}
+.discount-card:nth-child(2n) { border-right: 0; }
+.discount-card:nth-last-child(-n + 2) { border-bottom: 0; }
+.discount-card:last-child:nth-child(odd) { border-right: 0; }
+.discount-card:hover { background: rgba(212, 178, 113, 0.1); box-shadow: inset 3px 0 #b28b49; }
 
 .discount-card__logo {
-  flex: 0 0 auto;
-  width: 56px;
-  height: 56px;
-  border-radius: 12px;
-  object-fit: contain;
+  width: 58px;
+  height: 58px;
+  flex: 0 0 58px;
+  padding: 5px;
+  border: 1px solid rgba(73, 83, 68, 0.12);
+  border-radius: 50%;
   background: #fff;
-  border: 1px solid rgba(40, 59, 45, 0.08);
-  padding: 4px;
+  object-fit: contain;
 }
 
 .discount-card__body {
-  flex: 1 1 auto;
   min-width: 0;
+  flex: 1;
+  align-self: stretch;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 100%;
 }
 
 .discount-card h3 {
   margin: 0;
+  color: #1d3024;
   font-family: "Fraunces", serif;
-  font-size: 1.1rem;
-  line-height: 1.2;
-  color: #10281f;
+  font-size: 1.12rem;
+  font-weight: 550;
+  line-height: 1.25;
 }
 
 .discount-card p {
   margin: 8px 0 0;
+  color: rgba(29, 48, 36, 0.67);
+  font-size: 0.84rem;
   line-height: 1.5;
-  font-size: 0.9rem;
-  color: #405044;
 }
 
 .discount-card__bottom {
+  min-width: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 12px;
-  margin-top: 14px;
+  gap: 10px;
+  margin-top: 15px;
 }
 
 .discount-code {
+  min-width: 0;
   display: inline-flex;
   align-items: center;
-  max-width: 100%;
-  border-radius: 999px;
-  padding: 8px 12px;
-  background: #f3efe6;
-  color: #526143;
-  font-size: 0.78rem;
-  font-weight: 800;
+  overflow: hidden;
+  padding: 7px 10px;
+  border: 1px dashed rgba(128, 104, 63, 0.32);
+  border-radius: 3px;
+  background: rgba(223, 211, 187, 0.28);
+  color: #66705e;
+  font-size: 0.69rem;
+  font-weight: 750;
+  white-space: nowrap;
 }
 
 .discount-code strong {
+  overflow: hidden;
   margin-left: 4px;
-  color: #22412d;
+  color: #314936;
+  text-overflow: ellipsis;
 }
 
-.discount-code--none {
-  color: #6f7f57;
-}
+.discount-code--none { color: #6f7f57; }
 
 .discount-arrow {
-  flex: 0 0 auto;
-  width: 34px;
-  height: 34px;
+  width: 33px;
+  height: 33px;
+  flex: 0 0 33px;
   display: grid;
   place-items: center;
+  border: 1px solid rgba(73, 83, 68, 0.24);
   border-radius: 50%;
-  background: #26382b;
-  color: #fffaf0;
-  font-weight: 900;
+  color: #405744;
+  transition: background 0.2s ease, color 0.2s ease;
 }
 
+.discount-arrow svg { width: 15px; height: 15px; }
+.discount-card:hover .discount-arrow { background: #26382b; color: #fffaf0; }
+
+/* ---------- Affiliate notice ---------- */
+
 .discount-disclaimer-section {
-  padding: 0 0 90px;
+  padding: 0 0 88px;
 }
 
 .discount-disclaimer {
-  padding: 26px 30px;
-  border-radius: 20px;
-  background: linear-gradient(135deg, #10281f, #25442f);
-  color: rgba(255, 250, 240, 0.9);
-  line-height: 1.7;
-  box-shadow: 0 24px 60px rgba(16, 40, 31, 0.2);
+  display: grid;
+  grid-template-columns: 58px 1fr;
+  gap: 23px;
+  align-items: center;
+  padding: 30px 34px;
+  border: 1px solid rgba(212, 178, 113, 0.3);
+  border-radius: 4px;
+  background: linear-gradient(135deg, #1a2b20, #2b4331);
+  color: #fffaf0;
+  box-shadow: 0 24px 60px rgba(16, 40, 31, 0.18);
 }
 
-.discount-disclaimer strong {
-  color: #fffaf0;
+.discount-disclaimer__icon {
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(212, 178, 113, 0.42);
+  border-radius: 50%;
+  color: #d4b271;
 }
+
+.discount-disclaimer__icon svg { width: 23px; height: 23px; }
+.discount-disclaimer p { margin: 0; color: rgba(255, 250, 240, 0.8); line-height: 1.7; }
+.discount-disclaimer strong { color: #fffaf0; }
 
 @media (max-width: 950px) {
-  .discount-category {
-    grid-template-columns: 1fr;
-    gap: 22px;
-  }
-
-  .discount-category__head {
-    position: relative;
-    top: auto;
-  }
+  .discount-hero { padding: 126px 0 72px; }
+  .discount-hero__inner { grid-template-columns: 1fr; }
+  .discount-hero__art { position: absolute; right: -105px; bottom: -55px; width: 350px; opacity: 0.34; }
+  .discount-category { grid-template-columns: 1fr; gap: 22px; }
+  .discount-category__head { position: relative; top: auto; display: grid; grid-template-columns: 44px 1fr; gap: 0 18px; }
+  .discount-category__number { grid-column: 2; margin-bottom: 10px; }
+  .discount-category__icon { grid-row: 1 / 4; margin: 0; }
+  .discount-category__head h2, .discount-category__head p { grid-column: 2; }
 }
 
 @media (max-width: 650px) {
-  .discount-hero {
-    padding: 100px 0 56px;
-  }
+  .discount-inner { width: min(100% - 28px, 1160px); }
+  .discount-hero .discount-inner { width: min(100% - 40px, 1160px); }
+  .discount-hero h1 { font-size: clamp(3.2rem, 15vw, 4.7rem); }
+  .discount-section { padding: 52px 0 68px; }
+  .discount-category-list { gap: 52px; }
+  .discount-category__head { display: block; padding: 25px 22px; }
+  .discount-category__number { margin-bottom: 18px; }
+  .discount-category__icon { margin-bottom: 20px; }
+  .discount-grid { grid-template-columns: 1fr; }
+  .discount-card { min-height: 0; border-right: 0; }
+  .discount-card:nth-last-child(-n + 2) { border-bottom: 1px solid rgba(73, 83, 68, 0.13); }
+  .discount-card:last-child { border-bottom: 0; }
+  .discount-disclaimer { grid-template-columns: 1fr; padding: 28px 24px; }
+}
 
-  .discount-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .discount-card {
-    min-height: auto;
-  }
+@media (prefers-reduced-motion: reduce) {
+  .discount-hero__art,
+  .discount-hero__tag,
+  .discount-hero__fold,
+  .discount-hero__percent { animation: none; }
 }

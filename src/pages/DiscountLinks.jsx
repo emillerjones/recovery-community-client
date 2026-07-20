@@ -1,8 +1,18 @@
+import {
+  Candy,
+  Cable,
+  ExternalLink,
+  Leaf,
+  PackageCheck,
+  ShieldAlert,
+  Shirt,
+} from "lucide-react";
 import "./DiscountLinks.css";
 
 const discountCategories = [
   {
     title: "Apparel & Advocacy",
+    icon: Shirt,
     desc: "Wear the message and support the movement.",
     links: [
       { name: "Etsy #EXITDRUG Advocate T-Shirt", code: "EXITDRUG", url: "https://www.etsy.com/shop/TheExitDrugRecovery", logo: "https://cdn2.lnk.bi/uploads/6288789_20231123040640893-100.jpg" },
@@ -12,6 +22,7 @@ const discountCategories = [
   },
   {
     title: "CBD, Hemp & Cannabis Wellness",
+    icon: Leaf,
     desc: "Products some members use as part of their recovery routines.",
     links: [
       { name: "Coast Smokes", code: "SOBERSTONER", url: "https://coastsmokes.co/", logo: "https://cdn2.lnk.bi/uploads/11432104_20251005051805110-100.jpg" },
@@ -24,6 +35,7 @@ const discountCategories = [
   },
   {
     title: "Vaporizers & Devices",
+    icon: Cable,
     desc: "Device discounts and accessories from partner links.",
     links: [
       { name: "DYNAVAP", code: "SOBERSTONER", url: "https://www.dynavap.com/?ref=LAINIERUTH", logo: "https://cdn2.lnk.bi/uploads/8407012_20240930212435937-100.jpg" },
@@ -35,6 +47,7 @@ const discountCategories = [
   },
   {
     title: "Storage, Filters & Accessories",
+    icon: PackageCheck,
     desc: "Practical tools for safer storage, odor control, and daily use.",
     links: [
       { name: "Skunk Bags", code: "SOBERSTONER", url: "https://skunkbags.com/soberstoner", logo: "https://cdn2.lnk.bi/uploads/11114314_20250905044301743-100.jpg" },
@@ -53,6 +66,7 @@ const discountCategories = [
   },
   {
     title: "Gummies, Mints & Beverages",
+    icon: Candy,
     desc: "Partner links for edible-style products, mints, and drinks.",
     links: [
       { name: "Snoozy Gummy Discount Link", code: null, note: "Use this link, then click “Redeem Coupon.”", url: "https://snwbl.io/snoozy/SOBERSTONER", logo: "https://cdn2.lnk.bi/uploads/9153322_20250128220112811-100.png" },
@@ -67,21 +81,35 @@ export default function DiscountLinks() {
   return (
     <main className="discount-page">
       <section className="discount-hero">
-        <div className="discount-inner">
-          <p className="discount-eyebrow">Community perks</p>
-          <h1>Discount links and codes.</h1>
-          <p className="discount-intro">
-            A gathered list of partner links, referral links, and discount codes
-            connected to the Recovery With The Exit Drug community.
-          </p>
+        <div className="discount-inner discount-hero__inner">
+          <div className="discount-hero__copy">
+            <p className="discount-eyebrow">Community perks</p>
+            <h1>Discount links and codes.</h1>
+            <p className="discount-intro">
+              A gathered list of partner links, referral links, and discount codes
+              connected to the Recovery With The Exit Drug community.
+            </p>
+          </div>
+          <svg className="discount-hero__art" viewBox="0 0 500 380" aria-hidden="true">
+            <path className="discount-hero__orbit" pathLength="1" d="M38 190C38 89 124 29 252 29c130 0 210 61 210 162 0 103-82 158-212 158S38 294 38 190Z" />
+            <path className="discount-hero__tag" pathLength="1" d="M128 92h176l88 88-158 158-106-106Z" />
+            <path className="discount-hero__fold" pathLength="1" d="m304 92-1 89 89-1" />
+            <circle className="discount-hero__hole" cx="177" cy="141" r="13" />
+            <path className="discount-hero__percent" pathLength="1" d="m220 234 78-78M226 166a15 15 0 1 0 0 .1M292 224a15 15 0 1 0 0 .1" />
+            <path className="discount-hero__thread" pathLength="1" d="M177 128C133 83 86 91 69 125" />
+          </svg>
         </div>
       </section>
 
       <section className="discount-section">
         <div className="discount-inner discount-category-list">
-          {discountCategories.map((category) => (
+          {discountCategories.map((category, categoryIndex) => {
+            const CategoryIcon = category.icon;
+            return (
             <section className="discount-category" key={category.title}>
               <div className="discount-category__head">
+                <span className="discount-category__number">0{categoryIndex + 1}</span>
+                <span className="discount-category__icon"><CategoryIcon /></span>
                 <h2>{category.title}</h2>
                 <p>{category.desc}</p>
               </div>
@@ -119,23 +147,25 @@ export default function DiscountLinks() {
                             No code needed
                           </span>
                         )}
-                        <span className="discount-arrow">↗</span>
+                        <span className="discount-arrow"><ExternalLink /></span>
                       </div>
                     </div>
                   </a>
                 ))}
               </div>
             </section>
-          ))}
+            );
+          })}
         </div>
       </section>
 
       <section className="discount-disclaimer-section">
         <div className="discount-inner">
           <div className="discount-disclaimer">
-            <strong>Important:</strong> Some links may be affiliate or referral
-            links. Products listed here are not medical advice and are not a
-            substitute for professional care. Always follow your local laws.
+            <span className="discount-disclaimer__icon"><ShieldAlert /></span>
+            <p><strong>Important:</strong> Some links may be affiliate or referral
+              links. Products listed here are not medical advice and are not a
+              substitute for professional care. Always follow your local laws.</p>
           </div>
         </div>
       </section>
