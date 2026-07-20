@@ -1,0 +1,78 @@
+@import "./About.css";
+
+.about2-study .philosophy-hero {
+  border-bottom: 1px solid rgba(205, 164, 95, 0.24);
+}
+
+.about2-study .philosophy-hero__copy {
+  padding-left: 28px;
+  border-left: 1px solid rgba(205, 164, 95, 0.34);
+}
+
+.about2-study .philosophy-foundation blockquote {
+  position: relative;
+  padding-inline: 35px;
+}
+
+.about2-study .philosophy-foundation blockquote::before {
+  content: "“";
+  position: absolute;
+  left: -18px;
+  top: -55px;
+  color: rgba(205, 164, 95, 0.14);
+  font: 450 9rem/1 "Fraunces", serif;
+}
+
+.about2-study .mission-belief {
+  position: relative;
+}
+
+.about2-study .mission-belief::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -1px;
+  width: 0;
+  height: 1px;
+  translate: -50%;
+  background: linear-gradient(90deg, transparent, rgba(205, 164, 95, 0.55), transparent);
+  transition: width 700ms ease;
+}
+
+.about2-study .mission-belief.mission-draw-in::after {
+  width: 72%;
+}
+
+.about2-study .mission-belief__art {
+  filter: drop-shadow(0 18px 28px rgba(0, 0, 0, 0.14));
+}
+
+.about2-study .mission-growth__map {
+  border: 1px solid rgba(72, 97, 70, 0.14);
+  background: rgba(255, 253, 247, 0.28);
+  box-shadow: 0 35px 85px rgba(53, 57, 48, 0.08);
+}
+
+.about2-study .philosophy-welcome__inner {
+  padding-block: 22px;
+}
+
+.about2-study .philosophy-boundary {
+  border-top: 1px solid rgba(205, 164, 95, 0.28);
+}
+
+@media (max-width: 850px) {
+  .about2-study .philosophy-hero__copy {
+    padding-left: 18px;
+  }
+
+  .about2-study .philosophy-foundation blockquote {
+    padding-inline: 8px;
+  }
+
+  .about2-study .mission-growth__map {
+    border-right: 0;
+    border-left: 0;
+    box-shadow: none;
+  }
+}

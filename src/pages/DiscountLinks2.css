@@ -1,0 +1,68 @@
+@import "./DiscountLinks.css";
+
+.discount2-study .discount-hero {
+  border-bottom: 1px solid rgba(211, 173, 105, 0.25);
+}
+
+.discount2-study .discount-hero__copy {
+  padding-left: 27px;
+  border-left: 1px solid rgba(211, 173, 105, 0.34);
+}
+
+.discount2-study .discount-hero__art {
+  filter: drop-shadow(0 28px 60px rgba(0, 0, 0, 0.2));
+}
+
+.discount2-study .discount-section {
+  background:
+    linear-gradient(rgba(48, 61, 49, 0.025) 1px, transparent 1px),
+    #eee8dc;
+  background-size: 100% 24px;
+}
+
+.discount2-study .discount-category {
+  position: relative;
+  padding-left: 28px;
+  border-left: 1px solid rgba(134, 104, 60, 0.18);
+}
+
+.discount2-study .discount-category__number {
+  color: rgba(148, 111, 55, 0.55);
+}
+
+.discount2-study .discount-grid {
+  gap: 14px;
+}
+
+.discount2-study .discount-card {
+  border-radius: 0;
+  background: rgba(251, 248, 241, 0.78);
+  box-shadow: 0 20px 55px rgba(43, 49, 41, 0.07);
+}
+
+.discount2-study .discount-card::after {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  border: 1px solid rgba(132, 102, 58, 0.08);
+  pointer-events: none;
+}
+
+.discount2-study .discount-code {
+  border-radius: 0;
+  letter-spacing: 0.08em;
+}
+
+.discount2-study .discount-disclaimer {
+  border-top: 2px solid rgba(160, 119, 53, 0.5);
+}
+
+@media (max-width: 700px) {
+  .discount2-study .discount-hero__copy {
+    padding-left: 18px;
+  }
+
+  .discount2-study .discount-category {
+    padding-left: 16px;
+  }
+}

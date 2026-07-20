@@ -1,0 +1,79 @@
+@import "./Guidelines.css";
+
+.guidelines2-study .guidelines-hero {
+  border-bottom: 1px solid rgba(212, 178, 113, 0.26);
+}
+
+.guidelines2-study .guidelines-hero__copy {
+  padding-left: 28px;
+  border-left: 1px solid rgba(212, 178, 113, 0.35);
+}
+
+.guidelines2-study .guidelines-hero__art {
+  filter: drop-shadow(0 24px 55px rgba(0, 0, 0, 0.18));
+}
+
+.guidelines2-study .guidelines-body {
+  background:
+    linear-gradient(rgba(52, 65, 53, 0.025) 1px, transparent 1px),
+    #eee8dc;
+  background-size: 100% 22px;
+}
+
+.guidelines2-study .guidelines-side-card {
+  border-top: 3px solid #b68b48;
+  box-shadow: 0 28px 70px rgba(40, 47, 40, 0.11);
+}
+
+.guidelines2-study .guidelines-charter {
+  position: relative;
+  border-color: rgba(117, 92, 54, 0.24);
+  box-shadow: 0 38px 90px rgba(51, 45, 35, 0.12);
+}
+
+.guidelines2-study .guidelines-charter::after {
+  content: "";
+  position: absolute;
+  inset: 18px;
+  border: 1px solid rgba(132, 102, 58, 0.08);
+  pointer-events: none;
+}
+
+.guidelines2-study .guideline-card {
+  position: relative;
+}
+
+.guidelines2-study .guideline-card::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 1px;
+  height: 0;
+  translate: 0 -50%;
+  background: #b68b48;
+  transition: height 260ms ease;
+}
+
+.guidelines2-study .guideline-card:hover::before {
+  height: 62%;
+}
+
+.guidelines2-study .guidelines-contact-card {
+  border-style: solid;
+  background: linear-gradient(135deg, rgba(212, 178, 113, 0.08), transparent);
+}
+
+@media (max-width: 850px) {
+  .guidelines2-study .guidelines-hero__copy {
+    padding-left: 18px;
+  }
+
+  .guidelines2-study .guidelines-hero__art {
+    opacity: 0.3;
+  }
+
+  .guidelines2-study .guidelines-charter::after {
+    inset: 9px;
+  }
+}

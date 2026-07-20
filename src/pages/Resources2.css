@@ -1,0 +1,75 @@
+@import "./Resources.css";
+
+.resources2-study .resources-hero {
+  border-bottom: 1px solid rgba(208, 167, 97, 0.24);
+}
+
+.resources2-study .resources-hero__copy {
+  padding-left: 27px;
+  border-left: 1px solid rgba(208, 167, 97, 0.34);
+}
+
+.resources2-study .resources-field-art {
+  opacity: 0.92;
+}
+
+.resources2-study .resources-section {
+  background:
+    linear-gradient(rgba(49, 65, 51, 0.025) 1px, transparent 1px),
+    #f3eee4;
+  background-size: 100% 24px;
+}
+
+.resources2-study .learn-group {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.55fr) minmax(0, 1fr);
+  gap: clamp(35px, 6vw, 80px);
+  align-items: start;
+}
+
+.resources2-study .learn-group__title {
+  position: sticky;
+  top: 112px;
+}
+
+.resources2-study .learn-group__list {
+  padding: 14px 21px;
+  border: 1px solid rgba(27, 34, 28, 0.12);
+  background: rgba(251, 248, 241, 0.62);
+  box-shadow: 0 20px 55px rgba(39, 46, 38, 0.06);
+}
+
+.resources2-study .learn-link:last-child {
+  border-bottom: 0;
+}
+
+.resources2-study .resource-topic-mark {
+  right: auto;
+  left: 10px;
+  width: 170px;
+  opacity: 0.1;
+}
+
+.resources2-study .org-card {
+  border-top: 3px solid rgba(128, 103, 63, 0.5);
+  box-shadow: 0 23px 58px rgba(45, 46, 39, 0.09);
+}
+
+@media (max-width: 850px) {
+  .resources2-study .resources-hero__copy {
+    padding-left: 18px;
+  }
+
+  .resources2-study .learn-group {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .resources2-study .learn-group__title {
+    position: static;
+  }
+
+  .resources2-study .learn-group__list {
+    padding: 8px 14px;
+  }
+}

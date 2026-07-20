@@ -1,0 +1,104 @@
+@import "./Community.css";
+
+.community2-study .community-hero--network {
+  position: relative;
+  min-height: min(760px, 88svh);
+  background:
+    radial-gradient(circle at 78% 38%, rgba(212, 170, 101, 0.13), transparent 28%),
+    linear-gradient(145deg, #2b3b30, #17241b 64%, #0f1812);
+}
+
+.community2-study .community-hero--network::after {
+  content: "";
+  position: absolute;
+  right: 4vw;
+  top: 50%;
+  width: min(520px, 40vw);
+  aspect-ratio: 1;
+  translate: 0 -46%;
+  border: 1px solid rgba(245, 240, 230, 0.1);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 50%, #d4aa65 0 4px, transparent 5px),
+    radial-gradient(circle at 25% 34%, rgba(245, 240, 230, 0.55) 0 3px, transparent 4px),
+    radial-gradient(circle at 72% 26%, rgba(245, 240, 230, 0.48) 0 3px, transparent 4px),
+    radial-gradient(circle at 77% 70%, rgba(245, 240, 230, 0.45) 0 3px, transparent 4px),
+    radial-gradient(circle at 27% 73%, rgba(245, 240, 230, 0.42) 0 3px, transparent 4px);
+  box-shadow:
+    0 0 0 62px rgba(245, 240, 230, 0.018),
+    0 0 0 124px rgba(212, 170, 101, 0.012);
+  opacity: 0.75;
+  pointer-events: none;
+}
+
+.community2-study .community-hero__copy {
+  padding-left: 27px;
+  border-left: 1px solid rgba(212, 170, 101, 0.32);
+}
+
+.community2-study .community-moments {
+  padding-top: 110px;
+}
+
+.community2-study .community-moments__board {
+  padding: 38px;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(145deg, #303a31, #17231c);
+  background-size: 100% 12px, auto;
+}
+
+.community2-study .community-moments__board .community-card {
+  border-top: 3px solid rgba(184, 147, 84, 0.55);
+}
+
+.community2-study .community-spaces .community-space {
+  transition: background 180ms ease, padding-left 180ms ease;
+}
+
+.community2-study .community-spaces .community-space:hover {
+  padding-left: 39px;
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.community2-study .community-culture .community-inner {
+  position: relative;
+}
+
+.community2-study .community-culture .community-inner::after {
+  content: "";
+  position: absolute;
+  right: 24px;
+  bottom: 22px;
+  width: 90px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(212, 178, 113, 0.6));
+}
+
+@media (max-width: 800px) {
+  .community2-study .community-hero--network {
+    min-height: 0;
+  }
+
+  .community2-study .community-hero--network::after {
+    right: -42vw;
+    width: 95vw;
+    opacity: 0.26;
+  }
+
+  .community2-study .community-hero__copy {
+    padding-left: 19px;
+  }
+
+  .community2-study .community-moments {
+    padding-top: 54px;
+  }
+
+  .community2-study .community-moments__board {
+    padding: 20px;
+  }
+
+  .community2-study .community-spaces .community-space:hover {
+    padding-left: 18px;
+  }
+}

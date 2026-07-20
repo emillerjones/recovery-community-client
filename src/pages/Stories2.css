@@ -1,0 +1,80 @@
+@import "./Stories.css";
+
+.stories2-study {
+  background: #171d18;
+}
+
+.stories2-study .stories__room {
+  position: relative;
+  isolation: isolate;
+  background:
+    radial-gradient(circle at 83% 16%, rgba(209, 166, 95, 0.11), transparent 24%),
+    linear-gradient(160deg, #29342c, #151d17 72%);
+}
+
+.stories2-study .stories__room::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: -180px;
+  top: 18%;
+  width: 430px;
+  aspect-ratio: 1;
+  border: 1px solid rgba(247, 240, 226, 0.08);
+  border-radius: 47% 53% 42% 58%;
+  box-shadow: 0 0 0 58px rgba(209, 166, 95, 0.018);
+}
+
+.stories2-study .stories__copy {
+  padding-left: 26px;
+  border-left: 1px solid rgba(209, 166, 95, 0.34);
+}
+
+.stories2-study .stories__desk {
+  padding: clamp(24px, 4vw, 54px);
+  border: 1px solid rgba(209, 166, 95, 0.2);
+  background:
+    radial-gradient(circle at 12% 13%, rgba(209, 166, 95, 0.08), transparent 20%),
+    linear-gradient(145deg, #29352b, #111913);
+  box-shadow:
+    0 42px 95px rgba(0, 0, 0, 0.32),
+    inset 0 0 80px rgba(0, 0, 0, 0.18);
+}
+
+.stories2-study .stories__dee,
+.stories2-study .stories__prints button,
+.stories2-study .stories__shawn {
+  outline: 1px solid rgba(245, 235, 216, 0.13);
+  outline-offset: 6px;
+}
+
+.stories2-study .stories__prints button {
+  transition: rotate 180ms ease, translate 180ms ease, filter 180ms ease;
+}
+
+.stories2-study .stories__prints button:hover {
+  translate: 0 -5px;
+  rotate: 0deg;
+  filter: brightness(1.06);
+}
+
+.stories2-study .stories__join {
+  border-top: 1px solid rgba(209, 166, 95, 0.22);
+  border-bottom: 1px solid rgba(209, 166, 95, 0.22);
+}
+
+@media (max-width: 720px) {
+  .stories2-study .stories__copy {
+    padding-left: 18px;
+  }
+
+  .stories2-study .stories__desk {
+    padding: 22px 18px;
+  }
+
+  .stories2-study .stories__dee,
+  .stories2-study .stories__prints button,
+  .stories2-study .stories__shawn {
+    outline-offset: 3px;
+  }
+}

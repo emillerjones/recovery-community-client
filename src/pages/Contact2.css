@@ -1,0 +1,85 @@
+@import "./Contact.css";
+
+.contact2-study .contact__hero {
+  border-bottom: 1px solid rgba(212, 170, 101, 0.26);
+}
+
+.contact2-study .contact__hero > p,
+.contact2-study .contact__hero > h1,
+.contact2-study .contact__hero > div {
+  position: relative;
+  z-index: 2;
+}
+
+.contact2-study .contact__hero h1 {
+  padding-left: 26px;
+  border-left: 1px solid rgba(212, 170, 101, 0.36);
+}
+
+.contact2-study .contact__hero-art {
+  filter: drop-shadow(0 28px 65px rgba(0, 0, 0, 0.18));
+}
+
+.contact2-study .contact__primary {
+  align-items: start;
+}
+
+.contact2-study .contact__form {
+  position: relative;
+  border-radius: 0;
+  border-top: 3px solid #aa8040;
+  box-shadow: 0 35px 85px rgba(38, 46, 38, 0.12);
+}
+
+.contact2-study .contact__form::after {
+  content: "";
+  position: absolute;
+  inset: 14px;
+  border: 1px solid rgba(126, 96, 52, 0.08);
+  pointer-events: none;
+}
+
+.contact2-study .contact__side > * {
+  border-radius: 0;
+  box-shadow: 0 22px 58px rgba(38, 46, 38, 0.08);
+}
+
+.contact2-study .contact__quick-links a {
+  transition: padding-left 180ms ease, color 180ms ease;
+}
+
+.contact2-study .contact__quick-links a:hover {
+  padding-left: 8px;
+}
+
+.contact2-study .contact__social-card {
+  border-radius: 0;
+  border-top: 2px solid rgba(60, 78, 62, 0.32);
+}
+
+.contact2-study .contact__closing {
+  position: relative;
+  overflow: hidden;
+}
+
+.contact2-study .contact__closing::after {
+  content: "";
+  position: absolute;
+  right: -160px;
+  bottom: -220px;
+  width: 430px;
+  aspect-ratio: 1;
+  border: 1px solid rgba(212, 170, 101, 0.15);
+  border-radius: 50%;
+  box-shadow: 0 0 0 55px rgba(212, 170, 101, 0.025);
+}
+
+@media (max-width: 760px) {
+  .contact2-study .contact__hero h1 {
+    padding-left: 18px;
+  }
+
+  .contact2-study .contact__form::after {
+    inset: 8px;
+  }
+}

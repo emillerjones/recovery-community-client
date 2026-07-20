@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import "./About.css";
+import "./About2.css";
 
 const BELIEFS = [
   {
@@ -64,7 +64,7 @@ function BeliefRoot({ belief, index }) {
   );
 }
 
-export default function Mission() {
+export default function About2() {
   const pageRef = useRef(null);
 
   useEffect(() => {
@@ -98,7 +98,7 @@ export default function Mission() {
   }, []);
 
   return (
-    <main className="philosophy-page" ref={pageRef}>
+    <main className="philosophy-page about2-study" ref={pageRef}>
       <section className="philosophy-hero">
         <div className="philosophy-hero__soil" aria-hidden="true" />
         <div className="philosophy-inner philosophy-hero__inner">

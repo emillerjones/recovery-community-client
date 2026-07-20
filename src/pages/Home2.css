@@ -1,0 +1,110 @@
+@import "./Home.css";
+
+.home2-study {
+  --home2-line: rgba(215, 173, 104, 0.24);
+}
+
+.home2-study .home-hero::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  right: -12vw;
+  bottom: -28vw;
+  width: 58vw;
+  aspect-ratio: 1;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 47% 53% 45% 55%;
+  box-shadow:
+    0 0 0 6vw rgba(255, 255, 255, 0.018),
+    0 0 0 12vw rgba(215, 173, 104, 0.025);
+  pointer-events: none;
+}
+
+.home2-study .home-hero__content {
+  display: grid;
+  grid-template-columns: minmax(0, 760px) minmax(160px, 1fr);
+  align-items: end;
+}
+
+.home2-study .home-hero__content > * {
+  grid-column: 1;
+}
+
+.home2-study .home-belief {
+  padding-block: 145px;
+}
+
+.home2-study .home-belief::after {
+  content: "A place to begin again";
+  position: absolute;
+  right: 0;
+  bottom: 52px;
+  color: rgba(23, 34, 25, 0.3);
+  font: italic 0.72rem "Fraunces", serif;
+}
+
+.home2-study .home-stories__head {
+  padding-left: 25px;
+  border-left: 1px solid var(--home2-line);
+}
+
+.home2-study .home-story-card {
+  border-radius: 0;
+  box-shadow: 0 22px 52px rgba(23, 34, 25, 0.09);
+}
+
+.home2-study .home-story-card__photo::after {
+  content: "";
+  position: absolute;
+  inset: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  pointer-events: none;
+}
+
+.home2-study .home-community {
+  border-top: 1px solid rgba(215, 173, 104, 0.28);
+}
+
+.home2-study .home-community__copy {
+  padding-left: 35px;
+  border-left: 1px solid rgba(247, 242, 233, 0.14);
+}
+
+.home2-study .home-final__content::before {
+  content: "";
+  display: block;
+  width: 1px;
+  height: 62px;
+  margin: 0 auto 34px;
+  background: linear-gradient(transparent, var(--gold));
+}
+
+@media (max-width: 760px) {
+  .home2-study .home-hero__content {
+    display: block;
+  }
+
+  .home2-study .home-hero::after {
+    right: -42vw;
+    bottom: -18vw;
+    width: 105vw;
+  }
+
+  .home2-study .home-belief {
+    padding-block: 98px 112px;
+  }
+
+  .home2-study .home-belief::after {
+    right: auto;
+    left: 0;
+    bottom: 58px;
+  }
+
+  .home2-study .home-stories__head {
+    padding-left: 18px;
+  }
+
+  .home2-study .home-community__copy {
+    padding-left: 20px;
+  }
+}
