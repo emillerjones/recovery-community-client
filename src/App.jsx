@@ -19,6 +19,7 @@ import AppLayout from "./layout/AppLayout";
 import About from "./pages/About";
 import Resources from "./pages/Resources";
 import FAQ from "./pages/FAQ";
+import FAQ2 from "./pages/FAQ2";
 
 
 
@@ -38,6 +39,7 @@ export default function App() {
         <Route path="about" element={<About />} />
         <Route path="resources" element={<Resources />} />
         <Route path="faq" element={<FAQ />} />
+        <Route path="faq2" element={<FAQ2 />} />
         {/* <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} /> */}
       </Route>
