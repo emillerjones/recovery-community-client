@@ -168,9 +168,9 @@ export default function Guidelines2() {
             <div className="guidelines-side-card__icon"><ShieldCheck /></div>
             <span className="guidelines-side-card__label">What holds us together</span>
             <h2>
-              Trust.
+              Trust.{" "}
               <br />
-              Privacy.
+              Privacy.{" "}
               <br />
               Respect.
             </h2>
@@ -189,7 +189,7 @@ export default function Guidelines2() {
                     aria-current={activeGuideline === id ? "true" : undefined}
                   >
                     <span>{item.number}</span>
-                    {item.title}
+                    <span className="guidelines2-index__label">{item.title}</span>
                   </a>
                 );
               })}
