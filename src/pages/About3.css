@@ -1,90 +1,307 @@
-.about3-study {
-  --about3-progress: 0;
+.about3-final {
+  --about3-ink: #18241b;
+  --about3-gold: #d0a75f;
+  --about3-cream: #eee7da;
   position: relative;
-  isolation: isolate;
   overflow: clip;
+  background: #e9e2d5;
+  color: var(--about3-ink);
 }
 
-.about3-study .technique-note {
-  top: 118px;
+.about3-inner {
+  width: min(100% - 10vw, 1380px);
+  margin-inline: auto;
 }
 
-.about3-thread {
+.about3-eyebrow {
+  margin: 0;
+  color: #a77d40;
+  font-size: 0.61rem;
+  font-weight: 800;
+  letter-spacing: 0.17em;
+  text-transform: uppercase;
+}
+
+.about3-hero {
+  position: relative;
+  min-height: 82svh;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+  padding: 165px 0 105px;
+  background: radial-gradient(circle at 78% 28%, #39483a, #1a2a20 43%, #101a14 78%);
+  color: var(--about3-cream);
+}
+
+.about3-hero__grain {
   position: absolute;
-  z-index: 5;
-  top: 48vh;
-  right: max(18px, calc((100vw - 1540px) / 2));
-  width: min(180px, 14vw);
-  height: calc(100% - 56vh);
+  inset: 0;
+  opacity: 0.22;
+  background-image: linear-gradient(rgba(238, 231, 218, 0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(238, 231, 218, 0.025) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: linear-gradient(90deg, transparent, #000 28%, #000);
+}
+
+.about3-hero__inner {
+  position: relative;
+  z-index: 2;
+}
+
+.about3-hero .about3-eyebrow { color: var(--about3-gold); }
+
+.about3-hero h1 {
+  max-width: 1050px;
+  margin: 20px 0 0;
+  font: 450 clamp(4.2rem, 8.4vw, 8.8rem)/0.88 "Fraunces", serif;
+  letter-spacing: -0.047em;
+}
+
+.about3-hero__inner > p:last-child {
+  max-width: 580px;
+  margin: 34px 0 0;
+  color: rgba(238, 231, 218, 0.58);
+  font-size: 1.03rem;
+  line-height: 1.72;
+}
+
+.about3-hero__seed {
+  position: absolute;
+  right: max(2vw, calc((100vw - 1500px) / 2));
+  bottom: -42px;
+  width: min(38vw, 560px);
+  opacity: 0.34;
   overflow: visible;
+}
+
+.about3-hero__seed circle { fill: var(--about3-gold); }
+.about3-hero__seed path { fill: none; stroke: #dfc48f; stroke-width: 1.1; stroke-linecap: round; stroke-dasharray: 1; animation: about3-draw 2.2s ease 250ms both; }
+
+.about3-final > .technique-note {
+  position: relative;
+  inset: auto;
+  width: auto;
+  display: grid;
+  grid-template-columns: minmax(220px, 0.55fr) 1.45fr;
+  gap: 50px;
+  padding: 30px max(5vw, calc((100vw - 1380px) / 2));
+  border-width: 1px 0;
+  background: #131d16;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+.about3-final > .technique-note::before { display: none; }
+.about3-final > .technique-note h2 { margin-top: 7px; }
+.about3-final > .technique-note dl { grid-template-columns: 1fr 1fr; margin: 0; }
+
+.about3-journey {
+  padding: 110px 0 130px;
+  background: linear-gradient(rgba(85, 101, 78, 0.04) 1px, transparent 1px), #e9e2d5;
+  background-size: 100% 28px;
+}
+
+.about3-journey__grid {
+  display: grid;
+  grid-template-columns: minmax(390px, 0.78fr) 1.22fr;
+  gap: clamp(70px, 10vw, 155px);
+  align-items: start;
+}
+
+.about3-stage {
+  position: sticky;
+  top: 92px;
+  height: calc(100svh - 122px);
+  min-height: 580px;
+  display: grid;
+  grid-template-rows: auto 1fr auto auto;
+  overflow: hidden;
+  padding: 30px;
+  border: 1px solid rgba(208, 167, 95, 0.28);
+  background: radial-gradient(circle at 50% 45%, #2e3c2f, #17231a 67%);
+  box-shadow: 0 38px 90px rgba(42, 47, 39, 0.18);
+  color: var(--about3-cream);
+}
+
+.about3-stage::after {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  border: 1px solid rgba(238, 231, 218, 0.06);
   pointer-events: none;
-  filter: drop-shadow(0 0 10px rgba(214, 174, 101, 0.22));
 }
 
-.about3-thread path {
+.about3-stage__meta {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 20px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid rgba(238, 231, 218, 0.1);
+}
+
+.about3-stage__meta span { color: var(--about3-gold); font: 450 2rem "Fraunces", serif; }
+.about3-stage__meta p { margin: 0; color: rgba(238, 231, 218, 0.5); font-size: 0.57rem; font-weight: 800; letter-spacing: 0.13em; text-transform: uppercase; }
+
+.about3-drawing {
+  align-self: center;
+  justify-self: center;
+  width: min(100%, 440px);
+  max-height: 58vh;
+  overflow: visible;
+  filter: drop-shadow(0 0 14px rgba(208, 167, 95, 0.12));
+}
+
+.about3-drawing path,
+.about3-drawing circle {
+  vector-effect: non-scaling-stroke;
+}
+
+.about3-drawing path {
   fill: none;
-  vector-effect: non-scaling-stroke;
-}
-
-.about3-thread__ghost {
-  stroke: rgba(205, 164, 95, 0.1);
-  stroke-width: 1;
-  stroke-dasharray: 3 8;
-}
-
-.about3-thread__live {
-  stroke: #d4ad68;
-  stroke-width: 1.6;
+  stroke: #d6b06c;
+  stroke-width: 1.45;
   stroke-linecap: round;
+  stroke-linejoin: round;
   stroke-dasharray: 1;
-  stroke-dashoffset: calc(1 - var(--about3-progress));
+  animation: about3-draw 900ms cubic-bezier(0.2, 0.72, 0.2, 1) both;
 }
 
-.about3-thread circle {
-  fill: #d4ad68;
-  vector-effect: non-scaling-stroke;
-  opacity: clamp(0.12, var(--about3-progress), 1);
+.about3-drawing circle {
+  fill: #18241b;
+  stroke: #d6b06c;
+  stroke-width: 1.3;
+  animation: about3-node 520ms ease 420ms both;
 }
 
-.about3-study .philosophy-hero h1 {
+.about3-drawing .about3-drawing__seed { fill: #d6b06c; filter: drop-shadow(0 0 8px rgba(214, 176, 108, 0.65)); }
+.about3-drawing .about3-drawing__soft { stroke: rgba(214, 176, 108, 0.35); stroke-dasharray: 4 7; }
+.about3-drawing .about3-drawing__pulse { stroke: rgba(214, 176, 108, 0.28); animation: about3-pulse 1.4s ease-out both; }
+.about3-drawing .about3-drawing__door { fill: rgba(208, 167, 95, 0.08); }
+.about3-drawing .about3-drawing__light { fill: rgba(239, 207, 142, 0.12); stroke: none; animation: about3-light 900ms ease 450ms both; }
+
+.about3-stage__caption {
+  max-width: 340px;
+  margin: 0 auto 24px;
+  color: rgba(238, 231, 218, 0.54);
+  font: italic 450 0.78rem/1.55 "Fraunces", serif;
+  text-align: center;
+}
+
+.about3-stage__progress {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 6px;
+}
+
+.about3-stage__progress i { height: 2px; background: rgba(238, 231, 218, 0.12); transition: background 260ms ease; }
+.about3-stage__progress i.is-passed { background: var(--about3-gold); }
+
+.about3-chapters article {
+  min-height: 92svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 90px 0;
+  border-bottom: 1px solid rgba(75, 91, 70, 0.15);
+  opacity: 0.42;
+  transform: translateY(22px);
+  transition: opacity 420ms ease, transform 420ms ease;
+}
+
+.about3-chapters article.is-active { opacity: 1; transform: none; }
+.about3-chapters article:last-child { border-bottom: 0; }
+
+.about3-chapters h2 {
   max-width: 760px;
-  letter-spacing: calc(-0.04em + (var(--about3-progress) * 0.015em));
+  margin: 18px 0 0;
+  font: 450 clamp(3.2rem, 5.7vw, 6.4rem)/0.92 "Fraunces", serif;
+  letter-spacing: -0.04em;
 }
 
-.about3-study .philosophy-foundation,
-.about3-study .mission-beliefs,
-.about3-study .mission-growth,
-.about3-study .philosophy-welcome {
-  transition: background-color 500ms ease;
+.about3-chapter__body {
+  max-width: 690px;
+  margin-top: 40px;
+  color: rgba(24, 36, 27, 0.67);
+  font-size: 1rem;
+  line-height: 1.8;
 }
+
+.about3-chapter__body > p { margin: 0 0 20px; }
+.about3-chapter__body > strong { display: block; margin-top: 28px; padding-left: 20px; border-left: 2px solid var(--about3-gold); color: #765a30; font: 450 1.35rem/1.45 "Fraunces", serif; }
+.about3-chapter__body blockquote { margin: 0; padding-left: 30px; border-left: 1px solid var(--about3-gold); color: #624d30; font: 450 clamp(1.55rem, 2.5vw, 2.35rem)/1.45 "Fraunces", serif; }
+
+.about3-beliefs { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid rgba(75, 91, 70, 0.17); border-left: 1px solid rgba(75, 91, 70, 0.17); }
+.about3-beliefs > div { min-height: 170px; padding: 22px; border-right: 1px solid rgba(75, 91, 70, 0.17); border-bottom: 1px solid rgba(75, 91, 70, 0.17); }
+.about3-beliefs span { color: #a77d40; font: 450 0.72rem "Fraunces", serif; }
+.about3-beliefs h3 { margin: 20px 0 0; color: var(--about3-ink); font: 450 1.32rem/1.1 "Fraunces", serif; }
+.about3-beliefs p { margin: 10px 0 0; font-size: 0.78rem; line-height: 1.55; }
+
+.about3-branches { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 30px; }
+.about3-branches span { padding: 9px 13px; border: 1px solid rgba(128, 98, 51, 0.26); border-radius: 999px; background: rgba(255, 252, 245, 0.45); color: #695234; font-size: 0.67rem; font-weight: 750; }
+
+.about3-chapter__body ul { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin: 30px 0 0; padding: 0; list-style: none; border-top: 1px solid rgba(75, 91, 70, 0.17); }
+.about3-chapter__body li { padding: 15px 8px; border-bottom: 1px solid rgba(75, 91, 70, 0.17); color: #4c5c49; font-weight: 700; }
+
+.about3-boundary { padding: 78px 0 84px; background: #111a14; color: rgba(238, 231, 218, 0.62); }
+.about3-boundary .about3-inner { display: grid; grid-template-columns: 220px 1fr; gap: 70px; }
+.about3-boundary .about3-eyebrow { color: var(--about3-gold); }
+.about3-boundary p { margin: 0; line-height: 1.78; }
+.about3-boundary strong { color: var(--about3-cream); }
+
+@keyframes about3-draw { from { stroke-dashoffset: 1; opacity: 0.2; } to { stroke-dashoffset: 0; opacity: 1; } }
+@keyframes about3-node { from { opacity: 0; scale: 0; transform-origin: center; } to { opacity: 1; scale: 1; } }
+@keyframes about3-pulse { from { opacity: 0; scale: 0.6; transform-origin: center; } to { opacity: 1; scale: 1; } }
+@keyframes about3-light { from { opacity: 0; } to { opacity: 1; } }
 
 @media (max-width: 900px) {
-  .about3-study {
-    display: flex;
-    flex-direction: column;
+  .about3-inner { width: min(100% - 12vw, 760px); }
+  .about3-hero { min-height: 74svh; padding: 130px 0 76px; }
+  .about3-hero h1 { font-size: clamp(3.5rem, 15vw, 6rem); }
+  .about3-hero__seed { right: -90px; bottom: -20px; width: 78vw; opacity: 0.2; }
+
+  .about3-final > .technique-note { display: block; padding: 25px 6vw 28px; }
+  .about3-final > .technique-note dl { grid-template-columns: 1fr; margin-top: 20px; }
+
+  .about3-journey { padding: 0 0 80px; }
+  .about3-journey__grid { display: block; width: 100%; }
+  .about3-stage {
+    z-index: 8;
+    top: 64px;
+    width: 100%;
+    height: 35svh;
+    min-height: 250px;
+    grid-template-columns: 92px 1fr;
+    grid-template-rows: auto 1fr auto;
+    padding: 18px 6vw 14px;
+    border-width: 0 0 1px;
+    box-shadow: 0 18px 40px rgba(31, 38, 31, 0.2);
   }
 
-  .about3-study .technique-note {
-    order: 1;
-    padding-top: 96px;
-    background: #18241b;
-  }
+  .about3-stage__meta { grid-column: 1; grid-row: 1 / 3; display: grid; align-content: center; justify-content: start; padding: 0 16px 0 0; border: 0; border-right: 1px solid rgba(238, 231, 218, 0.1); }
+  .about3-stage__meta p { max-width: 75px; line-height: 1.5; }
+  .about3-drawing { grid-column: 2; grid-row: 1 / 3; width: min(100%, 250px); max-height: 26svh; }
+  .about3-stage__caption { display: none; }
+  .about3-stage__progress { grid-column: 1 / -1; grid-row: 3; margin-top: 10px; }
 
-  .about3-study > .philosophy-page {
-    order: 2;
-  }
+  .about3-chapters { width: min(100% - 12vw, 760px); margin-inline: auto; }
+  .about3-chapters article { min-height: 72svh; padding: 72px 0; opacity: 0.58; }
+  .about3-chapters h2 { font-size: clamp(2.7rem, 11vw, 4.6rem); }
+  .about3-chapter__body { margin-top: 30px; }
+  .about3-boundary .about3-inner { grid-template-columns: 1fr; gap: 16px; }
+}
 
-  .about3-thread {
-    z-index: 5;
-    top: 72vh;
-    right: 8px;
-    width: 52px;
-    height: calc(100% - 76vh - 260px);
-  }
+@media (max-width: 560px) {
+  .about3-beliefs,
+  .about3-chapter__body ul { grid-template-columns: 1fr; }
+  .about3-beliefs > div { min-height: 135px; }
+  .about3-stage { min-height: 235px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .about3-thread__live {
-    stroke-dashoffset: 0;
-  }
+  .about3-hero__seed path,
+  .about3-drawing path,
+  .about3-drawing circle { animation: none; stroke-dashoffset: 0; opacity: 1; }
+  .about3-chapters article { transform: none; transition: none; }
 }
