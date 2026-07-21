@@ -1,0 +1,153 @@
+.discount3-study {
+  position: relative;
+  isolation: isolate;
+}
+
+.discount3-study .technique-note {
+  top: 106px;
+}
+
+.discount3-study .discount-hero__copy {
+  max-width: 650px;
+}
+
+.discount3-rail {
+  position: fixed;
+  z-index: 13;
+  left: 18px;
+  top: 50%;
+  width: 112px;
+  translate: 0 -50%;
+  border: 1px solid rgba(211, 173, 105, 0.26);
+  background: rgba(20, 31, 23, 0.9);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  color: #f4ede0;
+  backdrop-filter: blur(12px);
+}
+
+.discount3-rail__label {
+  display: block;
+  padding: 13px 12px;
+  border-bottom: 1px solid rgba(244, 237, 224, 0.1);
+  color: rgba(244, 237, 224, 0.42);
+  font-size: 0.5rem;
+  font-weight: 800;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.discount3-rail > div {
+  display: grid;
+}
+
+.discount3-rail a {
+  display: grid;
+  gap: 4px;
+  min-height: 62px;
+  padding: 11px 12px;
+  border-bottom: 1px solid rgba(244, 237, 224, 0.08);
+  color: rgba(244, 237, 224, 0.7);
+  font-size: 0.59rem;
+  font-weight: 750;
+  text-decoration: none;
+  transition: background 180ms ease, color 180ms ease;
+}
+
+.discount3-rail a:last-child {
+  border-bottom: 0;
+}
+
+.discount3-rail a span {
+  color: #d3ad69;
+  font: 450 0.72rem "Fraunces", serif;
+}
+
+.discount3-rail a:hover,
+.discount3-rail a:focus-visible {
+  background: rgba(211, 173, 105, 0.12);
+  color: #fff8eb;
+}
+
+@media (min-width: 901px) {
+  .discount3-study .discount-grid {
+    grid-template-columns: repeat(12, 1fr);
+  }
+
+  .discount3-study .discount-card {
+    grid-column: span 4;
+  }
+
+  .discount3-study .discount-card:nth-child(5n + 1),
+  .discount3-study .discount-card:nth-child(7n) {
+    grid-column: span 6;
+  }
+
+  .discount3-study .discount-card:nth-child(5n + 1) .discount-card__logo {
+    width: 96px;
+    height: 96px;
+  }
+
+  .discount3-study .discount-card:nth-child(5n + 1) h3 {
+    font-size: 1.35rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .discount3-study {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .discount3-study > .discount-page {
+    order: 2;
+  }
+
+  .discount3-study .technique-note {
+    order: 1;
+    padding-top: 96px;
+    background: #18241b;
+  }
+
+  .discount3-rail {
+    position: fixed;
+    z-index: 20;
+    inset: auto;
+    top: auto;
+    bottom: 0;
+    order: 2;
+    width: 100%;
+    translate: none;
+    border-width: 1px 0;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.16);
+    backdrop-filter: blur(14px);
+  }
+
+  .discount3-rail__label {
+    display: none;
+  }
+
+  .discount3-rail > div {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 8px 6vw 9px;
+    scroll-padding-inline: 6vw;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .discount3-rail > div::-webkit-scrollbar {
+    display: none;
+  }
+
+  .discount3-rail a {
+    flex: 0 0 116px;
+    min-height: 52px;
+    border: 1px solid rgba(244, 237, 224, 0.1);
+    scroll-snap-align: start;
+  }
+
+  .discount3-study .discount-grid {
+    grid-template-columns: 1fr;
+  }
+}

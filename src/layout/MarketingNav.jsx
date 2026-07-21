@@ -16,6 +16,7 @@ const COMMUNITY_LINKS = [
   { to: "/guidelines2", label: "Culture 2" },
   { to: "/stories", label: "Stories" },
   { to: "/stories2", label: "Stories 2" },
+  { to: "/stories3", label: "Stories 3 — Gesture Deck" },
 ];
 
 const LEARN_LINKS = [
@@ -23,6 +24,7 @@ const LEARN_LINKS = [
   { to: "/resources2", label: "Resources 2" },
   { to: "/faq", label: "FAQ" },
   { to: "/faq2", label: "FAQ 2" },
+  { to: "/faq3", label: "FAQ 3 — Morphing Guide" },
 ];
 
 const SUPPORT_LINKS = [
@@ -30,11 +32,13 @@ const SUPPORT_LINKS = [
   { to: "/merch", label: "Merch" },
   { to: "/discountlinks", label: "Discount" },
   { to: "/discountlinks2", label: "Discount 2" },
+  { to: "/discountlinks3", label: "Discount 3 — Spatial Rail" },
 ];
 
 const ABOUT_LINKS = [
   { to: "/about", label: "Our Mission" },
   { to: "/about2", label: "Our Mission 2" },
+  { to: "/about3", label: "Our Mission 3 — Golden Thread" },
   { to: "/mystory", label: "My Story" },
   { to: "/mystory2", label: "My Story 2" },
   { to: "/contact", label: "Contact Us" },

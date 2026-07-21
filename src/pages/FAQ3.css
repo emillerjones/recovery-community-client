@@ -1,0 +1,129 @@
+.faq3-study {
+  position: relative;
+  isolation: isolate;
+}
+
+.faq3-study .technique-note {
+  top: 108px;
+}
+
+.faq3-study .faq-hero__copy {
+  padding-right: min(23vw, 300px);
+}
+
+.faq3-symbol {
+  position: fixed;
+  z-index: 12;
+  right: max(18px, calc((100vw - 1540px) / 2));
+  top: 50%;
+  display: grid;
+  place-items: center;
+  width: 92px;
+  aspect-ratio: 1;
+  translate: 0 -50%;
+  border: 1px solid rgba(205, 164, 95, 0.32);
+  border-radius: 50%;
+  background: rgba(24, 36, 27, 0.9);
+  box-shadow: 0 20px 55px rgba(0, 0, 0, 0.2);
+  color: #d3ad69;
+  backdrop-filter: blur(12px);
+  pointer-events: none;
+}
+
+.faq3-symbol::before,
+.faq3-symbol::after {
+  content: "";
+  position: absolute;
+  inset: -8px;
+  border: 1px solid rgba(205, 164, 95, 0.08);
+  border-radius: 48% 52% 51% 49%;
+  animation: faq3-orbit 12s linear infinite;
+}
+
+.faq3-symbol::after {
+  inset: 8px;
+  animation-direction: reverse;
+  animation-duration: 9s;
+}
+
+.faq3-symbol span {
+  position: absolute;
+  top: -24px;
+  font: 450 0.72rem "Fraunces", serif;
+}
+
+.faq3-symbol svg {
+  width: 48px;
+  overflow: visible;
+}
+
+.faq3-symbol path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.45;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  animation: faq3-redraw 700ms cubic-bezier(0.2, 0.75, 0.2, 1) both;
+}
+
+.faq3-study .faq-chapters {
+  view-transition-name: faq3-flow;
+}
+
+::view-transition-old(faq3-flow),
+::view-transition-new(faq3-flow) {
+  animation-duration: 320ms;
+  animation-timing-function: cubic-bezier(0.2, 0.75, 0.2, 1);
+}
+
+@keyframes faq3-redraw {
+  from { opacity: 0; stroke-dashoffset: 1; transform: rotate(-8deg) scale(0.86); }
+  to { opacity: 1; stroke-dashoffset: 0; transform: rotate(0) scale(1); }
+}
+
+@keyframes faq3-orbit {
+  to { rotate: 1turn; }
+}
+
+@media (max-width: 900px) {
+  .faq3-study {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .faq3-study > .faq {
+    order: 2;
+  }
+
+  .faq3-study .technique-note {
+    order: 1;
+    padding-top: 96px;
+    background: #18241b;
+  }
+
+  .faq3-study .faq-hero__copy {
+    padding-right: 0;
+  }
+
+  .faq3-symbol {
+    top: auto;
+    right: 14px;
+    bottom: 14px;
+    width: 64px;
+    translate: none;
+  }
+
+  .faq3-symbol svg {
+    width: 34px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .faq3-symbol::before,
+  .faq3-symbol::after,
+  .faq3-symbol path {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+}

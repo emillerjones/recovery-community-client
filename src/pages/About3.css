@@ -1,0 +1,90 @@
+.about3-study {
+  --about3-progress: 0;
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+}
+
+.about3-study .technique-note {
+  top: 118px;
+}
+
+.about3-thread {
+  position: absolute;
+  z-index: 5;
+  top: 48vh;
+  right: max(18px, calc((100vw - 1540px) / 2));
+  width: min(180px, 14vw);
+  height: calc(100% - 56vh);
+  overflow: visible;
+  pointer-events: none;
+  filter: drop-shadow(0 0 10px rgba(214, 174, 101, 0.22));
+}
+
+.about3-thread path {
+  fill: none;
+  vector-effect: non-scaling-stroke;
+}
+
+.about3-thread__ghost {
+  stroke: rgba(205, 164, 95, 0.1);
+  stroke-width: 1;
+  stroke-dasharray: 3 8;
+}
+
+.about3-thread__live {
+  stroke: #d4ad68;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: calc(1 - var(--about3-progress));
+}
+
+.about3-thread circle {
+  fill: #d4ad68;
+  vector-effect: non-scaling-stroke;
+  opacity: clamp(0.12, var(--about3-progress), 1);
+}
+
+.about3-study .philosophy-hero h1 {
+  max-width: 760px;
+  letter-spacing: calc(-0.04em + (var(--about3-progress) * 0.015em));
+}
+
+.about3-study .philosophy-foundation,
+.about3-study .mission-beliefs,
+.about3-study .mission-growth,
+.about3-study .philosophy-welcome {
+  transition: background-color 500ms ease;
+}
+
+@media (max-width: 900px) {
+  .about3-study {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .about3-study .technique-note {
+    order: 1;
+    padding-top: 96px;
+    background: #18241b;
+  }
+
+  .about3-study > .philosophy-page {
+    order: 2;
+  }
+
+  .about3-thread {
+    z-index: 5;
+    top: 72vh;
+    right: 8px;
+    width: 52px;
+    height: calc(100% - 76vh - 260px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about3-thread__live {
+    stroke-dashoffset: 0;
+  }
+}

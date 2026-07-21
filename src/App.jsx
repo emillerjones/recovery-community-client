@@ -29,6 +29,10 @@ import DiscountLinks2 from "./pages/DiscountLinks2";
 import About2 from "./pages/About2";
 import Resources2 from "./pages/Resources2";
 import FAQ2 from "./pages/FAQ2";
+import About3 from "./pages/About3";
+import Stories3 from "./pages/Stories3";
+import FAQ3 from "./pages/FAQ3";
+import DiscountLinks3 from "./pages/DiscountLinks3";
 
 
 
@@ -58,6 +62,10 @@ export default function App() {
         <Route path="about2" element={<About2 />} />
         <Route path="resources2" element={<Resources2 />} />
         <Route path="faq2" element={<FAQ2 />} />
+        <Route path="about3" element={<About3 />} />
+        <Route path="stories3" element={<Stories3 />} />
+        <Route path="faq3" element={<FAQ3 />} />
+        <Route path="discountlinks3" element={<DiscountLinks3 />} />
         {/* <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} /> */}
       </Route>
