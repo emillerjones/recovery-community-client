@@ -24,7 +24,6 @@ import Community2 from "./pages/Community2";
 import Contact2 from "./pages/Contact2";
 import DiscountLinks2 from "./pages/DiscountLinks2";
 import About2 from "./pages/About2";
-import Resources2 from "./pages/Resources2";
 import FAQ2 from "./pages/FAQ2";
 import About3 from "./pages/About3";
 import FAQ3 from "./pages/FAQ3";
@@ -53,7 +52,6 @@ export default function App() {
         <Route path="contact2" element={<Contact2 />} />
         <Route path="discountlinks2" element={<DiscountLinks2 />} />
         <Route path="about2" element={<About2 />} />
-        <Route path="resources2" element={<Resources2 />} />
         <Route path="faq2" element={<FAQ2 />} />
         <Route path="about3" element={<About3 />} />
         <Route path="faq3" element={<FAQ3 />} />
