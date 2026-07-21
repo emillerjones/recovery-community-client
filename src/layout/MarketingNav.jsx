@@ -6,31 +6,39 @@ import "./MarketingNav.css";
 
 const HOME_LINKS = [
   { to: "/", label: "Home" },
+  { to: "/home2", label: "Home 2" },
 ];
 
 const COMMUNITY_LINKS = [
   { to: "/community", label: "Inside the Community" },
+  { to: "/community2", label: "Inside the Community 2" },
   { to: "/guidelines", label: "Culture" },
+  { to: "/guidelines2", label: "Culture 2" },
   { to: "/stories", label: "Stories" },
-  // { to: "/stories2", label: "Stories 2" },
+  { to: "/stories2", label: "Stories 2" },
 ];
 
 const LEARN_LINKS = [
   { to: "/resources", label: "Resources" },
+  { to: "/resources2", label: "Resources 2" },
   { to: "/faq", label: "FAQ" },
+  { to: "/faq2", label: "FAQ 2" },
 ];
 
 const SUPPORT_LINKS = [
   { to: "/donate", label: "Donate" },
   { to: "/merch", label: "Merch" },
   { to: "/discountlinks", label: "Discount" },
+  { to: "/discountlinks2", label: "Discount 2" },
 ];
 
 const ABOUT_LINKS = [
   { to: "/about", label: "Our Mission" },
+  { to: "/about2", label: "Our Mission 2" },
   { to: "/mystory", label: "My Story" },
   { to: "/mystory2", label: "My Story 2" },
   { to: "/contact", label: "Contact Us" },
+  { to: "/contact2", label: "Contact Us 2" },
 ];
 
 
