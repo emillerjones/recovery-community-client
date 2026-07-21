@@ -30,3 +30,180 @@
 @media(prefers-reduced-motion:reduce){.mission-roots path,.mission-roots circle,.philosophy-hero__roots>p{animation:none;opacity:1;stroke-dashoffset:0}.mission-belief__art path,.mission-growth__map path{stroke-dashoffset:0;transition:none}}
 
 @media(max-width:850px){.mission-growth__map article{height:auto}.mission-growth__map article i{margin:0;translate:-50% -50%}.mission-growth__item>div,.mission-growth__item--top>div,.mission-growth__item--left>div,.mission-growth__item--right>div{position:static;width:auto;translate:none;text-align:left}}
+
+.philosophy-page .philosophy-hero {
+  border-bottom: 1px solid rgba(205, 164, 95, 0.24);
+}
+
+.about-chapter-nav {
+  position: relative;
+  z-index: 4;
+  border-bottom: 1px solid rgba(205, 164, 95, 0.22);
+  background: #171a15;
+}
+
+.about-chapter-nav .philosophy-inner {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.about-chapter-nav a {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-height: 62px;
+  padding-inline: 18px;
+  border-left: 1px solid rgba(238, 232, 220, 0.08);
+  color: rgba(238, 232, 220, 0.56);
+  font-size: 0.65rem;
+  font-weight: 750;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: background 180ms ease, color 180ms ease;
+}
+
+.about-chapter-nav a:last-child {
+  border-right: 1px solid rgba(238, 232, 220, 0.08);
+}
+
+.about-chapter-nav a span {
+  color: #cda45f;
+  font: 450 0.76rem "Fraunces", serif;
+}
+
+.about-chapter-nav a:hover {
+  background: rgba(205, 164, 95, 0.07);
+  color: #eee8dc;
+}
+
+.about-chapter-nav a.is-active {
+  position: relative;
+  background: rgba(205, 164, 95, 0.11);
+  color: #f3ecdf;
+}
+
+.about-chapter-nav a.is-active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  background: #cda45f;
+}
+
+.philosophy-page ::selection {
+  background: rgba(205, 164, 95, 0.32);
+  color: #18241b;
+}
+
+.philosophy-page a:focus-visible,
+.philosophy-page summary:focus-visible,
+.philosophy-page button:focus-visible {
+  outline: 2px solid #cda45f;
+  outline-offset: 3px;
+}
+
+.philosophy-page #about-purpose,
+.philosophy-page #about-beliefs,
+.philosophy-page #about-support,
+.philosophy-page #about-welcome {
+  scroll-margin-top: 90px;
+}
+
+.philosophy-page .philosophy-hero__copy {
+  padding-left: 28px;
+  border-left: 1px solid rgba(205, 164, 95, 0.34);
+}
+
+.philosophy-page .philosophy-foundation blockquote {
+  position: relative;
+  padding-inline: 35px;
+}
+
+.philosophy-page .philosophy-foundation blockquote::before {
+  content: "â€œ";
+  position: absolute;
+  left: -18px;
+  top: -55px;
+  color: rgba(205, 164, 95, 0.14);
+  font: 450 9rem/1 "Fraunces", serif;
+}
+
+.philosophy-page .mission-belief {
+  position: relative;
+}
+
+.philosophy-page .mission-belief::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -1px;
+  width: 0;
+  height: 1px;
+  translate: -50%;
+  background: linear-gradient(90deg, transparent, rgba(205, 164, 95, 0.55), transparent);
+  transition: width 700ms ease;
+}
+
+.philosophy-page .mission-belief.mission-draw-in::after {
+  width: 72%;
+}
+
+.philosophy-page .mission-belief__art {
+  filter: drop-shadow(0 18px 28px rgba(0, 0, 0, 0.14));
+}
+
+.philosophy-page .mission-growth__map {
+  border: 1px solid rgba(72, 97, 70, 0.14);
+  background: rgba(255, 253, 247, 0.28);
+  box-shadow: 0 35px 85px rgba(53, 57, 48, 0.08);
+}
+
+.philosophy-page .philosophy-welcome__inner {
+  padding-block: 22px;
+}
+
+.philosophy-page .philosophy-boundary {
+  border-top: 1px solid rgba(205, 164, 95, 0.28);
+}
+
+@media (max-width: 850px) {
+  .philosophy-page .philosophy-hero__copy {
+    padding-left: 18px;
+  }
+
+  .philosophy-page .philosophy-foundation blockquote {
+    padding-inline: 8px;
+  }
+
+  .philosophy-page .mission-growth__map {
+    border-right: 0;
+    border-left: 0;
+    box-shadow: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .about-chapter-nav {
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .about-chapter-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .about-chapter-nav .philosophy-inner {
+    width: max-content;
+    min-width: 100%;
+    grid-template-columns: repeat(4, minmax(112px, 1fr));
+  }
+
+  .about-chapter-nav a {
+    min-height: 54px;
+    padding-inline: 13px;
+    font-size: 0.56rem;
+  }
+}

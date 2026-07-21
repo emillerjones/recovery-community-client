@@ -24,16 +24,13 @@ const SUPPORT_LINKS = [
   { to: "/donate", label: "Donate" },
   { to: "/merch", label: "Merch" },
   { to: "/discountlinks", label: "Discount" },
-  { to: "/discountlinks2", label: "Discount 2" },
 ];
 
 const ABOUT_LINKS = [
   { to: "/about", label: "Our Mission" },
-  { to: "/about2", label: "Our Mission 2" },
   { to: "/mystory", label: "My Story" },
   { to: "/mystory2", label: "My Story 2" },
   { to: "/contact", label: "Contact Us" },
-  { to: "/contact2", label: "Contact Us 2" },
 ];
 
 

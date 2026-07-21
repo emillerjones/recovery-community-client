@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
   Candy,
   Cable,
@@ -77,7 +78,61 @@ const discountCategories = [
   },
 ];
 
+const categoryId = (title) =>
+  `discount-${title.toLowerCase().replaceAll("&", "and").replaceAll(/[^a-z0-9]+/g, "-").replace(/-$/, "")}`;
+
+const CATEGORY_IDS = discountCategories.map((category) => categoryId(category.title));
+
+function useActiveCategory(ids) {
+  const [active, setActive] = useState(ids[0]);
+
+  useEffect(() => {
+    const sections = ids.map((id) => document.getElementById(id)).filter(Boolean);
+    if (!sections.length || !("IntersectionObserver" in window)) return undefined;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setActive(entry.target.id);
+        });
+      },
+      { rootMargin: "-30% 0px -60% 0px", threshold: 0 }
+    );
+
+    sections.forEach((section) => observer.observe(section));
+    return () => observer.disconnect();
+  }, [ids]);
+
+  return active;
+}
+
+function CopyCodeButton({ code }) {
+  const [copied, setCopied] = useState(false);
+
+  function handleCopy(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    navigator.clipboard?.writeText(code).then(() => {
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1600);
+    });
+  }
+
+  return (
+    <button
+      type="button"
+      className={`discount-copy ${copied ? "is-copied" : ""}`}
+      onClick={handleCopy}
+      aria-label={`Copy code ${code}`}
+    >
+      {copied ? "Copied" : "Copy"}
+    </button>
+  );
+}
+
 export default function DiscountLinks() {
+  const activeCategory = useActiveCategory(CATEGORY_IDS);
+
   return (
     <main className="discount-page">
       <section className="discount-hero">
@@ -89,6 +144,22 @@ export default function DiscountLinks() {
               A gathered list of partner links, referral links, and discount codes
               connected to the Recovery With The Exit Drug community.
             </p>
+            <nav className="discount-index" aria-label="Discount categories">
+              {discountCategories.map((category, index) => {
+                const id = categoryId(category.title);
+                return (
+                  <a
+                    href={`#${id}`}
+                    key={category.title}
+                    className={activeCategory === id ? "is-active" : undefined}
+                    aria-current={activeCategory === id ? "true" : undefined}
+                  >
+                    <span>0{index + 1}</span>
+                    {category.title}
+                  </a>
+                );
+              })}
+            </nav>
           </div>
           <svg className="discount-hero__art" viewBox="0 0 500 380" aria-hidden="true">
             <path className="discount-hero__orbit" pathLength="1" d="M38 190C38 89 124 29 252 29c130 0 210 61 210 162 0 103-82 158-212 158S38 294 38 190Z" />
@@ -106,7 +177,7 @@ export default function DiscountLinks() {
           {discountCategories.map((category, categoryIndex) => {
             const CategoryIcon = category.icon;
             return (
-            <section className="discount-category" key={category.title}>
+            <section className="discount-category" id={categoryId(category.title)} key={category.title}>
               <div className="discount-category__head">
                 <span className="discount-category__number">0{categoryIndex + 1}</span>
                 <span className="discount-category__icon"><CategoryIcon /></span>
@@ -116,13 +187,14 @@ export default function DiscountLinks() {
 
               <div className="discount-grid">
                 {category.links.map((link) => (
-                  <a
-                    key={link.name}
-                    href={link.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="discount-card"
-                  >
+                  <div key={link.name} className="discount-card discount-feature-card">
+                    <a
+                      href={link.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="discount-card__link-overlay"
+                      aria-label={link.name}
+                    />
                     <img
                       src={link.logo}
                       alt=""
@@ -139,8 +211,9 @@ export default function DiscountLinks() {
 
                       <div className="discount-card__bottom">
                         {link.code ? (
-                          <span className="discount-code">
+                          <span className="discount-code discount-code-row">
                             Code: <strong>{link.code}</strong>
+                            <CopyCodeButton code={link.code} />
                           </span>
                         ) : (
                           <span className="discount-code discount-code--none">
@@ -150,7 +223,7 @@ export default function DiscountLinks() {
                         <span className="discount-arrow"><ExternalLink /></span>
                       </div>
                     </div>
-                  </a>
+                  </div>
                 ))}
               </div>
             </section>
