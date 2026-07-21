@@ -12,7 +12,7 @@ const COMMUNITY_LINKS = [
   { to: "/community", label: "Inside the Community" },
   { to: "/guidelines", label: "Culture" },
   { to: "/stories", label: "Stories" },
-  { to: "/stories2", label: "Stories 2" },
+  // { to: "/stories2", label: "Stories 2" },
 ];
 
 const LEARN_LINKS = [
