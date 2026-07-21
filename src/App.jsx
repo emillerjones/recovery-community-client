@@ -22,6 +22,7 @@ import FAQ from "./pages/FAQ";
 import Community2 from "./pages/Community2";
 import FAQ2 from "./pages/FAQ2";
 import DiscountLinks3 from "./pages/DiscountLinks3";
+import Stories2 from "./pages/Stories2";
 
 
 
@@ -33,6 +34,7 @@ export default function App() {
       <Route path="/" element={<MarketingLayout />}>
         <Route index element={<Home />} />
         <Route path="stories" element={<Stories />} />
+        <Route path="stories2" element={<Stories2 />} />
         <Route path="mystory" element={<MyStory />} />
         <Route path="community" element={<Community />} />
         <Route path="guidelines" element={<Guidelines />} />
