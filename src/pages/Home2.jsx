@@ -130,11 +130,11 @@ export default function Home2() {
           </div>
 
           <TechniqueNote name="Kinetic split-text headline">
-            Instead of fading in as one block, the headline above splits
-            into individual words, each one delayed slightly behind the
-            last using a per-word <code>--i</code> CSS variable. It reads
-            as the words "arriving," which draws the eye and adds a beat
-            of pacing before the rest of the page.
+            Refresh this page and watch the headline above, not this box —
+            each word of "You're not alone." slides up into place a beat
+            after the one before it, rather than the whole line fading in
+            at once. That stagger comes from a per-word <code>--i</code>{" "}
+            CSS variable driving the transition delay.
           </TechniqueNote>
         </div>
       </section>

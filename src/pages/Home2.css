@@ -67,9 +67,17 @@
 }
 
 /* ---------- Technique 1: kinetic split-text headline ---------- */
-.home2-split {
+/* Home.css's ".home-hero h1" rule (class+tag, higher specificity than a
+   single class) sets its own opacity:0 + block fade-in animation on this
+   same <h1> — left alone, that fade would run on top of the per-word
+   stagger below and mask it, making this look like plain Home1. Beating
+   it with a two-class selector so this variant's own reveal is the only
+   one in effect. */
+.home-hero .home2-split {
   display: block;
   overflow: hidden;
+  opacity: 1;
+  animation: none;
 }
 
 .home2-split__word {
