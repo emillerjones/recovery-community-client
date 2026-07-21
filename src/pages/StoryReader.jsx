@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import "./StoryReader.css";
 
-export default function StoryReader({ story, returnLabel, onClose, onNext, onPrev, position, photoTransitionName }) {
+export default function StoryReader({ story, returnLabel, onClose, onNext, onPrev, position }) {
   const [leaving, setLeaving] = useState(false);
 
   function leave() {
@@ -25,13 +25,8 @@ export default function StoryReader({ story, returnLabel, onClose, onNext, onPre
   });
 
   return (
-    <section
-      className={`sr-room ${leaving ? "is-leaving" : ""} ${photoTransitionName ? "sr-room--morph" : ""}`}
-      role="dialog"
-      aria-modal="true"
-      aria-label={`${story.name}'s complete story`}
-    >
-      <div className="sr-room__image"><img src={story.photo} alt={`Portrait of ${story.name}`} style={photoTransitionName ? { viewTransitionName: photoTransitionName } : undefined} /></div>
+    <section className={`sr-room ${leaving ? "is-leaving" : ""}`} role="dialog" aria-modal="true" aria-label={`${story.name}'s complete story`}>
+      <div className="sr-room__image"><img src={story.photo} alt={`Portrait of ${story.name}`} /></div>
       <div className="sr-room__words">
         <p>{story.path}</p>
         <h1>{story.name}</h1>
