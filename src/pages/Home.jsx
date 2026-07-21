@@ -29,12 +29,27 @@ const CONSTELLATION_EDGES = [
   [5, 7], [6, 8], [8, 9], [7, 10], [8, 10],
 ];
 
+function SplitHeadline({ text, isIn }) {
+  return (
+    <h1 className={`home-split ${isIn ? "is-in" : ""}`}>
+      {text.split(" ").map((word, index) => (
+        <span className="home-split__word" key={`${word}-${index}`}>
+          <span className="home-split__inner" style={{ "--word-index": index }}>
+            {word}
+          </span>
+        </span>
+      ))}
+    </h1>
+  );
+}
+
 export default function Home() {
   const { onRegister } = useOutletContext();
   const reelRef = useRef(null);
   const reduced = usePrefersReducedMotion();
   const [canRender3D] = useState(() => typeof window !== "undefined" && supportsWebGL());
   const [fireflyReady, setFireflyReady] = useState(false);
+  const [splitIn, setSplitIn] = useState(false);
 
   useEffect(() => {
     if (reduced || !canRender3D) return;
@@ -46,6 +61,11 @@ export default function Home() {
     const id = window.setTimeout(run, 400);
     return () => window.clearTimeout(id);
   }, [reduced, canRender3D]);
+
+  useEffect(() => {
+    const id = window.setTimeout(() => setSplitIn(true), 120);
+    return () => window.clearTimeout(id);
+  }, []);
 
   function moveStories(direction) {
     const reel = reelRef.current;
@@ -68,7 +88,7 @@ export default function Home() {
 
         <div className="home-hero__content">
           <p className="home-hero__eyebrow">Peer-led · Established 2013</p>
-          <h1>You&rsquo;re not alone.</h1>
+          <SplitHeadline text="You're not alone." isIn={splitIn} />
           <p className="home-hero__intro">A community for people exploring cannabis as a path away from alcohol, opioids, and other harmful substances.</p>
           <div className="home-hero__actions">
             <button type="button" onClick={onRegister}>Join the community <span>→</span></button>

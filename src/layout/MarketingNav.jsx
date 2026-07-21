@@ -6,7 +6,6 @@ import "./MarketingNav.css";
 
 const HOME_LINKS = [
   { to: "/", label: "Home" },
-  { to: "/home2", label: "Home 2" },
 ];
 
 const COMMUNITY_LINKS = [
