@@ -16,9 +16,8 @@ const REASONS = [
 ];
 
 /**
- * Contact2 — reuses the View Transitions API (also demonstrated on
- * Stories2, applied to a different problem here): when the form
- * succeeds, it's replaced by a confirmation panel entirely — rather
+ * Contact2 uses the View Transitions API: when the form succeeds,
+ * it's replaced by a confirmation panel entirely — rather
  * than just a status line — and that swap happens inside
  * `document.startViewTransition()` so the whole card morphs smoothly
  * instead of the content just being replaced instantly.
@@ -80,8 +79,8 @@ export default function Contact2() {
           <p>
             Submit the form successfully and the whole card morphs into a
             confirmation panel via <code>document.startViewTransition()</code>
-            — the same technique used on the Stories2 reader, applied here
-            to a form's success state instead of a photo gallery.
+            — applying a native shared-state transition to the form's
+            success state.
           </p>
         </aside>
       </section>

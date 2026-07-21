@@ -20,7 +20,7 @@ export default function Stories() {
         <div className="stories__copy"><p>Stories of Recovery</p><h1>Stories preserved because they may help someone survive.</h1><span>Chosen from hundreds of accounts, each story is presented in the storyteller's own words.  They are not instructions or promises.  They are records of courage, offered openly and held here with care.</span></div>
         <div className="stories__desk">
           <button className="stories__dee" onClick={() => setActive({ story: dee })}><img src={dee.photo} alt="Dee"/><span>Public success story · Dee</span><blockquote>“{dee.line}”</blockquote></button>
-          <div className="stories__prints">{PUBLIC_STORIES.slice(1).map((story) => <button onClick={() => setActive({ story })} key={story.slug}><img src={story.photo} alt=""/><span>{story.name}</span></button>)}</div>
+          <div className="stories__prints" role="region" aria-label="More recovery stories">{PUBLIC_STORIES.slice(1).map((story) => <button onClick={() => setActive({ story })} key={story.slug}><img src={story.photo} alt=""/><span>{story.name}</span></button>)}</div>
           <a className="stories__shawn" href="#stories-shawn"><img src={SHAWN_MEMORIAL.photo} alt="Shawn"/><span>In memoriam · 2017<strong>Shawn</strong></span></a>
         </div>
         <div className="stories__join"><span>When you are ready, there is room inside the community.</span><button onClick={onRegister}>Join the community</button></div>
