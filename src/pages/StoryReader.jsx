@@ -25,7 +25,12 @@ export default function StoryReader({ story, returnLabel, onClose, onNext, onPre
   });
 
   return (
-    <section className={`sr-room ${leaving ? "is-leaving" : ""}`} role="dialog" aria-modal="true" aria-label={`${story.name}'s complete story`}>
+    <section
+      className={`sr-room ${leaving ? "is-leaving" : ""} ${photoTransitionName ? "sr-room--morph" : ""}`}
+      role="dialog"
+      aria-modal="true"
+      aria-label={`${story.name}'s complete story`}
+    >
       <div className="sr-room__image"><img src={story.photo} alt={`Portrait of ${story.name}`} style={photoTransitionName ? { viewTransitionName: photoTransitionName } : undefined} /></div>
       <div className="sr-room__words">
         <p>{story.path}</p>

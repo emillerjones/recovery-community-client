@@ -36,6 +36,50 @@
   animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
+/* Without this, the browser's default "root" crossfade — a plain
+   opacity fade of the entire before/after page — runs at the same time
+   as the named-photo morph. Since the reader is a full-screen opaque
+   overlay, that root fade looks almost identical to the reader's own
+   sr-enter animation below, and the two together bury the photo morph
+   instead of making it the one clearly-moving thing. Turning the root
+   crossfade off leaves only the named element animating. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+}
+
+/* The reader's own fade+scale-in (sr-enter, in StoryReader.css) is what
+   plays for the Dee comparison case (no view-transition-name — see the
+   technique note). When a photo *is* morphing, that same fade-in would
+   run on the whole modal at the same time as the photo animates into
+   place, fighting for attention with the one effect we actually want
+   visible. Suppressing it here and letting the surrounding content
+   (text, return button) just appear keeps the photo as the only thing
+   moving. */
+.stories .sr-room.sr-room--morph {
+  animation: none;
+}
+
+.stories .sr-room.sr-room--morph .sr-room__words,
+.stories .sr-room.sr-room--morph .sr-room__return {
+  opacity: 0;
+  animation: stories2-content-in 320ms ease 160ms forwards;
+}
+
+@keyframes stories2-content-in {
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stories .sr-room.sr-room--morph .sr-room__words,
+  .stories .sr-room.sr-room--morph .sr-room__return {
+    opacity: 1;
+    animation: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-group(*) {
     animation-duration: 1ms !important;
