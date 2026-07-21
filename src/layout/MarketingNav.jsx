@@ -17,7 +17,6 @@ const COMMUNITY_LINKS = [
 
 const LEARN_LINKS = [
   { to: "/resources", label: "Resources" },
-  { to: "/resources2", label: "Resources 2" },
   { to: "/faq", label: "FAQ" },
   { to: "/faq2", label: "FAQ2" },
 ];

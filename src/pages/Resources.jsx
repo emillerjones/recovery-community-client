@@ -228,10 +228,98 @@ function TopicMark({ index }) {
   return <svg className="resource-topic-mark" viewBox="0 0 110 100" aria-hidden="true"><path d={paths[index]} /></svg>;
 }
 
+function ResourceAtlas({ activeIndex }) {
+  const activeGroup = LEARN_GROUPS[activeIndex];
+
+  return (
+    <aside className="resources-atlas" aria-label="Resource field guide chapters">
+      <div className="resources-atlas__topline">
+        <span>Field guide</span>
+        <span>{String(activeIndex + 1).padStart(2, "0")} / 05</span>
+      </div>
+
+      <div className="resources-atlas__visual" aria-hidden="true">
+        <svg viewBox="0 0 360 310">
+          <path className="resources-atlas__orbit" d="M48 154C48 78 103 32 181 32c80 0 132 47 132 123 0 77-53 123-133 123S48 231 48 154Z" />
+          <path className="resources-atlas__route" pathLength="1" d="M91 196c24-64 47-91 89-92 45-1 69 39 89 93" />
+          <path className="resources-atlas__stem" pathLength="1" d="M180 238c-3-42 4-77 1-113-2-31-13-57-28-79M181 164c-31-6-54-23-69-48M181 142c28-7 51-26 68-55M180 193c35 0 63-12 87-35" />
+          {[0, 1, 2, 3, 4].map((index) => {
+            const points = [
+              [91, 196],
+              [112, 116],
+              [180, 104],
+              [249, 87],
+              [269, 197],
+            ];
+            const [cx, cy] = points[index];
+            const state = index === activeIndex ? "is-active" : index < activeIndex ? "is-past" : "";
+            return (
+              <g className={`resources-atlas__node ${state}`} key={index}>
+                <circle cx={cx} cy={cy} r="14" />
+                <circle cx={cx} cy={cy} r="3" />
+              </g>
+            );
+          })}
+          <path className="resources-atlas__book" d="M117 236c27-8 48-4 63 10 15-14 36-18 63-10v39c-27-7-48-3-63 11-15-14-36-18-63-11Z" />
+          <path className="resources-atlas__book" d="M180 246v40" />
+        </svg>
+      </div>
+
+      <div className="resources-atlas__current" key={activeGroup.title}>
+        <span>Current chapter</span>
+        <strong>{activeGroup.title}</strong>
+        <small>{activeGroup.links.length} selected resources</small>
+      </div>
+
+      <nav className="resources-atlas__nav" aria-label="Jump to a resource chapter">
+        {LEARN_GROUPS.map((group, index) => (
+          <a
+            href={`#${GROUP_IDS[group.title]}`}
+            className={index === activeIndex ? "is-active" : undefined}
+            aria-current={index === activeIndex ? "location" : undefined}
+            key={group.title}
+          >
+            <span>{String(index + 1).padStart(2, "0")}</span>
+            <span className="resources-atlas__nav-label">{group.title}</span>
+          </a>
+        ))}
+      </nav>
+    </aside>
+  );
+}
+
 export default function Resources() {
   const { onRegister } = useOutletContext();
   const [learnRef, learnVisible] = useReveal();
   const [supportRef, supportVisible] = useReveal();
+  const [activeGroup, setActiveGroup] = useState(0);
+
+  useEffect(() => {
+    const groups = LEARN_GROUPS.map((group) =>
+      document.getElementById(GROUP_IDS[group.title])
+    ).filter(Boolean);
+
+    if (!groups.length || !("IntersectionObserver" in window)) return undefined;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visibleEntry = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+
+        if (visibleEntry) {
+          setActiveGroup(Number(visibleEntry.target.dataset.resourceIndex));
+        }
+      },
+      {
+        rootMargin: "-24% 0px -52% 0px",
+        threshold: [0, 0.15, 0.4, 0.7],
+      }
+    );
+
+    groups.forEach((group) => observer.observe(group));
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <div className="resources">
@@ -264,23 +352,36 @@ export default function Resources() {
             over the years.
           </p>
 
-          <div className="learn-groups">
-            {LEARN_GROUPS.map((group, index) => (
-              <article className="learn-group" id={GROUP_IDS[group.title]} key={group.title}>
-                <TopicMark index={index} />
-                <h3 className="learn-group__title">{group.title}</h3>
-                <ul className="learn-group__list">
-                  {group.links.map((link) => (
-                    <li key={link.text} className="learn-link">
-                      <a href={link.url} target="_blank" rel="noreferrer">
-                        {link.text}
-                      </a>
-                      {link.tag && <span className="learn-link__tag">{link.tag}</span>}
-                    </li>
-                  ))}
-                </ul>
-              </article>
-            ))}
+          <div className="resources-reading-layout">
+            <ResourceAtlas activeIndex={activeGroup} />
+
+            <div className="learn-groups resources-chapters">
+              {LEARN_GROUPS.map((group, index) => (
+                <article
+                  className={`learn-group resources-chapter ${index === activeGroup ? "is-active" : ""}`}
+                  data-resource-index={index}
+                  id={GROUP_IDS[group.title]}
+                  key={group.title}
+                >
+                  <TopicMark index={index} />
+                  <div className="resources-group-heading">
+                    <span>Field note {String(index + 1).padStart(2, "0")}</span>
+                    <h3 className="learn-group__title">{group.title}</h3>
+                    <small>{group.links.length} selected resources</small>
+                  </div>
+                  <ul className="learn-group__list">
+                    {group.links.map((link) => (
+                      <li key={link.text} className="learn-link">
+                        <a href={link.url} target="_blank" rel="noreferrer">
+                          {link.text}
+                        </a>
+                        {link.tag && <span className="learn-link__tag">{link.tag}</span>}
+                      </li>
+                    ))}
+                  </ul>
+                </article>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -303,8 +404,9 @@ export default function Resources() {
           </p>
 
           <div className="org-list">
-            {ORGANIZATIONS.map((org) => (
+            {ORGANIZATIONS.map((org, index) => (
               <div className="org-card" key={org.name}>
+                <span className="resources-org-number">0{index + 1}</span>
                 <div className="org-card__header">
                   <h3 className="org-card__name">{org.name}</h3>
                   <span className="org-card__type">{org.type}</span>
