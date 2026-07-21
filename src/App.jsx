@@ -19,7 +19,6 @@ import AppLayout from "./layout/AppLayout";
 import About from "./pages/About";
 import Resources from "./pages/Resources";
 import FAQ from "./pages/FAQ";
-import Stories2 from "./pages/Stories2";
 import MyStory2 from "./pages/MyStory2";
 
 
@@ -40,7 +39,6 @@ export default function App() {
         <Route path="about" element={<About />} />
         <Route path="resources" element={<Resources />} />
         <Route path="faq" element={<FAQ />} />
-        <Route path="stories2" element={<Stories2 />} />
         <Route path="mystory2" element={<MyStory2 />} />
         {/* <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} /> */}
