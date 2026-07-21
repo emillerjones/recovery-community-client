@@ -25,7 +25,6 @@ const SUPPORT_LINKS = [
   { to: "/donate", label: "Donate" },
   { to: "/merch", label: "Merch" },
   { to: "/discountlinks", label: "Discount" },
-  { to: "/discountlinks2", label: "Discount 2" },
   { to: "/discountlinks3", label: "Discount 3 — Spatial Rail" },
 ];
 
