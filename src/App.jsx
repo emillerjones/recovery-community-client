@@ -20,7 +20,6 @@ import About from "./pages/About";
 import Resources from "./pages/Resources";
 import FAQ from "./pages/FAQ";
 import FAQ2 from "./pages/FAQ2";
-import Guidelines2 from "./pages/Guidelines2";
 import Stories2 from "./pages/Stories2";
 import Resources2 from "./pages/Resources2";
 import DiscountLinks2 from "./pages/DiscountLinks2";
@@ -47,7 +46,6 @@ export default function App() {
         <Route path="resources" element={<Resources />} />
         <Route path="faq" element={<FAQ />} />
         <Route path="faq2" element={<FAQ2 />} />
-        <Route path="guidelines2" element={<Guidelines2 />} />
         <Route path="stories2" element={<Stories2 />} />
         <Route path="resources2" element={<Resources2 />} />
         <Route path="discountlinks2" element={<DiscountLinks2 />} />

@@ -11,7 +11,6 @@ const HOME_LINKS = [
 const COMMUNITY_LINKS = [
   { to: "/community", label: "Inside the Community" },
   { to: "/guidelines", label: "Culture" },
-  { to: "/guidelines2", label: "Culture 2" },
   { to: "/stories", label: "Stories" },
   { to: "/stories2", label: "Stories 2" },
 ];
