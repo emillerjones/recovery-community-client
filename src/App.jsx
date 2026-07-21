@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import Home from "./pages/Home";
+import Home2 from "./pages/Home2";
 import Community from "./pages/Community";
 import DiscountLinks from "./pages/DiscountLinks";
 import Guidelines from "./pages/Guidelines";
@@ -20,7 +20,6 @@ import About from "./pages/About";
 import Resources from "./pages/Resources";
 import FAQ from "./pages/FAQ";
 import FAQ2 from "./pages/FAQ2";
-import Home2 from "./pages/Home2";
 import Community2 from "./pages/Community2";
 import Guidelines2 from "./pages/Guidelines2";
 import Stories2 from "./pages/Stories2";
@@ -38,7 +37,7 @@ export default function App() {
     <Routes>
       {/* Marketing/logged-out routes — transparent hero nav */}
       <Route path="/" element={<MarketingLayout />}>
-        <Route index element={<Home />} />
+        <Route index element={<Home2 />} />
         <Route path="stories" element={<Stories />} />
         <Route path="mystory" element={<MyStory />} />
         <Route path="community" element={<Community />} />
