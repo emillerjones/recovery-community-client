@@ -82,14 +82,61 @@ function useReveal(threshold = 0.15) {
   return [ref, visible];
 }
 
+function CommunityNetworkArt() {
+  const nodes = [
+    { x: 90, y: 190, r: 5 },
+    { x: 205, y: 90, r: 6 },
+    { x: 350, y: 58, r: 4 },
+    { x: 465, y: 155, r: 6 },
+    { x: 430, y: 305, r: 4 },
+    { x: 270, y: 350, r: 6 },
+    { x: 120, y: 310, r: 4 },
+    { x: 280, y: 210, r: 12 },
+  ];
+  const edges = [
+    [0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 0],
+    [0, 7], [1, 7], [3, 7], [4, 7], [5, 7],
+  ];
+
+  return (
+    <div className="community-constellation" aria-hidden="true">
+      <svg viewBox="0 0 560 410">
+        <path className="community-constellation__orbit" d="M50 210C50 94 148 25 282 25c138 0 229 69 229 187 0 116-94 173-232 173S50 326 50 210Z" />
+        {edges.map(([from, to], index) => {
+          const start = nodes[from];
+          const end = nodes[to];
+          const d = `M${start.x} ${start.y}L${end.x} ${end.y}`;
+          return (
+            <g key={d}>
+              <path className="community-constellation__edge" d={d} />
+              <path className="community-constellation__signal" d={d} pathLength="1" style={{ "--edge-delay": `${index * 0.32}s` }} />
+            </g>
+          );
+        })}
+        {nodes.map((node, index) => (
+          <circle
+            className={index === nodes.length - 1 ? "community-constellation__node community-constellation__node--center" : "community-constellation__node"}
+            cx={node.x}
+            cy={node.y}
+            r={node.r}
+            key={`${node.x}-${node.y}`}
+          />
+        ))}
+      </svg>
+      <p>One conversation can reach further than we know.</p>
+    </div>
+  );
+}
+
 export default function Community() {
   const { onRegister } = useOutletContext();
 
   const heroRef = useRef(null);
+  const stackRef = useRef(null);
   const [momentsRef, momentsVisible] = useReveal(0.1);
-  const [spacesRef, spacesVisible] = useReveal(0.1);
   const [cultureRef, cultureVisible] = useReveal(0.1);
   const [ctaRef, ctaVisible] = useReveal(0.25);
+  const [activeSpace, setActiveSpace] = useState(0);
 
   useEffect(() => {
     const hero = heroRef.current;
@@ -110,6 +157,40 @@ export default function Community() {
     }, hero);
 
     return () => context.revert();
+  }, []);
+
+  useEffect(() => {
+    const stack = stackRef.current;
+    if (!stack) return undefined;
+
+    const cards = [...stack.querySelectorAll("[data-community-space]")];
+    let frame = null;
+
+    const updateActiveCard = () => {
+      frame = null;
+      const focusLine = window.innerHeight * 0.38;
+      let nextActive = 0;
+
+      cards.forEach((card, index) => {
+        if (card.getBoundingClientRect().top <= focusLine) nextActive = index;
+      });
+
+      setActiveSpace((current) => current === nextActive ? current : nextActive);
+    };
+
+    const requestUpdate = () => {
+      if (frame === null) frame = window.requestAnimationFrame(updateActiveCard);
+    };
+
+    updateActiveCard();
+    window.addEventListener("scroll", requestUpdate, { passive: true });
+    window.addEventListener("resize", requestUpdate);
+
+    return () => {
+      window.removeEventListener("scroll", requestUpdate);
+      window.removeEventListener("resize", requestUpdate);
+      if (frame !== null) window.cancelAnimationFrame(frame);
+    };
   }, []);
 
   return (
@@ -139,6 +220,7 @@ export default function Community() {
               </Link>
             </div>
           </div>
+          <CommunityNetworkArt />
         </div>
       </section>
 
@@ -166,25 +248,59 @@ export default function Community() {
       </section>
 
       {/* PLANNED SPACES */}
-      <section className="community-section community-spaces">
-        <div
-          ref={spacesRef}
-          className={`community-inner community-reveal ${
-            spacesVisible ? "community-in" : ""
-          }`}
-        >
-          <p className="community-eyebrow">What we’re building</p>
-          <h2>Community spaces designed around real recovery.</h2>
+      <section className="community-section community-spaces community-stack-section">
+        <div className="community-inner">
+          <div className="community-stack-intro">
+            <div>
+              <p className="community-eyebrow">What we’re building</p>
+              <h2>Community spaces designed around real recovery.</h2>
+            </div>
+            <p className="community-stack-intro__note">
+              Six spaces. Each one built for a different part of the journey.
+            </p>
+          </div>
 
-          <div className="community-space-list">
+          <div className="community-stack" ref={stackRef}>
             {PLANNED_SPACES.map((space, index) => {
               const SpaceIcon = space.icon;
+              const depth = Math.max(0, activeSpace - index);
               return (
-              <article className="community-space" key={space.name}>
-                <span className="community-space__number">0{index + 1}</span>
-                <span className="community-space__icon"><SpaceIcon /></span>
-                <div><h3>{space.name}</h3><p>{space.desc}</p></div>
-              </article>
+                <article
+                  className={`community-stack-card ${index === activeSpace ? "is-active" : ""} ${index < activeSpace ? "is-behind" : ""}`}
+                  data-community-space
+                  key={space.name}
+                  style={{
+                    "--stack-order": index + 10,
+                    "--stack-step": `${index * 13}px`,
+                    "--stack-step-tablet": `${index * 8}px`,
+                    "--stack-step-mobile": `${index * 6}px`,
+                    "--stack-scale": Math.max(0.86, 1 - depth * 0.035),
+                    "--stack-shift": `${depth * -10}px`,
+                    "--stack-z": `${depth * -48}px`,
+                    "--stack-pitch": `${depth * 0.55}deg`,
+                    "--stack-rotate": `${depth * (index % 2 ? -0.42 : 0.42)}deg`,
+                  }}
+                >
+                  <div className="community-stack-card__line" aria-hidden="true" />
+                  <header>
+                    <span>Community space</span>
+                    <strong>{String(index + 1).padStart(2, "0")} / 06</strong>
+                  </header>
+
+                  <div className="community-stack-card__body">
+                    <span className="community-stack-card__icon"><SpaceIcon /></span>
+                    <div>
+                      <h3>{space.name}</h3>
+                      <p>{space.desc}</p>
+                    </div>
+                  </div>
+
+                  <footer>
+                    <span>Private by design</span>
+                    <i aria-hidden="true" />
+                    <span>Peer-led</span>
+                  </footer>
+                </article>
               );
             })}
           </div>
