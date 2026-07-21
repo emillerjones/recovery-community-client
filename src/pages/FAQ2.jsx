@@ -108,7 +108,7 @@ export default function FAQ2() {
 
   return (
     <div className="faq2">
-      <section className="faq2-hero">
+      <section className="faq2-hero" data-nav-theme="light">
         <p className="faq2-kicker">Frequently asked questions</p>
         <h1>Questions are welcome here.</h1>
         <p>Clear answers about the community, cannabis substitution, privacy, and getting involved.</p>
@@ -145,7 +145,7 @@ export default function FAQ2() {
         </div>
       </section>
 
-      <section className="faq2-cta">
+      <section className="faq2-cta" data-nav-theme="light">
         <p className="faq2-cta__text">Still have a question?</p>
         <p className="faq2-cta__script">The community is here too.</p>
         <button type="button" onClick={onRegister} className="faq2-cta__button">

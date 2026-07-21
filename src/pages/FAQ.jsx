@@ -155,7 +155,7 @@ export default function FAQ() {
 
   return (
     <main className="faq">
-      <section className="faq-hero">
+      <section className="faq-hero" data-nav-theme="light">
         <div className="faq-hero__glow" aria-hidden="true" />
         <div className="faq-container faq-hero__inner">
           <div className="faq-hero__copy">
@@ -283,7 +283,7 @@ export default function FAQ() {
         </div>
       </section>
 
-      <section className="faq-closing">
+      <section className="faq-closing" data-nav-theme="light">
         <div className="faq-closing__rings" aria-hidden="true">
           <i />
           <i />

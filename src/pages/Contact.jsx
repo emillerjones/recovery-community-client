@@ -84,7 +84,7 @@ export default function Contact() {
 
   return (
     <main className="contact">
-      <section className="contact__hero">
+      <section className="contact__hero" data-nav-theme="light">
         <svg className="contact__hero-art" viewBox="0 0 560 390" aria-hidden="true">
           <path className="contact__hero-orbit" d="M42 196C42 91 137 28 284 28c148 0 234 65 234 169 0 106-92 166-238 166S42 301 42 196Z" />
           <path className="contact__hero-bubble contact__hero-bubble--back" d="M244 93h198c27 0 48 21 48 48v71c0 27-21 48-48 48h-72l-45 42 9-42h-90c-27 0-48-21-48-48v-71c0-27 21-48 48-48Z" />

@@ -6,7 +6,7 @@ import heroPhoto from "../assets/images/mystory.jpg";
 export default function MyStory() {
   return (
 
-    <div className="mystory">
+    <div className="mystory" data-nav-theme="light">
       <div
         className="mystory-hero__photo"
         style={{ backgroundImage: `url(${heroPhoto})` }}

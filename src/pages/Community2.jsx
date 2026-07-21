@@ -69,7 +69,7 @@ export default function Community2() {
 
   return (
     <main className="community2">
-      <section className="community2-hero">
+      <section className="community2-hero" data-nav-theme="light">
         <p className="community2-eyebrow">Inside the community</p>
         <h1>Recovery gets lighter when it is shared.</h1>
         <p>
@@ -130,7 +130,7 @@ export default function Community2() {
         </div>
       </section>
 
-      <section className="community2-cta">
+      <section className="community2-cta" data-nav-theme="light">
         <p className="community2-kicker">Be part of what comes next</p>
         <h2>Help shape a recovery community that feels human.</h2>
         <p>The goal is simple: build a place where people can show up honestly, find support, and keep moving.</p>

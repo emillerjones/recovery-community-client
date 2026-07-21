@@ -323,7 +323,7 @@ export default function Resources() {
 
   return (
     <div className="resources">
-      <section className="resources-hero">
+      <section className="resources-hero" data-nav-theme="light">
         <div className="resources-hero__light" aria-hidden="true" />
         <div className="resources-hero__inner">
           <div className="resources-hero__content">
@@ -425,7 +425,7 @@ export default function Resources() {
       </section>
 
       {/* CLOSING — quiet, no stat block, matches About's restraint */}
-      <section className="resources-cta">
+      <section className="resources-cta" data-nav-theme="light">
         <p className="resources-cta__text">
           Looking for more than information?
         </p>

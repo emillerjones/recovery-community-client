@@ -141,7 +141,7 @@ export default function Guidelines() {
 
   return (
     <main className="guidelines-page">
-      <section className="guidelines-hero">
+      <section className="guidelines-hero" data-nav-theme="light">
         <div className="guidelines-inner guidelines-hero__inner">
           <div className="guidelines-hero__copy">
             <p className="guidelines-eyebrow">Our community culture</p>
@@ -236,7 +236,7 @@ export default function Guidelines() {
 
       <section className="guidelines-disclaimer-section">
         <div className="guidelines-inner">
-          <div className="guidelines-disclaimer">
+          <div className="guidelines-disclaimer" data-nav-theme="light">
             <div className="guidelines-disclaimer__icon"><ShieldCheck /></div>
             <p>
               <strong>Disclaimer:</strong> Recovery With The Exit Drug is a

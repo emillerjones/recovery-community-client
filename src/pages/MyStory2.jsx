@@ -36,7 +36,7 @@ export default function MyStory2() {
 
   return (
 
-    <div className="mystory mystory2-study" ref={pageRef}>
+    <div className="mystory mystory2-study" data-nav-theme="light" ref={pageRef}>
       <div
         className="mystory-hero__photo"
         style={{ backgroundImage: `url(${heroPhoto})` }}

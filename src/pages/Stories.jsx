@@ -15,7 +15,7 @@ export default function Stories() {
   const [active, setActive] = useState(null);
   const dee = PUBLIC_STORIES[0];
   return (
-    <main className="stories">
+    <main className="stories" data-nav-theme="light">
       <section className="stories__room">
         <div className="stories__copy"><p>Stories of Recovery</p><h1>Stories preserved because they may help someone survive.</h1><span>Chosen from hundreds of accounts, each story is presented in the storyteller's own words.  They are not instructions or promises.  They are records of courage, offered openly and held here with care.</span></div>
         <div className="stories__desk">

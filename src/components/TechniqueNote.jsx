@@ -2,7 +2,7 @@ import "./TechniqueNote.css";
 
 export default function TechniqueNote({ number, title, how, watch }) {
   return (
-    <aside className="technique-note" aria-label={`Design technique: ${title}`}>
+    <aside className="technique-note" data-nav-theme="light" aria-label={`Design technique: ${title}`}>
       <p className="technique-note__eyebrow">Design study {number}</p>
       <h2>{title}</h2>
       <dl>

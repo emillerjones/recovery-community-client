@@ -196,7 +196,7 @@ export default function Community() {
   return (
     <main className="community-page page--flat">
       {/* HERO */}
-      <section className="community-hero community-hero--network" ref={heroRef}>
+      <section className="community-hero community-hero--network" data-nav-theme="light" ref={heroRef}>
         <div className="community-hero__glow" aria-hidden="true" />
         <div className="community-inner community-hero__layout">
           <div className="community-hero__copy">
@@ -311,6 +311,7 @@ export default function Community() {
       <section className="community-section community-culture">
         <div
           ref={cultureRef}
+          data-nav-theme="light"
           className={`community-inner community-reveal ${
             cultureVisible ? "community-in" : ""
           }`}
@@ -341,7 +342,7 @@ export default function Community() {
       </section>
 
       {/* CTA */}
-      <section className="community-cta-section">
+      <section className="community-cta-section" data-nav-theme="light">
         <div
           ref={ctaRef}
           className={`community-inner community-cta community-reveal ${

@@ -135,7 +135,7 @@ export default function DiscountLinks() {
 
   return (
     <main className="discount-page">
-      <section className="discount-hero">
+      <section className="discount-hero" data-nav-theme="light">
         <div className="discount-inner discount-hero__inner">
           <div className="discount-hero__copy">
             <p className="discount-eyebrow">Community perks</p>
@@ -234,7 +234,7 @@ export default function DiscountLinks() {
 
       <section className="discount-disclaimer-section">
         <div className="discount-inner">
-          <div className="discount-disclaimer">
+          <div className="discount-disclaimer" data-nav-theme="light">
             <span className="discount-disclaimer__icon"><ShieldAlert /></span>
             <p><strong>Important:</strong> Some links may be affiliate or referral
               links. Products listed here are not medical advice and are not a

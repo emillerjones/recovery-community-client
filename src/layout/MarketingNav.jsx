@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
 import logo from "../assets/icons/logo.png";
@@ -72,6 +72,8 @@ export default function MarketingNav({ onLogin, onRegister }) {
   const { token, logout, user } = useAuth();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [navTextTheme, setNavTextTheme] = useState("light");
+  const headerRef = useRef(null);
   const location = useLocation();
 
   /*
@@ -107,6 +109,37 @@ export default function MarketingNav({ onLogin, onRegister }) {
     return () => document.body.classList.remove("mobile-nav-open");
   }, [menuOpen]);
 
+  useEffect(() => {
+    let frameId;
+
+    function updateNavTextTheme() {
+      const header = headerRef.current;
+      const sampleY = Math.min((header?.getBoundingClientRect().height || 72) / 2, window.innerHeight - 1);
+      const sampleX = window.innerWidth / 2;
+      const elementBehindNav = document
+        .elementsFromPoint(sampleX, sampleY)
+        .find((element) => !header?.contains(element));
+      const themedSection = elementBehindNav?.closest?.("[data-nav-theme]");
+
+      setNavTextTheme(themedSection?.dataset.navTheme === "light" ? "light" : "dark");
+    }
+
+    function queueThemeUpdate() {
+      window.cancelAnimationFrame(frameId);
+      frameId = window.requestAnimationFrame(updateNavTextTheme);
+    }
+
+    queueThemeUpdate();
+    window.addEventListener("scroll", queueThemeUpdate, { passive: true });
+    window.addEventListener("resize", queueThemeUpdate);
+
+    return () => {
+      window.cancelAnimationFrame(frameId);
+      window.removeEventListener("scroll", queueThemeUpdate);
+      window.removeEventListener("resize", queueThemeUpdate);
+    };
+  }, [location.pathname]);
+
   function closeMenu() {
     setMenuOpen(false);
   }
@@ -134,6 +167,10 @@ export default function MarketingNav({ onLogin, onRegister }) {
     // Force solid nav on light-background pages.
     pageWantsSolidNav ? "site-header--solid" : "",
 
+    menuOpen || pageWantsSolidNav
+      ? "site-header--dark-text"
+      : `site-header--${navTextTheme}-text`,
+
     // Keep both desktop and mobile transparent on scroll when the switch is off.
     (ENABLE_SOLID_NAV_ON_SCROLL && scrolled) || menuOpen
       ? "site-header--scrolled"
@@ -144,7 +181,7 @@ export default function MarketingNav({ onLogin, onRegister }) {
     .join(" ");
 
   return (
-    <header className={headerClass}>
+    <header className={headerClass} ref={headerRef}>
       <NavLink to="/" className="site-logo" onClick={closeMenu}>
         <img src={logo} alt="Recovery With The Exit Drug" className="site-logo__mark" />
         <span className="site-logo__text">

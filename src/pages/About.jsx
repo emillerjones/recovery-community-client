@@ -125,7 +125,7 @@ export default function About() {
 
   return (
     <main className="philosophy-page" ref={pageRef}>
-      <section className="philosophy-hero">
+      <section className="philosophy-hero" data-nav-theme="light">
         <div className="philosophy-hero__soil" aria-hidden="true" />
         <div className="philosophy-inner philosophy-hero__inner">
           <div className="philosophy-hero__copy">
@@ -157,7 +157,7 @@ export default function About() {
         </div>
       </nav>
 
-      <section className="philosophy-foundation" id="about-purpose">
+      <section className="philosophy-foundation" id="about-purpose" data-nav-theme="light">
         <div className="philosophy-inner">
           <p className="philosophy-eyebrow">Our founding purpose</p>
           <blockquote>The mission of Maintaining My Recovery with Cannabis is to develop a recovery support community of people who use cannabis as a form of harm-reduction therapy from dangerous or addictive substances.</blockquote>
@@ -165,7 +165,7 @@ export default function About() {
         </div>
       </section>
 
-      <section className="mission-beliefs" id="about-beliefs">
+      <section className="mission-beliefs" id="about-beliefs" data-nav-theme="light">
         <div className="philosophy-inner">
           <div className="mission-beliefs__head">
             <p className="philosophy-eyebrow">What we are rooted in</p>
@@ -205,7 +205,7 @@ export default function About() {
         </div>
       </section>
 
-      <section className="philosophy-boundary">
+      <section className="philosophy-boundary" data-nav-theme="light">
         <div className="philosophy-inner"><p className="philosophy-eyebrow">Our boundary</p><p><strong>Maintaining My Recovery with Cannabis is a volunteer support group sharing practical information.</strong> This is not a professional or medical organization. The information provided is for informational and educational purposes only and is not a substitute for professional care.</p></div>
       </section>
     </main>

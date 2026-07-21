@@ -75,7 +75,7 @@ export default function Home() {
 
   return (
     <main className="home">
-      <section className="home-hero">
+      <section className="home-hero" data-nav-theme="light">
         <div className="home-hero__photo" style={{ backgroundImage: `url(${heroPhoto})` }} />
         <div className="home-hero__veil" />
 
@@ -150,7 +150,7 @@ export default function Home() {
         <p className="home-swipe-hint">Swipe to meet the people <span>→</span></p>
       </section>
 
-      <section className="home-community">
+      <section className="home-community" data-nav-theme="light">
         <svg className="home-community__orbit" viewBox="0 0 500 500" aria-hidden="true"><circle cx="250" cy="250" r="190"/><circle cx="250" cy="250" r="122"/><circle cx="250" cy="250" r="48"/><path d="M250 60v380M60 250h380"/></svg>
         <div>
           <p className="home-eyebrow home-eyebrow--light">Inside the community</p>
@@ -162,7 +162,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="home-final">
+      <section className="home-final" data-nav-theme="light">
         <div className="home-final__glow" aria-hidden="true" />
         <div className="home-final__scene" aria-hidden="true">
           <svg className="home-final__constellation" viewBox="0 0 1200 260" preserveAspectRatio="xMidYMid slice">
