@@ -82,8 +82,6 @@
 
 /* ---------- Tab bar ---------- */
 .faq2-section {
-  max-width: 900px;
-  margin: 0 auto;
   padding: 56px max(6vw, calc((100vw - 900px) / 2)) 100px;
 }
 
