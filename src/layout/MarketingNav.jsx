@@ -19,7 +19,6 @@ const LEARN_LINKS = [
   { to: "/resources", label: "Resources" },
   { to: "/faq", label: "FAQ" },
   { to: "/faq2", label: "FAQ 2" },
-  { to: "/faq3", label: "FAQ 3 — Morphing Guide" },
 ];
 
 const SUPPORT_LINKS = [
