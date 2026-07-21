@@ -22,9 +22,7 @@ import FAQ from "./pages/FAQ";
 import MyStory2 from "./pages/MyStory2";
 import Community2 from "./pages/Community2";
 import Contact2 from "./pages/Contact2";
-import About2 from "./pages/About2";
 import FAQ2 from "./pages/FAQ2";
-import About3 from "./pages/About3";
 import DiscountLinks3 from "./pages/DiscountLinks3";
 
 
@@ -48,9 +46,7 @@ export default function App() {
         <Route path="mystory2" element={<MyStory2 />} />
         <Route path="community2" element={<Community2 />} />
         <Route path="contact2" element={<Contact2 />} />
-        <Route path="about2" element={<About2 />} />
         <Route path="faq2" element={<FAQ2 />} />
-        <Route path="about3" element={<About3 />} />
         <Route path="discountlinks3" element={<DiscountLinks3 />} />
         {/* <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} /> */}

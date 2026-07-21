@@ -30,8 +30,6 @@ const SUPPORT_LINKS = [
 
 const ABOUT_LINKS = [
   { to: "/about", label: "Our Mission" },
-  { to: "/about2", label: "Our Mission 2" },
-  { to: "/about3", label: "Our Mission 3 — Golden Thread" },
   { to: "/mystory", label: "My Story" },
   { to: "/mystory2", label: "My Story 2" },
   { to: "/contact", label: "Contact Us" },
