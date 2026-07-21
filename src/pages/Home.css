@@ -777,7 +777,14 @@
   }
 
   .home-final__edge--signal {
-    display: none;
+    display: block;
+    stroke-width: 1.6;
+    filter: drop-shadow(0 0 2px rgba(215, 173, 104, .68));
+    animation-duration: 5.2s;
+  }
+
+  .home-final__node {
+    animation-duration: 5s;
   }
 
   .home-final__glow {
