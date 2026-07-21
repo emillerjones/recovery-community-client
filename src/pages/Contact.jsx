@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { flushSync } from "react-dom";
 import { Link, useOutletContext } from "react-router-dom";
 import { FaFacebookF, FaInstagram } from "react-icons/fa";
 import { FiCompass, FiSend, FiUsers } from "react-icons/fi";
@@ -15,6 +16,14 @@ const REASONS = [
   "Media or speaking inquiries",
   "Website or account help",
 ];
+
+function withViewTransition(update) {
+  if (typeof document !== "undefined" && document.startViewTransition) {
+    document.startViewTransition(() => flushSync(update));
+  } else {
+    update();
+  }
+}
 
 export default function Contact() {
   const { onRegister } = useOutletContext();
@@ -53,13 +62,24 @@ export default function Contact() {
         throw new Error(result.message || "We couldn't send your message.");
       }
 
-      setForm({ name: "", email: "", reason: "", message: "", website: "" });
-      setSubmitState("success");
-      setSubmitMessage("Thank you — your message was sent to our team.");
+      withViewTransition(() => {
+        setForm({ name: "", email: "", reason: "", message: "", website: "" });
+        setSubmitState("success");
+        setSubmitMessage("Your message was sent to our team.");
+      });
     } catch (error) {
-      setSubmitState("error");
-      setSubmitMessage(error.message || "We couldn't send your message.");
+      withViewTransition(() => {
+        setSubmitState("error");
+        setSubmitMessage(error.message || "We couldn't send your message.");
+      });
     }
+  };
+
+  const sendAnother = () => {
+    withViewTransition(() => {
+      setSubmitState("idle");
+      setSubmitMessage("");
+    });
   };
 
   return (
@@ -83,6 +103,15 @@ export default function Contact() {
       </section>
 
       <section className="contact__primary">
+        {submitState === "success" ? (
+          <section className="contact__form contact__confirmation" aria-live="polite">
+            <span className="contact__confirmation-icon" aria-hidden="true"><FiSend /></span>
+            <p className="contact__eyebrow">Message sent</p>
+            <h2>Thank you.</h2>
+            <p>{submitMessage} A real person will read it.</p>
+            <button type="button" className="contact__send-another" onClick={sendAnother}>Send another message</button>
+          </section>
+        ) : (
         <form className="contact__form" onSubmit={handleSubmit}>
           <h2><span className="contact__heading-icon"><FiSend /></span>Send a message</h2>
 
@@ -128,7 +157,6 @@ export default function Contact() {
           </button>
 
           <div className="contact__form-status" aria-live="polite">
-            {submitState === "success" && <p className="contact__success">{submitMessage}</p>}
             {submitState === "error" && (
               <p className="contact__error">
                 {submitMessage} Please try again or email us directly at{" "}
@@ -146,6 +174,7 @@ export default function Contact() {
             contact local emergency services.
           </p>
         </form>
+        )}
 
         <aside className="contact__side">
           <div className="contact__join-card">

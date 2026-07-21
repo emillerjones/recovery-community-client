@@ -33,7 +33,6 @@ const ABOUT_LINKS = [
   { to: "/mystory", label: "My Story" },
   { to: "/mystory2", label: "My Story 2" },
   { to: "/contact", label: "Contact Us" },
-  { to: "/contact2", label: "Contact Us 2" },
 ];
 
 

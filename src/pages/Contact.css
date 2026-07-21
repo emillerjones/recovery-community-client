@@ -142,6 +142,7 @@
 
 .contact__form {
   box-shadow: 0 24px 60px rgba(20, 31, 23, 0.14);
+  view-transition-name: contact-form-card;
 }
 
 .contact__form {
@@ -278,6 +279,66 @@
   font-size: 0.9rem;
   line-height: 1.5;
   color: #6d7668;
+}
+
+.contact__confirmation {
+  min-height: 470px;
+  display: grid;
+  align-content: center;
+  justify-items: start;
+  gap: 14px;
+}
+
+.contact__confirmation-icon {
+  width: 58px;
+  height: 58px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 8px;
+  border-radius: 50%;
+  background: rgba(91, 126, 82, 0.13);
+  color: #365331;
+}
+
+.contact__confirmation-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.contact__confirmation .contact__eyebrow,
+.contact__confirmation h2,
+.contact__confirmation p {
+  margin: 0;
+}
+
+.contact__confirmation > p:last-of-type {
+  max-width: 430px;
+  color: #526150;
+  line-height: 1.7;
+}
+
+.contact__send-another {
+  min-height: 46px;
+  margin-top: 12px;
+  padding: 0 22px;
+  border: 1px solid #2c3a2d;
+  border-radius: 999px;
+  background: transparent;
+  color: #2c3a2d;
+  font-weight: 800;
+  cursor: pointer;
+  transition: background 180ms ease, color 180ms ease;
+}
+
+.contact__send-another:hover {
+  background: #2c3a2d;
+  color: #fffaf0;
+}
+
+::view-transition-old(contact-form-card),
+::view-transition-new(contact-form-card) {
+  animation-duration: 380ms;
+  animation-timing-function: cubic-bezier(0.2, 0.75, 0.2, 1);
 }
 
 .contact__side {
@@ -431,5 +492,12 @@
 
   .contact__social-card {
     padding: 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(contact-form-card),
+  ::view-transition-new(contact-form-card) {
+    animation: none !important;
   }
 }
