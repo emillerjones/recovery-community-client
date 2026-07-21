@@ -45,6 +45,9 @@ const OTHER_LINKS = [
 
 const ALL_LINKS = [...HOME_LINKS, ...COMMUNITY_LINKS, ...LEARN_LINKS, ...SUPPORT_LINKS, ...ABOUT_LINKS];
 
+// Set to true to give the desktop and mobile navbar a solid background after scrolling.
+const ENABLE_SOLID_NAV_ON_SCROLL = false;
+
 function NavDropdown({ label, links, closeMenu }) {
   return (
     <div className="main-nav__dropdown">
@@ -131,9 +134,10 @@ export default function MarketingNav({ onLogin, onRegister }) {
     // Force solid nav on light-background pages.
     pageWantsSolidNav ? "site-header--solid" : "",
 
-    // Still turn solid after scrolling on transparent hero pages.
-    scrolled || menuOpen ? "site-header--scrolled" : "",
-
+    // Keep both desktop and mobile transparent on scroll when the switch is off.
+    (ENABLE_SOLID_NAV_ON_SCROLL && scrolled) || menuOpen
+      ? "site-header--scrolled"
+      : "",
     menuOpen ? "site-header--menu-open" : "",
   ]
     .filter(Boolean)
