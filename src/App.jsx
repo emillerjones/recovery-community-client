@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import Home2 from "./pages/Home2";
+import Home from "./pages/Home";
 import Community from "./pages/Community";
 import DiscountLinks from "./pages/DiscountLinks";
 import Guidelines from "./pages/Guidelines";
@@ -37,7 +37,7 @@ export default function App() {
     <Routes>
       {/* Marketing/logged-out routes — transparent hero nav */}
       <Route path="/" element={<MarketingLayout />}>
-        <Route index element={<Home2 />} />
+        <Route index element={<Home />} />
         <Route path="stories" element={<Stories />} />
         <Route path="mystory" element={<MyStory />} />
         <Route path="community" element={<Community />} />
@@ -48,7 +48,6 @@ export default function App() {
         <Route path="resources" element={<Resources />} />
         <Route path="faq" element={<FAQ />} />
         <Route path="faq2" element={<FAQ2 />} />
-        <Route path="home2" element={<Home2 />} />
         <Route path="community2" element={<Community2 />} />
         <Route path="guidelines2" element={<Guidelines2 />} />
         <Route path="stories2" element={<Stories2 />} />

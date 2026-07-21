@@ -3,7 +3,7 @@ import { Link, useOutletContext } from "react-router-dom";
 import heroPhoto from "../assets/images/hero-lake.jpg";
 import { PUBLIC_STORIES } from "../data/publicStories";
 import { usePrefersReducedMotion, supportsWebGL } from "./motionSupport";
-import "./Home2.css";
+import "./Home.css";
 
 // Lazy-loaded: pulls in three.js/R3F/three.quarks. Deferred until the browser
 // is idle after first paint (see `fireflyReady` below) so it never competes
@@ -29,7 +29,7 @@ const CONSTELLATION_EDGES = [
   [5, 7], [6, 8], [8, 9], [7, 10], [8, 10],
 ];
 
-export default function Home2() {
+export default function Home() {
   const { onRegister } = useOutletContext();
   const reelRef = useRef(null);
   const reduced = usePrefersReducedMotion();
@@ -54,7 +54,7 @@ export default function Home2() {
   }
 
   return (
-    <main className="home home2-study">
+    <main className="home">
       <section className="home-hero">
         <div className="home-hero__photo" style={{ backgroundImage: `url(${heroPhoto})` }} />
         <div className="home-hero__veil" />
@@ -74,7 +74,7 @@ export default function Home2() {
             <button type="button" onClick={onRegister}>Join the community <span>→</span></button>
             <Link to="/stories">Read real stories</Link>
           </div>
-          <div className="home2-hero-proof" aria-label="Community values">
+          <div className="home-hero-proof" aria-label="Community values">
             <span><i>01</i>Private by design</span>
             <span><i>02</i>Peer-led support</span>
             <span><i>03</i>No judgment</span>
@@ -84,7 +84,7 @@ export default function Home2() {
       </section>
 
       <section className="home-belief" id="belief">
-        <span className="home2-section-number" aria-hidden="true">01</span>
+        <span className="home-section-number" aria-hidden="true">01</span>
         <svg className="home-belief__mark" viewBox="0 0 300 300" aria-hidden="true"><path d="M151 281c-7-70-3-135 0-211M150 163c-42-12-73-39-91-81M151 129c40-17 69-44 86-82M151 218c-47-3-85 12-116 44M152 204c44 3 81 20 112 51"/><path d="M59 82c26 0 46 12 60 35M237 47c-24 2-43 14-57 36M35 262c24-3 45 5 62 24M264 255c-24-4-45 3-63 21"/></svg>
         <p className="home-eyebrow">Our philosophy</p>
         <h2>Recovery looks different for everyone—and that&rsquo;s okay.</h2>
@@ -92,7 +92,7 @@ export default function Home2() {
       </section>
 
       <section className="home-stories" id="stories">
-        <span className="home2-stories-number" aria-hidden="true">02</span>
+        <span className="home-stories-number" aria-hidden="true">02</span>
         <div className="home-stories__contours" aria-hidden="true"><i/><i/><i/></div>
         <header className="home-stories__head">
           <div>
