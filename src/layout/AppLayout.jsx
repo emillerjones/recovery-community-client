@@ -1,16 +1,11 @@
-import AppNav from "./AppNav";
+import MarketingNav from "./MarketingNav";
 import { Outlet } from "react-router-dom";
 
-/**
- * Layout for logged-in app pages.
- * Same exact pattern as MarketingLayout — renders a nav, then
- * whatever page is currently active goes in <Outlet />.
- * The only difference is WHICH nav: AppNav instead of MarketingNav.
- */
+/** Layout for logged-in pages using the shared site navigation. */
 export default function AppLayout() {
   return (
     <>
-      <AppNav />
+      <MarketingNav />
       <Outlet />
     </>
   );

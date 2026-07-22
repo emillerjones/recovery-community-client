@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import MarketingNav from "./MarketingNav";
 import AuthPanel from "../auth/AuthPanel";
@@ -13,13 +13,11 @@ import ScrollToTop from "./ScrollToTop";
  */
 export default function MarketingLayout() {
   const location = useLocation();
-  const [authMode, setAuthMode] = useState(null); // null | "login" | "register"
-
-  // Open panel automatically for direct URL visits
-  useEffect(() => {
-    if (location.pathname === "/login") setAuthMode("login");
-    else if (location.pathname === "/register") setAuthMode("register");
-  }, []);
+  const [authMode, setAuthMode] = useState(() => {
+    if (location.pathname === "/login") return "login";
+    if (location.pathname === "/register") return "register";
+    return null;
+  }); // null | "login" | "register"
 
   function openLogin() {
     setAuthMode("login");

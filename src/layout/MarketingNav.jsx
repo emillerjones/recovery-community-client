@@ -191,6 +191,8 @@ export default function MarketingNav({ onLogin, onRegister }) {
       <nav className="main-nav" aria-label="Primary navigation">
         <NavDropdown label="Home" links={HOME_LINKS} closeMenu={closeMenu} />
         <NavDropdown label="Community" links={COMMUNITY_LINKS} closeMenu={closeMenu} />
+        {token && <NavLink to="/forum" className="main-nav__link">Forum</NavLink>}
+        {token && <NavLink to="/forum2" className="main-nav__link">Forum 2</NavLink>}
         <NavDropdown label="Learn" links={LEARN_LINKS} closeMenu={closeMenu} />
         <NavDropdown label="Support" links={SUPPORT_LINKS} closeMenu={closeMenu} />
         <NavDropdown label="About" links={ABOUT_LINKS} closeMenu={closeMenu} />
@@ -252,6 +254,8 @@ export default function MarketingNav({ onLogin, onRegister }) {
           <div className="mobile-nav__actions">
             {token ? (
               <>
+                <NavLink to="/forum" className="mobile-nav__link" onClick={closeMenu}>Forum</NavLink>
+                <NavLink to="/forum2" className="mobile-nav__link" onClick={closeMenu}>Forum 2</NavLink>
                 <NavLink to="/profile" className="mobile-nav__link" onClick={closeMenu}>Profile</NavLink>
                 {user?.role_id <= 99 && (
                   <NavLink to="/admin/users" className="mobile-nav__link" onClick={closeMenu}>Users</NavLink>
