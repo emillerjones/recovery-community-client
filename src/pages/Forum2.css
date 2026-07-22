@@ -346,9 +346,18 @@
   .f2-categories { position: static; display: flex; gap: 7px; overflow-x: auto; padding: 9px; }
   .f2-section-heading { display: none; }
   .f2-category { min-width: max-content; width: auto; padding: 10px 13px; }
-  .f2-category small, .f2-category b { display: none; }
+  .f2-category small { display: none; }
+  .f2-category b {
+    display: inline-flex;
+    margin-left: 2px;
+    padding: 2px 7px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.65);
+    font-size: 10px;
+  }
   .f2-feed { padding: 21px 16px; }
   .f2-toolbar { flex-direction: column; align-items: stretch; }
+  .f2-search { flex: 0 1 auto; width: 100%; }
   .f2-sort { overflow-x: auto; }
   .f2-post-card { grid-template-columns: 36px minmax(0, 1fr); padding: 17px 4px; }
   .f2-post-card .f2-avatar { width: 36px; height: 36px; }

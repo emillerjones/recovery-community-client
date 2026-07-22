@@ -9,6 +9,7 @@ import {
   Search,
   Sparkles,
   TrendingUp,
+  User,
   X,
 } from "lucide-react";
 import { useAuth } from "../auth/AuthContext";
@@ -124,7 +125,8 @@ export default function Forum2() {
   }, [composerOpen]);
 
   const { pinnedPosts, regularPosts } = useMemo(() => {
-    const sorted = [...posts].sort((a, b) => {
+    const base = sort === "mine" ? posts.filter((post) => post.author_id === user?.id) : posts;
+    const sorted = [...base].sort((a, b) => {
       if (sort === "discussed") return b.comment_count - a.comment_count;
       return new Date(b.latest_activity_at) - new Date(a.latest_activity_at);
     });
@@ -132,7 +134,12 @@ export default function Forum2() {
       pinnedPosts: sorted.filter((post) => post.pinned),
       regularPosts: sorted.filter((post) => !post.pinned),
     };
-  }, [posts, sort]);
+  }, [posts, sort, user?.id]);
+
+  const totalPostCount = useMemo(
+    () => categories.reduce((sum, category) => sum + category.post_count, 0),
+    [categories]
+  );
 
   function openComposer() {
     const selected = categories.find((category) => category.slug === activeCategory);
@@ -166,6 +173,7 @@ export default function Forum2() {
   }
 
   const hasFilters = Boolean(activeCategory || search);
+  const visibleCount = pinnedPosts.length + regularPosts.length;
 
   return (
     <main className="f2-shell">
@@ -194,6 +202,7 @@ export default function Forum2() {
             onClick={() => setSearchParams(search ? { search } : {})}
           >
             <span><strong>All conversations</strong><small>Everything happening now</small></span>
+            <b>{totalPostCount}</b>
           </button>
           {categories.map((category) => (
             <button
@@ -236,15 +245,18 @@ export default function Forum2() {
               <button className={sort === "discussed" ? "is-active" : ""} onClick={() => setSort("discussed")}>
                 <TrendingUp size={13} /> Most discussed
               </button>
+              <button className={sort === "mine" ? "is-active" : ""} onClick={() => setSort("mine")}>
+                <User size={13} /> My posts
+              </button>
             </div>
           </div>
 
           <div className="f2-feed-heading">
             <div>
               <p className="f2-eyebrow">Conversations</p>
-              <h2>{categories.find((category) => category.slug === activeCategory)?.name || "Recent activity"}</h2>
+              <h2>{sort === "mine" ? "Your posts" : categories.find((category) => category.slug === activeCategory)?.name || "Recent activity"}</h2>
             </div>
-            <span>{posts.length} {posts.length === 1 ? "post" : "posts"}</span>
+            <span>{visibleCount} {visibleCount === 1 ? "post" : "posts"}</span>
           </div>
 
           {error && <p className="f2-error" role="alert">{error}</p>}
@@ -255,7 +267,16 @@ export default function Forum2() {
             </div>
           )}
 
-          {!loading && !error && posts.length === 0 && hasFilters && (
+          {!loading && !error && visibleCount === 0 && sort === "mine" && (
+            <div className="f2-empty">
+              <User size={28} />
+              <h3>You haven&rsquo;t posted here yet.</h3>
+              <p>Whenever you start a conversation, it will show up in this view.</p>
+              <button onClick={openComposer}>Start a conversation</button>
+            </div>
+          )}
+
+          {!loading && !error && visibleCount === 0 && sort !== "mine" && hasFilters && (
             <div className="f2-empty">
               <Search size={28} />
               <h3>Nothing matches yet.</h3>
@@ -264,7 +285,7 @@ export default function Forum2() {
             </div>
           )}
 
-          {!loading && !error && posts.length === 0 && !hasFilters && (
+          {!loading && !error && visibleCount === 0 && sort !== "mine" && !hasFilters && (
             <div className="f2-empty">
               <MessageCircle size={28} />
               <h3>Be the first to start something here.</h3>
@@ -273,7 +294,7 @@ export default function Forum2() {
             </div>
           )}
 
-          {!loading && !error && posts.length > 0 && (
+          {!loading && !error && visibleCount > 0 && (
             <>
               {pinnedPosts.length > 0 && (
                 <div className="f2-pinned-group">
