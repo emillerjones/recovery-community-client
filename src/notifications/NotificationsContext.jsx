@@ -11,6 +11,7 @@ export function NotificationsProvider({ children }) {
   const { token } = useAuth();
   const [unreadCount, setUnreadCount] = useState(0);
   const [notifications, setNotifications] = useState([]);
+  const [socket, setSocket] = useState(null);
   const socketRef = useRef(null);
 
   useEffect(() => {
@@ -36,18 +37,20 @@ export function NotificationsProvider({ children }) {
       })
       .catch(() => {});
 
-    const socket = io(API, { auth: { token } });
-    socketRef.current = socket;
+    const newSocket = io(API, { auth: { token } });
+    socketRef.current = newSocket;
+    setSocket(newSocket);
 
-    socket.on("notification", (notification) => {
+    newSocket.on("notification", (notification) => {
       setUnreadCount((count) => count + 1);
       setNotifications((current) => [notification, ...current]);
     });
 
     return () => {
       cancelled = true;
-      socket.disconnect();
+      newSocket.disconnect();
       socketRef.current = null;
+      setSocket(null);
     };
   }, [token]);
 
@@ -88,7 +91,7 @@ export function NotificationsProvider({ children }) {
     return true;
   }, [token]);
 
-  const value = { unreadCount, notifications, fetchNotifications, markRead, markAllRead };
+  const value = { unreadCount, notifications, fetchNotifications, markRead, markAllRead, socket };
   return <NotificationsContext.Provider value={value}>{children}</NotificationsContext.Provider>;
 }
 

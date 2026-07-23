@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { ArrowLeft, CornerDownRight, Flag, Lock, Pencil, Pin, Trash2 } from "lucide-react";
+import { ArrowLeft, Bookmark, CornerDownRight, Flag, Lock, Pencil, Pin, Trash2 } from "lucide-react";
 import { useAuth } from "../auth/AuthContext";
+import { useNotifications } from "../notifications/NotificationsContext";
 import "./Forum.css";
 
 const API = import.meta.env.VITE_API;
@@ -50,7 +51,7 @@ function Comment({ comment, depth, currentUserId, canModerate, replyingTo, setRe
           <p className="forum-comment-removed">This reply was removed.</p>
         ) : (
           <>
-            <div className="forum-comment-head">
+            <div className="forum-comment-head forum-comment-head--reply">
               <div className="forum-avatar forum-avatar--small">{initials(comment.author_username)}</div>
               <div><strong>{comment.author_username}</strong><span>{formatDate(comment.created_at)}</span></div>
             </div>
@@ -116,6 +117,7 @@ function Comment({ comment, depth, currentUserId, canModerate, replyingTo, setRe
 export default function ForumThread() {
   const { postId } = useParams();
   const { token, user } = useAuth();
+  const { socket } = useNotifications();
   const navigate = useNavigate();
   const [post, setPost] = useState(null);
   const [comments, setComments] = useState([]);
@@ -155,6 +157,26 @@ export default function ForumThread() {
       });
     return () => { cancelled = true; };
   }, [fetchThread]);
+
+  useEffect(() => {
+    if (!socket) return;
+    const postIdNumber = Number(postId);
+
+    socket.emit("join_thread", postIdNumber);
+
+    function onNewComment(comment) {
+      if (comment.post_id !== postIdNumber) return;
+      setComments((current) =>
+        current.some((existing) => existing.comment_id === comment.comment_id) ? current : [...current, comment]
+      );
+    }
+    socket.on("new_comment", onNewComment);
+
+    return () => {
+      socket.emit("leave_thread", postIdNumber);
+      socket.off("new_comment", onNewComment);
+    };
+  }, [socket, postId]);
 
   async function submitReply(event, parentCommentId = null) {
     // TRACE STEP 2: The reply form's onSubmit calls this function.
@@ -226,6 +248,20 @@ export default function ForumThread() {
       return;
     }
     setPost((current) => ({ ...current, flagged_by_me: !isFlagged }));
+  }
+
+  async function togglePostSave() {
+    const isSaved = post.saved_by_me;
+    const response = await fetch(`${API}/api/forum/posts/${postId}/save`, {
+      method: isSaved ? "DELETE" : "POST",
+      headers: { ...headers, "Content-Type": "application/json" },
+    });
+    if (!response.ok) {
+      const result = await response.json().catch(() => ({}));
+      setError(result.message || "Could not update that.");
+      return;
+    }
+    setPost((current) => ({ ...current, saved_by_me: !isSaved }));
   }
 
   async function toggleCommentFlag(commentId, isFlagged) {
@@ -326,7 +362,7 @@ export default function ForumThread() {
         ) : (
           <>
             <h1>{post.title}</h1>
-            <div className="forum-comment-head">
+            <div className="forum-comment-head forum-thread-author">
               <div className="forum-avatar">{initials(post.author_username)}</div>
               <div><strong>{post.author_username}</strong><span>{formatDate(post.created_at)}</span></div>
             </div>
@@ -337,12 +373,12 @@ export default function ForumThread() {
         {!editingPost && (
           <div className="forum-moderation">
             {isAuthor && !post.locked && (
-              <button onClick={startEditingPost}><Pencil size={15} /> Edit</button>
+              <button className="forum-action-button" onClick={startEditingPost}><Pencil size={15} /> Edit</button>
             )}
             {canModerate && (
               <>
-                <button onClick={() => moderate({ pinned: !post.pinned })}><Pin size={15} /> {post.pinned ? "Unpin" : "Pin"}</button>
-                <button onClick={() => moderate({ locked: !post.locked })}><Lock size={15} /> {post.locked ? "Unlock" : "Lock"}</button>
+                <button className="forum-action-button" onClick={() => moderate({ pinned: !post.pinned })}><Pin size={15} /> {post.pinned ? "Unpin" : "Pin"}</button>
+                <button className="forum-action-button" onClick={() => moderate({ locked: !post.locked })}><Lock size={15} /> {post.locked ? "Unlock" : "Lock"}</button>
               </>
             )}
             {(isAuthor || canModerate) && (
@@ -353,20 +389,23 @@ export default function ForumThread() {
                   <button onClick={() => setConfirmingPostDelete(false)}>Cancel</button>
                 </span>
               ) : (
-                <button onClick={() => setConfirmingPostDelete(true)}><Trash2 size={15} /> Delete</button>
+                <button className="forum-action-button forum-action-button--danger" onClick={() => setConfirmingPostDelete(true)}><Trash2 size={15} /> Delete</button>
               )
             )}
             {!isAuthor && (
-              <button className={post.flagged_by_me ? "is-flagged" : ""} onClick={togglePostFlag}>
+              <button className={`forum-action-button ${post.flagged_by_me ? "is-flagged" : ""}`} onClick={togglePostFlag}>
                 <Flag size={15} /> {post.flagged_by_me ? "Flagged" : "Flag"}
               </button>
             )}
+            <button className={`forum-action-button ${post.saved_by_me ? "is-saved" : ""}`} onClick={togglePostSave}>
+              <Bookmark size={15} fill={post.saved_by_me ? "currentColor" : "none"} /> {post.saved_by_me ? "Saved" : "Save"}
+            </button>
           </div>
         )}
       </article>
 
       <section className="forum-thread-replies">
-        <div className="forum-feed-heading"><div><p className="forum-eyebrow">Community responses</p><h2>{comments.filter((c) => !c.deleted_at).length} {comments.filter((c) => !c.deleted_at).length === 1 ? "reply" : "replies"}</h2></div></div>
+        <div className="forum-feed-heading forum-thread-replies__heading"><div><p className="forum-eyebrow">Community responses</p><h2>{comments.filter((c) => !c.deleted_at).length} {comments.filter((c) => !c.deleted_at).length === 1 ? "reply" : "replies"}</h2></div><span>Oldest first</span></div>
         {error && <p className="forum-error" role="alert">{error}</p>}
         {commentTree.length === 0 && <div className="forum-empty"><h3>No replies yet.</h3><p>You can be the first person to respond.</p></div>}
         <div className="forum-comment-tree">
@@ -402,7 +441,10 @@ export default function ForumThread() {
           <p className="forum-eyebrow">Join the conversation</p>
           <h2>Leave a reply</h2>
           <textarea required rows={5} value={mainReply} onChange={(e) => setMainReply(e.target.value)} placeholder="Share support, experience, or a thoughtful question." />
-          <button className="forum-primary-button" disabled={submitting}>{submitting ? "Replying…" : "Post reply"}</button>
+          <div className="forum-main-reply__footer">
+            <span>Speak from experience and leave room for someone else&rsquo;s path.</span>
+            <button className="forum-primary-button" disabled={submitting}>{submitting ? "Replying…" : "Post reply"}</button>
+          </div>
         </form>
       )}
     </main>

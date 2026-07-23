@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthContext";
 import "./AuthPanel.css";
 
@@ -14,6 +15,7 @@ import "./AuthPanel.css";
  */
 export default function AuthPanel({ mode, onClose, onSwitchMode }) {
   const { login, register } = useAuth();
+  const navigate = useNavigate();
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const panelRef = useRef(null);
@@ -34,10 +36,10 @@ export default function AuthPanel({ mode, onClose, onSwitchMode }) {
     if (first) setTimeout(() => first.focus(), 300);
   }, [mode]);
 
-  // Reset error when switching modes
-  useEffect(() => {
+  function switchMode(nextMode) {
     setError(null);
-  }, [mode]);
+    onSwitchMode(nextMode);
+  }
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -51,12 +53,14 @@ export default function AuthPanel({ mode, onClose, onSwitchMode }) {
     try {
       if (isLogin) {
         await login({ email, password });
+        onClose();
+        navigate("/forum", { state: { justLoggedIn: true } });
       } else {
         const username = data.get("username");
         await register({ username, email, password });
+        onClose();
+        window.history.replaceState(null, "", "/");
       }
-      onClose();
-      window.history.replaceState(null, "", "/");
     } catch (err) {
       setError(err.message);
     } finally {
@@ -188,15 +192,15 @@ export default function AuthPanel({ mode, onClose, onSwitchMode }) {
         <button
           className="ap-switch-btn"
           type="button"
-          onClick={() => onSwitchMode(isLogin ? "register" : "login")}
+          onClick={() => switchMode(isLogin ? "register" : "login")}
         >
           {isLogin ? "Create an account" : "Already have an account? Log in"}
         </button>
 
         <p className="ap-footer">
           {isLogin
-            ? <>Need an account? <button type="button" onClick={() => onSwitchMode("register")}>Sign up here.</button></>
-            : <>Already a member? <button type="button" onClick={() => onSwitchMode("login")}>Log in.</button></>
+            ? <>Need an account? <button type="button" onClick={() => switchMode("register")}>Sign up here.</button></>
+            : <>Already a member? <button type="button" onClick={() => switchMode("login")}>Log in.</button></>
           }
         </p>
       </aside>

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
 import NotificationBell from "../components/NotificationBell";
+import MessagesBell from "../components/MessagesBell";
 import logo from "../assets/icons/logo.png";
 import "./MarketingNav.css";
 
@@ -206,6 +207,7 @@ export default function MarketingNav({ onLogin, onRegister }) {
       <div className="site-header__actions">
         {token ? (
           <>
+            <MessagesBell />
             <NotificationBell />
             <NavLink to="/profile" className="nav-link-soft">Profile</NavLink>
             {user?.role_id <= 99 && (
@@ -259,6 +261,7 @@ export default function MarketingNav({ onLogin, onRegister }) {
             {token ? (
               <>
                 <NavLink to="/forum" className="mobile-nav__link" onClick={closeMenu}>Forum</NavLink>
+                <NavLink to="/messages" className="mobile-nav__link" onClick={closeMenu}>Messages</NavLink>
                 <NavLink to="/profile" className="mobile-nav__link" onClick={closeMenu}>Profile</NavLink>
                 {user?.role_id <= 99 && (
                   <NavLink to="/admin/users" className="mobile-nav__link" onClick={closeMenu}>Users</NavLink>

@@ -1,15 +1,24 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import {
+  Bookmark,
+  BookOpen,
+  Check,
+  Coffee,
+  HeartHandshake,
+  Leaf,
   LifeBuoy,
   Lock,
   MessageCircle,
   Pin,
   Plus,
   Search,
+  ShieldCheck,
   Sparkles,
   TrendingUp,
+  Trophy,
   User,
+  UsersRound,
   X,
 } from "lucide-react";
 import { useAuth } from "../auth/AuthContext";
@@ -36,10 +45,22 @@ function isNew(value) {
   return Date.now() - new Date(value).getTime() < NEW_WINDOW_MS;
 }
 
+function CategoryGlyph({ name, size = 15 }) {
+  const normalizedName = name?.toLowerCase() || "";
+  if (normalizedName.includes("introduction")) return <User size={size} />;
+  if (normalizedName.includes("cannabis")) return <Leaf size={size} />;
+  if (normalizedName.includes("success") || normalizedName.includes("milestone")) return <Trophy size={size} />;
+  if (normalizedName.includes("question") || normalizedName.includes("support")) return <HeartHandshake size={size} />;
+  if (normalizedName.includes("family") || normalizedName.includes("friend")) return <UsersRound size={size} />;
+  if (normalizedName.includes("resource")) return <BookOpen size={size} />;
+  if (normalizedName.includes("off topic")) return <Coffee size={size} />;
+  return <LifeBuoy size={size} />;
+}
+
 function PostCard({ post }) {
   return (
     <Link to={`/forum/${post.post_id}`} className={`forum-post-card ${post.pinned ? "is-pinned" : ""}`}>
-      <div className="forum-avatar">{initials(post.author_username)}</div>
+      <div className="forum-category-icon" aria-hidden="true"><CategoryGlyph name={post.category_name} size={19} /></div>
       <div className="forum-post-copy">
         <div className="forum-post-meta">
           <span className="forum-category-pill">{post.category_name}</span>
@@ -49,17 +70,16 @@ function PostCard({ post }) {
         </div>
         <h3>{post.title}</h3>
         <p>{post.body}</p>
-        <div className="forum-post-byline">
-          <span>{post.author_username}</span>
-          <i />
-          <span>{timeAgo(post.latest_activity_at)}</span>
-        </div>
+      </div>
+      <div className="forum-post-author">
+        <div className="forum-avatar forum-avatar--small">{initials(post.author_username)}</div>
+        <span>{post.author_username}</span>
       </div>
       <div className="forum-reply-count">
         <MessageCircle size={17} />
         <strong>{post.comment_count}</strong>
-        <span>{post.comment_count === 1 ? "reply" : "replies"}</span>
       </div>
+      <time className="forum-post-activity">{timeAgo(post.latest_activity_at)}</time>
     </Link>
   );
 }
@@ -67,6 +87,7 @@ function PostCard({ post }) {
 export default function Forum() {
   const { token, user } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
   const activeCategory = searchParams.get("category") || "";
   const [categories, setCategories] = useState([]);
@@ -79,8 +100,16 @@ export default function Forum() {
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("recent");
+  const [showLoginWelcome, setShowLoginWelcome] = useState(() => Boolean(location.state?.justLoggedIn));
 
   const headers = useMemo(() => ({ Authorization: `Bearer ${token}` }), [token]);
+
+  useEffect(() => {
+    if (!showLoginWelcome) return;
+    navigate(`${location.pathname}${location.search}`, { replace: true, state: null });
+    const id = setTimeout(() => setShowLoginWelcome(false), 4000);
+    return () => clearTimeout(id);
+  }, [showLoginWelcome, navigate, location.pathname, location.search]);
 
   useEffect(() => {
     const id = setTimeout(() => setSearch(searchInput.trim()), SEARCH_DEBOUNCE_MS);
@@ -125,7 +154,9 @@ export default function Forum() {
   }, [composerOpen]);
 
   const { pinnedPosts, regularPosts } = useMemo(() => {
-    const base = sort === "mine" ? posts.filter((post) => post.author_id === user?.id) : posts;
+    let base = posts;
+    if (sort === "mine") base = posts.filter((post) => post.author_id === user?.id);
+    if (sort === "saved") base = posts.filter((post) => post.saved_by_me);
     const sorted = [...base].sort((a, b) => {
       if (sort === "discussed") return b.comment_count - a.comment_count;
       return new Date(b.latest_activity_at) - new Date(a.latest_activity_at);
@@ -177,11 +208,16 @@ export default function Forum() {
 
   return (
     <main className="forum-shell">
+      {showLoginWelcome && (
+        <div className="forum-login-welcome" role="status">
+          <Check size={16} /> Welcome back, {user?.username || "friend"}. You&rsquo;re logged in.
+        </div>
+      )}
       <section className="forum-hero">
-        <div>
+        <div className="forum-hero__copy">
           <p className="forum-eyebrow">Private member community</p>
-          <h1>Welcome back, {user?.username || "friend"}.</h1>
-          <p>Share what is real, ask what you need, and leave something useful for the next person.</p>
+          <h1>Community Forum</h1>
+          <p>A safe place to share, listen, and support each other. You don&rsquo;t have to have the perfect words.</p>
           <Link to="/resources" className="forum-resources-link">
             <LifeBuoy size={15} /> Need support right now? Visit Resources
           </Link>
@@ -192,36 +228,7 @@ export default function Forum() {
       </section>
 
       <div className="forum-layout">
-        <aside className="forum-categories" aria-label="Forum categories">
-          <div className="forum-section-heading">
-            <p>Spaces</p>
-            <span>{categories.length}</span>
-          </div>
-          <button
-            className={`forum-category ${activeCategory === "" ? "is-active" : ""}`}
-            onClick={() => setSearchParams(search ? { search } : {})}
-          >
-            <span><strong>All conversations</strong><small>Everything happening now</small></span>
-            <b>{totalPostCount}</b>
-          </button>
-          {categories.map((category) => (
-            <button
-              key={category.category_id}
-              className={`forum-category ${activeCategory === category.slug ? "is-active" : ""}`}
-              onClick={() => setSearchParams(search ? { category: category.slug, search } : { category: category.slug })}
-            >
-              <span><strong>{category.name}</strong><small>{category.description}</small></span>
-              <b>{category.post_count}</b>
-            </button>
-          ))}
-        </aside>
-
         <section className="forum-feed">
-          <button type="button" className="forum-composer-bar" onClick={openComposer}>
-            <div className="forum-avatar">{initials(user?.username)}</div>
-            <span>What&rsquo;s on your mind, {user?.username || "friend"}?</span>
-          </button>
-
           <div className="forum-toolbar">
             <label className="forum-search">
               <Search size={16} />
@@ -248,13 +255,16 @@ export default function Forum() {
               <button className={sort === "mine" ? "is-active" : ""} onClick={() => setSort("mine")}>
                 <User size={13} /> My posts
               </button>
+              <button className={sort === "saved" ? "is-active" : ""} onClick={() => setSort("saved")}>
+                <Bookmark size={13} /> Saved
+              </button>
             </div>
           </div>
 
           <div className="forum-feed-heading">
             <div>
               <p className="forum-eyebrow">Conversations</p>
-              <h2>{sort === "mine" ? "Your posts" : categories.find((category) => category.slug === activeCategory)?.name || "Recent activity"}</h2>
+              <h2>{sort === "mine" ? "Your posts" : sort === "saved" ? "Saved posts" : categories.find((category) => category.slug === activeCategory)?.name || "Recent activity"}</h2>
             </div>
             <span>{visibleCount} {visibleCount === 1 ? "post" : "posts"}</span>
           </div>
@@ -276,7 +286,15 @@ export default function Forum() {
             </div>
           )}
 
-          {!loading && !error && visibleCount === 0 && sort !== "mine" && hasFilters && (
+          {!loading && !error && visibleCount === 0 && sort === "saved" && (
+            <div className="forum-empty">
+              <Bookmark size={28} />
+              <h3>Nothing saved yet.</h3>
+              <p>Save a post from its page to find it here later.</p>
+            </div>
+          )}
+
+          {!loading && !error && visibleCount === 0 && sort !== "mine" && sort !== "saved" && hasFilters && (
             <div className="forum-empty">
               <Search size={28} />
               <h3>Nothing matches yet.</h3>
@@ -285,7 +303,7 @@ export default function Forum() {
             </div>
           )}
 
-          {!loading && !error && visibleCount === 0 && sort !== "mine" && !hasFilters && (
+          {!loading && !error && visibleCount === 0 && sort !== "mine" && sort !== "saved" && !hasFilters && (
             <div className="forum-empty">
               <MessageCircle size={28} />
               <h3>Be the first to start something here.</h3>
@@ -298,7 +316,10 @@ export default function Forum() {
             <>
               {pinnedPosts.length > 0 && (
                 <div className="forum-pinned-group">
-                  <p className="forum-pinned-label"><Pin size={13} /> Pinned</p>
+                  <div className="forum-pinned-heading">
+                    <h2><Pin size={16} /> Pinned conversations</h2>
+                    <span>{pinnedPosts.length}</span>
+                  </div>
                   <div className="forum-post-list">
                     {pinnedPosts.map((post) => <PostCard post={post} key={post.post_id} />)}
                   </div>
@@ -310,6 +331,51 @@ export default function Forum() {
             </>
           )}
         </section>
+
+        <aside className="forum-sidebar">
+          <section className="forum-categories" aria-label="Forum categories">
+            <div className="forum-section-heading">
+              <p>Browse categories</p>
+              <span>{categories.length}</span>
+            </div>
+            <button
+              className={`forum-category ${activeCategory === "" ? "is-active" : ""}`}
+              onClick={() => setSearchParams(search ? { search } : {})}
+            >
+              <span><strong>All conversations</strong><small>Everything happening now</small></span>
+              <b>{totalPostCount}</b>
+            </button>
+            {categories.map((category) => (
+              <button
+                key={category.category_id}
+                className={`forum-category ${activeCategory === category.slug ? "is-active" : ""}`}
+                onClick={() => setSearchParams(search ? { category: category.slug, search } : { category: category.slug })}
+              >
+                <span className="forum-category__copy">
+                  <i className="forum-category__icon" aria-hidden="true">
+                    <CategoryGlyph name={category.name} />
+                  </i>
+                  <span><strong>{category.name}</strong><small>{category.description}</small></span>
+                </span>
+                <b>{category.post_count}</b>
+              </button>
+            ))}
+          </section>
+
+          <section className="forum-guidelines-card">
+            <div className="forum-guidelines-card__title">
+              <ShieldCheck size={19} />
+              <h2>Community guidelines</h2>
+            </div>
+            <p>We&rsquo;re here to support one another with respect, compassion, and honesty.</p>
+            <ul>
+              <li><Check size={13} /> Be kind and respectful</li>
+              <li><Check size={13} /> Share from your own experience</li>
+              <li><Check size={13} /> Protect privacy and confidentiality</li>
+            </ul>
+            <Link to="/guidelines">Read the full guidelines <span aria-hidden="true">&rarr;</span></Link>
+          </section>
+        </aside>
       </div>
 
       {composerOpen && (

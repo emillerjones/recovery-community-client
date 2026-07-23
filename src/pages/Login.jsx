@@ -15,7 +15,7 @@ export default function Login() {
     const password = formData.get("password");
     try {
       await login({ email, password });
-      navigate("/");
+      navigate("/forum", { replace: true, state: { justLoggedIn: true } });
     } catch (e) {
       setError(e.message);
     }
