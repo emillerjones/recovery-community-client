@@ -318,6 +318,7 @@
 .f2-moderation { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 28px; padding-top: 18px; border-top: 1px solid var(--f2-line); }
 .f2-moderation button, .f2-reply-button { display: inline-flex; align-items: center; gap: 6px; border: 0; color: var(--f2-green); background: transparent; font: inherit; font-size: 12px; font-weight: 750; cursor: pointer; }
 .f2-moderation button { padding: 7px 9px; border-radius: 8px; background: var(--f2-sage); }
+.f2-moderation button.is-reported, .f2-reply-button.is-reported { color: #843e36; background: #f5dfdb; }
 .f2-thread-replies { margin-top: 20px; padding: 30px 38px; }
 .f2-comment-tree { display: grid; gap: 3px; }
 .f2-comment { position: relative; margin-top: 8px; }

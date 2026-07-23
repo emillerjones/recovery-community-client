@@ -210,6 +210,9 @@ export default function MarketingNav({ onLogin, onRegister }) {
             {user?.role_id <= 99 && (
               <NavLink to="/admin/users" className="main-nav__link">Users</NavLink>
             )}
+            {user?.role_id <= 50 && (
+              <NavLink to="/admin/forum-reports" className="main-nav__link">Reports</NavLink>
+            )}
             <button className="nav-button" onClick={handleLogout}>Log out</button>
           </>
         ) : (
@@ -259,6 +262,9 @@ export default function MarketingNav({ onLogin, onRegister }) {
                 <NavLink to="/profile" className="mobile-nav__link" onClick={closeMenu}>Profile</NavLink>
                 {user?.role_id <= 99 && (
                   <NavLink to="/admin/users" className="mobile-nav__link" onClick={closeMenu}>Users</NavLink>
+                )}
+                {user?.role_id <= 50 && (
+                  <NavLink to="/admin/forum-reports" className="mobile-nav__link" onClick={closeMenu}>Reports</NavLink>
                 )}
                 <button className="mobile-nav__button" onClick={handleLogout}>Log out</button>
               </>

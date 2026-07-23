@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { ArrowLeft, CornerDownRight, Lock, Pencil, Pin, Trash2 } from "lucide-react";
+import { ArrowLeft, CornerDownRight, Flag, Lock, Pencil, Pin, Trash2 } from "lucide-react";
 import { useAuth } from "../auth/AuthContext";
 import "./Forum2.css";
 
@@ -32,10 +32,11 @@ function buildCommentTree(comments) {
   return roots;
 }
 
-function Comment({ comment, depth, currentUserId, canModerate, replyingTo, setReplyingTo, replyBody, setReplyBody, submitReply, submitting, deleteComment }) {
+function Comment({ comment, depth, currentUserId, canModerate, replyingTo, setReplyingTo, replyBody, setReplyBody, submitReply, submitting, deleteComment, toggleCommentReport }) {
   const [confirmingDelete, setConfirmingDelete] = useState(false);
   const isRemoved = Boolean(comment.deleted_at);
-  const canDelete = !isRemoved && (comment.author_id === currentUserId || canModerate);
+  const isOwn = comment.author_id === currentUserId;
+  const canDelete = !isRemoved && (isOwn || canModerate);
 
   return (
     <div className={`f2-comment depth-${Math.min(depth, 2)}`}>
@@ -67,6 +68,14 @@ function Comment({ comment, depth, currentUserId, canModerate, replyingTo, setRe
                   </button>
                 )
               )}
+              {!isOwn && (
+                <button
+                  className={`f2-reply-button ${comment.reported_by_me ? "is-reported" : ""}`}
+                  onClick={() => toggleCommentReport(comment.comment_id, comment.reported_by_me)}
+                >
+                  <Flag size={14} /> {comment.reported_by_me ? "Reported" : "Report"}
+                </button>
+              )}
             </div>
             {replyingTo === comment.comment_id && (
               <form className="f2-inline-reply" onSubmit={(event) => submitReply(event, comment.comment_id)}>
@@ -91,6 +100,7 @@ function Comment({ comment, depth, currentUserId, canModerate, replyingTo, setRe
           submitReply={submitReply}
           submitting={submitting}
           deleteComment={deleteComment}
+          toggleCommentReport={toggleCommentReport}
         />
       ))}
     </div>
@@ -180,6 +190,37 @@ export default function ForumThread2() {
     setComments(refreshed.comments);
   }
 
+  async function togglePostReport() {
+    const isReported = post.reported_by_me;
+    const response = await fetch(`${API}/api/forum/posts/${postId}/report`, {
+      method: isReported ? "DELETE" : "POST",
+      headers: { ...headers, "Content-Type": "application/json" },
+    });
+    if (!response.ok) {
+      const result = await response.json().catch(() => ({}));
+      setError(result.message || "Could not update that report.");
+      return;
+    }
+    setPost((current) => ({ ...current, reported_by_me: !isReported }));
+  }
+
+  async function toggleCommentReport(commentId, isReported) {
+    const response = await fetch(`${API}/api/forum/posts/${postId}/comments/${commentId}/report`, {
+      method: isReported ? "DELETE" : "POST",
+      headers: { ...headers, "Content-Type": "application/json" },
+    });
+    if (!response.ok) {
+      const result = await response.json().catch(() => ({}));
+      setError(result.message || "Could not update that report.");
+      return;
+    }
+    setComments((current) =>
+      current.map((comment) =>
+        comment.comment_id === commentId ? { ...comment, reported_by_me: !isReported } : comment
+      )
+    );
+  }
+
   function startEditingPost() {
     setPostDraft({ title: post.title, body: post.body });
     setEditingPost(true);
@@ -267,7 +308,7 @@ export default function ForumThread2() {
           </>
         )}
 
-        {(isAuthor || canModerate) && !editingPost && (
+        {!editingPost && (
           <div className="f2-moderation">
             {isAuthor && !post.locked && (
               <button onClick={startEditingPost}><Pencil size={15} /> Edit</button>
@@ -288,6 +329,11 @@ export default function ForumThread2() {
               ) : (
                 <button onClick={() => setConfirmingPostDelete(true)}><Trash2 size={15} /> Delete</button>
               )
+            )}
+            {!isAuthor && (
+              <button className={post.reported_by_me ? "is-reported" : ""} onClick={togglePostReport}>
+                <Flag size={15} /> {post.reported_by_me ? "Reported" : "Report"}
+              </button>
             )}
           </div>
         )}
@@ -312,6 +358,7 @@ export default function ForumThread2() {
               submitReply={submitReply}
               submitting={submitting}
               deleteComment={deleteComment}
+              toggleCommentReport={toggleCommentReport}
             />
           ))}
         </div>

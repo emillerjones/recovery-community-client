@@ -13,6 +13,7 @@ import Register from "./pages/Register";
 
 
 import UserManagement from "./pages/admin/UserManagement";
+import ForumReports from "./pages/admin/ForumReports";
 import RequireRole from "./components/RequireRole";
 import MarketingLayout from "./layout/MarketingLayout";
 import AppLayout from "./layout/AppLayout";
@@ -64,6 +65,14 @@ export default function App() {
           element={
             <RequireRole maxRoleId={9}>
               <UserManagement />
+            </RequireRole>
+          }
+        />
+        <Route
+          path="/admin/forum-reports"
+          element={
+            <RequireRole maxRoleId={50}>
+              <ForumReports />
             </RequireRole>
           }
         />
