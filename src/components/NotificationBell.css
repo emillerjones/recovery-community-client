@@ -95,3 +95,16 @@
 .notif-bell__panel li button time { color: #9aa19c; font-size: 11px; }
 .notif-bell__panel li button.is-unread { background: rgba(223, 232, 220, 0.35); }
 .notif-bell__panel li button.is-unread span { font-weight: 700; }
+
+@media (max-width: 800px) {
+  .notif-bell__panel {
+    position: fixed;
+    top: 76px;
+    right: auto;
+    left: 50%;
+    width: calc(100vw - 24px);
+    max-width: 380px;
+    max-height: calc(100dvh - 92px);
+    transform: translateX(-50%);
+  }
+}
