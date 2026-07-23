@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
+import { LogOut } from "lucide-react";
 import { useAuth } from "../auth/AuthContext";
 import NotificationBell from "../components/NotificationBell";
 import MessagesBell from "../components/MessagesBell";
@@ -216,7 +217,10 @@ export default function MarketingNav({ onLogin, onRegister }) {
             {user?.role_id <= 50 && (
               <NavLink to="/admin/forum-flags" className="main-nav__link">Flagged</NavLink>
             )}
-            <button className="nav-button" onClick={handleLogout}>Log out</button>
+            <button className="nav-button nav-logout-button" onClick={handleLogout} aria-label="Log out" title="Log out">
+              <LogOut className="nav-logout-button__icon" size={18} />
+              <span>Log out</span>
+            </button>
           </>
         ) : (
           <>
