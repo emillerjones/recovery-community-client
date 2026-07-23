@@ -13,7 +13,7 @@ import {
   X,
 } from "lucide-react";
 import { useAuth } from "../auth/AuthContext";
-import "./Forum2.css";
+import "./Forum.css";
 
 const API = import.meta.env.VITE_API;
 const SEARCH_DEBOUNCE_MS = 350;
@@ -38,24 +38,24 @@ function isNew(value) {
 
 function PostCard({ post }) {
   return (
-    <Link to={`/forum/${post.post_id}`} className={`f2-post-card ${post.pinned ? "is-pinned" : ""}`}>
-      <div className="f2-avatar">{initials(post.author_username)}</div>
-      <div className="f2-post-copy">
-        <div className="f2-post-meta">
-          <span className="f2-category-pill">{post.category_name}</span>
-          {post.pinned && <span className="f2-state f2-state--pinned"><Pin size={12} /> Pinned</span>}
-          {post.locked && <span className="f2-state"><Lock size={12} /> Locked</span>}
-          {isNew(post.created_at) && <span className="f2-state f2-state--new"><Sparkles size={12} /> New</span>}
+    <Link to={`/forum/${post.post_id}`} className={`forum-post-card ${post.pinned ? "is-pinned" : ""}`}>
+      <div className="forum-avatar">{initials(post.author_username)}</div>
+      <div className="forum-post-copy">
+        <div className="forum-post-meta">
+          <span className="forum-category-pill">{post.category_name}</span>
+          {post.pinned && <span className="forum-state forum-state--pinned"><Pin size={12} /> Pinned</span>}
+          {post.locked && <span className="forum-state"><Lock size={12} /> Locked</span>}
+          {isNew(post.created_at) && <span className="forum-state forum-state--new"><Sparkles size={12} /> New</span>}
         </div>
         <h3>{post.title}</h3>
         <p>{post.body}</p>
-        <div className="f2-post-byline">
+        <div className="forum-post-byline">
           <span>{post.author_username}</span>
           <i />
           <span>{timeAgo(post.latest_activity_at)}</span>
         </div>
       </div>
-      <div className="f2-reply-count">
+      <div className="forum-reply-count">
         <MessageCircle size={17} />
         <strong>{post.comment_count}</strong>
         <span>{post.comment_count === 1 ? "reply" : "replies"}</span>
@@ -64,7 +64,7 @@ function PostCard({ post }) {
   );
 }
 
-export default function Forum2() {
+export default function Forum() {
   const { token, user } = useAuth();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -176,29 +176,29 @@ export default function Forum2() {
   const visibleCount = pinnedPosts.length + regularPosts.length;
 
   return (
-    <main className="f2-shell">
-      <section className="f2-hero">
+    <main className="forum-shell">
+      <section className="forum-hero">
         <div>
-          <p className="f2-eyebrow">Private member community</p>
+          <p className="forum-eyebrow">Private member community</p>
           <h1>Welcome back, {user?.username || "friend"}.</h1>
           <p>Share what is real, ask what you need, and leave something useful for the next person.</p>
-          <Link to="/resources" className="f2-resources-link">
+          <Link to="/resources" className="forum-resources-link">
             <LifeBuoy size={15} /> Need support right now? Visit Resources
           </Link>
         </div>
-        <button className="f2-primary-button" onClick={openComposer}>
+        <button className="forum-primary-button" onClick={openComposer}>
           <Plus size={18} /> Start a conversation
         </button>
       </section>
 
-      <div className="f2-layout">
-        <aside className="f2-categories" aria-label="Forum categories">
-          <div className="f2-section-heading">
+      <div className="forum-layout">
+        <aside className="forum-categories" aria-label="Forum categories">
+          <div className="forum-section-heading">
             <p>Spaces</p>
             <span>{categories.length}</span>
           </div>
           <button
-            className={`f2-category ${activeCategory === "" ? "is-active" : ""}`}
+            className={`forum-category ${activeCategory === "" ? "is-active" : ""}`}
             onClick={() => setSearchParams(search ? { search } : {})}
           >
             <span><strong>All conversations</strong><small>Everything happening now</small></span>
@@ -207,7 +207,7 @@ export default function Forum2() {
           {categories.map((category) => (
             <button
               key={category.category_id}
-              className={`f2-category ${activeCategory === category.slug ? "is-active" : ""}`}
+              className={`forum-category ${activeCategory === category.slug ? "is-active" : ""}`}
               onClick={() => setSearchParams(search ? { category: category.slug, search } : { category: category.slug })}
             >
               <span><strong>{category.name}</strong><small>{category.description}</small></span>
@@ -216,14 +216,14 @@ export default function Forum2() {
           ))}
         </aside>
 
-        <section className="f2-feed">
-          <button type="button" className="f2-composer-bar" onClick={openComposer}>
-            <div className="f2-avatar">{initials(user?.username)}</div>
+        <section className="forum-feed">
+          <button type="button" className="forum-composer-bar" onClick={openComposer}>
+            <div className="forum-avatar">{initials(user?.username)}</div>
             <span>What&rsquo;s on your mind, {user?.username || "friend"}?</span>
           </button>
 
-          <div className="f2-toolbar">
-            <label className="f2-search">
+          <div className="forum-toolbar">
+            <label className="forum-search">
               <Search size={16} />
               <input
                 type="search"
@@ -238,7 +238,7 @@ export default function Forum2() {
                 </button>
               )}
             </label>
-            <div className="f2-sort" role="group" aria-label="Sort conversations">
+            <div className="forum-sort" role="group" aria-label="Sort conversations">
               <button className={sort === "recent" ? "is-active" : ""} onClick={() => setSort("recent")}>
                 Recent activity
               </button>
@@ -251,24 +251,24 @@ export default function Forum2() {
             </div>
           </div>
 
-          <div className="f2-feed-heading">
+          <div className="forum-feed-heading">
             <div>
-              <p className="f2-eyebrow">Conversations</p>
+              <p className="forum-eyebrow">Conversations</p>
               <h2>{sort === "mine" ? "Your posts" : categories.find((category) => category.slug === activeCategory)?.name || "Recent activity"}</h2>
             </div>
             <span>{visibleCount} {visibleCount === 1 ? "post" : "posts"}</span>
           </div>
 
-          {error && <p className="f2-error" role="alert">{error}</p>}
+          {error && <p className="forum-error" role="alert">{error}</p>}
 
           {loading && (
-            <div className="f2-skeleton-list" aria-hidden="true">
-              {[0, 1, 2].map((i) => <div className="f2-skeleton-card" key={i} />)}
+            <div className="forum-skeleton-list" aria-hidden="true">
+              {[0, 1, 2].map((i) => <div className="forum-skeleton-card" key={i} />)}
             </div>
           )}
 
           {!loading && !error && visibleCount === 0 && sort === "mine" && (
-            <div className="f2-empty">
+            <div className="forum-empty">
               <User size={28} />
               <h3>You haven&rsquo;t posted here yet.</h3>
               <p>Whenever you start a conversation, it will show up in this view.</p>
@@ -277,7 +277,7 @@ export default function Forum2() {
           )}
 
           {!loading && !error && visibleCount === 0 && sort !== "mine" && hasFilters && (
-            <div className="f2-empty">
+            <div className="forum-empty">
               <Search size={28} />
               <h3>Nothing matches yet.</h3>
               <p>Try a different word, or clear your filters and browse by space.</p>
@@ -286,7 +286,7 @@ export default function Forum2() {
           )}
 
           {!loading && !error && visibleCount === 0 && sort !== "mine" && !hasFilters && (
-            <div className="f2-empty">
+            <div className="forum-empty">
               <MessageCircle size={28} />
               <h3>Be the first to start something here.</h3>
               <p>A thoughtful question or honest update is enough.</p>
@@ -297,14 +297,14 @@ export default function Forum2() {
           {!loading && !error && visibleCount > 0 && (
             <>
               {pinnedPosts.length > 0 && (
-                <div className="f2-pinned-group">
-                  <p className="f2-pinned-label"><Pin size={13} /> Pinned</p>
-                  <div className="f2-post-list">
+                <div className="forum-pinned-group">
+                  <p className="forum-pinned-label"><Pin size={13} /> Pinned</p>
+                  <div className="forum-post-list">
                     {pinnedPosts.map((post) => <PostCard post={post} key={post.post_id} />)}
                   </div>
                 </div>
               )}
-              <div className="f2-post-list">
+              <div className="forum-post-list">
                 {regularPosts.map((post) => <PostCard post={post} key={post.post_id} />)}
               </div>
             </>
@@ -313,10 +313,10 @@ export default function Forum2() {
       </div>
 
       {composerOpen && (
-        <div className="f2-modal-backdrop" role="presentation" onMouseDown={() => setComposerOpen(false)}>
-          <section className="f2-composer" role="dialog" aria-modal="true" aria-labelledby="new-post-title" onMouseDown={(e) => e.stopPropagation()}>
-            <button className="f2-modal-close" onClick={() => setComposerOpen(false)} aria-label="Close"><X /></button>
-            <p className="f2-eyebrow">New conversation</p>
+        <div className="forum-modal-backdrop" role="presentation" onMouseDown={() => setComposerOpen(false)}>
+          <section className="forum-composer" role="dialog" aria-modal="true" aria-labelledby="new-post-title" onMouseDown={(e) => e.stopPropagation()}>
+            <button className="forum-modal-close" onClick={() => setComposerOpen(false)} aria-label="Close"><X /></button>
+            <p className="forum-eyebrow">New conversation</p>
             <h2 id="new-post-title">What would you like to share?</h2>
             <form onSubmit={createPost}>
               <label>Space
@@ -331,10 +331,10 @@ export default function Forum2() {
               <label>Message
                 <textarea required rows={8} value={draft.body} onChange={(e) => setDraft({ ...draft, body: e.target.value })} placeholder="You do not have to have the perfect words." />
               </label>
-              {error && <p className="f2-error" role="alert">{error}</p>}
-              <div className="f2-composer-actions">
-                <button type="button" className="f2-secondary-button" onClick={() => setComposerOpen(false)}>Cancel</button>
-                <button className="f2-primary-button" disabled={submitting}>{submitting ? "Publishing…" : "Publish post"}</button>
+              {error && <p className="forum-error" role="alert">{error}</p>}
+              <div className="forum-composer-actions">
+                <button type="button" className="forum-secondary-button" onClick={() => setComposerOpen(false)}>Cancel</button>
+                <button className="forum-primary-button" disabled={submitting}>{submitting ? "Publishing…" : "Publish post"}</button>
               </div>
             </form>
           </section>

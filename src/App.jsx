@@ -23,8 +23,8 @@ import FAQ from "./pages/FAQ";
 import Community2 from "./pages/Community2";
 import FAQ2 from "./pages/FAQ2";
 import DiscountLinks3 from "./pages/DiscountLinks3";
-import Forum2 from "./pages/Forum2";
-import ForumThread2 from "./pages/ForumThread2";
+import Forum from "./pages/Forum";
+import ForumThread from "./pages/ForumThread";
 import RequireAuth from "./components/RequireAuth";
 
 
@@ -54,8 +54,8 @@ export default function App() {
 
       {/* App/logged-in routes — solid utility nav */}
       <Route element={<RequireAuth><AppLayout /></RequireAuth>}>
-        <Route path="/forum" element={<Forum2 />} />
-        <Route path="/forum/:postId" element={<ForumThread2 />} />
+        <Route path="/forum" element={<Forum />} />
+        <Route path="/forum/:postId" element={<ForumThread />} />
         <Route
           path="/admin/users"
           element={

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, CornerDownRight, Flag, Lock, Pencil, Pin, Trash2 } from "lucide-react";
 import { useAuth } from "../auth/AuthContext";
-import "./Forum2.css";
+import "./Forum.css";
 
 const API = import.meta.env.VITE_API;
 
@@ -43,38 +43,38 @@ function Comment({ comment, depth, currentUserId, canModerate, replyingTo, setRe
   const canDelete = !isRemoved && (isOwn || canModerate);
 
   return (
-    <div className={`f2-comment depth-${Math.min(depth, 2)}`}>
-      <div className="f2-comment-line" />
+    <div className={`forum-comment depth-${Math.min(depth, 2)}`}>
+      <div className="forum-comment-line" />
       <article>
         {isRemoved ? (
-          <p className="f2-comment-removed">This reply was removed.</p>
+          <p className="forum-comment-removed">This reply was removed.</p>
         ) : (
           <>
-            <div className="f2-comment-head">
-              <div className="f2-avatar f2-avatar--small">{initials(comment.author_username)}</div>
+            <div className="forum-comment-head">
+              <div className="forum-avatar forum-avatar--small">{initials(comment.author_username)}</div>
               <div><strong>{comment.author_username}</strong><span>{formatDate(comment.created_at)}</span></div>
             </div>
             <p>{comment.body}</p>
-            <div className="f2-comment-actions">
-              <button className="f2-reply-button" onClick={() => setReplyingTo(replyingTo === comment.comment_id ? null : comment.comment_id)}>
+            <div className="forum-comment-actions">
+              <button className="forum-reply-button" onClick={() => setReplyingTo(replyingTo === comment.comment_id ? null : comment.comment_id)}>
                 <CornerDownRight size={15} /> Reply
               </button>
               {canDelete && (
                 confirmingDelete ? (
-                  <span className="f2-inline-confirm">
+                  <span className="forum-inline-confirm">
                     Delete this reply?
                     <button onClick={() => deleteComment(comment.comment_id)}>Yes, delete</button>
                     <button onClick={() => setConfirmingDelete(false)}>Cancel</button>
                   </span>
                 ) : (
-                  <button className="f2-reply-button" onClick={() => setConfirmingDelete(true)}>
+                  <button className="forum-reply-button" onClick={() => setConfirmingDelete(true)}>
                     <Trash2 size={14} /> Delete
                   </button>
                 )
               )}
               {!isOwn && (
                 <button
-                  className={`f2-reply-button ${comment.flagged_by_me ? "is-flagged" : ""}`}
+                  className={`forum-reply-button ${comment.flagged_by_me ? "is-flagged" : ""}`}
                   onClick={() => toggleCommentFlag(comment.comment_id, comment.flagged_by_me)}
                 >
                   <Flag size={14} /> {comment.flagged_by_me ? "Flagged" : "Flag"}
@@ -82,7 +82,7 @@ function Comment({ comment, depth, currentUserId, canModerate, replyingTo, setRe
               )}
             </div>
             {replyingTo === comment.comment_id && (
-              <form className="f2-inline-reply" onSubmit={(event) => submitReply(event, comment.comment_id)}>
+              <form className="forum-inline-reply" onSubmit={(event) => submitReply(event, comment.comment_id)}>
                 <textarea autoFocus required rows={3} value={replyBody} onChange={(e) => setReplyBody(e.target.value)} placeholder={`Reply to ${comment.author_username}`} />
                 <div><button type="button" onClick={() => setReplyingTo(null)}>Cancel</button><button disabled={submitting}>{submitting ? "Replying…" : "Reply"}</button></div>
               </form>
@@ -113,7 +113,7 @@ function Comment({ comment, depth, currentUserId, canModerate, replyingTo, setRe
   );
 }
 
-export default function ForumThread2() {
+export default function ForumThread() {
   const { postId } = useParams();
   const { token, user } = useAuth();
   const navigate = useNavigate();
@@ -293,49 +293,49 @@ export default function ForumThread2() {
     setPost((current) => ({ ...current, ...result }));
   }
 
-  if (loading) return <main className="f2-shell"><div className="f2-empty">Loading conversation…</div></main>;
-  if (error && !post) return <main className="f2-shell"><Link to="/forum" className="f2-back"><ArrowLeft size={17} /> Back to forum</Link><p className="f2-error">{error}</p></main>;
+  if (loading) return <main className="forum-shell"><div className="forum-empty">Loading conversation…</div></main>;
+  if (error && !post) return <main className="forum-shell"><Link to="/forum" className="forum-back"><ArrowLeft size={17} /> Back to forum</Link><p className="forum-error">{error}</p></main>;
 
   // TRACE STEP 6: Turn the refreshed flat comment array into parent/child
   // branches before the JSX below maps over and displays it.
   const commentTree = buildCommentTree(comments);
 
   return (
-    <main className="f2-shell f2-thread-shell">
-      <Link to={`/forum?category=${post.category_slug}`} className="f2-back"><ArrowLeft size={17} /> Back to {post.category_name}</Link>
+    <main className="forum-shell forum-thread-shell">
+      <Link to={`/forum?category=${post.category_slug}`} className="forum-back"><ArrowLeft size={17} /> Back to {post.category_name}</Link>
 
-      <article className="f2-thread-post">
-        <div className="f2-thread-topline">
-          <span className="f2-category-pill">{post.category_name}</span>
-          <div className="f2-post-meta">
-            {post.pinned && <span className="f2-state f2-state--pinned"><Pin size={13} /> Pinned</span>}
-            {post.locked && <span className="f2-state"><Lock size={13} /> Locked</span>}
+      <article className="forum-thread-post">
+        <div className="forum-thread-topline">
+          <span className="forum-category-pill">{post.category_name}</span>
+          <div className="forum-post-meta">
+            {post.pinned && <span className="forum-state forum-state--pinned"><Pin size={13} /> Pinned</span>}
+            {post.locked && <span className="forum-state"><Lock size={13} /> Locked</span>}
           </div>
         </div>
 
         {editingPost ? (
-          <form className="f2-edit-post-form" onSubmit={saveEditedPost}>
+          <form className="forum-edit-post-form" onSubmit={saveEditedPost}>
             <input required maxLength={180} value={postDraft.title} onChange={(e) => setPostDraft({ ...postDraft, title: e.target.value })} />
             <textarea required rows={8} value={postDraft.body} onChange={(e) => setPostDraft({ ...postDraft, body: e.target.value })} />
-            {error && <p className="f2-error" role="alert">{error}</p>}
-            <div className="f2-composer-actions">
-              <button type="button" className="f2-secondary-button" onClick={() => { setEditingPost(false); setError(""); }}>Cancel</button>
-              <button className="f2-primary-button" disabled={submitting}>{submitting ? "Saving…" : "Save changes"}</button>
+            {error && <p className="forum-error" role="alert">{error}</p>}
+            <div className="forum-composer-actions">
+              <button type="button" className="forum-secondary-button" onClick={() => { setEditingPost(false); setError(""); }}>Cancel</button>
+              <button className="forum-primary-button" disabled={submitting}>{submitting ? "Saving…" : "Save changes"}</button>
             </div>
           </form>
         ) : (
           <>
             <h1>{post.title}</h1>
-            <div className="f2-comment-head">
-              <div className="f2-avatar">{initials(post.author_username)}</div>
+            <div className="forum-comment-head">
+              <div className="forum-avatar">{initials(post.author_username)}</div>
               <div><strong>{post.author_username}</strong><span>{formatDate(post.created_at)}</span></div>
             </div>
-            <p className="f2-thread-body">{post.body}</p>
+            <p className="forum-thread-body">{post.body}</p>
           </>
         )}
 
         {!editingPost && (
-          <div className="f2-moderation">
+          <div className="forum-moderation">
             {isAuthor && !post.locked && (
               <button onClick={startEditingPost}><Pencil size={15} /> Edit</button>
             )}
@@ -347,7 +347,7 @@ export default function ForumThread2() {
             )}
             {(isAuthor || canModerate) && (
               confirmingPostDelete ? (
-                <span className="f2-inline-confirm">
+                <span className="forum-inline-confirm">
                   Delete this post?
                   <button onClick={deletePost}>Yes, delete</button>
                   <button onClick={() => setConfirmingPostDelete(false)}>Cancel</button>
@@ -365,11 +365,11 @@ export default function ForumThread2() {
         )}
       </article>
 
-      <section className="f2-thread-replies">
-        <div className="f2-feed-heading"><div><p className="f2-eyebrow">Community responses</p><h2>{comments.filter((c) => !c.deleted_at).length} {comments.filter((c) => !c.deleted_at).length === 1 ? "reply" : "replies"}</h2></div></div>
-        {error && <p className="f2-error" role="alert">{error}</p>}
-        {commentTree.length === 0 && <div className="f2-empty"><h3>No replies yet.</h3><p>You can be the first person to respond.</p></div>}
-        <div className="f2-comment-tree">
+      <section className="forum-thread-replies">
+        <div className="forum-feed-heading"><div><p className="forum-eyebrow">Community responses</p><h2>{comments.filter((c) => !c.deleted_at).length} {comments.filter((c) => !c.deleted_at).length === 1 ? "reply" : "replies"}</h2></div></div>
+        {error && <p className="forum-error" role="alert">{error}</p>}
+        {commentTree.length === 0 && <div className="forum-empty"><h3>No replies yet.</h3><p>You can be the first person to respond.</p></div>}
+        <div className="forum-comment-tree">
           {/* Display every top-level comment. Each Comment component then maps
               its own children recursively near the top of this file. */}
           {commentTree.map((comment) => (
@@ -393,16 +393,16 @@ export default function ForumThread2() {
       </section>
 
       {post.locked ? (
-        <div className="f2-locked-note"><Lock size={18} /> This conversation is locked. Existing replies are still available to read.</div>
+        <div className="forum-locked-note"><Lock size={18} /> This conversation is locked. Existing replies are still available to read.</div>
       ) : (
         /* TRACE STEP 1: Start tracing here. This is the large reply form the
            member sees. Clicking "Post reply" submits this form, and onSubmit
            calls submitReply(event) above. No parent ID means a top-level reply. */
-        <form className="f2-main-reply" onSubmit={(event) => submitReply(event)}>
-          <p className="f2-eyebrow">Join the conversation</p>
+        <form className="forum-main-reply" onSubmit={(event) => submitReply(event)}>
+          <p className="forum-eyebrow">Join the conversation</p>
           <h2>Leave a reply</h2>
           <textarea required rows={5} value={mainReply} onChange={(e) => setMainReply(e.target.value)} placeholder="Share support, experience, or a thoughtful question." />
-          <button className="f2-primary-button" disabled={submitting}>{submitting ? "Replying…" : "Post reply"}</button>
+          <button className="forum-primary-button" disabled={submitting}>{submitting ? "Replying…" : "Post reply"}</button>
         </form>
       )}
     </main>
