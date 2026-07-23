@@ -7,6 +7,7 @@ import {
   Coffee,
   HeartHandshake,
   Leaf,
+  LayoutGrid,
   LifeBuoy,
   Lock,
   MessageCircle,
@@ -342,7 +343,10 @@ export default function Forum() {
               className={`forum-category ${activeCategory === "" ? "is-active" : ""}`}
               onClick={() => setSearchParams(search ? { search } : {})}
             >
-              <span><strong>All conversations</strong><small>Everything happening now</small></span>
+              <span className="forum-category__copy">
+                <i className="forum-category__icon" aria-hidden="true"><LayoutGrid size={15} /></i>
+                <span><strong>All conversations</strong><small>Everything happening now</small></span>
+              </span>
               <b>{totalPostCount}</b>
             </button>
             {categories.map((category) => (

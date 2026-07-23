@@ -394,14 +394,23 @@
   .site-header {
     height: 64px;
     padding: 10px 16px;
-    background: rgba(246, 242, 234, 0.94);
-    backdrop-filter: blur(12px);
-    box-shadow: 0 1px 0 var(--nav-line);
+    background: transparent;
+    backdrop-filter: none;
+    box-shadow: none;
   }
 
   .site-header--scrolled,
   .site-header--solid {
     padding: 10px 16px;
+    background: transparent;
+    backdrop-filter: none;
+    box-shadow: none;
+  }
+
+  .site-header--menu-open {
+    background: rgba(246, 242, 234, 0.96);
+    backdrop-filter: blur(14px);
+    box-shadow: 0 1px 0 var(--nav-line);
   }
 
   .main-nav,
@@ -434,8 +443,25 @@
     height: 40px;
     border: 1px solid rgba(27, 34, 28, 0.12);
     border-radius: 50%;
+    backdrop-filter: blur(8px);
+  }
+
+  .site-header--light-text .site-header__actions .notif-bell__button,
+  .site-header--light-text .mobile-menu-button {
+    border-color: rgba(255, 255, 255, 0.28);
+    color: #fff;
+    background: rgba(20, 30, 23, 0.2);
+  }
+
+  .site-header--dark-text .site-header__actions .notif-bell__button,
+  .site-header--dark-text .mobile-menu-button,
+  .site-header--solid .site-header__actions .notif-bell__button,
+  .site-header--solid .mobile-menu-button,
+  .site-header--menu-open .site-header__actions .notif-bell__button,
+  .site-header--menu-open .mobile-menu-button {
+    border-color: rgba(27, 34, 28, 0.12);
     color: var(--nav-ink);
-    background: rgba(255, 255, 255, 0.42);
+    background: rgba(246, 242, 234, 0.68);
   }
 
   .mobile-menu-button {
