@@ -269,6 +269,10 @@
 .ap-footer button:hover { color: var(--forest-deep); }
 
 /* ── Mobile ── */
+@media (max-width: 800px) {
+  .ap-input { font-size: 16px; }
+}
+
 @media (max-width: 480px) {
   .ap-panel {
     width: 100vw;

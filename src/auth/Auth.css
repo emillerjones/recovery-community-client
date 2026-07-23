@@ -337,6 +337,8 @@
    MOBILE — photo full bleed, card centered over it
    ============================================================ */
 @media (max-width: 768px) {
+  .auth-input { font-size: 16px; }
+
   .auth-page {
     grid-template-columns: 1fr;
     grid-template-rows: 1fr auto;
