@@ -21,6 +21,8 @@ function initials(username) {
 }
 
 function buildCommentTree(comments) {
+  // The API sends comments as one flat array. This function connects each
+  // reply to its parent so React can display the conversation as a tree.
   const nodes = new Map(comments.map((comment) => [comment.comment_id, { ...comment, children: [] }]));
   const roots = [];
 
@@ -32,7 +34,9 @@ function buildCommentTree(comments) {
   return roots;
 }
 
-function Comment({ comment, depth, currentUserId, canModerate, replyingTo, setReplyingTo, replyBody, setReplyBody, submitReply, submitting, deleteComment, toggleCommentReport }) {
+function Comment({ comment, depth, currentUserId, canModerate, replyingTo, setReplyingTo, replyBody, setReplyBody, submitReply, submitting, deleteComment, toggleCommentFlag }) {
+  // This component displays ONE comment. Near the bottom, it maps over this
+  // comment's children and renders another <Comment /> for every nested reply.
   const [confirmingDelete, setConfirmingDelete] = useState(false);
   const isRemoved = Boolean(comment.deleted_at);
   const isOwn = comment.author_id === currentUserId;
@@ -70,10 +74,10 @@ function Comment({ comment, depth, currentUserId, canModerate, replyingTo, setRe
               )}
               {!isOwn && (
                 <button
-                  className={`f2-reply-button ${comment.reported_by_me ? "is-reported" : ""}`}
-                  onClick={() => toggleCommentReport(comment.comment_id, comment.reported_by_me)}
+                  className={`f2-reply-button ${comment.flagged_by_me ? "is-flagged" : ""}`}
+                  onClick={() => toggleCommentFlag(comment.comment_id, comment.flagged_by_me)}
                 >
-                  <Flag size={14} /> {comment.reported_by_me ? "Reported" : "Report"}
+                  <Flag size={14} /> {comment.flagged_by_me ? "Flagged" : "Flag"}
                 </button>
               )}
             </div>
@@ -86,6 +90,8 @@ function Comment({ comment, depth, currentUserId, canModerate, replyingTo, setRe
           </>
         )}
       </article>
+      {/* Recursive rendering: every child reply uses this same Comment component.
+          depth increases for each generation, while the CSS limits visual indentation. */}
       {comment.children.map((child) => (
         <Comment
           key={child.comment_id}
@@ -100,7 +106,7 @@ function Comment({ comment, depth, currentUserId, canModerate, replyingTo, setRe
           submitReply={submitReply}
           submitting={submitting}
           deleteComment={deleteComment}
-          toggleCommentReport={toggleCommentReport}
+          toggleCommentFlag={toggleCommentFlag}
         />
       ))}
     </div>
@@ -151,25 +157,43 @@ export default function ForumThread2() {
   }, [fetchThread]);
 
   async function submitReply(event, parentCommentId = null) {
+    // TRACE STEP 2: The reply form's onSubmit calls this function.
+    // parentCommentId is null for the large "Leave a reply" form. It contains
+    // a comment ID when the member is replying directly to another comment.
     event.preventDefault();
+
+    // Both reply forms share this function, so choose the text from whichever
+    // form the member used.
     const body = parentCommentId ? replyBody : mainReply;
     setSubmitting(true);
     setError("");
+
+    // TRACE STEP 3: Send the reply to the server. To continue tracing this
+    // request, find this POST route in recovery-community-server/api/forum.js.
     const response = await fetch(`${API}/api/forum/posts/${postId}/comments`, {
       method: "POST",
       headers: { ...headers, "Content-Type": "application/json" },
       body: JSON.stringify({ body, parent_comment_id: parentCommentId }),
     });
+
+    // The server sends JSON back. If it rejected the reply, show its message
+    // and stop here without clearing the member's text.
     const result = await response.json();
     if (!response.ok) {
       setError(result.message || "Could not add that reply.");
       setSubmitting(false);
       return;
     }
+
+    // TRACE STEP 4: The server saved the reply successfully. Clean up both
+    // possible reply forms and return the button to its normal state.
     setMainReply("");
     setReplyBody("");
     setReplyingTo(null);
     setSubmitting(false);
+
+    // TRACE STEP 5: Ask the server for the entire updated thread. Store the
+    // returned post/comments in state so React rerenders the new reply.
     const refreshed = await fetchThread();
     setPost(refreshed.post);
     setComments(refreshed.comments);
@@ -190,33 +214,33 @@ export default function ForumThread2() {
     setComments(refreshed.comments);
   }
 
-  async function togglePostReport() {
-    const isReported = post.reported_by_me;
-    const response = await fetch(`${API}/api/forum/posts/${postId}/report`, {
-      method: isReported ? "DELETE" : "POST",
+  async function togglePostFlag() {
+    const isFlagged = post.flagged_by_me;
+    const response = await fetch(`${API}/api/forum/posts/${postId}/flag`, {
+      method: isFlagged ? "DELETE" : "POST",
       headers: { ...headers, "Content-Type": "application/json" },
     });
     if (!response.ok) {
       const result = await response.json().catch(() => ({}));
-      setError(result.message || "Could not update that report.");
+      setError(result.message || "Could not update that flag.");
       return;
     }
-    setPost((current) => ({ ...current, reported_by_me: !isReported }));
+    setPost((current) => ({ ...current, flagged_by_me: !isFlagged }));
   }
 
-  async function toggleCommentReport(commentId, isReported) {
-    const response = await fetch(`${API}/api/forum/posts/${postId}/comments/${commentId}/report`, {
-      method: isReported ? "DELETE" : "POST",
+  async function toggleCommentFlag(commentId, isFlagged) {
+    const response = await fetch(`${API}/api/forum/posts/${postId}/comments/${commentId}/flag`, {
+      method: isFlagged ? "DELETE" : "POST",
       headers: { ...headers, "Content-Type": "application/json" },
     });
     if (!response.ok) {
       const result = await response.json().catch(() => ({}));
-      setError(result.message || "Could not update that report.");
+      setError(result.message || "Could not update that flag.");
       return;
     }
     setComments((current) =>
       current.map((comment) =>
-        comment.comment_id === commentId ? { ...comment, reported_by_me: !isReported } : comment
+        comment.comment_id === commentId ? { ...comment, flagged_by_me: !isFlagged } : comment
       )
     );
   }
@@ -272,6 +296,8 @@ export default function ForumThread2() {
   if (loading) return <main className="f2-shell"><div className="f2-empty">Loading conversation…</div></main>;
   if (error && !post) return <main className="f2-shell"><Link to="/forum2" className="f2-back"><ArrowLeft size={17} /> Back to forum</Link><p className="f2-error">{error}</p></main>;
 
+  // TRACE STEP 6: Turn the refreshed flat comment array into parent/child
+  // branches before the JSX below maps over and displays it.
   const commentTree = buildCommentTree(comments);
 
   return (
@@ -331,8 +357,8 @@ export default function ForumThread2() {
               )
             )}
             {!isAuthor && (
-              <button className={post.reported_by_me ? "is-reported" : ""} onClick={togglePostReport}>
-                <Flag size={15} /> {post.reported_by_me ? "Reported" : "Report"}
+              <button className={post.flagged_by_me ? "is-flagged" : ""} onClick={togglePostFlag}>
+                <Flag size={15} /> {post.flagged_by_me ? "Flagged" : "Flag"}
               </button>
             )}
           </div>
@@ -344,6 +370,8 @@ export default function ForumThread2() {
         {error && <p className="f2-error" role="alert">{error}</p>}
         {commentTree.length === 0 && <div className="f2-empty"><h3>No replies yet.</h3><p>You can be the first person to respond.</p></div>}
         <div className="f2-comment-tree">
+          {/* Display every top-level comment. Each Comment component then maps
+              its own children recursively near the top of this file. */}
           {commentTree.map((comment) => (
             <Comment
               key={comment.comment_id}
@@ -358,7 +386,7 @@ export default function ForumThread2() {
               submitReply={submitReply}
               submitting={submitting}
               deleteComment={deleteComment}
-              toggleCommentReport={toggleCommentReport}
+              toggleCommentFlag={toggleCommentFlag}
             />
           ))}
         </div>
@@ -367,6 +395,9 @@ export default function ForumThread2() {
       {post.locked ? (
         <div className="f2-locked-note"><Lock size={18} /> This conversation is locked. Existing replies are still available to read.</div>
       ) : (
+        /* TRACE STEP 1: Start tracing here. This is the large reply form the
+           member sees. Clicking "Post reply" submits this form, and onSubmit
+           calls submitReply(event) above. No parent ID means a top-level reply. */
         <form className="f2-main-reply" onSubmit={(event) => submitReply(event)}>
           <p className="f2-eyebrow">Join the conversation</p>
           <h2>Leave a reply</h2>

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
+import NotificationBell from "../components/NotificationBell";
 import logo from "../assets/icons/logo.png";
 import "./MarketingNav.css";
 
@@ -206,12 +207,13 @@ export default function MarketingNav({ onLogin, onRegister }) {
       <div className="site-header__actions">
         {token ? (
           <>
+            <NotificationBell />
             <NavLink to="/profile" className="nav-link-soft">Profile</NavLink>
             {user?.role_id <= 99 && (
               <NavLink to="/admin/users" className="main-nav__link">Users</NavLink>
             )}
             {user?.role_id <= 50 && (
-              <NavLink to="/admin/forum-reports" className="main-nav__link">Reports</NavLink>
+              <NavLink to="/admin/forum-flags" className="main-nav__link">Flagged</NavLink>
             )}
             <button className="nav-button" onClick={handleLogout}>Log out</button>
           </>
@@ -264,7 +266,7 @@ export default function MarketingNav({ onLogin, onRegister }) {
                   <NavLink to="/admin/users" className="mobile-nav__link" onClick={closeMenu}>Users</NavLink>
                 )}
                 {user?.role_id <= 50 && (
-                  <NavLink to="/admin/forum-reports" className="mobile-nav__link" onClick={closeMenu}>Reports</NavLink>
+                  <NavLink to="/admin/forum-flags" className="mobile-nav__link" onClick={closeMenu}>Flagged</NavLink>
                 )}
                 <button className="mobile-nav__button" onClick={handleLogout}>Log out</button>
               </>
