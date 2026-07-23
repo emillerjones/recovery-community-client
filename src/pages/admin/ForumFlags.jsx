@@ -95,7 +95,7 @@ export default function ForumFlags() {
                   </span>
                 </div>
                 <div className="forum-flags__actions">
-                  <Link to={`/forum2/${post.post_id}`}>View thread</Link>
+                  <Link to={`/forum/${post.post_id}`}>View thread</Link>
                   <button onClick={() => reviewPost(post.post_id)}>Mark reviewed</button>
                 </div>
               </div>
@@ -116,7 +116,7 @@ export default function ForumFlags() {
                   </span>
                 </div>
                 <div className="forum-flags__actions">
-                  <Link to={`/forum2/${comment.post_id}`}>View thread</Link>
+                  <Link to={`/forum/${comment.post_id}`}>View thread</Link>
                   <button onClick={() => reviewComment(comment.comment_id)}>Mark reviewed</button>
                 </div>
               </div>

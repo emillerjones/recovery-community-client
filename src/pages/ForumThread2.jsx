@@ -279,7 +279,7 @@ export default function ForumThread2() {
       setError(result.message || "Could not delete this post.");
       return;
     }
-    navigate(`/forum2${post.category_slug ? `?category=${post.category_slug}` : ""}`);
+    navigate(`/forum${post.category_slug ? `?category=${post.category_slug}` : ""}`);
   }
 
   async function moderate(changes) {
@@ -294,7 +294,7 @@ export default function ForumThread2() {
   }
 
   if (loading) return <main className="f2-shell"><div className="f2-empty">Loading conversation…</div></main>;
-  if (error && !post) return <main className="f2-shell"><Link to="/forum2" className="f2-back"><ArrowLeft size={17} /> Back to forum</Link><p className="f2-error">{error}</p></main>;
+  if (error && !post) return <main className="f2-shell"><Link to="/forum" className="f2-back"><ArrowLeft size={17} /> Back to forum</Link><p className="f2-error">{error}</p></main>;
 
   // TRACE STEP 6: Turn the refreshed flat comment array into parent/child
   // branches before the JSX below maps over and displays it.
@@ -302,7 +302,7 @@ export default function ForumThread2() {
 
   return (
     <main className="f2-shell f2-thread-shell">
-      <Link to={`/forum2?category=${post.category_slug}`} className="f2-back"><ArrowLeft size={17} /> Back to {post.category_name}</Link>
+      <Link to={`/forum?category=${post.category_slug}`} className="f2-back"><ArrowLeft size={17} /> Back to {post.category_name}</Link>
 
       <article className="f2-thread-post">
         <div className="f2-thread-topline">

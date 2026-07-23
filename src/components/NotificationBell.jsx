@@ -42,7 +42,7 @@ export default function NotificationBell() {
   async function openNotification(notification) {
     if (!notification.read_at) await markRead(notification.notification_id);
     setOpen(false);
-    navigate(`/forum2/${notification.post_id}`);
+    navigate(`/forum/${notification.post_id}`);
   }
 
   return (

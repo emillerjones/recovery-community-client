@@ -38,7 +38,7 @@ function isNew(value) {
 
 function PostCard({ post }) {
   return (
-    <Link to={`/forum2/${post.post_id}`} className={`f2-post-card ${post.pinned ? "is-pinned" : ""}`}>
+    <Link to={`/forum/${post.post_id}`} className={`f2-post-card ${post.pinned ? "is-pinned" : ""}`}>
       <div className="f2-avatar">{initials(post.author_username)}</div>
       <div className="f2-post-copy">
         <div className="f2-post-meta">
@@ -169,7 +169,7 @@ export default function Forum2() {
       return;
     }
 
-    navigate(`/forum2/${result.post_id}`);
+    navigate(`/forum/${result.post_id}`);
   }
 
   const hasFilters = Boolean(activeCategory || search);
