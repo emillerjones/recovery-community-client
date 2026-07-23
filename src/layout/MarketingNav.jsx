@@ -217,10 +217,7 @@ export default function MarketingNav({ onLogin, onRegister }) {
             {user?.role_id <= 50 && (
               <NavLink to="/admin/forum-flags" className="main-nav__link">Flagged</NavLink>
             )}
-            <button className="nav-button nav-logout-button" onClick={handleLogout} aria-label="Log out" title="Log out">
-              <LogOut className="nav-logout-button__icon" size={18} />
-              <span>Log out</span>
-            </button>
+            <button className="nav-button nav-logout-button" onClick={handleLogout}>Log out</button>
           </>
         ) : (
           <>
@@ -273,7 +270,7 @@ export default function MarketingNav({ onLogin, onRegister }) {
                 {user?.role_id <= 50 && (
                   <NavLink to="/admin/forum-flags" className="mobile-nav__link" onClick={closeMenu}>Flagged</NavLink>
                 )}
-                <button className="mobile-nav__button" onClick={handleLogout}>Log out</button>
+                <button className="mobile-nav__button" onClick={handleLogout}><LogOut size={18} /> Log out</button>
               </>
             ) : (
               <>
