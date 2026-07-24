@@ -6,7 +6,6 @@ import { Toast, useToast } from "../../components/Toast";
 import "./UserManagement.css";
 
 const API = import.meta.env.VITE_API;
-const HARD_DELETE_ENABLED = import.meta.env.VITE_ENABLE_TEST_HARD_DELETE === "true";
 
 // The four roles, in order from highest authority to lowest.
 // role_id 1 (Owner) is intentionally left OUT of this list — it's
@@ -364,7 +363,7 @@ export default function UserManagement() {
                           >
                             Delete
                           </button>
-                          {HARD_DELETE_ENABLED && u.role_id === 100 && (
+                          {currentUser.role_id === OWNER_ROLE_ID && u.role_id === 100 && (
                             <button
                               className="user-actions__button user-actions__button--hard-delete"
                               onClick={() => hardDeleteTestAccount(u)}
