@@ -27,7 +27,9 @@
   align-items: center;
   justify-content: space-between;
 
-  padding: 22px 5vw;
+  min-height: 72px;
+  box-sizing: border-box;
+  padding: 18px 4vw;
   background: transparent;
 
   transition:
@@ -99,7 +101,7 @@
 .main-nav {
   display: flex;
   align-items: center;
-  gap: 34px;
+  gap: clamp(20px, 2vw, 30px);
 }
 
 .main-nav__link {
@@ -128,12 +130,16 @@
   font-weight: 600;
 }
 
+.main-nav__link--forum { position: relative; font-weight: 650; }
+.main-nav__link--forum::after { content: ""; position: absolute; right: 0; bottom: -8px; left: 0; height: 2px; border-radius: 2px; background: currentColor; opacity: 0; transform: scaleX(.45); transition: opacity .2s ease, transform .2s ease; }
+.main-nav__link--forum:hover::after, .main-nav__link--forum.active::after { opacity: .72; transform: scaleX(1); }
+
 /* Right-side actions */
 
 .site-header__actions {
   display: flex;
   align-items: center;
-  gap: 18px;
+  gap: 11px;
 
   position: relative;
   z-index: 102;
@@ -269,6 +275,9 @@
   font: inherit;
 }
 
+.main-nav__link--icon-trigger { gap: 7px; padding: 8px 11px; border: 1px solid rgba(255,255,255,.24); border-radius: 999px; background: rgba(20,30,23,.12); }
+.site-header--scrolled .main-nav__link--icon-trigger, .site-header--solid .main-nav__link--icon-trigger, .site-header--dark-text .main-nav__link--icon-trigger { border-color: rgba(27,34,28,.12); background: rgba(255,255,255,.52); }
+
 .main-nav__chevron {
   transition: transform 0.2s ease;
 }
@@ -329,6 +338,27 @@
 .main-nav__dropdown-link.active {
   background: rgba(44, 58, 45, 0.08);
 }
+
+.main-nav__dropdown-link > span { display: block; }
+.main-nav__dropdown-link > span strong { font: inherit; }
+.main-nav__dropdown-link--rich { display: grid; grid-template-columns: 28px 1fr; align-items: center; gap: 8px; }
+.main-nav__dropdown-link--rich > svg { color: #607461; }
+.main-nav__dropdown-link--rich span { display: grid; gap: 2px; }
+.main-nav__dropdown-link--rich small { color: rgba(27,34,28,.5); font-size: 9px; font-weight: 500; }
+
+/* One compact account control replaces separate profile and logout items. */
+.nav-account__trigger { min-width: 0; display: flex; align-items: center; gap: 8px; padding: 3px 5px 3px 3px; border: 1px solid rgba(255,255,255,.25); border-radius: 999px; background: rgba(20,30,23,.12); color: rgba(255,255,255,.94); cursor: pointer; }
+.nav-account__trigger > span:nth-child(2) { max-width: 105px; overflow: hidden; font: 650 11px Inter,sans-serif; text-overflow: ellipsis; white-space: nowrap; }
+.nav-account__chevron { margin-right: 2px; transform: rotate(90deg); opacity: .65; transition: transform .2s ease; }
+.nav-account:hover .nav-account__chevron, .nav-account:focus-within .nav-account__chevron { transform: rotate(270deg); }
+.site-header--scrolled .nav-account__trigger, .site-header--solid .nav-account__trigger, .site-header--dark-text .nav-account__trigger { border-color: rgba(27,34,28,.13); background: rgba(255,255,255,.58); color: var(--nav-ink); }
+.nav-account__panel { min-width: 210px; padding: 10px; }
+.nav-account__summary { display: grid; gap: 2px; margin: 2px 4px 8px; padding: 8px 8px 11px; border-bottom: 1px solid rgba(27,34,28,.09); color: var(--nav-ink); }
+.nav-account__summary strong { max-width: 180px; overflow: hidden; font-size: 13px; text-overflow: ellipsis; white-space: nowrap; }
+.nav-account__summary small { color: rgba(27,34,28,.48); font-size: 9px; font-weight: 650; letter-spacing: .07em; text-transform: uppercase; }
+.nav-account__panel > a, .nav-account__panel > button { width: 100%; min-height: 40px; display: flex; align-items: center; gap: 8px; box-sizing: border-box; padding: 8px 10px; border: 0; border-radius: 9px; background: transparent; color: var(--nav-ink); font: 600 12px Inter,sans-serif; text-align: left; text-decoration: none; cursor: pointer; }
+.nav-account__panel > a:hover, .nav-account__panel > button:hover { background: rgba(44,58,45,.07); }
+.nav-account__panel > button { color: rgba(92,49,38,.78); }
 
 /* Mobile menu button */
 
@@ -445,7 +475,7 @@
   }
 }
 
-@media (max-width: 880px) {
+@media (max-width: 1060px) {
   .nav-action-register { display: none; }
   body.mobile-nav-open {
     overflow: hidden;

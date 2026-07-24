@@ -71,10 +71,11 @@ const MOBILE_EXPLORE_GROUPS = [
 // Set to true to give the desktop and mobile navbar a solid background after scrolling.
 const ENABLE_SOLID_NAV_ON_SCROLL = false;
 
-function NavDropdown({ label, links, closeMenu, align = "left" }) {
+function NavDropdown({ label, links, closeMenu, align = "left", icon: TriggerIcon }) {
   return (
     <div className={`main-nav__dropdown ${align === "right" ? "main-nav__dropdown--right" : ""}`}>
-      <button type="button" className="main-nav__link main-nav__link--trigger" aria-haspopup="true">
+      <button type="button" className={`main-nav__link main-nav__link--trigger ${TriggerIcon ? "main-nav__link--icon-trigger" : ""}`} aria-haspopup="true">
+        {TriggerIcon && <TriggerIcon size={16} />}
         {label}
         <svg className="main-nav__chevron" width="10" height="10" viewBox="0 0 10 10">
           <path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" strokeWidth="1.4" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
@@ -82,8 +83,9 @@ function NavDropdown({ label, links, closeMenu, align = "left" }) {
       </button>
       <div className="main-nav__dropdown-panel">
         {links.map((link) => (
-          <NavLink key={link.to} to={link.to} className="main-nav__dropdown-link" onClick={closeMenu}>
-            {link.label}
+          <NavLink key={link.to} to={link.to} className={`main-nav__dropdown-link ${link.icon ? "main-nav__dropdown-link--rich" : ""}`} onClick={closeMenu}>
+            {link.icon && <link.icon size={17} />}
+            <span><strong>{link.label}</strong>{link.description && <small>{link.description}</small>}</span>
           </NavLink>
         ))}
       </div>
@@ -215,9 +217,8 @@ export default function MarketingNav({ onLogin, onRegister }) {
       </NavLink>
 
       <nav className="main-nav" aria-label="Primary navigation">
-        <NavDropdown label="Home" links={HOME_LINKS} closeMenu={closeMenu} />
         <NavDropdown label="Community" links={COMMUNITY_LINKS} closeMenu={closeMenu} />
-        {token && <NavLink to="/forum" className="main-nav__link">Forum</NavLink>}
+        {token && <NavLink to="/forum" className="main-nav__link main-nav__link--forum">Forum</NavLink>}
         <NavDropdown label="Learn" links={LEARN_LINKS} closeMenu={closeMenu} />
         <NavDropdown label="Support" links={SUPPORT_LINKS} closeMenu={closeMenu} />
         <NavDropdown label="About" links={ABOUT_LINKS} closeMenu={closeMenu} />
@@ -231,21 +232,23 @@ export default function MarketingNav({ onLogin, onRegister }) {
       <div className="site-header__actions">
         {token ? (
           <>
+            {user?.role_id <= 10 && (
+              <NavDropdown label="Admin" links={ADMIN_LINKS} closeMenu={closeMenu} align="right" icon={ShieldCheck} />
+            )}
             <MessagesBell />
             <NotificationBell />
-            {user?.role_id <= 10 && (
-              <NavDropdown label="Admin" links={ADMIN_LINKS} closeMenu={closeMenu} align="right" />
-            )}
-            {/* Persistent identity reminder. It links directly to the profile,
-                where this same avatar can be changed. */}
-            <NavLink to="/profile" className="nav-identity" aria-label={`Signed in as ${user?.username}; open profile`}>
-              <MemberAvatar className="nav-identity__avatar" username={user?.username} avatarUrl={user?.avatar_url} size={32} />
-              <span className="nav-identity__copy">
-                <strong>{user?.username}</strong>
-                <small>{ROLE_LABELS[user?.role_id] || "Member"}</small>
-              </span>
-            </NavLink>
-            <button className="nav-button nav-logout-button" onClick={handleLogout}>Log out</button>
+            <div className="nav-account main-nav__dropdown main-nav__dropdown--right">
+              <button type="button" className="nav-account__trigger" aria-haspopup="true" aria-label={`Account menu for ${user?.username}`}>
+                <MemberAvatar className="nav-identity__avatar" username={user?.username} avatarUrl={user?.avatar_url} size={34} />
+                <span>{user?.username}</span>
+                <ChevronRight size={14} className="nav-account__chevron" />
+              </button>
+              <div className="nav-account__panel main-nav__dropdown-panel">
+                <div className="nav-account__summary"><strong>{user?.username}</strong><small>{ROLE_LABELS[user?.role_id] || "Member"}</small></div>
+                <NavLink to="/profile" onClick={closeMenu}>My profile</NavLink>
+                <button type="button" onClick={handleLogout}><LogOut size={15} /> Log out</button>
+              </div>
+            </div>
           </>
         ) : (
           <>
