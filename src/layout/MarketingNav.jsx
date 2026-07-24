@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { ChevronRight, Flag, LogOut, ShieldCheck, UserCheck, UsersRound } from "lucide-react";
+import { ChevronRight, Flag, LayoutGrid, LogOut, MessageCircle, ShieldCheck, UserCheck, UsersRound } from "lucide-react";
 import { useAuth } from "../auth/AuthContext";
 import NotificationBell from "../components/NotificationBell";
 import MessagesBell from "../components/MessagesBell";
@@ -61,6 +61,13 @@ const ADMIN_LINKS = [
   { to: "/admin/forum-flags", label: "Flagged", description: "Review reported forum content", icon: Flag },
 ];
 
+const MOBILE_EXPLORE_GROUPS = [
+  { label: "Community", links: COMMUNITY_LINKS },
+  { label: "Learn", links: LEARN_LINKS },
+  { label: "Support", links: SUPPORT_LINKS },
+  { label: "About", links: ABOUT_LINKS },
+];
+
 // Set to true to give the desktop and mobile navbar a solid background after scrolling.
 const ENABLE_SOLID_NAV_ON_SCROLL = false;
 
@@ -88,6 +95,7 @@ export default function MarketingNav({ onLogin, onRegister }) {
   const { token, logout, user } = useAuth();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [mobileExpanded, setMobileExpanded] = useState(null);
   const [navTextTheme, setNavTextTheme] = useState("light");
   const headerRef = useRef(null);
   const location = useLocation();
@@ -158,6 +166,7 @@ export default function MarketingNav({ onLogin, onRegister }) {
 
   function closeMenu() {
     setMenuOpen(false);
+    setMobileExpanded(null);
   }
 
   function handleLogin() {
@@ -260,65 +269,47 @@ export default function MarketingNav({ onLogin, onRegister }) {
 
       <div className="mobile-nav-panel" aria-hidden={!menuOpen}>
         <nav className="mobile-nav" aria-label="Mobile navigation">
-          <div className="mobile-nav__actions">
-            {token ? (
-              <>
-                {/* Mobile keeps the same identity information at the top of
-                    the signed-in action group where it is easy to spot. */}
-                <NavLink to="/profile" className="mobile-nav__identity" onClick={closeMenu} aria-label={`Signed in as ${user?.username}; open profile`}>
-                  <MemberAvatar className="nav-identity__avatar" username={user?.username} avatarUrl={user?.avatar_url} size={38} />
-                  <span><small>Signed in as</small><strong>{user?.username}</strong><em>{ROLE_LABELS[user?.role_id] || "Member"}</em></span>
-                  <ChevronRight size={18} className="mobile-nav__identity-arrow" aria-hidden="true" />
-                </NavLink>
-                <NavLink to="/forum" className="mobile-nav__link" onClick={closeMenu}>Forum</NavLink>
-                <NavLink to="/messages" className="mobile-nav__link" onClick={closeMenu}>Messages</NavLink>
-                {user?.role_id <= 10 && (
-                  <section className="mobile-nav__admin" aria-labelledby="mobile-admin-title">
-                    <div className="mobile-nav__admin-heading">
-                      <ShieldCheck size={20} />
-                      <div><strong id="mobile-admin-title">Admin tools</strong><small>Community management</small></div>
-                    </div>
-                    {ADMIN_LINKS.map((link) => {
-                      const Icon = link.icon;
-                      return (
-                        <NavLink key={link.to} to={link.to} className="mobile-nav__admin-link" onClick={closeMenu}>
-                          <span className="mobile-nav__admin-icon"><Icon size={19} /></span>
-                          <span><strong>{link.label}</strong><small>{link.description}</small></span>
-                          <ChevronRight size={18} aria-hidden="true" />
-                        </NavLink>
-                      );
-                    })}
-                  </section>
-                )}
-                <button className="mobile-nav__button" onClick={handleLogout}><LogOut size={18} /> Log out</button>
-              </>
-            ) : (
-              <>
-                <button className="mobile-nav__link mobile-nav__link-button" onClick={handleLogin}>Log In</button>
-                <button className="mobile-nav__button" onClick={handleRegister}>Join Community</button>
-              </>
-            )}
-          </div>
+          {token ? (
+            <>
+              <NavLink to="/profile" className="mobile-nav__identity" onClick={closeMenu} aria-label={`Signed in as ${user?.username}; open profile`}>
+                <MemberAvatar className="nav-identity__avatar" username={user?.username} avatarUrl={user?.avatar_url} size={48} />
+                <span className="mobile-nav__identity-copy"><small>My profile</small><strong>{user?.username}</strong><em>{ROLE_LABELS[user?.role_id] || "Member"}</em></span>
+                <ChevronRight size={19} className="mobile-nav__identity-arrow" aria-hidden="true" />
+              </NavLink>
 
-          {/* Account and admin work stays at the top on phones. Marketing
-              navigation follows below, so owners do not have to scroll past
-              the whole public site before reaching daily management tools. */}
-          {[
-            { label: "Home", links: HOME_LINKS },
-            { label: "Community", links: COMMUNITY_LINKS },
-            { label: "Learn", links: LEARN_LINKS },
-            { label: "Support", links: SUPPORT_LINKS },
-            { label: "About", links: ABOUT_LINKS },
-          ].map((group) => (
-            <div key={group.label}>
-              <span className="mobile-nav__group-label">{group.label}</span>
-              {group.links.map((link) => (
-                <NavLink key={link.to} to={link.to} className="mobile-nav__link" onClick={closeMenu}>
-                  {link.label}
-                </NavLink>
-              ))}
-            </div>
-          ))}
+              <div className="mobile-nav__member-shortcuts">
+                <NavLink to="/forum" onClick={closeMenu}><LayoutGrid size={21} /><strong>Forum</strong><small>Community posts</small></NavLink>
+                <NavLink to="/messages" onClick={closeMenu}><MessageCircle size={21} /><strong>Messages</strong><small>Private conversations</small></NavLink>
+              </div>
+
+              {user?.role_id <= 10 && (
+                <section className={`mobile-nav__admin ${mobileExpanded === "Admin" ? "is-open" : ""}`}>
+                  <button type="button" className="mobile-nav__section-trigger" onClick={() => setMobileExpanded((current) => current === "Admin" ? null : "Admin")} aria-expanded={mobileExpanded === "Admin"}>
+                    <span className="mobile-nav__section-icon"><ShieldCheck size={20} /></span>
+                    <span><strong>Admin tools</strong><small>Users, admissions, and flagged content</small></span>
+                    <ChevronRight size={18} />
+                  </button>
+                  {mobileExpanded === "Admin" && <div className="mobile-nav__section-links">{ADMIN_LINKS.map((link) => <NavLink key={link.to} to={link.to} onClick={closeMenu}>{link.label}<ChevronRight size={16} /></NavLink>)}</div>}
+                </section>
+              )}
+            </>
+          ) : (
+            <div className="mobile-nav__guest-actions"><button onClick={handleLogin}>Log In</button><button onClick={handleRegister}>Join Community</button></div>
+          )}
+
+          <section className="mobile-nav__explore" aria-label="Explore the website">
+            <span className="mobile-nav__eyebrow">Explore the website</span>
+            <NavLink to="/" className="mobile-nav__explore-home" onClick={closeMenu}>Home<ChevronRight size={18} /></NavLink>
+            {MOBILE_EXPLORE_GROUPS.map((group) => {
+              const isOpen = mobileExpanded === group.label;
+              return <div className={`mobile-nav__explore-group ${isOpen ? "is-open" : ""}`} key={group.label}>
+                <button type="button" onClick={() => setMobileExpanded((current) => current === group.label ? null : group.label)} aria-expanded={isOpen}>{group.label}<ChevronRight size={18} /></button>
+                {isOpen && <div>{group.links.map((link) => <NavLink key={link.to} to={link.to} onClick={closeMenu}>{link.label}</NavLink>)}</div>}
+              </div>;
+            })}
+          </section>
+
+          {token && <button className="mobile-nav__logout" onClick={handleLogout}><LogOut size={16} /> Log out</button>}
         </nav>
       </div>
 
