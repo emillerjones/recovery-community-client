@@ -93,7 +93,7 @@ export default function MembershipAdmin() {
     try {
       const code = await fetch(`${API}/api/admissions/codes`, {
         method: "POST", headers: authHeaders(true),
-        body: JSON.stringify({ name: data.get("name"), code: data.get("code"), expiresInDays: data.get("expiresInDays"), maxUses: data.get("maxUses") }),
+        body: JSON.stringify({ code: data.get("code"), expiresInDays: data.get("expiresInDays"), maxUses: data.get("maxUses") }),
       }).then(readResponse);
       form.reset();
       setCodes((current) => [code, ...current]);
@@ -137,7 +137,7 @@ export default function MembershipAdmin() {
         <section className="membership-section">
           <h2>Shared community codes</h2><p className="membership-help">Create a temporary code for the current Facebook community.</p>
           {newCode && <div className="new-code"><span>Copy this code now</span><strong>{newCode}</strong><button onClick={() => navigator.clipboard.writeText(newCode)}>Copy</button></div>}
-          <form className="membership-form" onSubmit={makeCode}><input name="name" placeholder="Facebook migration summer 2026" required /><input name="code" placeholder="Custom code (optional)" minLength="6" /><div className="membership-form__row"><label>Days <input name="expiresInDays" type="number" min="1" max="365" defaultValue="90" /></label><label>Use limit <input name="maxUses" type="number" min="1" placeholder="None" /></label></div><button className="membership-primary">Create shared code</button></form>
+          <form className="membership-form" onSubmit={makeCode}><label>Code<input name="code" placeholder="Example: MMRC420" minLength="6" maxLength="64" autoCapitalize="characters" required /></label><div className="membership-form__row"><label>Days <input name="expiresInDays" type="number" min="1" max="365" defaultValue="90" /></label><label>Use limit <input name="maxUses" type="number" min="1" placeholder="None" /></label></div><button className="membership-primary">Create shared code</button></form>
           <div className="membership-list">{codes.map((code) => <div key={code.code_id}><span><strong>{code.name}</strong><small>{code.use_count}{code.max_uses ? ` / ${code.max_uses}` : ""} uses · expires {new Date(code.expires_at).toLocaleDateString()}</small></span><button onClick={() => toggleCode(code)}>{code.active ? "Disable" : "Enable"}</button></div>)}</div>
         </section>
       </div>
