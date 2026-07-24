@@ -139,6 +139,63 @@
   z-index: 102;
 }
 
+/* Compact signed-in identity. It uses token data already in AuthContext, so
+   the navbar does not need another request just to say who is present. */
+.nav-identity {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.nav-identity__avatar {
+  width: 32px;
+  height: 32px;
+  flex: 0 0 32px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.34);
+  border-radius: 50%;
+  background: rgba(20, 30, 23, 0.2);
+  font: 700 11px/1 "Inter", sans-serif;
+}
+
+.nav-identity__copy {
+  display: grid;
+  min-width: 0;
+  line-height: 1.15;
+}
+
+.nav-identity__copy strong {
+  max-width: 120px;
+  overflow: hidden;
+  font: 600 12px/1.2 "Inter", sans-serif;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nav-identity__copy small {
+  margin-top: 2px;
+  font: 500 9px/1.2 "Inter", sans-serif;
+  letter-spacing: 0.06em;
+  opacity: 0.62;
+  text-transform: uppercase;
+}
+
+.site-header--scrolled .nav-identity,
+.site-header--solid .nav-identity,
+.site-header--dark-text .nav-identity {
+  color: var(--nav-ink);
+}
+
+.site-header--scrolled .nav-identity__avatar,
+.site-header--solid .nav-identity__avatar,
+.site-header--dark-text .nav-identity__avatar {
+  border-color: rgba(27, 34, 28, 0.16);
+  background: rgba(44, 58, 45, 0.08);
+}
+
 .nav-link-soft {
   font-family: "Inter", sans-serif;
   font-size: 14px;
@@ -428,6 +485,10 @@
     gap: 6px;
   }
 
+  .nav-identity {
+    display: none;
+  }
+
   .site-logo__mark {
     width: 38px;
     height: 38px;
@@ -552,6 +613,41 @@
     flex-direction: column;
     gap: 14px;
     padding-top: 22px;
+  }
+
+  .mobile-nav__identity {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    margin: 0 20px 8px 0;
+    padding: 13px 14px;
+    border: 1px solid rgba(27, 34, 28, 0.1);
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.52);
+  }
+
+  .mobile-nav__identity .nav-identity__avatar {
+    border-color: rgba(27, 34, 28, 0.16);
+    background: rgba(44, 58, 45, 0.09);
+    color: var(--nav-ink);
+  }
+
+  .mobile-nav__identity > span:last-child {
+    display: grid;
+    line-height: 1.2;
+  }
+
+  .mobile-nav__identity small,
+  .mobile-nav__identity em {
+    color: rgba(27, 34, 28, 0.5);
+    font-size: 10px;
+    font-style: normal;
+    font-weight: 500;
+  }
+
+  .mobile-nav__identity strong {
+    margin: 2px 0;
+    font-size: 14px;
   }
 
   .mobile-nav__button {

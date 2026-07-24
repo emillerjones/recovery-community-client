@@ -47,6 +47,19 @@ const OTHER_LINKS = [
 
 const ALL_LINKS = [...HOME_LINKS, ...COMMUNITY_LINKS, ...LEARN_LINKS, ...SUPPORT_LINKS, ...ABOUT_LINKS];
 
+const ROLE_LABELS = {
+  1: "Owner",
+  10: "Administrator",
+  50: "Moderator",
+  100: "Member",
+};
+
+function userInitials(username) {
+  const words = String(username || "").trim().split(/\s+/).filter(Boolean);
+  if (!words.length) return "?";
+  return (words.length > 1 ? words[0][0] + words.at(-1)[0] : words[0].slice(0, 2)).toUpperCase();
+}
+
 // Set to true to give the desktop and mobile navbar a solid background after scrolling.
 const ENABLE_SOLID_NAV_ON_SCROLL = false;
 
@@ -220,6 +233,15 @@ export default function MarketingNav({ onLogin, onRegister }) {
             {user?.role_id <= 50 && (
               <NavLink to="/admin/forum-flags" className="main-nav__link">Flagged</NavLink>
             )}
+            {/* Small persistent identity reminder. This is intentionally not a
+                link until the future profile page actually exists. */}
+            <div className="nav-identity" aria-label={`Signed in as ${user?.username}`}>
+              <span className="nav-identity__avatar" aria-hidden="true">{userInitials(user?.username)}</span>
+              <span className="nav-identity__copy">
+                <strong>{user?.username}</strong>
+                <small>{ROLE_LABELS[user?.role_id] || "Member"}</small>
+              </span>
+            </div>
             <button className="nav-button nav-logout-button" onClick={handleLogout}>Log out</button>
           </>
         ) : (
@@ -264,6 +286,12 @@ export default function MarketingNav({ onLogin, onRegister }) {
           <div className="mobile-nav__actions">
             {token ? (
               <>
+                {/* Mobile keeps the same identity information at the top of
+                    the signed-in action group where it is easy to spot. */}
+                <div className="mobile-nav__identity">
+                  <span className="nav-identity__avatar" aria-hidden="true">{userInitials(user?.username)}</span>
+                  <span><small>Signed in as</small><strong>{user?.username}</strong><em>{ROLE_LABELS[user?.role_id] || "Member"}</em></span>
+                </div>
                 <NavLink to="/forum" className="mobile-nav__link" onClick={closeMenu}>Forum</NavLink>
                 <NavLink to="/messages" className="mobile-nav__link" onClick={closeMenu}>Messages</NavLink>
                 <NavLink to="/profile" className="mobile-nav__link" onClick={closeMenu}>Profile</NavLink>
