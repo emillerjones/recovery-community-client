@@ -330,6 +330,9 @@
 }
 .forum-avatar { width: 42px; height: 42px; display: grid; place-items: center; flex: 0 0 auto; border-radius: 50%; color: white; background: #708475; font-size: 12px; font-weight: 800; }
 .forum-avatar--small { width: 34px; height: 34px; font-size: 10px; }
+.forum-avatar .preset-avatar { width: 100% !important; height: 100% !important; }
+.forum-composer-identity { display: flex; align-items: center; gap: 10px; margin: 0 0 18px; color: rgba(27,34,28,.58); font-size: 12px; }
+.forum-composer-identity strong { color: #2c3a2d; }
 .forum-post-copy { min-width: 0; }
 .forum-post-copy h3 { margin: 5px 0 3px; overflow: hidden; font-family: Georgia, serif; font-size: 17px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
 .forum-post-copy > p {

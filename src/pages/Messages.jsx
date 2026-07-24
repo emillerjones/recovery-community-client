@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, MessageSquarePlus, Search, Send, X } from "lucide-react";
 import { useAuth } from "../auth/AuthContext";
 import { useMessages } from "../notifications/MessagesContext";
+import MemberAvatar from "../components/MemberAvatar";
 import "./Messages.css";
 
 const API = import.meta.env.VITE_API;
@@ -14,10 +15,6 @@ function timeAgo(value) {
   if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
   if (seconds < 604800) return `${Math.floor(seconds / 86400)}d ago`;
   return new Date(value).toLocaleDateString(undefined, { month: "short", day: "numeric" });
-}
-
-function initials(username) {
-  return username?.slice(0, 2).toUpperCase() || "?";
 }
 
 export default function Messages() {
@@ -188,7 +185,7 @@ export default function Messages() {
                 to={`/messages/${conversation.conversation_id}`}
                 className={`dm-conversation-row ${Number(conversationId) === conversation.conversation_id ? "is-active" : ""}`}
               >
-                <div className="dm-avatar">{initials(conversation.other_username)}</div>
+                <MemberAvatar className="dm-avatar" username={conversation.other_username} avatarUrl={conversation.other_avatar_url} size={42} />
                 <div className="dm-conversation-copy">
                   <div className="dm-conversation-top">
                     <strong>{conversation.other_username}</strong>
@@ -215,7 +212,7 @@ export default function Messages() {
             <>
               <div className="dm-thread-header">
                 <Link to="/messages" className="dm-back"><ArrowLeft size={18} /></Link>
-                <div className="dm-avatar">{initials(activeConversation?.other_username)}</div>
+                <MemberAvatar className="dm-avatar" username={activeConversation?.other_username} avatarUrl={activeConversation?.other_avatar_url} size={42} />
                 <strong>{activeConversation?.other_username || "Conversation"}</strong>
               </div>
 
@@ -269,7 +266,7 @@ export default function Messages() {
               {pickableUsers.map((candidate) => (
                 <li key={candidate.user_id}>
                   <button onClick={() => startConversation(candidate.username)}>
-                    <div className="dm-avatar dm-avatar--small">{initials(candidate.username)}</div>
+                    <MemberAvatar className="dm-avatar dm-avatar--small" username={candidate.username} avatarUrl={candidate.avatar_url} size={30} />
                     {candidate.username}
                   </button>
                 </li>

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import MemberAvatar from "./MemberAvatar";
 import "./Mentions.css";
 
 const API = import.meta.env.VITE_API;
@@ -139,7 +140,7 @@ export default function MentionTextarea({
               onMouseDown={(event) => event.preventDefault()}
               onClick={() => selectMember(member)}
             >
-              <span>{member.username.slice(0, 2).toUpperCase()}</span>
+              <MemberAvatar username={member.username} avatarUrl={member.avatar_url} size={28} />
               <strong>@{member.username}</strong>
             </button>
           ))}

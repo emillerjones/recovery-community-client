@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-import { createContext, useContext, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useState } from "react";
 
 const API = import.meta.env.VITE_API;
 
@@ -17,6 +17,21 @@ function decodeToken(token) {
 export function AuthProvider({ children }) {
   const [token, setToken] = useState(() => localStorage.getItem("token"));
   const [user, setUser] = useState(() => decodeToken(localStorage.getItem("token")));
+
+  // The token proves identity, while /me supplies current profile details such
+  // as the avatar. This keeps the navbar current after a reload without making
+  // profile data part of authorization decisions.
+  useEffect(() => {
+    if (!token) return;
+    let cancelled = false;
+    fetch(API + "/api/users/me", { headers: { Authorization: `Bearer ${token}` } })
+      .then((response) => response.ok ? response.json() : null)
+      .then((profile) => {
+        if (!cancelled && profile) setUser((current) => ({ ...current, ...profile, id: profile.user_id }));
+      })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, [token]);
 
   
   const register = async (credentials) => {
@@ -51,7 +66,8 @@ export function AuthProvider({ children }) {
     const result = JSON.parse(text);
     setToken(result.token);
     localStorage.setItem("token", result.token);
-    setUser(decodeToken(result.token));
+    const tokenUser = decodeToken(result.token);
+    setUser({ ...tokenUser, ...result.user, id: tokenUser?.id });
   };
 
 
@@ -62,7 +78,8 @@ export function AuthProvider({ children }) {
   };
 
 
-  const value = { token, user, register, login, logout };
+  const updateUser = useCallback((profile) => setUser((current) => ({ ...current, ...profile, id: profile.user_id || current?.id })), []);
+  const value = { token, user, register, login, logout, updateUser };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 

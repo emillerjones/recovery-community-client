@@ -1,5 +1,7 @@
 import { lazy, Suspense, useEffect, useMemo, useState } from "react";
 import { useAuth } from "../auth/AuthContext";
+import MemberAvatar from "../components/MemberAvatar";
+import { memberInitials } from "../components/memberAvatarUtils";
 import "./Profile.css";
 
 const API = import.meta.env.VITE_API;
@@ -7,16 +9,9 @@ const ROLE_LABELS = { 1: "Owner", 10: "Administrator", 50: "Moderator", 100: "Me
 // Phosphor contains thousands of exports, so the browser downloads the avatar
 // studio only when somebody actually opens it (or already has a preset avatar).
 const AvatarStudio = lazy(() => import("../components/AvatarStudio"));
-const PresetAvatar = lazy(() => import("../components/PresetAvatar"));
-
-function initials(username) {
-  const words = String(username || "").trim().split(/\s+/).filter(Boolean);
-  if (!words.length) return "?";
-  return (words.length > 1 ? words[0][0] + words.at(-1)[0] : words[0].slice(0, 2)).toUpperCase();
-}
 
 export default function Profile() {
-  const { token } = useAuth();
+  const { token, updateUser } = useAuth();
   const [profile, setProfile] = useState(null);
   const [form, setForm] = useState({ bio: "", phoneNumber: "", dateOfBirth: "", gender: "", avatarPreset: "" });
   const [avatarStudioOpen, setAvatarStudioOpen] = useState(false);
@@ -50,7 +45,7 @@ export default function Profile() {
       .catch((requestError) => { if (!cancelled) setError(requestError.message); })
       .finally(() => { if (!cancelled) setLoading(false); });
     return () => { cancelled = true; };
-  }, [authHeaders]);
+  }, [authHeaders, updateUser]);
 
   function updateField(event) {
     setForm((current) => ({ ...current, [event.target.name]: event.target.value }));
@@ -72,6 +67,7 @@ export default function Profile() {
       const data = await response.json();
       if (!response.ok) throw new Error(data.message || "Your profile could not be saved.");
       setProfile(data);
+      updateUser(data);
       setMessage("Your profile was saved.");
     } catch (requestError) {
       setError(requestError.message);
@@ -91,7 +87,7 @@ export default function Profile() {
         <header className="profile-header">
           <button className="profile-avatar-button" type="button" onClick={() => setAvatarStudioOpen(true)} aria-label="Choose your profile avatar">
             <span className="profile-avatar">
-              {form.avatarPreset ? <Suspense fallback={initials(profile.username)}><PresetAvatar value={form.avatarPreset} fallback={initials(profile.username)} size={82} /></Suspense> : initials(profile.username)}
+              <MemberAvatar username={profile.username} avatarUrl={form.avatarPreset} size={82} />
             </span>
             <span className="profile-avatar-edit">Edit</span>
           </button>
@@ -125,7 +121,7 @@ export default function Profile() {
       {/* PROFILE SCREEN: this dialog sits over the page after the avatar circle
           is clicked. Choosing an icon updates the form; Save changes is what
           sends it through the profile API and into users.avatar_url. */}
-      {avatarStudioOpen && <Suspense fallback={<div className="avatar-studio-loading">Loading avatar choices…</div>}><AvatarStudio value={form.avatarPreset} fallback={initials(profile.username)} onClose={() => setAvatarStudioOpen(false)} onChoose={(avatarPreset) => { setForm((current) => ({ ...current, avatarPreset })); setAvatarStudioOpen(false); }} /></Suspense>}
+      {avatarStudioOpen && <Suspense fallback={<div className="avatar-studio-loading">Loading avatar choices…</div>}><AvatarStudio value={form.avatarPreset} fallback={memberInitials(profile.username)} onClose={() => setAvatarStudioOpen(false)} onChoose={(avatarPreset) => { setForm((current) => ({ ...current, avatarPreset })); setAvatarStudioOpen(false); }} /></Suspense>}
     </main>
   );
 }

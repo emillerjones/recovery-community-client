@@ -3,6 +3,7 @@ import { useAuth } from "../../auth/AuthContext";
 import RoleBadge from "../../components/RoleBadge";
 import ConfirmModal from "../../components/ConfirmModal";
 import { Toast, useToast } from "../../components/Toast";
+import MemberAvatar from "../../components/MemberAvatar";
 import "./UserManagement.css";
 
 const API = import.meta.env.VITE_API;
@@ -27,21 +28,6 @@ const ROLE_LABELS = {
   50: "Moderator",
   100: "Member",
 };
-
-// A small set of colors to cycle through for avatar circles, so
-// rows are visually distinguishable from one another at a glance.
-const AVATAR_COLORS = ["#C97B5E", "#5E83A8", "#7B6CA8", "#5E8C6A", "#C9A05E"];
-
-// Turns "jane_doe" into "JD" for the avatar circle, and picks a
-// color based on the user's id so the same person always gets the
-// same color across renders.
-function getInitials(username) {
-  if (!username) return "?";
-  return username.slice(0, 2).toUpperCase();
-}
-function getAvatarColor(userId) {
-  return AVATAR_COLORS[userId % AVATAR_COLORS.length];
-}
 
 export default function UserManagement() {
   const { token, user: currentUser } = useAuth();
@@ -297,12 +283,7 @@ export default function UserManagement() {
                   <tr key={u.user_id} className={!u.active ? "user-row--inactive" : ""}>
                     <td>
                       <div className="user-cell">
-                        <span
-                          className="user-cell__avatar"
-                          style={{ background: getAvatarColor(u.user_id) }}
-                        >
-                          {getInitials(u.username)}
-                        </span>
+                        <MemberAvatar className="user-cell__avatar" username={u.username} avatarUrl={u.avatar_url} size={38} />
                         <div className="user-cell__text">
                           <span className="user-cell__name">{u.username}</span>
                           <span className="user-cell__email">{u.email}</span>

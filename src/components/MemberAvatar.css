@@ -1,0 +1,3 @@
+.member-avatar { display: inline-grid; place-items: center; flex: 0 0 auto; overflow: hidden; border-radius: 50%; background: #708475; color: #fff; font: 800 11px/1 Inter, sans-serif; }
+.member-avatar .preset-avatar { width: 100% !important; height: 100% !important; }
+.preset-avatar { display: inline-grid; place-items: center; flex: 0 0 auto; border-radius: 50%; }

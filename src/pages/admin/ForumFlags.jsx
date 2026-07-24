@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../auth/AuthContext";
 import { Toast, useToast } from "../../components/Toast";
+import MemberAvatar from "../../components/MemberAvatar";
 import "./ForumFlags.css";
 
 const API = import.meta.env.VITE_API;
@@ -87,6 +88,7 @@ export default function ForumFlags() {
             {posts.map((post) => (
               <div className="forum-flags__row" key={post.post_id}>
                 <div className="forum-flags__count">{post.flag_count}</div>
+                <MemberAvatar username={post.author_username} avatarUrl={post.author_avatar_url} size={38} />
                 <div className="forum-flags__body">
                   <strong>{post.title}</strong>
                   <p>{snippet(post.body)}</p>
@@ -108,6 +110,7 @@ export default function ForumFlags() {
             {comments.map((comment) => (
               <div className="forum-flags__row" key={comment.comment_id}>
                 <div className="forum-flags__count">{comment.flag_count}</div>
+                <MemberAvatar username={comment.author_username} avatarUrl={comment.author_avatar_url} size={38} />
                 <div className="forum-flags__body">
                   <strong>Reply by {comment.author_username}</strong>
                   <p>{snippet(comment.body)}</p>

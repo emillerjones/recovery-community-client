@@ -6,6 +6,7 @@ import { useNotifications } from "../notifications/NotificationsContext";
 import ReactionBar from "../components/ReactionBar";
 import MentionText from "../components/MentionText";
 import MentionTextarea from "../components/MentionTextarea";
+import MemberAvatar from "../components/MemberAvatar";
 import "./Forum.css";
 
 const API = import.meta.env.VITE_API;
@@ -18,10 +19,6 @@ function formatDate(value) {
     hour: "numeric",
     minute: "2-digit",
   });
-}
-
-function initials(username) {
-  return username?.slice(0, 2).toUpperCase() || "?";
 }
 
 function buildCommentTree(comments) {
@@ -55,7 +52,7 @@ function Comment({ comment, depth, currentUserId, canModerate, token, replyingTo
         ) : (
           <>
             <div className="forum-comment-head forum-comment-head--reply">
-              <div className="forum-avatar forum-avatar--small">{initials(comment.author_username)}</div>
+              <MemberAvatar className="forum-avatar forum-avatar--small" username={comment.author_username} avatarUrl={comment.author_avatar_url} size={34} />
               <div><strong>{comment.author_username}</strong><span>{formatDate(comment.created_at)}</span></div>
             </div>
             <MentionText body={comment.body} mentions={comment.mentions} />
@@ -481,7 +478,7 @@ export default function ForumThread() {
           <>
             <h1>{post.title}</h1>
             <div className="forum-comment-head forum-thread-author">
-              <div className="forum-avatar">{initials(post.author_username)}</div>
+              <MemberAvatar className="forum-avatar" username={post.author_username} avatarUrl={post.author_avatar_url} size={42} />
               <div><strong>{post.author_username}</strong><span>{formatDate(post.created_at)}</span></div>
             </div>
             <MentionText className="forum-thread-body" body={post.body} mentions={post.mentions} />

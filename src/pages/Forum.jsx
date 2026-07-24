@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "../auth/AuthContext";
 import MentionTextarea from "../components/MentionTextarea";
+import MemberAvatar from "../components/MemberAvatar";
 import "./Forum.css";
 
 const API = import.meta.env.VITE_API;
@@ -37,10 +38,6 @@ function timeAgo(value) {
   if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
   if (seconds < 604800) return `${Math.floor(seconds / 86400)}d ago`;
   return new Date(value).toLocaleDateString(undefined, { month: "short", day: "numeric" });
-}
-
-function initials(username) {
-  return username?.slice(0, 2).toUpperCase() || "?";
 }
 
 function isNew(value) {
@@ -74,7 +71,7 @@ function PostCard({ post }) {
         <p>{post.body}</p>
       </div>
       <div className="forum-post-author">
-        <div className="forum-avatar forum-avatar--small">{initials(post.author_username)}</div>
+        <MemberAvatar className="forum-avatar forum-avatar--small" username={post.author_username} avatarUrl={post.author_avatar_url} size={34} />
         <span>{post.author_username}</span>
       </div>
       <div className="forum-reply-count">
@@ -425,6 +422,7 @@ export default function Forum() {
             <button className="forum-modal-close" onClick={() => setComposerOpen(false)} aria-label="Close"><X /></button>
             <p className="forum-eyebrow">New conversation</p>
             <h2 id="new-post-title">What would you like to share?</h2>
+            <div className="forum-composer-identity"><MemberAvatar username={user?.username} avatarUrl={user?.avatar_url} size={38} /><span>Posting as <strong>{user?.username}</strong></span></div>
             <form onSubmit={createPost}>
               <label>Space
                 <select required value={draft.category_id} onChange={(e) => setDraft({ ...draft, category_id: e.target.value })}>
