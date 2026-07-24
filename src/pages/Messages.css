@@ -235,4 +235,8 @@
   .dm-conversations--hide-mobile { display: none; }
   .dm-thread--hide-mobile { display: none; }
   .dm-back { display: inline-flex; }
+  /* iOS Safari zooms the page when it focuses an input below 16px. Keep both
+     message inputs at the native threshold instead of disabling user zoom. */
+  .dm-picker-search input,
+  .dm-composer input { font-size: 16px; }
 }
