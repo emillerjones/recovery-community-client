@@ -21,6 +21,10 @@ const REACTIONS = [
   { type: "care", Icon: HandHeart, label: "Care", color: "#a65773" },
 ];
 
+// `onReact` is NOT something imported from React. It is our own prop name.
+// ForumThread.jsx passes a real function into that prop when it renders this
+// component. For the main post, `onReact` will point to togglePostReaction().
+// For a reply, it will point to a wrapper that calls toggleCommentReaction().
 export default function ReactionBar({ reactions = {}, myReaction, onReact, disabled = false }) {
   return (
     <div className="reaction-bar" aria-label="Reactions">
@@ -29,6 +33,19 @@ export default function ReactionBar({ reactions = {}, myReaction, onReact, disab
         const count = Number(reactions[reaction.type] || 0);
         const selected = myReaction === reaction.type;
         return (
+          // REACTION TRACE STEP 1: This is one visible reaction button.
+          //
+          // Read the onClick line below as:
+          // "When clicked, call onReact and give it this button's type."
+          //
+          // For the Support button, reaction.type is "support", so the click
+          // effectively becomes: onReact("support"). Because ForumThread.jsx
+          // passed togglePostReaction into onReact, that ultimately becomes:
+          // togglePostReaction("support").
+          //
+          // The `() =>` wrapper is important. It tells React to WAIT for the
+          // click. Writing onClick={onReact(reaction.type)} would run it right
+          // away while the page is rendering instead of waiting for a click.
           <button
             type="button"
             key={reaction.type}

@@ -57,6 +57,9 @@ function Comment({ comment, depth, currentUserId, canModerate, replyingTo, setRe
               <div><strong>{comment.author_username}</strong><span>{formatDate(comment.created_at)}</span></div>
             </div>
             <p>{comment.body}</p>
+            {/* REACTION TRACE STEP 2B: This controls the reaction buttons shown
+                under ONE reply. It sends both the reply ID and reaction type
+                to toggleCommentReaction() farther down in this file. */}
             <ReactionBar
               reactions={comment.reactions}
               myReaction={comment.my_reaction}
@@ -292,6 +295,9 @@ export default function ForumThread() {
   }
 
   function applyReaction(current, reactionType) {
+    // REACTION TRACE STEP 7: The server has confirmed the database change.
+    // Update the count and the logged-in user's selected reaction in React
+    // state. That state change rerenders ReactionBar with the new appearance.
     const previous = current.my_reaction;
     const next = previous === reactionType ? null : reactionType;
     const reactions = { ...(current.reactions || {}) };
@@ -301,8 +307,17 @@ export default function ForumThread() {
   }
 
   async function togglePostReaction(reactionType) {
+    // REACTION TRACE STEP 3A: The main post's ReactionBar leads here.
+    // Clicking the already-selected reaction removes it; every other click
+    // adds a reaction or changes the member's existing reaction.
     const removing = post.my_reaction === reactionType;
     setReactingTo("post");
+    // Optimistic update: apply the change locally before the network round
+    // trip so the button reacts instantly. applyReaction() is symmetric, so
+    // reapplying the same reactionType again below undoes it on failure.
+    setPost((current) => applyReaction(current, reactionType));
+    // This request leaves the client here. Continue at REACTION TRACE STEP 4A
+    // in recovery-community-server/api/forum.js.
     const response = await fetch(`${API}/api/forum/posts/${postId}/reaction`, {
       method: removing ? "DELETE" : "PUT",
       headers: { ...headers, "Content-Type": "application/json" },
@@ -312,15 +327,25 @@ export default function ForumThread() {
     if (!response.ok) {
       const result = await response.json().catch(() => ({}));
       setError(result.message || "Could not update that reaction.");
+      setPost((current) => applyReaction(current, reactionType));
       return;
     }
-    setPost((current) => applyReaction(current, reactionType));
+    // REACTION TRACE STEP 7A: The server confirmed the same change we already
+    // applied optimistically above, so there is nothing left to do here.
   }
 
   async function toggleCommentReaction(commentId, reactionType) {
+    // REACTION TRACE STEP 3B: A reply's ReactionBar leads here. This is the
+    // same flow as a post reaction, but the URL includes the comment ID so the
+    // server knows which reply owns the reaction.
     const comment = comments.find((item) => item.comment_id === commentId);
     const removing = comment?.my_reaction === reactionType;
     setReactingTo(`comment-${commentId}`);
+    // Optimistic update: same reasoning as togglePostReaction() above.
+    setComments((current) => current.map((item) => (
+      item.comment_id === commentId ? applyReaction(item, reactionType) : item
+    )));
+    // Continue at REACTION TRACE STEP 4B in the server api/forum.js file.
     const response = await fetch(`${API}/api/forum/posts/${postId}/comments/${commentId}/reaction`, {
       method: removing ? "DELETE" : "PUT",
       headers: { ...headers, "Content-Type": "application/json" },
@@ -330,11 +355,13 @@ export default function ForumThread() {
     if (!response.ok) {
       const result = await response.json().catch(() => ({}));
       setError(result.message || "Could not update that reaction.");
+      setComments((current) => current.map((item) => (
+        item.comment_id === commentId ? applyReaction(item, reactionType) : item
+      )));
       return;
     }
-    setComments((current) => current.map((item) => (
-      item.comment_id === commentId ? applyReaction(item, reactionType) : item
-    )));
+    // REACTION TRACE STEP 7B: The server confirmed the same change already
+    // applied optimistically above, so there is nothing left to do here.
   }
 
   function startEditingPost() {
@@ -423,6 +450,11 @@ export default function ForumThread() {
               <div><strong>{post.author_username}</strong><span>{formatDate(post.created_at)}</span></div>
             </div>
             <p className="forum-thread-body">{post.body}</p>
+            {/* REACTION TRACE STEP 2A: This controls the reaction buttons shown
+                directly under the main forum post. `onReact` points to the
+                togglePostReaction() function above. This is where the prop gets
+                its value: onReact={togglePostReaction}. ReactionBar does not
+                import that function; this parent component hands it down. */}
             <ReactionBar
               reactions={post.reactions}
               myReaction={post.my_reaction}
