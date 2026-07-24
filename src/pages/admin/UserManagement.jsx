@@ -6,6 +6,7 @@ import { Toast, useToast } from "../../components/Toast";
 import "./UserManagement.css";
 
 const API = import.meta.env.VITE_API;
+const HARD_DELETE_ENABLED = import.meta.env.VITE_ENABLE_TEST_HARD_DELETE === "true";
 
 // The four roles, in order from highest authority to lowest.
 // role_id 1 (Owner) is intentionally left OUT of this list — it's
@@ -56,19 +57,21 @@ export default function UserManagement() {
   const [pendingAction, setPendingAction] = useState(null);
   // Shape: { type: "role" | "deactivate" | "reactivate" | "delete", user, newRoleId? }
 
-  async function fetchUsers() {
-    setLoading(true);
-    const response = await fetch(`${API}/api/users`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    const data = await response.json();
-    setUsers(data);
-    setLoading(false);
-  }
-
   useEffect(() => {
-    fetchUsers();
-  }, [token]);
+    let cancelled = false;
+    fetch(`${API}/api/users`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then(async (response) => {
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.message || "Users could not be loaded.");
+        return data;
+      })
+      .then((data) => { if (!cancelled) setUsers(data); })
+      .catch((error) => { if (!cancelled) showToast(error.message); })
+      .finally(() => { if (!cancelled) setLoading(false); });
+    return () => { cancelled = true; };
+  }, [token, showToast]);
 
   // Returns true if the logged-in admin is allowed to manage this
   // particular user, based on our role hierarchy rule: you can only
@@ -192,6 +195,34 @@ export default function UserManagement() {
     }
 
     setPendingAction(null);
+  }
+
+  // ---------- Permanent test-account deletion ----------
+
+  async function hardDeleteTestAccount(targetUser) {
+    const confirmation = window.prompt(
+      `Testing only: permanently delete ${targetUser.username} and its signup records?\n\nType the username exactly to continue.`
+    );
+    if (confirmation !== targetUser.username) {
+      if (confirmation !== null) showToast("Username did not match. Nothing was deleted.");
+      return;
+    }
+
+    const response = await fetch(`${API}/api/users/${targetUser.user_id}/hard`, {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    const text = await response.text();
+    let result = {};
+    try { result = text ? JSON.parse(text) : {}; } catch { result = { message: text }; }
+
+    if (!response.ok) {
+      showToast(result.message || "That test account could not be permanently deleted.");
+      return;
+    }
+
+    setUsers((previous) => previous.filter((u) => u.user_id !== targetUser.user_id));
+    showToast(`${targetUser.username} and its signup records were permanently deleted.`);
   }
 
   // Decides which confirm function to run based on pendingAction.type
@@ -333,6 +364,15 @@ export default function UserManagement() {
                           >
                             Delete
                           </button>
+                          {HARD_DELETE_ENABLED && u.role_id === 100 && (
+                            <button
+                              className="user-actions__button user-actions__button--hard-delete"
+                              onClick={() => hardDeleteTestAccount(u)}
+                              title="Testing only: permanently remove an unused signup"
+                            >
+                              Hard delete test
+                            </button>
+                          )}
                         </div>
                       )}
                     </td>

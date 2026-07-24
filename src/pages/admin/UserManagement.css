@@ -266,6 +266,17 @@
   color: #a83a3a;
 }
 
+.user-actions__button--hard-delete {
+  border-color: rgba(128, 38, 38, 0.22);
+  color: #7f2424;
+}
+
+.user-actions__button--hard-delete:hover {
+  background: #7f2424;
+  border-color: #7f2424;
+  color: #fff;
+}
+
 /* ---------- Responsive ---------- */
 
 @media (max-width: 760px) {
