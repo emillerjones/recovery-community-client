@@ -1,9 +1,13 @@
-import { useEffect, useMemo, useState } from "react";
+import { lazy, Suspense, useEffect, useMemo, useState } from "react";
 import { useAuth } from "../auth/AuthContext";
 import "./Profile.css";
 
 const API = import.meta.env.VITE_API;
 const ROLE_LABELS = { 1: "Owner", 10: "Administrator", 50: "Moderator", 100: "Member" };
+// Phosphor contains thousands of exports, so the browser downloads the avatar
+// studio only when somebody actually opens it (or already has a preset avatar).
+const AvatarStudio = lazy(() => import("../components/AvatarStudio"));
+const PresetAvatar = lazy(() => import("../components/PresetAvatar"));
 
 function initials(username) {
   const words = String(username || "").trim().split(/\s+/).filter(Boolean);
@@ -14,7 +18,8 @@ function initials(username) {
 export default function Profile() {
   const { token } = useAuth();
   const [profile, setProfile] = useState(null);
-  const [form, setForm] = useState({ bio: "", phoneNumber: "", dateOfBirth: "", gender: "" });
+  const [form, setForm] = useState({ bio: "", phoneNumber: "", dateOfBirth: "", gender: "", avatarPreset: "" });
+  const [avatarStudioOpen, setAvatarStudioOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
@@ -39,6 +44,7 @@ export default function Profile() {
           phoneNumber: data.phone_number || "",
           dateOfBirth: data.date_of_birth ? String(data.date_of_birth).slice(0, 10) : "",
           gender: data.gender || "",
+          avatarPreset: data.avatar_url || "",
         });
       })
       .catch((requestError) => { if (!cancelled) setError(requestError.message); })
@@ -80,12 +86,17 @@ export default function Profile() {
   return (
     <main className="profile-page">
       <section className="profile-shell">
-        {/* On-screen identity summary. Avatar upload will replace this initials
-            fallback later without changing the rest of the profile layout. */}
+        {/* PROFILE SCREEN: this is the identity summary at the very top. The
+            round avatar itself is the button that opens the picker below. */}
         <header className="profile-header">
-          <div className="profile-avatar" aria-hidden="true">{initials(profile.username)}</div>
+          <button className="profile-avatar-button" type="button" onClick={() => setAvatarStudioOpen(true)} aria-label="Choose your profile avatar">
+            <span className="profile-avatar">
+              {form.avatarPreset ? <Suspense fallback={initials(profile.username)}><PresetAvatar value={form.avatarPreset} fallback={initials(profile.username)} size={82} /></Suspense> : initials(profile.username)}
+            </span>
+            <span className="profile-avatar-edit">Edit</span>
+          </button>
           <div><span className="profile-eyebrow">My profile</span><h1>{profile.username}</h1><p>{ROLE_LABELS[profile.role_id] || "Member"} · Joined {new Date(profile.created_at).toLocaleDateString(undefined, { month: "long", year: "numeric" })}</p></div>
-          <button className="profile-photo-placeholder" type="button" disabled>Photo upload coming later</button>
+          <button className="profile-choose-avatar" type="button" onClick={() => setAvatarStudioOpen(true)}>Choose avatar</button>
         </header>
 
         <form className="profile-form" onSubmit={saveProfile}>
@@ -111,6 +122,10 @@ export default function Profile() {
           <div className="profile-actions"><button className="profile-save" disabled={saving}>{saving ? "Saving…" : "Save changes"}</button></div>
         </form>
       </section>
+      {/* PROFILE SCREEN: this dialog sits over the page after the avatar circle
+          is clicked. Choosing an icon updates the form; Save changes is what
+          sends it through the profile API and into users.avatar_url. */}
+      {avatarStudioOpen && <Suspense fallback={<div className="avatar-studio-loading">Loading avatar choices…</div>}><AvatarStudio value={form.avatarPreset} fallback={initials(profile.username)} onClose={() => setAvatarStudioOpen(false)} onChoose={(avatarPreset) => { setForm((current) => ({ ...current, avatarPreset })); setAvatarStudioOpen(false); }} /></Suspense>}
     </main>
   );
 }
