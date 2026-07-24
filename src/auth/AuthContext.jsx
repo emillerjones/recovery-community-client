@@ -5,17 +5,18 @@ const API = import.meta.env.VITE_API;
 
 const AuthContext = createContext();
 
+function decodeToken(token) {
+  if (!token) return null;
+  try {
+    return JSON.parse(atob(token.split(".")[1]));
+  } catch {
+    return null;
+  }
+}
+
 export function AuthProvider({ children }) {
   const [token, setToken] = useState(() => localStorage.getItem("token"));
-  const [user, setUser] = useState(() => {
-  const savedToken = localStorage.getItem("token");
-    if (!savedToken) return null;
-    try {
-      return JSON.parse(atob(savedToken.split(".")[1]));
-    } catch {
-      return null;
-    }    
-  });
+  const [user, setUser] = useState(() => decodeToken(localStorage.getItem("token")));
 
   
   const register = async (credentials) => {
@@ -30,7 +31,7 @@ export function AuthProvider({ children }) {
     }
     setToken(result.token);
     localStorage.setItem("token", result.token);
-    setUser(result.user);
+    setUser(decodeToken(result.token));
   };
 
 
@@ -49,7 +50,7 @@ export function AuthProvider({ children }) {
     const result = JSON.parse(text);
     setToken(result.token);
     localStorage.setItem("token", result.token);
-    setUser(result.user);
+    setUser(decodeToken(result.token));
   };
 
 
