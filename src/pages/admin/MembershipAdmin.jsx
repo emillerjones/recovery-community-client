@@ -63,13 +63,16 @@ export default function MembershipAdmin() {
 
   async function makeInvite(event) {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
+    // React clears event.currentTarget after the handler yields at await.
+    // Keep the actual form element so we can safely reset it after success.
+    const form = event.currentTarget;
+    const data = new FormData(form);
     try {
       const invite = await fetch(`${API}/api/admissions/invites`, {
         method: "POST", headers: authHeaders(true),
         body: JSON.stringify({ email: data.get("email"), expiresInDays: data.get("expiresInDays") }),
       }).then(readResponse);
-      event.currentTarget.reset();
+      form.reset();
       setInvites((current) => [invite, ...current]);
       setNotice(`The private invitation was emailed to ${invite.email}.`);
     } catch (error) { setNotice(error.message); }
@@ -84,13 +87,15 @@ export default function MembershipAdmin() {
 
   async function makeCode(event) {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
+    // Same async-event rule as the invitation form above.
+    const form = event.currentTarget;
+    const data = new FormData(form);
     try {
       const code = await fetch(`${API}/api/admissions/codes`, {
         method: "POST", headers: authHeaders(true),
         body: JSON.stringify({ name: data.get("name"), code: data.get("code"), expiresInDays: data.get("expiresInDays"), maxUses: data.get("maxUses") }),
       }).then(readResponse);
-      event.currentTarget.reset();
+      form.reset();
       setCodes((current) => [code, ...current]);
       setNewCode(code.code);
       setNotice("Code created. Copy it now—the secure value is only shown once.");
