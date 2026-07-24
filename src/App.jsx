@@ -27,6 +27,8 @@ import Forum from "./pages/Forum";
 import ForumThread from "./pages/ForumThread";
 import Messages from "./pages/Messages";
 import RequireAuth from "./components/RequireAuth";
+import VerifyEmail from "./pages/VerifyEmail";
+import MembershipAdmin from "./pages/admin/MembershipAdmin";
 
 
 
@@ -34,6 +36,12 @@ import RequireAuth from "./components/RequireAuth";
 export default function App() {
   return (
     <Routes>
+      {/* Registration is a full application, so it gets room to breathe instead
+          of using the compact login drawer. All three signup flows use it. */}
+      <Route path="/register" element={<Register />} />
+      <Route path="/verify-email" element={<VerifyEmail />} />
+      <Route path="/login" element={<Login />} />
+
       {/* Marketing/logged-out routes — transparent hero nav */}
       <Route path="/" element={<MarketingLayout />}>
         <Route index element={<Home />} />
@@ -60,9 +68,17 @@ export default function App() {
         <Route path="/messages" element={<Messages />} />
         <Route path="/messages/:conversationId" element={<Messages />} />
         <Route
+          path="/admin/membership"
+          element={
+            <RequireRole maxRoleId={10}>
+              <MembershipAdmin />
+            </RequireRole>
+          }
+        />
+        <Route
           path="/admin/users"
           element={
-            <RequireRole maxRoleId={9}>
+            <RequireRole maxRoleId={10}>
               <UserManagement />
             </RequireRole>
           }

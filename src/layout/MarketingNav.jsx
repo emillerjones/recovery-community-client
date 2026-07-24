@@ -211,8 +211,11 @@ export default function MarketingNav({ onLogin, onRegister }) {
             <MessagesBell />
             <NotificationBell />
             <NavLink to="/profile" className="nav-link-soft">Profile</NavLink>
-            {user?.role_id <= 99 && (
+            {user?.role_id <= 10 && (
               <NavLink to="/admin/users" className="main-nav__link">Users</NavLink>
+            )}
+            {user?.role_id <= 10 && (
+              <NavLink to="/admin/membership" className="main-nav__link">Admissions</NavLink>
             )}
             {user?.role_id <= 50 && (
               <NavLink to="/admin/forum-flags" className="main-nav__link">Flagged</NavLink>
@@ -264,8 +267,11 @@ export default function MarketingNav({ onLogin, onRegister }) {
                 <NavLink to="/forum" className="mobile-nav__link" onClick={closeMenu}>Forum</NavLink>
                 <NavLink to="/messages" className="mobile-nav__link" onClick={closeMenu}>Messages</NavLink>
                 <NavLink to="/profile" className="mobile-nav__link" onClick={closeMenu}>Profile</NavLink>
-                {user?.role_id <= 99 && (
+                {user?.role_id <= 10 && (
                   <NavLink to="/admin/users" className="mobile-nav__link" onClick={closeMenu}>Users</NavLink>
+                )}
+                {user?.role_id <= 10 && (
+                  <NavLink to="/admin/membership" className="mobile-nav__link" onClick={closeMenu}>Admissions</NavLink>
                 )}
                 {user?.role_id <= 50 && (
                   <NavLink to="/admin/forum-flags" className="mobile-nav__link" onClick={closeMenu}>Flagged</NavLink>

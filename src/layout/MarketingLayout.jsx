@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import MarketingNav from "./MarketingNav";
 import AuthPanel from "../auth/AuthPanel";
 import MarketingFooter from "./MarketingFooter";
@@ -13,6 +13,7 @@ import ScrollToTop from "./ScrollToTop";
  */
 export default function MarketingLayout() {
   const location = useLocation();
+  const navigate = useNavigate();
   const [authMode, setAuthMode] = useState(() => {
     if (location.pathname === "/login") return "login";
     if (location.pathname === "/register") return "register";
@@ -25,8 +26,10 @@ export default function MarketingLayout() {
   }
 
   function openRegister() {
-    setAuthMode("register");
-    window.history.replaceState(null, "", "/register");
+    // Registration now includes application questions and agreements, so it
+    // uses a dedicated mobile-friendly page instead of the small login drawer.
+    setAuthMode(null);
+    navigate("/register");
   }
 
   function closePanel() {
@@ -51,8 +54,13 @@ export default function MarketingLayout() {
           mode={authMode}
           onClose={closePanel}
           onSwitchMode={(m) => {
-            setAuthMode(m);
-            window.history.replaceState(null, "", `/${m}`);
+            if (m === "register") {
+              setAuthMode(null);
+              navigate("/register");
+            } else {
+              setAuthMode(m);
+              window.history.replaceState(null, "", `/${m}`);
+            }
           }}
         />
       )}

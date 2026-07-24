@@ -20,7 +20,10 @@ export function AuthProvider({ children }) {
 
   
   const register = async (credentials) => {
-    const response = await fetch(API + "/api/users/register", {
+    // REGISTRATION TRACE STEP 0: callers hand the complete application to the
+    // public registration API. Registration never stores a login token; email
+    // verification and (when needed) staff approval happen first.
+    const response = await fetch(API + "/api/registration/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(credentials),
@@ -29,9 +32,7 @@ export function AuthProvider({ children }) {
     if (!response.ok) {
       throw Error(result.message);
     }
-    setToken(result.token);
-    localStorage.setItem("token", result.token);
-    setUser(decodeToken(result.token));
+    return result;
   };
 
 

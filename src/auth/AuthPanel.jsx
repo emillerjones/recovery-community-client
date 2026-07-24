@@ -18,6 +18,8 @@ export default function AuthPanel({ mode, onClose, onSwitchMode }) {
   const navigate = useNavigate();
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [submittedEmail, setSubmittedEmail] = useState("");
+  const [resendMessage, setResendMessage] = useState("");
   const panelRef = useRef(null);
   const isLogin = mode === "login";
 
@@ -48,6 +50,7 @@ export default function AuthPanel({ mode, onClose, onSwitchMode }) {
 
     const data = new FormData(e.target);
     const email = data.get("email");
+    setSubmittedEmail(email);
     const password = data.get("password");
 
     try {
@@ -66,6 +69,17 @@ export default function AuthPanel({ mode, onClose, onSwitchMode }) {
     } finally {
       setLoading(false);
     }
+  }
+
+  async function resendVerification() {
+    setResendMessage("");
+    const response = await fetch(`${import.meta.env.VITE_API}/api/registration/resend-verification`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: submittedEmail }),
+    });
+    const data = await response.json();
+    setResendMessage(data.message || "Please try again later.");
   }
 
   return (
@@ -181,6 +195,10 @@ export default function AuthPanel({ mode, onClose, onSwitchMode }) {
           </button>
 
           {error && <p className="ap-error" role="alert">{error}</p>}
+          {error?.includes("verify your email") && (
+            <button className="ap-switch-btn" type="button" onClick={resendVerification}>Send a new verification link</button>
+          )}
+          {resendMessage && <p className="ap-sub" role="status">{resendMessage}</p>}
         </form>
 
         {/* Divider */}

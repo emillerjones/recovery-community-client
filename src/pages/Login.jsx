@@ -8,10 +8,13 @@ export default function Login() {
   const { login } = useAuth();
   const navigate = useNavigate();
   const [error, setError] = useState(null);
+  const [loginEmail, setLoginEmail] = useState("");
+  const [resendMessage, setResendMessage] = useState("");
 
   const tryLogin = async (formData) => {
     setError(null);
     const email = formData.get("email");
+    setLoginEmail(email);
     const password = formData.get("password");
     try {
       await login({ email, password });
@@ -20,6 +23,17 @@ export default function Login() {
       setError(e.message);
     }
   };
+
+  async function resendVerification() {
+    setResendMessage("");
+    const response = await fetch(`${import.meta.env.VITE_API}/api/registration/resend-verification`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: loginEmail }),
+    });
+    const data = await response.json();
+    setResendMessage(data.message || "Please try again later.");
+  }
 
   return (
     <main className="auth-page">
@@ -117,6 +131,10 @@ export default function Login() {
             </button>
 
             {error && <p className="auth-error" role="alert">{error}</p>}
+            {error?.includes("verify your email") && (
+              <button className="auth-secondary" type="button" onClick={resendVerification}>Send a new verification link</button>
+            )}
+            {resendMessage && <p className="auth-card__sub" role="status">{resendMessage}</p>}
           </form>
 
           <div className="auth-divider">
