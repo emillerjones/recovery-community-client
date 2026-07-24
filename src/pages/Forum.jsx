@@ -23,6 +23,7 @@ import {
   X,
 } from "lucide-react";
 import { useAuth } from "../auth/AuthContext";
+import MentionTextarea from "../components/MentionTextarea";
 import "./Forum.css";
 
 const API = import.meta.env.VITE_API;
@@ -98,6 +99,7 @@ export default function Forum() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [draft, setDraft] = useState({ category_id: "", title: "", body: "" });
+  const [draftMentions, setDraftMentions] = useState([]);
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("recent");
@@ -205,7 +207,13 @@ export default function Forum() {
     const response = await fetch(`${API}/api/forum/posts`, {
       method: "POST",
       headers: { ...headers, "Content-Type": "application/json" },
-      body: JSON.stringify({ ...draft, category_id: Number(draft.category_id) }),
+      // MENTION TRACE STEP 6A: MentionTextarea saved selected member objects.
+      // Send only their IDs beside the visible @usernames in draft.body.
+      body: JSON.stringify({
+        ...draft,
+        category_id: Number(draft.category_id),
+        mentioned_user_ids: draftMentions.map((member) => member.user_id),
+      }),
     });
     const result = await response.json();
 
@@ -428,7 +436,17 @@ export default function Forum() {
                 <input required maxLength={180} value={draft.title} onChange={(e) => setDraft({ ...draft, title: e.target.value })} placeholder="Give the conversation a clear title" />
               </label>
               <label>Message
-                <textarea required rows={8} value={draft.body} onChange={(e) => setDraft({ ...draft, body: e.target.value })} placeholder="You do not have to have the perfect words." />
+                {/* This controls the new-post message box. Typing @ opens the
+                    active-member picker implemented by MentionTextarea. */}
+                <MentionTextarea
+                  token={token}
+                  rows={8}
+                  value={draft.body}
+                  onChange={(body) => setDraft((current) => ({ ...current, body }))}
+                  mentions={draftMentions}
+                  onMentionsChange={setDraftMentions}
+                  placeholder="You do not have to have the perfect words."
+                />
               </label>
               {error && <p className="forum-error" role="alert">{error}</p>}
               <div className="forum-composer-actions">

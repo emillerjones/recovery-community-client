@@ -534,9 +534,9 @@
 .forum-inline-confirm { display: inline-flex; align-items: center; gap: 8px; color: #843e36; font-size: 12px; font-weight: 700; }
 .forum-inline-confirm button { border: 0; background: transparent; color: inherit; font: inherit; font-weight: 700; text-decoration: underline; cursor: pointer; }
 .forum-inline-reply { margin: 16px 0 3px; padding: 14px; border-radius: 13px; background: #f5f3ec; }
-.forum-inline-reply > div { display: flex; justify-content: flex-end; gap: 8px; margin-top: 7px; }
-.forum-inline-reply button { border: 0; border-radius: 999px; padding: 8px 13px; color: var(--forum-muted); background: #e9ece6; font: inherit; font-size: 11px; font-weight: 700; cursor: pointer; }
-.forum-inline-reply button:last-child { color: white; background: var(--forum-green); }
+.forum-inline-reply__actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 7px; }
+.forum-inline-reply__actions button { border: 0; border-radius: 999px; padding: 8px 13px; color: var(--forum-muted); background: #e9ece6; font: inherit; font-size: 11px; font-weight: 700; cursor: pointer; }
+.forum-inline-reply__actions button:last-child { color: white; background: var(--forum-green); }
 
 .forum-main-reply {
   position: relative;

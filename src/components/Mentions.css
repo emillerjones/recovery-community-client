@@ -1,0 +1,73 @@
+.mention-input { position: relative; }
+.mention-input > textarea { width: 100%; }
+.mention-input__hint { display: block; margin: 5px 2px 0; color: #7b867e; font-size: 10px; }
+
+.mention-picker {
+  position: absolute;
+  z-index: 20;
+  right: 0;
+  bottom: calc(100% + 7px);
+  left: 0;
+  max-height: 240px;
+  overflow-y: auto;
+  padding: 6px;
+  border: 1px solid rgba(48, 70, 54, 0.14);
+  border-radius: 13px;
+  background: #fffefb;
+  box-shadow: 0 16px 38px rgba(35, 52, 40, 0.16);
+}
+
+.mention-picker button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 9px;
+  border: 0;
+  border-radius: 9px;
+  color: #354238;
+  background: transparent;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.mention-picker button:hover,
+.mention-picker button:focus-visible,
+.mention-picker button[aria-selected="true"] { outline: none; background: #edf2e9; }
+.mention-picker button:disabled { cursor: not-allowed; opacity: 0.45; }
+.mention-picker button > span {
+  display: grid;
+  width: 29px;
+  height: 29px;
+  place-items: center;
+  border-radius: 50%;
+  color: #f8faf6;
+  background: #718a73;
+  font-size: 10px;
+  font-weight: 800;
+}
+.mention-picker strong { font-size: 12px; }
+.mention-picker small { display: block; padding: 5px 9px 3px; color: #7b867e; font-size: 10px; }
+
+.forum-mention {
+  display: inline;
+  padding: 2px 5px;
+  border-radius: 6px;
+  color: #31553b;
+  background: #e3ecdf;
+  font-weight: 750;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.forum-comment > article:target {
+  outline: 2px solid rgba(86, 128, 93, 0.32);
+  background: #f1f6ee;
+  animation: mention-target-fade 2.8s ease forwards;
+}
+
+@keyframes mention-target-fade {
+  0%, 55% { outline-color: rgba(86, 128, 93, 0.38); }
+  100% { outline-color: transparent; }
+}

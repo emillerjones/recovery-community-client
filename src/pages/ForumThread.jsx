@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, Bookmark, CornerDownRight, Flag, Lock, Pencil, Pin, Trash2 } from "lucide-react";
 import { useAuth } from "../auth/AuthContext";
 import { useNotifications } from "../notifications/NotificationsContext";
 import ReactionBar from "../components/ReactionBar";
+import MentionText from "../components/MentionText";
+import MentionTextarea from "../components/MentionTextarea";
 import "./Forum.css";
 
 const API = import.meta.env.VITE_API;
@@ -36,7 +38,7 @@ function buildCommentTree(comments) {
   return roots;
 }
 
-function Comment({ comment, depth, currentUserId, canModerate, replyingTo, setReplyingTo, replyBody, setReplyBody, submitReply, submitting, deleteComment, toggleCommentFlag, toggleCommentReaction, reactingTo }) {
+function Comment({ comment, depth, currentUserId, canModerate, token, replyingTo, setReplyingTo, replyBody, setReplyBody, replyMentions, setReplyMentions, submitReply, submitting, deleteComment, toggleCommentFlag, toggleCommentReaction, reactingTo }) {
   // This component displays ONE comment. Near the bottom, it maps over this
   // comment's children and renders another <Comment /> for every nested reply.
   const [confirmingDelete, setConfirmingDelete] = useState(false);
@@ -47,7 +49,7 @@ function Comment({ comment, depth, currentUserId, canModerate, replyingTo, setRe
   return (
     <div className={`forum-comment depth-${Math.min(depth, 2)}`}>
       <div className="forum-comment-line" />
-      <article>
+      <article id={`comment-${comment.comment_id}`}>
         {isRemoved ? (
           <p className="forum-comment-removed">This reply was removed.</p>
         ) : (
@@ -56,7 +58,7 @@ function Comment({ comment, depth, currentUserId, canModerate, replyingTo, setRe
               <div className="forum-avatar forum-avatar--small">{initials(comment.author_username)}</div>
               <div><strong>{comment.author_username}</strong><span>{formatDate(comment.created_at)}</span></div>
             </div>
-            <p>{comment.body}</p>
+            <MentionText body={comment.body} mentions={comment.mentions} />
             {/* REACTION TRACE STEP 2B: This controls the reaction buttons shown
                 under ONE reply. It sends both the reply ID and reaction type
                 to toggleCommentReaction() farther down in this file. */}
@@ -94,8 +96,18 @@ function Comment({ comment, depth, currentUserId, canModerate, replyingTo, setRe
             </div>
             {replyingTo === comment.comment_id && (
               <form className="forum-inline-reply" onSubmit={(event) => submitReply(event, comment.comment_id)}>
-                <textarea autoFocus required rows={3} value={replyBody} onChange={(e) => setReplyBody(e.target.value)} placeholder={`Reply to ${comment.author_username}`} />
-                <div><button type="button" onClick={() => setReplyingTo(null)}>Cancel</button><button disabled={submitting}>{submitting ? "Replying…" : "Reply"}</button></div>
+                {/* This controls the small reply box beneath one comment. */}
+                <MentionTextarea
+                  token={token}
+                  autoFocus
+                  rows={3}
+                  value={replyBody}
+                  onChange={setReplyBody}
+                  mentions={replyMentions}
+                  onMentionsChange={setReplyMentions}
+                  placeholder={`Reply to ${comment.author_username}`}
+                />
+                <div className="forum-inline-reply__actions"><button type="button" onClick={() => setReplyingTo(null)}>Cancel</button><button disabled={submitting}>{submitting ? "Replying…" : "Reply"}</button></div>
               </form>
             )}
           </>
@@ -110,10 +122,13 @@ function Comment({ comment, depth, currentUserId, canModerate, replyingTo, setRe
           depth={depth + 1}
           currentUserId={currentUserId}
           canModerate={canModerate}
+          token={token}
           replyingTo={replyingTo}
           setReplyingTo={setReplyingTo}
           replyBody={replyBody}
           setReplyBody={setReplyBody}
+          replyMentions={replyMentions}
+          setReplyMentions={setReplyMentions}
           submitReply={submitReply}
           submitting={submitting}
           deleteComment={deleteComment}
@@ -131,13 +146,16 @@ export default function ForumThread() {
   const { token, user } = useAuth();
   const { socket } = useNotifications();
   const navigate = useNavigate();
+  const location = useLocation();
   const [post, setPost] = useState(null);
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [replyingTo, setReplyingTo] = useState(null);
   const [replyBody, setReplyBody] = useState("");
+  const [replyMentions, setReplyMentions] = useState([]);
   const [mainReply, setMainReply] = useState("");
+  const [mainReplyMentions, setMainReplyMentions] = useState([]);
   const [submitting, setSubmitting] = useState(false);
   const [editingPost, setEditingPost] = useState(false);
   const [postDraft, setPostDraft] = useState({ title: "", body: "" });
@@ -191,6 +209,14 @@ export default function ForumThread() {
     };
   }, [socket, postId]);
 
+  useEffect(() => {
+    // MENTION TRACE STEP 12: Notification links include #comment-123. After
+    // comments render, find that exact reply and scroll it into view.
+    if (!comments.length || !location.hash.startsWith("#comment-")) return;
+    const target = document.getElementById(location.hash.slice(1));
+    target?.scrollIntoView({ behavior: "smooth", block: "center" });
+  }, [comments, location.hash]);
+
   async function submitReply(event, parentCommentId = null) {
     // TRACE STEP 2: The reply form's onSubmit calls this function.
     // parentCommentId is null for the large "Leave a reply" form. It contains
@@ -200,6 +226,7 @@ export default function ForumThread() {
     // Both reply forms share this function, so choose the text from whichever
     // form the member used.
     const body = parentCommentId ? replyBody : mainReply;
+    const selectedMentions = parentCommentId ? replyMentions : mainReplyMentions;
     setSubmitting(true);
     setError("");
 
@@ -208,7 +235,13 @@ export default function ForumThread() {
     const response = await fetch(`${API}/api/forum/posts/${postId}/comments`, {
       method: "POST",
       headers: { ...headers, "Content-Type": "application/json" },
-      body: JSON.stringify({ body, parent_comment_id: parentCommentId }),
+      // MENTION TRACE STEP 6B: Send the visible reply plus the real IDs chosen
+      // from MentionTextarea. Continue at server/api/forum.js.
+      body: JSON.stringify({
+        body,
+        parent_comment_id: parentCommentId,
+        mentioned_user_ids: selectedMentions.map((member) => member.user_id),
+      }),
     });
 
     // The server sends JSON back. If it rejected the reply, show its message
@@ -224,7 +257,9 @@ export default function ForumThread() {
     // possible reply forms and return the button to its normal state.
     setMainReply("");
     setReplyBody("");
+    setReplyMentions([]);
     setReplyingTo(null);
+    setMainReplyMentions([]);
     setSubmitting(false);
 
     // TRACE STEP 5: Ask the server for the entire updated thread. Store the
@@ -449,7 +484,7 @@ export default function ForumThread() {
               <div className="forum-avatar">{initials(post.author_username)}</div>
               <div><strong>{post.author_username}</strong><span>{formatDate(post.created_at)}</span></div>
             </div>
-            <p className="forum-thread-body">{post.body}</p>
+            <MentionText className="forum-thread-body" body={post.body} mentions={post.mentions} />
             {/* REACTION TRACE STEP 2A: This controls the reaction buttons shown
                 directly under the main forum post. `onReact` points to the
                 togglePostReaction() function above. This is where the prop gets
@@ -512,10 +547,13 @@ export default function ForumThread() {
               depth={0}
               currentUserId={user?.id}
               canModerate={canModerate}
+              token={token}
               replyingTo={replyingTo}
               setReplyingTo={setReplyingTo}
               replyBody={replyBody}
               setReplyBody={setReplyBody}
+              replyMentions={replyMentions}
+              setReplyMentions={setReplyMentions}
               submitReply={submitReply}
               submitting={submitting}
               deleteComment={deleteComment}
@@ -536,7 +574,16 @@ export default function ForumThread() {
         <form className="forum-main-reply" onSubmit={(event) => submitReply(event)}>
           <p className="forum-eyebrow">Join the conversation</p>
           <h2>Leave a reply</h2>
-          <textarea required rows={5} value={mainReply} onChange={(e) => setMainReply(e.target.value)} placeholder="Share support, experience, or a thoughtful question." />
+          {/* This controls the large reply box at the bottom of the thread. */}
+          <MentionTextarea
+            token={token}
+            rows={5}
+            value={mainReply}
+            onChange={setMainReply}
+            mentions={mainReplyMentions}
+            onMentionsChange={setMainReplyMentions}
+            placeholder="Share support, experience, or a thoughtful question."
+          />
           <div className="forum-main-reply__footer">
             <span>Speak from experience and leave room for someone else&rsquo;s path.</span>
             <button className="forum-primary-button" disabled={submitting}>{submitting ? "Replying…" : "Post reply"}</button>

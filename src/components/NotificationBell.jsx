@@ -13,6 +13,12 @@ function timeAgo(value) {
 }
 
 function describe(notification) {
+  if (notification.type === "mention_in_comment") {
+    return `${notification.actor_username} mentioned you in a reply on "${notification.post_title}"`;
+  }
+  if (notification.type === "mention_in_post") {
+    return `${notification.actor_username} mentioned you in "${notification.post_title}"`;
+  }
   if (notification.type === "reaction_to_post" || notification.type === "reaction_to_comment") {
     const count = Number(notification.reaction_count || 1);
     const target = notification.type === "reaction_to_comment" ? "your reply" : "your post";
@@ -50,7 +56,10 @@ export default function NotificationBell() {
   async function openNotification(notification) {
     if (!notification.read_at) await markRead(notification.notification_id);
     setOpen(false);
-    navigate(`/forum/${notification.post_id}`);
+    // MENTION TRACE STEP 11: A reply-level alert carries comment_id. Add it as
+    // a hash so ForumThread can scroll directly to #comment-that-id.
+    const commentHash = notification.comment_id ? `#comment-${notification.comment_id}` : "";
+    navigate(`/forum/${notification.post_id}${commentHash}`);
   }
 
   return (
