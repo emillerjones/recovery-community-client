@@ -360,6 +360,19 @@
 .nav-account__panel > a:hover, .nav-account__panel > button:hover { background: rgba(44,58,45,.07); }
 .nav-account__panel > button { color: rgba(92,49,38,.78); }
 
+/* Logged-in members get one organized home for secondary/marketing pages. */
+.member-more__panel { left: 50%; width: min(600px, calc(100vw - 40px)); display: grid; grid-template-columns: 1fr 1fr; gap: 8px 22px; box-sizing: border-box; padding: 18px; transform: translate(-50%, 4px); }
+.main-nav__dropdown.member-more:hover .main-nav__dropdown-panel.member-more__panel,
+.main-nav__dropdown.member-more:focus-within .main-nav__dropdown-panel.member-more__panel { transform: translate(-50%, 0); }
+.member-more__group { min-width: 0; padding: 4px; }
+.member-more__heading { display: block; margin: 0 8px 6px; color: rgba(27,34,28,.45); font: 750 9px Inter,sans-serif; letter-spacing: .1em; text-transform: uppercase; }
+.member-more__link { min-height: 48px; display: grid; grid-template-columns: 28px 1fr; align-items: center; gap: 8px; padding: 7px 8px; border-radius: 10px; color: var(--nav-ink); text-decoration: none; }
+.member-more__link:hover, .member-more__link.active { background: rgba(44,58,45,.07); }
+.member-more__link > svg { color: #607461; }
+.member-more__link > span { min-width: 0; display: grid; gap: 2px; }
+.member-more__link strong { overflow: hidden; font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
+.member-more__link small { overflow: hidden; color: rgba(27,34,28,.48); font-size: 9px; font-weight: 500; text-overflow: ellipsis; white-space: nowrap; }
+
 /* Mobile menu button */
 
 .mobile-menu-button {

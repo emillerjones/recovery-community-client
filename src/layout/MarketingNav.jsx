@@ -68,6 +68,13 @@ const MOBILE_EXPLORE_GROUPS = [
   { label: "About", links: ABOUT_LINKS },
 ];
 
+const MEMBER_MORE_GROUPS = [
+  { label: "Community", links: COMMUNITY_LINKS },
+  { label: "Help and information", links: [...LEARN_LINKS.filter((link) => link.to !== "/resources"), ABOUT_LINKS.find((link) => link.to === "/contact")] },
+  { label: "Support the mission", links: SUPPORT_LINKS },
+  { label: "About", links: ABOUT_LINKS.filter((link) => link.to !== "/contact") },
+];
+
 // Set to true to give the desktop and mobile navbar a solid background after scrolling.
 const ENABLE_SOLID_NAV_ON_SCROLL = false;
 
@@ -87,6 +94,31 @@ function NavDropdown({ label, links, closeMenu, align = "left", icon: TriggerIco
             {link.icon && <link.icon size={17} />}
             <span><strong>{link.label}</strong>{link.description && <small>{link.description}</small>}</span>
           </NavLink>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function MemberMoreDropdown({ closeMenu }) {
+  return (
+    <div className="main-nav__dropdown member-more">
+      <button type="button" className="main-nav__link main-nav__link--trigger" aria-haspopup="true">
+        More
+        <svg className="main-nav__chevron" width="10" height="10" viewBox="0 0 10 10"><path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" strokeWidth="1.4" fill="none" strokeLinecap="round" strokeLinejoin="round" /></svg>
+      </button>
+      <div className="main-nav__dropdown-panel member-more__panel">
+        {MEMBER_MORE_GROUPS.map((group) => (
+          <section key={group.label} className="member-more__group">
+            <span className="member-more__heading">{group.label}</span>
+            {group.links.map((link) => {
+              const Icon = link.icon;
+              return <NavLink key={link.to} to={link.to} className="member-more__link" onClick={closeMenu}>
+                <Icon size={17} />
+                <span><strong>{link.label}</strong><small>{link.description}</small></span>
+              </NavLink>;
+            })}
+          </section>
         ))}
       </div>
     </div>
@@ -217,11 +249,20 @@ export default function MarketingNav({ onLogin, onRegister }) {
       </NavLink>
 
       <nav className="main-nav" aria-label="Primary navigation">
-        <NavDropdown label="Community" links={COMMUNITY_LINKS} closeMenu={closeMenu} />
-        {token && <NavLink to="/forum" className="main-nav__link main-nav__link--forum">Forum</NavLink>}
-        <NavDropdown label="Learn" links={LEARN_LINKS} closeMenu={closeMenu} />
-        <NavDropdown label="Support" links={SUPPORT_LINKS} closeMenu={closeMenu} />
-        <NavDropdown label="About" links={ABOUT_LINKS} closeMenu={closeMenu} />
+        {token ? (
+          <>
+            <NavLink to="/forum" className="main-nav__link main-nav__link--forum">Forum</NavLink>
+            <NavLink to="/resources" className="main-nav__link">Resources</NavLink>
+            <MemberMoreDropdown closeMenu={closeMenu} />
+          </>
+        ) : (
+          <>
+            <NavDropdown label="Community" links={COMMUNITY_LINKS} closeMenu={closeMenu} />
+            <NavDropdown label="Learn" links={LEARN_LINKS} closeMenu={closeMenu} />
+            <NavDropdown label="Support" links={SUPPORT_LINKS} closeMenu={closeMenu} />
+            <NavDropdown label="About" links={ABOUT_LINKS} closeMenu={closeMenu} />
+          </>
+        )}
         {/* {OTHER_LINKS.map((link) => (
           <NavLink key={link.to} to={link.to} className="main-nav__link">
             {link.label}
