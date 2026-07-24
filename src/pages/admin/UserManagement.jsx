@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { MoreHorizontal, X } from "lucide-react";
 import { useAuth } from "../../auth/AuthContext";
 import RoleBadge from "../../components/RoleBadge";
 import ConfirmModal from "../../components/ConfirmModal";
@@ -36,10 +37,12 @@ export default function UserManagement() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  const [memberFilter, setMemberFilter] = useState("all");
 
   // Tracks which confirm modal (if any) is currently open, and which
   // user + action it's for. When this is null, no modal is showing.
   const [pendingAction, setPendingAction] = useState(null);
+  const [mobileActionUser, setMobileActionUser] = useState(null);
   // Shape: { type: "role" | "deactivate" | "reactivate" | "delete", user, newRoleId? }
 
   useEffect(() => {
@@ -69,10 +72,16 @@ export default function UserManagement() {
   // Filters the user list by the search box, matching username or email
   const visibleUsers = users.filter((u) => {
     const term = searchTerm.toLowerCase();
-    return (
+    const matchesSearch = (
       u.username?.toLowerCase().includes(term) ||
       u.email?.toLowerCase().includes(term)
     );
+    const matchesFilter = memberFilter === "all"
+      || (memberFilter === "active" && u.active)
+      || (memberFilter === "inactive" && !u.active)
+      || (memberFilter === "staff" && u.role_id <= 50)
+      || (memberFilter === "members" && u.role_id === 100);
+    return matchesSearch && matchesFilter;
   });
 
   // Builds the little "3 Owners · 1 Administrator · ..." summary.
@@ -260,6 +269,10 @@ export default function UserManagement() {
           </div>
         )}
 
+        {!loading && <div className="user-mobile-filters" aria-label="Filter members">
+          {[{ key: "all", label: "All" }, { key: "active", label: "Active" }, { key: "inactive", label: "Inactive" }, { key: "staff", label: "Staff" }, { key: "members", label: "Members" }].map((filter) => <button type="button" key={filter.key} className={memberFilter === filter.key ? "is-selected" : ""} onClick={() => setMemberFilter(filter.key)}>{filter.label}</button>)}
+        </div>}
+
         {loading ? (
           <p className="user-management__loading">Loading users…</p>
         ) : (
@@ -281,7 +294,7 @@ export default function UserManagement() {
 
                 return (
                   <tr key={u.user_id} className={!u.active ? "user-row--inactive" : ""}>
-                    <td>
+                    <td className="user-card__identity">
                       <div className="user-cell">
                         <MemberAvatar className="user-cell__avatar" username={u.username} avatarUrl={u.avatar_url} size={38} />
                         <div className="user-cell__text">
@@ -291,7 +304,7 @@ export default function UserManagement() {
                       </div>
                     </td>
 
-                    <td>
+                    <td className="user-card__role" data-label="Role">
                       {isOwner || !manageable ? (
                         // Owners (and anyone you're not allowed to manage)
                         // just show a static badge, no dropdown at all.
@@ -317,7 +330,7 @@ export default function UserManagement() {
                       )}
                     </td>
 
-                    <td>
+                    <td className="user-card__status">
                       <span
                         className={`status-pill ${u.active ? "status-pill--active" : "status-pill--inactive"}`}
                       >
@@ -325,13 +338,14 @@ export default function UserManagement() {
                       </span>
                     </td>
 
-                    <td className="user-cell__date">
+                    <td className="user-cell__date" data-label="Joined">
                       {new Date(u.created_at).toLocaleDateString()}
                     </td>
 
-                    <td>
+                    <td className="user-card__actions">
                       {manageable && !isOwner && (
-                        <div className="user-actions">
+                        <>
+                        <div className="user-actions user-actions--desktop">
                           <button
                             className="user-actions__button"
                             onClick={() => askToToggleActive(u)}
@@ -354,13 +368,29 @@ export default function UserManagement() {
                             </button>
                           )}
                         </div>
+                        <button type="button" className="user-actions__mobile-trigger" onClick={() => setMobileActionUser(u)}><MoreHorizontal size={18} /> Manage</button>
+                        </>
                       )}
                     </td>
                   </tr>
                 );
               })}
+              {visibleUsers.length === 0 && <tr className="user-table__empty"><td colSpan="5">No members match this search and filter.</td></tr>}
             </tbody>
           </table>
+        )}
+
+        {/* MOBILE USER ACTIONS: destructive controls stay out of each card.
+            Hard delete is intentionally absent from this mobile sheet. */}
+        {mobileActionUser && (
+          <div className="user-mobile-actions-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setMobileActionUser(null); }}>
+            <section className="user-mobile-actions" role="dialog" aria-modal="true" aria-labelledby="mobile-user-actions-title">
+              <header><div><small>Manage member</small><h2 id="mobile-user-actions-title">{mobileActionUser.username}</h2></div><button type="button" onClick={() => setMobileActionUser(null)} aria-label="Close member actions"><X size={21} /></button></header>
+              <button type="button" onClick={() => { const target = mobileActionUser; setMobileActionUser(null); askToToggleActive(target); }}>{mobileActionUser.active ? "Deactivate account" : "Reactivate account"}</button>
+              <button type="button" className="is-danger" onClick={() => { const target = mobileActionUser; setMobileActionUser(null); askToDelete(target); }}>Delete account</button>
+              <button type="button" className="is-cancel" onClick={() => setMobileActionUser(null)}>Cancel</button>
+            </section>
+          </div>
         )}
 
         {/* One shared confirm modal, reused for every action. The

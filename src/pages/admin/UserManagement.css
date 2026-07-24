@@ -145,6 +145,7 @@
 .user-table tbody tr:hover {
   background: rgba(143, 168, 138, 0.06);
 }
+.user-table__empty td { padding: 42px 20px; color: rgba(27,34,28,.48); text-align: center; }
 
 .user-row--inactive {
   opacity: 0.5;
@@ -277,14 +278,64 @@
   color: #fff;
 }
 
+.user-actions__mobile-trigger,
+.user-mobile-actions-backdrop,
+.user-mobile-filters { display: none; }
+
 /* ---------- Responsive ---------- */
 
 @media (max-width: 760px) {
   .user-management {
-    padding: 120px 5vw 60px;
+    padding: 104px 14px 60px;
   }
-  .user-table {
-    display: block;
-    overflow-x: auto;
-  }
+  .user-management__header { display: grid; gap: 17px; margin-bottom: 24px; }
+  .user-management__header h1 { margin: 0 0 6px; font-size: 2rem; }
+  .user-management__subtitle { margin: 0; font-size: 13px; }
+  .user-management__search { width: 100%; min-width: 0; box-sizing: border-box; padding: 13px 16px; font-size: 16px; }
+  .user-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; padding: 17px; margin-bottom: 18px; }
+  .user-stats__item { min-height: 72px; justify-content: center; padding: 0 13px; border-radius: 13px; background: #f4f6f1; }
+  .user-stats__number { font-size: 1.65rem; }
+  .user-stats__label { font-size: 10px; }
+  .user-stats__breakdown { grid-column: 1/-1; margin: 0; padding-top: 2px; gap: 7px; }
+  .user-stats__breakdown-item { padding: 6px 9px; border-radius: 999px; background: #edf1e9; font-size: 10px; }
+  .user-mobile-filters { display: flex; gap: 7px; overflow-x: auto; margin: 0 -14px 14px; padding: 0 14px 4px; scrollbar-width: none; }
+  .user-mobile-filters::-webkit-scrollbar { display: none; }
+  .user-mobile-filters button { min-height: 38px; flex: 0 0 auto; padding: 0 14px; border: 1px solid rgba(44,58,45,.12); border-radius: 999px; background: #fff; color: rgba(27,34,28,.62); font: 650 11px Inter,sans-serif; }
+  .user-mobile-filters button.is-selected { border-color: #2c3a2d; background: #2c3a2d; color: #fff; }
+
+  /* The desktop table becomes a stack of touch-friendly member cards. */
+  .user-table { display: block; overflow: visible; background: transparent; box-shadow: none; }
+  .user-table thead { display: none; }
+  .user-table tbody { display: grid; gap: 12px; }
+  .user-table tbody tr { position: relative; display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 15px 12px; padding: 17px; border: 1px solid rgba(27,34,28,.07); border-radius: 17px; background: #fff; box-shadow: 0 10px 30px rgba(27,34,28,.06); }
+  .user-table tbody tr:hover { background: #fff; }
+  .user-table tbody tr.user-table__empty { display: block; }
+  .user-table__empty td { padding: 28px 12px; }
+  .user-table td { display: block; padding: 0; border: 0; }
+  .user-row--inactive { opacity: .72; }
+  .user-card__identity { grid-column: 1/-1; padding-right: 76px !important; }
+  .user-cell { gap: 11px; }
+  .user-cell__text { min-width: 0; }
+  .user-cell__name { overflow: hidden; font-size: 15px; text-overflow: ellipsis; white-space: nowrap; }
+  .user-cell__email { overflow: hidden; font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
+  .user-card__status { position: absolute; top: 18px; right: 16px; }
+  .status-pill { padding: 5px 9px; font-size: 10px; }
+  .user-card__role, .user-cell__date { display: grid !important; gap: 6px; }
+  .user-card__role::before, .user-cell__date::before { content: attr(data-label); color: rgba(27,34,28,.42); font-size: 9px; font-weight: 750; letter-spacing: .08em; text-transform: uppercase; }
+  .role-select { min-width: 145px; min-height: 44px; padding: 8px 11px; font-size: 16px; }
+  .user-cell__date { align-content: end; color: rgba(27,34,28,.65); font-size: 12px; text-align: right; }
+  .user-card__actions { grid-column: 1/-1; padding-top: 13px !important; border-top: 1px solid rgba(27,34,28,.07) !important; }
+  .user-actions--desktop { display: none; }
+  .user-actions__button--hard-delete { display: none !important; }
+  .user-actions__mobile-trigger { width: 100%; min-height: 44px; display: flex; align-items: center; justify-content: center; gap: 7px; border: 1px solid rgba(44,58,45,.14); border-radius: 12px; background: #f3f6f0; color: #345039; font: 700 12px Inter,sans-serif; }
+
+  .user-mobile-actions-backdrop { position: fixed; z-index: 1200; inset: 0; display: grid; align-items: end; background: rgba(15,22,17,.58); backdrop-filter: blur(5px); }
+  .user-mobile-actions { padding: 20px 18px calc(18px + env(safe-area-inset-bottom,0px)); border-radius: 22px 22px 0 0; background: #f8f8f4; box-shadow: 0 -20px 60px rgba(0,0,0,.22); }
+  .user-mobile-actions header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 14px; }
+  .user-mobile-actions header small { color: #738171; font-size: 9px; font-weight: 750; letter-spacing: .1em; text-transform: uppercase; }
+  .user-mobile-actions h2 { margin: 4px 0 0; font: 500 1.45rem Fraunces,serif; }
+  .user-mobile-actions header button { width: 38px; height: 38px; display: grid; place-items: center; border: 1px solid rgba(27,34,28,.1); border-radius: 50%; background: #fff; }
+  .user-mobile-actions > button { width: 100%; min-height: 50px; border: 0; border-top: 1px solid rgba(27,34,28,.08); background: transparent; color: #2c3a2d; font: 700 14px Inter,sans-serif; text-align: left; }
+  .user-mobile-actions > button.is-danger { color: #9b3e35; }
+  .user-mobile-actions > button.is-cancel { margin-top: 8px; border: 0; border-radius: 12px; background: #e8ece4; text-align: center; }
 }
