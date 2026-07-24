@@ -224,7 +224,6 @@ export default function MarketingNav({ onLogin, onRegister }) {
           <>
             <MessagesBell />
             <NotificationBell />
-            <NavLink to="/profile" className="nav-link-soft">Profile</NavLink>
             {user?.role_id <= 10 && (
               <NavDropdown label="Admin" links={ADMIN_LINKS} closeMenu={closeMenu} align="right" />
             )}
@@ -266,13 +265,13 @@ export default function MarketingNav({ onLogin, onRegister }) {
               <>
                 {/* Mobile keeps the same identity information at the top of
                     the signed-in action group where it is easy to spot. */}
-                <div className="mobile-nav__identity">
+                <NavLink to="/profile" className="mobile-nav__identity" onClick={closeMenu} aria-label={`Signed in as ${user?.username}; open profile`}>
                   <MemberAvatar className="nav-identity__avatar" username={user?.username} avatarUrl={user?.avatar_url} size={38} />
                   <span><small>Signed in as</small><strong>{user?.username}</strong><em>{ROLE_LABELS[user?.role_id] || "Member"}</em></span>
-                </div>
+                  <ChevronRight size={18} className="mobile-nav__identity-arrow" aria-hidden="true" />
+                </NavLink>
                 <NavLink to="/forum" className="mobile-nav__link" onClick={closeMenu}>Forum</NavLink>
                 <NavLink to="/messages" className="mobile-nav__link" onClick={closeMenu}>Messages</NavLink>
-                <NavLink to="/profile" className="mobile-nav__link" onClick={closeMenu}>Profile</NavLink>
                 {user?.role_id <= 10 && (
                   <section className="mobile-nav__admin" aria-labelledby="mobile-admin-title">
                     <div className="mobile-nav__admin-heading">

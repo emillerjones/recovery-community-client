@@ -630,7 +630,12 @@
     border: 1px solid rgba(27, 34, 28, 0.1);
     border-radius: 14px;
     background: rgba(255, 255, 255, 0.52);
+    color: var(--nav-ink);
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
   }
+
+  .mobile-nav__identity:active { background: rgba(44, 58, 45, 0.09); }
 
   .mobile-nav__identity .nav-identity__avatar {
     border-color: rgba(27, 34, 28, 0.16);
@@ -655,6 +660,8 @@
     margin: 2px 0;
     font-size: 14px;
   }
+
+  .mobile-nav__identity-arrow { margin-left: auto; color: rgba(27,34,28,.36); }
 
   .mobile-nav__admin { margin: 4px 0 2px; padding: 14px; border: 1px solid rgba(44,58,45,.14); border-radius: 18px; background: rgba(255,255,255,.62); box-shadow: 0 10px 28px rgba(27,34,28,.07); }
   .mobile-nav__admin-heading { display: flex; align-items: center; gap: 10px; padding: 2px 4px 12px; color: var(--nav-forest); }
