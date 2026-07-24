@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { LogOut } from "lucide-react";
+import { ChevronRight, Flag, LogOut, ShieldCheck, UserCheck, UsersRound } from "lucide-react";
 import { useAuth } from "../auth/AuthContext";
 import NotificationBell from "../components/NotificationBell";
 import MessagesBell from "../components/MessagesBell";
@@ -55,13 +55,19 @@ const ROLE_LABELS = {
   100: "Member",
 };
 
+const ADMIN_LINKS = [
+  { to: "/admin/users", label: "Users", description: "Roles and member accounts", icon: UsersRound },
+  { to: "/admin/membership", label: "Admissions", description: "Applications and invite codes", icon: UserCheck },
+  { to: "/admin/forum-flags", label: "Flagged", description: "Review reported forum content", icon: Flag },
+];
+
 // Set to true to give the desktop and mobile navbar a solid background after scrolling.
 const ENABLE_SOLID_NAV_ON_SCROLL = false;
 
-function NavDropdown({ label, links, closeMenu }) {
+function NavDropdown({ label, links, closeMenu, align = "left" }) {
   return (
-    <div className="main-nav__dropdown">
-      <button type="button" className="main-nav__link main-nav__link--trigger">
+    <div className={`main-nav__dropdown ${align === "right" ? "main-nav__dropdown--right" : ""}`}>
+      <button type="button" className="main-nav__link main-nav__link--trigger" aria-haspopup="true">
         {label}
         <svg className="main-nav__chevron" width="10" height="10" viewBox="0 0 10 10">
           <path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" strokeWidth="1.4" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
@@ -220,13 +226,7 @@ export default function MarketingNav({ onLogin, onRegister }) {
             <NotificationBell />
             <NavLink to="/profile" className="nav-link-soft">Profile</NavLink>
             {user?.role_id <= 10 && (
-              <NavLink to="/admin/users" className="main-nav__link">Users</NavLink>
-            )}
-            {user?.role_id <= 10 && (
-              <NavLink to="/admin/membership" className="main-nav__link">Admissions</NavLink>
-            )}
-            {user?.role_id <= 50 && (
-              <NavLink to="/admin/forum-flags" className="main-nav__link">Flagged</NavLink>
+              <NavDropdown label="Admin" links={ADMIN_LINKS} closeMenu={closeMenu} align="right" />
             )}
             {/* Persistent identity reminder. It links directly to the profile,
                 where this same avatar can be changed. */}
@@ -261,6 +261,49 @@ export default function MarketingNav({ onLogin, onRegister }) {
 
       <div className="mobile-nav-panel" aria-hidden={!menuOpen}>
         <nav className="mobile-nav" aria-label="Mobile navigation">
+          <div className="mobile-nav__actions">
+            {token ? (
+              <>
+                {/* Mobile keeps the same identity information at the top of
+                    the signed-in action group where it is easy to spot. */}
+                <div className="mobile-nav__identity">
+                  <MemberAvatar className="nav-identity__avatar" username={user?.username} avatarUrl={user?.avatar_url} size={38} />
+                  <span><small>Signed in as</small><strong>{user?.username}</strong><em>{ROLE_LABELS[user?.role_id] || "Member"}</em></span>
+                </div>
+                <NavLink to="/forum" className="mobile-nav__link" onClick={closeMenu}>Forum</NavLink>
+                <NavLink to="/messages" className="mobile-nav__link" onClick={closeMenu}>Messages</NavLink>
+                <NavLink to="/profile" className="mobile-nav__link" onClick={closeMenu}>Profile</NavLink>
+                {user?.role_id <= 10 && (
+                  <section className="mobile-nav__admin" aria-labelledby="mobile-admin-title">
+                    <div className="mobile-nav__admin-heading">
+                      <ShieldCheck size={20} />
+                      <div><strong id="mobile-admin-title">Admin tools</strong><small>Community management</small></div>
+                    </div>
+                    {ADMIN_LINKS.map((link) => {
+                      const Icon = link.icon;
+                      return (
+                        <NavLink key={link.to} to={link.to} className="mobile-nav__admin-link" onClick={closeMenu}>
+                          <span className="mobile-nav__admin-icon"><Icon size={19} /></span>
+                          <span><strong>{link.label}</strong><small>{link.description}</small></span>
+                          <ChevronRight size={18} aria-hidden="true" />
+                        </NavLink>
+                      );
+                    })}
+                  </section>
+                )}
+                <button className="mobile-nav__button" onClick={handleLogout}><LogOut size={18} /> Log out</button>
+              </>
+            ) : (
+              <>
+                <button className="mobile-nav__link mobile-nav__link-button" onClick={handleLogin}>Log In</button>
+                <button className="mobile-nav__button" onClick={handleRegister}>Join Community</button>
+              </>
+            )}
+          </div>
+
+          {/* Account and admin work stays at the top on phones. Marketing
+              navigation follows below, so owners do not have to scroll past
+              the whole public site before reaching daily management tools. */}
           {[
             { label: "Home", links: HOME_LINKS },
             { label: "Community", links: COMMUNITY_LINKS },
@@ -277,37 +320,6 @@ export default function MarketingNav({ onLogin, onRegister }) {
               ))}
             </div>
           ))}
-
-          <div className="mobile-nav__actions">
-            {token ? (
-              <>
-                {/* Mobile keeps the same identity information at the top of
-                    the signed-in action group where it is easy to spot. */}
-                <div className="mobile-nav__identity">
-                  <MemberAvatar className="nav-identity__avatar" username={user?.username} avatarUrl={user?.avatar_url} size={38} />
-                  <span><small>Signed in as</small><strong>{user?.username}</strong><em>{ROLE_LABELS[user?.role_id] || "Member"}</em></span>
-                </div>
-                <NavLink to="/forum" className="mobile-nav__link" onClick={closeMenu}>Forum</NavLink>
-                <NavLink to="/messages" className="mobile-nav__link" onClick={closeMenu}>Messages</NavLink>
-                <NavLink to="/profile" className="mobile-nav__link" onClick={closeMenu}>Profile</NavLink>
-                {user?.role_id <= 10 && (
-                  <NavLink to="/admin/users" className="mobile-nav__link" onClick={closeMenu}>Users</NavLink>
-                )}
-                {user?.role_id <= 10 && (
-                  <NavLink to="/admin/membership" className="mobile-nav__link" onClick={closeMenu}>Admissions</NavLink>
-                )}
-                {user?.role_id <= 50 && (
-                  <NavLink to="/admin/forum-flags" className="mobile-nav__link" onClick={closeMenu}>Flagged</NavLink>
-                )}
-                <button className="mobile-nav__button" onClick={handleLogout}><LogOut size={18} /> Log out</button>
-              </>
-            ) : (
-              <>
-                <button className="mobile-nav__link mobile-nav__link-button" onClick={handleLogin}>Log In</button>
-                <button className="mobile-nav__button" onClick={handleRegister}>Join Community</button>
-              </>
-            )}
-          </div>
         </nav>
       </div>
 
