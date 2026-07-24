@@ -4,6 +4,7 @@
 .profile-header { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 20px; margin-bottom: 30px; }
 .profile-avatar-button { position: relative; width: 82px; height: 82px; padding: 0; border: 0; border-radius: 50%; background: none; cursor: pointer; }
 .profile-avatar { width: 82px; height: 82px; display: grid; place-items: center; overflow: hidden; border-radius: 50%; background: #2c3a2d; color: #f6f2ea; font: 600 24px Fraunces, serif; box-shadow: 0 10px 28px rgba(44,58,45,.17); transition: transform .18s ease, box-shadow .18s ease; }
+.profile-avatar .member-avatar,
 .profile-avatar .preset-avatar { width: 100% !important; height: 100% !important; }
 .profile-avatar-button:hover .profile-avatar { transform: translateY(-2px); box-shadow: 0 14px 32px rgba(44,58,45,.23); }
 .profile-avatar-button:focus-visible { outline: 3px solid #829780; outline-offset: 4px; }
