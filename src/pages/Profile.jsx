@@ -51,8 +51,7 @@ export default function Profile() {
     setForm((current) => ({ ...current, [event.target.name]: event.target.value }));
   }
 
-  async function saveProfile(event) {
-    event.preventDefault();
+  async function persistProfile(nextForm, successMessage = "Your profile was saved.") {
     setSaving(true);
     setMessage("");
     setError("");
@@ -62,18 +61,37 @@ export default function Profile() {
       const response = await fetch(`${API}/api/users/me/profile`, {
         method: "PATCH",
         headers: { ...authHeaders, "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify(nextForm),
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.message || "Your profile could not be saved.");
       setProfile(data);
       updateUser(data);
-      setMessage("Your profile was saved.");
+      setMessage(successMessage);
+      return true;
     } catch (requestError) {
       setError(requestError.message);
+      return false;
     } finally {
       setSaving(false);
     }
+  }
+
+  async function saveProfile(event) {
+    event.preventDefault();
+    await persistProfile(form);
+  }
+
+  async function chooseAvatar(avatarPreset) {
+    const previousAvatar = form.avatarPreset;
+    const nextForm = { ...form, avatarPreset };
+    setForm(nextForm);
+    setAvatarStudioOpen(false);
+
+    // AVATAR TRACE: "Use this avatar" now performs the database save itself.
+    // The member does not need to find and click Save changes afterward.
+    const saved = await persistProfile(nextForm, "Your new avatar was saved.");
+    if (!saved) setForm((current) => ({ ...current, avatarPreset: previousAvatar }));
   }
 
   if (loading) return <main className="profile-page"><p className="profile-loading">Loading your profile…</p></main>;
@@ -119,9 +137,8 @@ export default function Profile() {
         </form>
       </section>
       {/* PROFILE SCREEN: this dialog sits over the page after the avatar circle
-          is clicked. Choosing an icon updates the form; Save changes is what
-          sends it through the profile API and into users.avatar_url. */}
-      {avatarStudioOpen && <Suspense fallback={<div className="avatar-studio-loading">Loading avatar choices…</div>}><AvatarStudio value={form.avatarPreset} fallback={memberInitials(profile.username)} onClose={() => setAvatarStudioOpen(false)} onChoose={(avatarPreset) => { setForm((current) => ({ ...current, avatarPreset })); setAvatarStudioOpen(false); }} /></Suspense>}
+          is clicked. "Use this avatar" immediately saves the chosen preset. */}
+      {avatarStudioOpen && <Suspense fallback={<div className="avatar-studio-loading">Loading avatar choices…</div>}><AvatarStudio value={form.avatarPreset} fallback={memberInitials(profile.username)} onClose={() => setAvatarStudioOpen(false)} onChoose={chooseAvatar} /></Suspense>}
     </main>
   );
 }
