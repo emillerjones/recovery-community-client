@@ -453,7 +453,10 @@
   text-wrap: balance;
 }
 .forum-comment-head { display: flex; align-items: center; gap: 11px; }
-.forum-comment-head strong, .forum-comment-head span { display: block; }
+/* Only stack the username/date text. A broad `span` selector here used to
+   override the nested avatar spans' grid layout and pull icons off-center. */
+.forum-comment-head > div > strong,
+.forum-comment-head > div > span { display: block; }
 .forum-comment-head strong { color: #29372d; font-size: 13px; }
 .forum-comment-head span { margin-top: 3px; color: var(--forum-muted); font-size: 11px; }
 .forum-thread-author {
