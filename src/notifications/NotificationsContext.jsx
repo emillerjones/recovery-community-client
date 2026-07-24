@@ -39,18 +39,24 @@ export function NotificationsProvider({ children }) {
 
     const newSocket = io(API, { auth: { token } });
     socketRef.current = newSocket;
-    setSocket(newSocket);
+    newSocket.on("connect", () => setSocket(newSocket));
+    newSocket.on("disconnect", () => setSocket((current) => current === newSocket ? null : current));
 
     newSocket.on("notification", (notification) => {
-      setUnreadCount((count) => count + 1);
-      setNotifications((current) => [notification, ...current]);
+      // Grouped reaction alerts update an existing unread row instead of
+      // increasing the badge for every person who reacts.
+      setUnreadCount((count) => notification.grouped ? count : count + 1);
+      setNotifications((current) => {
+        if (!notification.grouped) return [notification, ...current];
+        const withoutOldCopy = current.filter((item) => item.notification_id !== notification.notification_id);
+        return [notification, ...withoutOldCopy];
+      });
     });
 
     return () => {
       cancelled = true;
       newSocket.disconnect();
       socketRef.current = null;
-      setSocket(null);
     };
   }, [token]);
 

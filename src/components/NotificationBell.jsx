@@ -13,6 +13,14 @@ function timeAgo(value) {
 }
 
 function describe(notification) {
+  if (notification.type === "reaction_to_post" || notification.type === "reaction_to_comment") {
+    const count = Number(notification.reaction_count || 1);
+    const target = notification.type === "reaction_to_comment" ? "your reply" : "your post";
+    if (count > 1) {
+      return `${notification.actor_username} and ${count - 1} ${count === 2 ? "other" : "others"} reacted to ${target} in "${notification.post_title}"`;
+    }
+    return `${notification.actor_username} reacted to ${target} in "${notification.post_title}"`;
+  }
   if (notification.type === "reply_to_comment") {
     return `${notification.actor_username} replied to your comment on "${notification.post_title}"`;
   }
@@ -65,7 +73,7 @@ export default function NotificationBell() {
             )}
           </div>
           {notifications.length === 0 ? (
-            <p className="notif-bell__empty">Nothing yet. Replies to your posts will show up here.</p>
+            <p className="notif-bell__empty">Nothing yet. Replies and reactions to your posts will show up here.</p>
           ) : (
             <ul>
               {notifications.map((notification) => (

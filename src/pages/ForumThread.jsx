@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, Bookmark, CornerDownRight, Flag, Lock, Pencil, Pin, Trash2 } from "lucide-react";
 import { useAuth } from "../auth/AuthContext";
 import { useNotifications } from "../notifications/NotificationsContext";
+import ReactionBar from "../components/ReactionBar";
 import "./Forum.css";
 
 const API = import.meta.env.VITE_API;
@@ -35,7 +36,7 @@ function buildCommentTree(comments) {
   return roots;
 }
 
-function Comment({ comment, depth, currentUserId, canModerate, replyingTo, setReplyingTo, replyBody, setReplyBody, submitReply, submitting, deleteComment, toggleCommentFlag }) {
+function Comment({ comment, depth, currentUserId, canModerate, replyingTo, setReplyingTo, replyBody, setReplyBody, submitReply, submitting, deleteComment, toggleCommentFlag, toggleCommentReaction, reactingTo }) {
   // This component displays ONE comment. Near the bottom, it maps over this
   // comment's children and renders another <Comment /> for every nested reply.
   const [confirmingDelete, setConfirmingDelete] = useState(false);
@@ -56,6 +57,12 @@ function Comment({ comment, depth, currentUserId, canModerate, replyingTo, setRe
               <div><strong>{comment.author_username}</strong><span>{formatDate(comment.created_at)}</span></div>
             </div>
             <p>{comment.body}</p>
+            <ReactionBar
+              reactions={comment.reactions}
+              myReaction={comment.my_reaction}
+              onReact={(reactionType) => toggleCommentReaction(comment.comment_id, reactionType)}
+              disabled={reactingTo === `comment-${comment.comment_id}`}
+            />
             <div className="forum-comment-actions">
               <button className="forum-reply-button" onClick={() => setReplyingTo(replyingTo === comment.comment_id ? null : comment.comment_id)}>
                 <CornerDownRight size={15} /> Reply
@@ -108,6 +115,8 @@ function Comment({ comment, depth, currentUserId, canModerate, replyingTo, setRe
           submitting={submitting}
           deleteComment={deleteComment}
           toggleCommentFlag={toggleCommentFlag}
+          toggleCommentReaction={toggleCommentReaction}
+          reactingTo={reactingTo}
         />
       ))}
     </div>
@@ -130,6 +139,7 @@ export default function ForumThread() {
   const [editingPost, setEditingPost] = useState(false);
   const [postDraft, setPostDraft] = useState({ title: "", body: "" });
   const [confirmingPostDelete, setConfirmingPostDelete] = useState(false);
+  const [reactingTo, setReactingTo] = useState(null);
   const headers = useMemo(() => ({ Authorization: `Bearer ${token}` }), [token]);
   const canModerate = user?.role_id <= 50;
   const isAuthor = post?.author_id === user?.id;
@@ -281,6 +291,52 @@ export default function ForumThread() {
     );
   }
 
+  function applyReaction(current, reactionType) {
+    const previous = current.my_reaction;
+    const next = previous === reactionType ? null : reactionType;
+    const reactions = { ...(current.reactions || {}) };
+    if (previous) reactions[previous] = Math.max(0, Number(reactions[previous] || 0) - 1);
+    if (next) reactions[next] = Number(reactions[next] || 0) + 1;
+    return { ...current, reactions, my_reaction: next };
+  }
+
+  async function togglePostReaction(reactionType) {
+    const removing = post.my_reaction === reactionType;
+    setReactingTo("post");
+    const response = await fetch(`${API}/api/forum/posts/${postId}/reaction`, {
+      method: removing ? "DELETE" : "PUT",
+      headers: { ...headers, "Content-Type": "application/json" },
+      body: removing ? undefined : JSON.stringify({ reaction_type: reactionType }),
+    });
+    setReactingTo(null);
+    if (!response.ok) {
+      const result = await response.json().catch(() => ({}));
+      setError(result.message || "Could not update that reaction.");
+      return;
+    }
+    setPost((current) => applyReaction(current, reactionType));
+  }
+
+  async function toggleCommentReaction(commentId, reactionType) {
+    const comment = comments.find((item) => item.comment_id === commentId);
+    const removing = comment?.my_reaction === reactionType;
+    setReactingTo(`comment-${commentId}`);
+    const response = await fetch(`${API}/api/forum/posts/${postId}/comments/${commentId}/reaction`, {
+      method: removing ? "DELETE" : "PUT",
+      headers: { ...headers, "Content-Type": "application/json" },
+      body: removing ? undefined : JSON.stringify({ reaction_type: reactionType }),
+    });
+    setReactingTo(null);
+    if (!response.ok) {
+      const result = await response.json().catch(() => ({}));
+      setError(result.message || "Could not update that reaction.");
+      return;
+    }
+    setComments((current) => current.map((item) => (
+      item.comment_id === commentId ? applyReaction(item, reactionType) : item
+    )));
+  }
+
   function startEditingPost() {
     setPostDraft({ title: post.title, body: post.body });
     setEditingPost(true);
@@ -367,6 +423,12 @@ export default function ForumThread() {
               <div><strong>{post.author_username}</strong><span>{formatDate(post.created_at)}</span></div>
             </div>
             <p className="forum-thread-body">{post.body}</p>
+            <ReactionBar
+              reactions={post.reactions}
+              myReaction={post.my_reaction}
+              onReact={togglePostReaction}
+              disabled={reactingTo === "post"}
+            />
           </>
         )}
 
@@ -426,6 +488,8 @@ export default function ForumThread() {
               submitting={submitting}
               deleteComment={deleteComment}
               toggleCommentFlag={toggleCommentFlag}
+              toggleCommentReaction={toggleCommentReaction}
+              reactingTo={reactingTo}
             />
           ))}
         </div>

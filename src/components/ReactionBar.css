@@ -1,0 +1,39 @@
+.reaction-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 16px;
+}
+
+.reaction-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 6px 10px;
+  border: 1px solid rgba(51, 86, 64, 0.11);
+  border-radius: 999px;
+  color: #526158;
+  background: rgba(255, 255, 255, 0.68);
+  font: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 140ms ease, border-color 140ms ease, background 140ms ease;
+}
+
+.reaction-button:hover { transform: translateY(-1px); border-color: rgba(51, 86, 64, 0.24); }
+.reaction-button svg { color: var(--reaction-color); }
+.reaction-button.is-selected {
+  border-color: color-mix(in srgb, var(--reaction-color) 34%, transparent);
+  color: var(--reaction-color);
+  background: color-mix(in srgb, var(--reaction-color) 11%, white);
+}
+.reaction-button strong { color: inherit; font-size: 10px; }
+.reaction-button:disabled { cursor: wait; opacity: 0.6; }
+
+@media (max-width: 520px) {
+  .reaction-bar { gap: 5px; }
+  .reaction-button { flex: 1 1 calc(50% - 5px); justify-content: center; }
+}

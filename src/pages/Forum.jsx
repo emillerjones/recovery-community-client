@@ -154,14 +154,28 @@ export default function Forum() {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [composerOpen]);
 
+  // MY POSTS TRACE STEP 2: After one of the filter buttons changes `sort`,
+  // this block prepares the exact post lists that the JSX displays below.
+  // useMemo reruns whenever the full posts list, the chosen sort, or the
+  // logged-in user's ID changes.
   const { pinnedPosts, regularPosts } = useMemo(() => {
+    // Start with every post returned by the server. The conditions below can
+    // replace this with a smaller list before anything is shown on screen.
     let base = posts;
+
+    // MY POSTS TRACE STEP 3: Keep only posts created by the logged-in user.
+    // post.author_id is the creator of the post; user.id is the current user.
     if (sort === "mine") base = posts.filter((post) => post.author_id === user?.id);
     if (sort === "saved") base = posts.filter((post) => post.saved_by_me);
+
+    // Sort whichever list survived the filter above.
     const sorted = [...base].sort((a, b) => {
       if (sort === "discussed") return b.comment_count - a.comment_count;
       return new Date(b.latest_activity_at) - new Date(a.latest_activity_at);
     });
+
+    // MY POSTS TRACE STEP 4: Split the filtered/sorted result into the two
+    // screen sections rendered later: pinned conversations and regular posts.
     return {
       pinnedPosts: sorted.filter((post) => post.pinned),
       regularPosts: sorted.filter((post) => !post.pinned),
@@ -253,6 +267,9 @@ export default function Forum() {
               <button className={sort === "discussed" ? "is-active" : ""} onClick={() => setSort("discussed")}>
                 <TrendingUp size={13} /> Most discussed
               </button>
+              {/* MY POSTS TRACE STEP 1: This is the visible "My posts" filter
+                  button in the forum toolbar. Clicking it changes `sort` to
+                  "mine", which sends the flow back to the useMemo above. */}
               <button className={sort === "mine" ? "is-active" : ""} onClick={() => setSort("mine")}>
                 <User size={13} /> My posts
               </button>
@@ -262,6 +279,8 @@ export default function Forum() {
             </div>
           </div>
 
+          {/* This controls the heading directly above the list of post cards.
+              It changes to "Your posts" while the My posts filter is active. */}
           <div className="forum-feed-heading">
             <div>
               <p className="forum-eyebrow">Conversations</p>
@@ -278,6 +297,8 @@ export default function Forum() {
             </div>
           )}
 
+          {/* This controls the empty message shown in the feed when the logged-in
+              user has not created any posts yet. */}
           {!loading && !error && visibleCount === 0 && sort === "mine" && (
             <div className="forum-empty">
               <User size={28} />
@@ -313,8 +334,14 @@ export default function Forum() {
             </div>
           )}
 
+          {/* MY POSTS TRACE STEP 5: This is the actual post-list area on screen.
+              When My posts is active, both arrays below already contain only
+              posts whose author_id matches the logged-in user's ID. */}
           {!loading && !error && visibleCount > 0 && (
             <>
+              {/* This controls the "Pinned conversations" section at the top
+                  of the feed. It appears only when at least one matching post
+                  is pinned. Each PostCard becomes one visible post card. */}
               {pinnedPosts.length > 0 && (
                 <div className="forum-pinned-group">
                   <div className="forum-pinned-heading">
@@ -326,6 +353,8 @@ export default function Forum() {
                   </div>
                 </div>
               )}
+              {/* This controls the main list of regular, non-pinned post cards
+                  shown underneath the pinned section. */}
               <div className="forum-post-list">
                 {regularPosts.map((post) => <PostCard post={post} key={post.post_id} />)}
               </div>
