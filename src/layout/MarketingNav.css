@@ -292,7 +292,7 @@
   top: calc(100% + 14px);
   left: 0;
 
-  min-width: 220px;
+  min-width: 250px;
   padding: 14px;
 
   background: var(--nav-cream);
@@ -341,7 +341,7 @@
 
 .main-nav__dropdown-link > span { display: block; }
 .main-nav__dropdown-link > span strong { font: inherit; }
-.main-nav__dropdown-link--rich { display: grid; grid-template-columns: 28px 1fr; align-items: center; gap: 8px; }
+.main-nav__dropdown-link--rich { min-height: 44px; display: grid; grid-template-columns: 28px 1fr; align-items: center; gap: 8px; }
 .main-nav__dropdown-link--rich > svg { color: #607461; }
 .main-nav__dropdown-link--rich span { display: grid; gap: 2px; }
 .main-nav__dropdown-link--rich small { color: rgba(27,34,28,.5); font-size: 9px; font-weight: 500; }

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { ChevronRight, Flag, LayoutGrid, LogOut, MessageCircle, ShieldCheck, UserCheck, UsersRound } from "lucide-react";
+import { BadgePercent, BookHeart, BookOpen, ChevronRight, CircleHelp, Flag, Heart, HeartHandshake, LayoutGrid, LifeBuoy, LogOut, Mail, MessageCircle, ScrollText, ShieldCheck, ShoppingBag, Sparkles, UserCheck, UsersRound } from "lucide-react";
 import { useAuth } from "../auth/AuthContext";
 import NotificationBell from "../components/NotificationBell";
 import MessagesBell from "../components/MessagesBell";
@@ -13,29 +13,29 @@ const HOME_LINKS = [
 ];
 
 const COMMUNITY_LINKS = [
-  { to: "/community", label: "Inside the Community" },
-  { to: "/community2", label: "Inside the Community 2" },
-  { to: "/guidelines", label: "Culture" },
-  { to: "/stories", label: "Stories" },
+  { to: "/community", label: "Inside the Community", description: "Meet the mission and member space", icon: UsersRound },
+  { to: "/community2", label: "Inside the Community 2", description: "Explore the alternate community view", icon: HeartHandshake },
+  { to: "/guidelines", label: "Culture", description: "Shared values and community guidelines", icon: ScrollText },
+  { to: "/stories", label: "Stories", description: "Member experiences and recovery stories", icon: BookHeart },
 ];
 
 const LEARN_LINKS = [
-  { to: "/resources", label: "Resources" },
-  { to: "/faq", label: "FAQ" },
-  { to: "/faq2", label: "FAQ 2" },
+  { to: "/resources", label: "Resources", description: "Practical recovery information", icon: BookOpen },
+  { to: "/faq", label: "FAQ", description: "Answers to common questions", icon: CircleHelp },
+  { to: "/faq2", label: "FAQ 2", description: "Explore the alternate FAQ", icon: LifeBuoy },
 ];
 
 const SUPPORT_LINKS = [
-  { to: "/donate", label: "Donate - Inactive" },
-  { to: "/merch", label: "Merch  - Inactive" },
-  { to: "/discountlinks", label: "Discount" },
-  { to: "/discountlinks3", label: "Discount 3 — Spatial Rail" },
+  { to: "/donate", label: "Donate - Inactive", description: "Future community giving", icon: Heart },
+  { to: "/merch", label: "Merch - Inactive", description: "Future community merchandise", icon: ShoppingBag },
+  { to: "/discountlinks", label: "Discount", description: "Community partner savings", icon: BadgePercent },
+  { to: "/discountlinks3", label: "Discount 3 — Spatial Rail", description: "Explore the spatial discount rail", icon: Sparkles },
 ];
 
 const ABOUT_LINKS = [
-  { to: "/about", label: "Our Mission" },
-  { to: "/mystory", label: "My Story" },
-  { to: "/contact", label: "Contact Us" },
+  { to: "/about", label: "Our Mission", description: "Why this community exists", icon: HeartHandshake },
+  { to: "/mystory", label: "My Story", description: "Lainie Ruth's personal journey", icon: BookHeart },
+  { to: "/contact", label: "Contact Us", description: "Reach the organization", icon: Mail },
 ];
 
 
