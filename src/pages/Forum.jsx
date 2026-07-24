@@ -2,11 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import {
   Bookmark,
-  BookOpen,
   Check,
-  Coffee,
-  HeartHandshake,
-  Leaf,
   LayoutGrid,
   LifeBuoy,
   Lock,
@@ -17,14 +13,13 @@ import {
   ShieldCheck,
   Sparkles,
   TrendingUp,
-  Trophy,
   User,
-  UsersRound,
   X,
 } from "lucide-react";
 import { useAuth } from "../auth/AuthContext";
 import MentionTextarea from "../components/MentionTextarea";
 import MemberAvatar from "../components/MemberAvatar";
+import ForumCategoryGlyph from "../components/ForumCategoryGlyph";
 import "./Forum.css";
 
 const API = import.meta.env.VITE_API;
@@ -44,22 +39,10 @@ function isNew(value) {
   return Date.now() - new Date(value).getTime() < NEW_WINDOW_MS;
 }
 
-function CategoryGlyph({ name, size = 15 }) {
-  const normalizedName = name?.toLowerCase() || "";
-  if (normalizedName.includes("introduction")) return <User size={size} />;
-  if (normalizedName.includes("cannabis")) return <Leaf size={size} />;
-  if (normalizedName.includes("success") || normalizedName.includes("milestone")) return <Trophy size={size} />;
-  if (normalizedName.includes("question") || normalizedName.includes("support")) return <HeartHandshake size={size} />;
-  if (normalizedName.includes("family") || normalizedName.includes("friend")) return <UsersRound size={size} />;
-  if (normalizedName.includes("resource")) return <BookOpen size={size} />;
-  if (normalizedName.includes("off topic")) return <Coffee size={size} />;
-  return <LifeBuoy size={size} />;
-}
-
 function PostCard({ post }) {
   return (
     <Link to={`/forum/${post.post_id}`} className={`forum-post-card ${post.pinned ? "is-pinned" : ""}`}>
-      <div className="forum-category-icon" aria-hidden="true"><CategoryGlyph name={post.category_name} size={19} /></div>
+      <div className="forum-category-icon" aria-hidden="true"><ForumCategoryGlyph name={post.category_name} size={19} /></div>
       <div className="forum-post-copy">
         <div className="forum-post-meta">
           <span className="forum-category-pill">{post.category_name}</span>
@@ -391,7 +374,7 @@ export default function Forum() {
               >
                 <span className="forum-category__copy">
                   <i className="forum-category__icon" aria-hidden="true">
-                    <CategoryGlyph name={category.name} />
+                    <ForumCategoryGlyph name={category.name} />
                   </i>
                   <span><strong>{category.name}</strong><small>{category.description}</small></span>
                 </span>

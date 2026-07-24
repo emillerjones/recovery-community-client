@@ -7,6 +7,7 @@ import ReactionBar from "../components/ReactionBar";
 import MentionText from "../components/MentionText";
 import MentionTextarea from "../components/MentionTextarea";
 import MemberAvatar from "../components/MemberAvatar";
+import ForumCategoryGlyph from "../components/ForumCategoryGlyph";
 import "./Forum.css";
 
 const API = import.meta.env.VITE_API;
@@ -457,7 +458,7 @@ export default function ForumThread() {
 
       <article className="forum-thread-post">
         <div className="forum-thread-topline">
-          <span className="forum-category-pill">{post.category_name}</span>
+          <span className="forum-category-pill"><ForumCategoryGlyph name={post.category_name} size={13} />{post.category_name}</span>
           <div className="forum-post-meta">
             {post.pinned && <span className="forum-state forum-state--pinned"><Pin size={13} /> Pinned</span>}
             {post.locked && <span className="forum-state"><Lock size={13} /> Locked</span>}

@@ -345,7 +345,7 @@
   white-space: nowrap;
 }
 .forum-post-meta { display: flex; align-items: center; flex-wrap: wrap; gap: 7px; }
-.forum-category-pill { display: inline-flex; padding: 3px 8px; border-radius: 999px; color: #365440; background: var(--forum-sage); font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; }
+.forum-category-pill { display: inline-flex; align-items: center; gap: 5px; padding: 3px 8px; border-radius: 999px; color: #365440; background: var(--forum-sage); font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; }
 .forum-state { display: inline-flex; align-items: center; gap: 4px; color: #81683e; font-size: 11px; font-weight: 700; }
 .forum-state--pinned { color: var(--forum-amber-ink); }
 .forum-state--new { color: #2c6e4f; }
