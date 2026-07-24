@@ -61,10 +61,10 @@ export default function Register() {
     return (
       <main className="registration-page">
         <section className="registration-card registration-card--message">
-          <span className="registration-eyebrow">One more step</span>
-          <h1>Check your email.</h1>
+          <span className="registration-eyebrow">{result.status === "approved" ? "Invitation accepted" : "One more step"}</span>
+          <h1>{result.status === "approved" ? "Your account is ready." : "Check your email."}</h1>
           <p>{result.message}</p>
-          <p className="registration-muted">We sent the link to <strong>{result.email}</strong>. It expires in 24 hours.</p>
+          {result.status !== "approved" && <p className="registration-muted">We sent the link to <strong>{result.email}</strong>. It expires in 24 hours.</p>}
           <button className="registration-primary" onClick={() => navigate("/login")}>Go to login</button>
         </section>
       </main>
