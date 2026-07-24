@@ -29,6 +29,7 @@ import Messages from "./pages/Messages";
 import RequireAuth from "./components/RequireAuth";
 import VerifyEmail from "./pages/VerifyEmail";
 import MembershipAdmin from "./pages/admin/MembershipAdmin";
+import Profile from "./pages/Profile";
 
 
 
@@ -67,6 +68,7 @@ export default function App() {
         <Route path="/forum/:postId" element={<ForumThread />} />
         <Route path="/messages" element={<Messages />} />
         <Route path="/messages/:conversationId" element={<Messages />} />
+        <Route path="/profile" element={<Profile />} />
         <Route
           path="/admin/membership"
           element={
