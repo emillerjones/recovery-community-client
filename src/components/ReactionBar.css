@@ -1,9 +1,12 @@
 .reaction-bar {
+  margin-top: 16px;
+}
+
+.reaction-desktop {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 6px;
-  margin-top: 16px;
 }
 
 .reaction-button {
@@ -32,8 +35,31 @@
 }
 .reaction-button strong { color: inherit; font-size: 10px; }
 .reaction-button:disabled { cursor: wait; opacity: 0.6; }
+.reaction-mobile, .reaction-sheet-backdrop { display: none; }
 
 @media (max-width: 520px) {
-  .reaction-bar { gap: 5px; }
-  .reaction-button { flex: 1 1 calc(50% - 5px); justify-content: center; }
+  .reaction-desktop { display: none; }
+  .reaction-mobile { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .reaction-mobile__summary { min-width: 0; display: flex; align-items: center; gap: 4px; overflow-x: auto; scrollbar-width: none; }
+  .reaction-mobile__summary::-webkit-scrollbar { display: none; }
+  .reaction-mobile__summary > span { padding-left: 2px; color: rgba(27,34,28,.43); font-size: 10px; white-space: nowrap; }
+  .reaction-mobile__summary button { min-width: 42px; height: 34px; display: inline-flex; align-items: center; justify-content: center; gap: 4px; flex: 0 0 auto; padding: 0 8px; border: 1px solid rgba(51,86,64,.11); border-radius: 999px; background: rgba(255,255,255,.65); color: var(--reaction-color); }
+  .reaction-mobile__summary button.is-selected { border-color: color-mix(in srgb, var(--reaction-color) 38%, transparent); background: color-mix(in srgb, var(--reaction-color) 12%, white); }
+  .reaction-mobile__summary strong { font-size: 10px; }
+  .reaction-mobile__open { min-width: 92px; height: 38px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; flex: 0 0 auto; border: 1px solid rgba(51,86,64,.17); border-radius: 999px; background: #fff; color: #385241; font: 750 11px Inter,sans-serif; }
+  .reaction-mobile__open.has-reaction { background: #e8eee5; }
+  .reaction-sheet-backdrop { position: fixed; z-index: 1200; inset: 0; display: grid; align-items: end; background: rgba(15,22,17,.58); backdrop-filter: blur(5px); }
+  .reaction-sheet { padding: 20px 18px calc(18px + env(safe-area-inset-bottom,0px)); border-radius: 22px 22px 0 0; background: #f8f8f4; color: #1b221c; box-shadow: 0 -20px 60px rgba(0,0,0,.22); animation: reactionSheetIn .2s ease-out; }
+  .reaction-sheet header { display: flex; justify-content: space-between; align-items: flex-start; gap: 15px; margin-bottom: 17px; }
+  .reaction-sheet header span { color: #738171; font-size: 9px; font-weight: 750; letter-spacing: .1em; text-transform: uppercase; }
+  .reaction-sheet h3 { margin: 4px 0 0; font: 500 1.35rem Fraunces,serif; }
+  .reaction-sheet header button { width: 38px; height: 38px; display: grid; place-items: center; flex: 0 0 auto; border: 1px solid rgba(27,34,28,.1); border-radius: 50%; background: #fff; color: #263429; }
+  .reaction-sheet__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .reaction-sheet__grid > button { min-height: 58px; display: grid; grid-template-columns: 30px 1fr auto; align-items: center; gap: 7px; padding: 8px 11px; border: 1px solid rgba(51,86,64,.11); border-radius: 14px; background: #fff; color: #3c4c40; text-align: left; }
+  .reaction-sheet__grid > button svg { color: var(--reaction-color); }
+  .reaction-sheet__grid > button span { font-size: 11px; font-weight: 700; }
+  .reaction-sheet__grid > button strong { color: var(--reaction-color); font-size: 10px; }
+  .reaction-sheet__grid > button.is-selected { border-color: color-mix(in srgb, var(--reaction-color) 40%, transparent); background: color-mix(in srgb, var(--reaction-color) 11%, white); }
+  .reaction-sheet > p { margin: 13px 3px 0; color: rgba(27,34,28,.5); font-size: 9px; line-height: 1.4; }
+  @keyframes reactionSheetIn { from { transform: translateY(18px); opacity: .6; } to { transform: translateY(0); opacity: 1; } }
 }

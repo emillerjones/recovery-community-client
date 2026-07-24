@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
   Confetti,
   HandHeart,
@@ -6,7 +7,9 @@ import {
   Lightbulb,
   Plant,
   Sparkle,
+  Smiley,
   ThumbsUp,
+  X,
 } from "@phosphor-icons/react";
 import "./ReactionBar.css";
 
@@ -26,8 +29,30 @@ const REACTIONS = [
 // component. For the main post, `onReact` will point to togglePostReaction().
 // For a reply, it will point to a wrapper that calls toggleCommentReaction().
 export default function ReactionBar({ reactions = {}, myReaction, onReact, disabled = false }) {
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const activeReactions = REACTIONS.filter((reaction) => Number(reactions[reaction.type] || 0) > 0);
+
+  useEffect(() => {
+    if (!pickerOpen) return;
+    function closeOnEscape(event) { if (event.key === "Escape") setPickerOpen(false); }
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [pickerOpen]);
+
+  function chooseReaction(reactionType) {
+    // Mobile and desktop still call the exact same onReact function. The sheet
+    // changes only how someone chooses a type, never the API/database flow.
+    onReact(reactionType);
+    setPickerOpen(false);
+  }
+
   return (
     <div className="reaction-bar" aria-label="Reactions">
+      <div className="reaction-desktop">
       {REACTIONS.map((reaction) => {
         const Icon = reaction.Icon;
         const count = Number(reactions[reaction.type] || 0);
@@ -63,6 +88,37 @@ export default function ReactionBar({ reactions = {}, myReaction, onReact, disab
           </button>
         );
       })}
+      </div>
+
+      {/* MOBILE REACTIONS: counts stay visible in this compact summary. The
+          single React button opens every available choice in the sheet below. */}
+      <div className="reaction-mobile">
+        <div className="reaction-mobile__summary" aria-label="Current reactions">
+          {activeReactions.length ? activeReactions.map((reaction) => {
+            const Icon = reaction.Icon;
+            const selected = myReaction === reaction.type;
+            return <button type="button" key={reaction.type} className={selected ? "is-selected" : ""} style={{ "--reaction-color": reaction.color }} onClick={() => onReact(reaction.type)} disabled={disabled} aria-pressed={selected} aria-label={`${reaction.label}, ${reactions[reaction.type]}`} title={reaction.label}><Icon size={17} weight={selected ? "fill" : "duotone"} /><strong>{reactions[reaction.type]}</strong></button>;
+          }) : <span>No reactions yet</span>}
+        </div>
+        <button type="button" className={`reaction-mobile__open ${myReaction ? "has-reaction" : ""}`} onClick={() => setPickerOpen(true)} disabled={disabled}><Smiley size={18} weight={myReaction ? "fill" : "duotone"} /> React</button>
+      </div>
+
+      {pickerOpen && (
+        <div className="reaction-sheet-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setPickerOpen(false); }}>
+          <section className="reaction-sheet" role="dialog" aria-modal="true" aria-label="Choose a reaction">
+            <header><div><span>Community reaction</span><h3>How would you like to respond?</h3></div><button type="button" onClick={() => setPickerOpen(false)} aria-label="Close reaction choices"><X size={21} /></button></header>
+            <div className="reaction-sheet__grid">
+              {REACTIONS.map((reaction) => {
+                const Icon = reaction.Icon;
+                const selected = myReaction === reaction.type;
+                const count = Number(reactions[reaction.type] || 0);
+                return <button type="button" key={reaction.type} className={selected ? "is-selected" : ""} style={{ "--reaction-color": reaction.color }} onClick={() => chooseReaction(reaction.type)} disabled={disabled} aria-pressed={selected}><Icon size={25} weight={selected ? "fill" : "duotone"} /><span>{reaction.label}</span>{count > 0 && <strong>{count}</strong>}</button>;
+              })}
+            </div>
+            {myReaction && <p>Tap your selected reaction again to remove it, or choose another to change it.</p>}
+          </section>
+        </div>
+      )}
     </div>
   );
 }
