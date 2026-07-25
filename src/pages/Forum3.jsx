@@ -50,19 +50,19 @@ function isNew(value) {
 function PostRow({ post, showCategory }) {
   return (
     <Link to={`/forum/${post.post_id}`} className="f3-row">
-      <MemberAvatar className="f3-row__avatar" username={post.author_username} avatarUrl={post.author_avatar_url} size={40} />
+      <MemberAvatar className="f3-row__avatar" username={post.author_username} avatarUrl={post.author_avatar_url} size={46} />
       <div className="f3-row__body">
         <div className="f3-row__line1">
           <strong>{post.author_username}</strong>
+          <time>{timeAgo(post.latest_activity_at)}</time>
           {showCategory && <span className="f3-row__category"><ForumCategoryGlyph name={post.category_name} size={11} /> {post.category_name}</span>}
           {post.locked && <span className="f3-row__badge"><Lock size={11} /></span>}
           {isNew(post.created_at) && <span className="f3-row__badge f3-row__badge--new"><Sparkles size={11} /> New</span>}
-          <time>{timeAgo(post.latest_activity_at)}</time>
         </div>
         <h3>{post.title}</h3>
         <p>{post.body}</p>
+        <span className="f3-row__replies"><MessageCircle size={14} /> {post.comment_count} {post.comment_count === 1 ? "reply" : "replies"}</span>
       </div>
-      <div className="f3-row__replies"><MessageCircle size={16} /><span>{post.comment_count}</span></div>
     </Link>
   );
 }
@@ -257,9 +257,14 @@ export default function Forum3() {
             <h1>{sort === "mine" ? "Your posts" : sort === "saved" ? "Saved posts" : activeCategoryData?.name || "All conversations"}</h1>
             {activeCategoryData?.description && sort !== "mine" && sort !== "saved" && <p>{activeCategoryData.description}</p>}
           </div>
-          <button type="button" className="f3-info-toggle" onClick={() => setInfoOpen((open) => !open)} aria-expanded={infoOpen}>
-            <ShieldCheck size={16} /> Channel info
-          </button>
+          <div className="f3-main__actions">
+            <button type="button" className="f3-primary-button" onClick={openComposer}>
+              <Plus size={16} /> Start a conversation
+            </button>
+            <button type="button" className="f3-info-toggle" onClick={() => setInfoOpen((open) => !open)} aria-expanded={infoOpen}>
+              <ShieldCheck size={16} /> Channel info
+            </button>
+          </div>
         </header>
 
         <div className="f3-toolbar">
@@ -344,14 +349,6 @@ export default function Forum3() {
             {regularPosts.map((post) => <PostRow post={post} key={post.post_id} showCategory={activeCategory === ""} />)}
           </div>
         )}
-
-        {/* Docked composer bar, styled like a message input, always visible
-            at the bottom of the feed column. */}
-        <button type="button" className="f3-dock-composer" onClick={openComposer}>
-          <MemberAvatar username={user?.username} avatarUrl={user?.avatar_url} size={30} />
-          <span>Share something with the community…</span>
-          <Plus size={17} />
-        </button>
       </main>
 
       {/* ---------- Right rail: channel info, collapses to a drawer on mobile ---------- */}
