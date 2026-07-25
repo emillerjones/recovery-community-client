@@ -459,6 +459,8 @@
 .forum-comment-head > div > span { display: block; }
 .forum-comment-head strong { color: #29372d; font-size: 13px; }
 .forum-comment-head span { margin-top: 3px; color: var(--forum-muted); font-size: 11px; }
+.forum-edited-label { display: inline-flex; align-items: center; margin-left: 7px; color: #58705c; font-size: 9px; font-weight: 750; letter-spacing: .04em; text-transform: uppercase; cursor: help; }
+.forum-edited-label::before { content: "·"; margin-right: 7px; color: var(--forum-muted); }
 .forum-thread-author {
   width: fit-content;
   padding: 9px 13px 9px 9px;

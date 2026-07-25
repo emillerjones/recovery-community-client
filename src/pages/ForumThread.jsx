@@ -406,6 +406,8 @@ export default function ForumThread() {
     event.preventDefault();
     setSubmitting(true);
     setError("");
+    // EDIT HISTORY TRACE STEP 1: Save changes sends the new wording to the
+    // forum API. Continue at EDIT HISTORY TRACE STEP 3 in server/api/forum.js.
     const response = await fetch(`${API}/api/forum/posts/${postId}`, {
       method: "PATCH",
       headers: { ...headers, "Content-Type": "application/json" },
@@ -480,7 +482,7 @@ export default function ForumThread() {
             <h1>{post.title}</h1>
             <div className="forum-comment-head forum-thread-author">
               <MemberAvatar className="forum-avatar" username={post.author_username} avatarUrl={post.author_avatar_url} size={42} />
-              <div><strong>{post.author_username}</strong><span>{formatDate(post.created_at)}</span></div>
+              <div><strong>{post.author_username}</strong><span>{formatDate(post.created_at)}{post.content_edited_at && <b className="forum-edited-label" title={`Last edited ${formatDate(post.content_edited_at)}`}>Edited</b>}</span></div>
             </div>
             <MentionText className="forum-thread-body" body={post.body} mentions={post.mentions} />
             {/* REACTION TRACE STEP 2A: This controls the reaction buttons shown
