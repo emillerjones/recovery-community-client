@@ -1,0 +1,216 @@
+.welcome-shell {
+  position: relative;
+  overflow: hidden;
+  min-height: 100svh;
+  background: #0e150f;
+}
+
+.welcome-scene {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100svh;
+  overflow: hidden;
+  transform-origin: 50% 55%;
+}
+
+.welcome-scene__veil {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(ellipse 70% 55% at 50% 45%, rgba(226, 194, 124, 0.16), transparent 60%),
+    radial-gradient(ellipse 120% 90% at 50% 100%, rgba(51, 86, 64, 0.28), transparent 70%),
+    #0e150f;
+}
+
+/* Reuses HeroFireflies.jsx, which renders with this exact class name baked
+   in — keep it in sync with Home.css if that component's markup changes. */
+.home-hero__fireflies {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+.home-hero__fireflies canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* ---------- Sequenced arrival beats ---------- */
+
+.welcome-beats {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  padding: 0 24px;
+  text-align: center;
+}
+
+.welcome-beat {
+  margin: 0;
+  color: #f3efe2;
+  font-family: Georgia, serif;
+  font-size: clamp(28px, 5vw, 46px);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  animation: welcome-beat-in 2.4s ease both;
+}
+
+@keyframes welcome-beat-in {
+  0% { opacity: 0; transform: translateY(10px); }
+  16% { opacity: 1; transform: translateY(0); }
+  82% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-6px); }
+}
+
+/* ---------- Final reveal panel ---------- */
+
+.welcome-panel {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  justify-items: center;
+  max-width: 640px;
+  padding: 0 28px;
+  text-align: center;
+  animation: welcome-panel-in 900ms ease both;
+}
+.welcome-panel.is-entering { animation: welcome-panel-out 500ms ease both; }
+
+@keyframes welcome-panel-in {
+  from { opacity: 0; transform: translateY(16px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes welcome-panel-out {
+  from { opacity: 1; }
+  to { opacity: 0; transform: translateY(-6px); }
+}
+
+.welcome-eyebrow {
+  margin: 0 0 10px;
+  color: #e2c27c;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 11px;
+  font-weight: 750;
+}
+
+.welcome-panel h1 {
+  margin: 0 0 26px;
+  color: #fff;
+  font-family: Georgia, serif;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  font-size: clamp(34px, 6vw, 56px);
+  line-height: 1.08;
+}
+
+.welcome-quote {
+  margin: 0 0 22px;
+  padding: 18px 22px;
+  border: 1px solid rgba(226, 194, 124, 0.25);
+  border-left: 3px solid #e2c27c;
+  border-radius: 4px 14px 14px 4px;
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(243, 239, 226, 0.88);
+  font-family: Georgia, serif;
+  font-size: 16px;
+  font-style: italic;
+  line-height: 1.6;
+  text-align: left;
+}
+.welcome-quote span {
+  display: block;
+  margin-bottom: 6px;
+  color: rgba(226, 194, 124, 0.85);
+  font-family: Inter, sans-serif;
+  font-style: normal;
+  font-size: 10.5px;
+  font-weight: 750;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.welcome-population {
+  margin: 0 0 32px;
+  color: rgba(243, 239, 226, 0.68);
+  font-size: 14.5px;
+  line-height: 1.6;
+}
+
+.welcome-enter {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  border: 0;
+  border-radius: 999px;
+  padding: 16px 30px;
+  color: #1c2a1f;
+  background: #e2c27c;
+  box-shadow: 0 16px 40px rgba(226, 194, 124, 0.28);
+  font: inherit;
+  font-size: 14.5px;
+  font-weight: 750;
+  cursor: pointer;
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+.welcome-enter:hover { transform: translateY(-1px); box-shadow: 0 20px 48px rgba(226, 194, 124, 0.36); }
+.welcome-enter:disabled { cursor: wait; opacity: 0.85; }
+
+/* ---------- Door panels + light flash for the final transition ---------- */
+
+.welcome-door {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 3;
+  width: 50%;
+  pointer-events: none;
+  background: linear-gradient(180deg, #1a2a1e 0%, #122016 60%, #0c150f 100%);
+  /* Closed and covering the scene only for the moment the enter animation
+     runs. At rest they sit just off-screen so they never block the beats
+     or the reveal panel underneath. */
+  opacity: 0;
+  visibility: hidden;
+}
+.welcome-door--left { transform: translateX(-100%); }
+.welcome-door--right { transform: translateX(100%); }
+.welcome-door--left { left: 0; border-right: 1px solid rgba(226, 194, 124, 0.18); }
+.welcome-door--right { right: 0; border-left: 1px solid rgba(226, 194, 124, 0.18); }
+.welcome-door--left::after,
+.welcome-door--right::after {
+  position: absolute;
+  top: 50%;
+  width: 3px;
+  height: 90px;
+  border-radius: 3px;
+  background: rgba(226, 194, 124, 0.4);
+  content: "";
+  transform: translateY(-50%);
+}
+.welcome-door--left::after { right: 26px; }
+.welcome-door--right::after { left: 26px; }
+
+.welcome-flash {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  background: radial-gradient(circle at 50% 50%, #fff8e6, #f7f3e8 55%, transparent 78%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+@media (max-width: 640px) {
+  .welcome-quote { font-size: 14.5px; }
+  .welcome-enter { width: 100%; justify-content: center; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .welcome-beat, .welcome-panel { animation: none; }
+}

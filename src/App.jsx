@@ -32,6 +32,7 @@ import RequireAuth from "./components/RequireAuth";
 import VerifyEmail from "./pages/VerifyEmail";
 import MembershipAdmin from "./pages/admin/MembershipAdmin";
 import Profile from "./pages/Profile";
+import Welcome from "./pages/Welcome";
 
 
 
@@ -65,6 +66,10 @@ export default function App() {
       </Route>
 
       {/* App/logged-in routes — solid utility nav */}
+      {/* Full-bleed, no site nav — this is a one-time ceremonial screen, not a
+          normal app page. */}
+      <Route path="/welcome" element={<RequireAuth><Welcome /></RequireAuth>} />
+
       <Route element={<RequireAuth><AppLayout /></RequireAuth>}>
         <Route path="/forum" element={<Forum />} />
         <Route path="/forum2" element={<Forum2 />} />
