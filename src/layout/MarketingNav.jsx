@@ -253,6 +253,7 @@ export default function MarketingNav({ onLogin, onRegister }) {
           <>
             <NavLink to="/forum" className="main-nav__link main-nav__link--forum">Forum</NavLink>
             <NavLink to="/forum2" className="main-nav__link main-nav__link--forum">Forum2</NavLink>
+            <NavLink to="/forum3" className="main-nav__link main-nav__link--forum">Forum3</NavLink>
             <NavLink to="/resources" className="main-nav__link">Resources</NavLink>
             <MemberMoreDropdown closeMenu={closeMenu} />
           </>
@@ -325,6 +326,7 @@ export default function MarketingNav({ onLogin, onRegister }) {
               <div className="mobile-nav__member-shortcuts">
                 <NavLink to="/forum" onClick={closeMenu}><LayoutGrid size={21} /><strong>Forum</strong><small>Community posts</small></NavLink>
                 <NavLink to="/forum2" onClick={closeMenu}><LayoutGrid size={21} /><strong>Forum2</strong><small>New forum design</small></NavLink>
+                <NavLink to="/forum3" onClick={closeMenu}><LayoutGrid size={21} /><strong>Forum3</strong><small>Channel-style layout</small></NavLink>
                 <NavLink to="/messages" onClick={closeMenu}><MessageCircle size={21} /><strong>Messages</strong><small>Private conversations</small></NavLink>
               </div>
 
