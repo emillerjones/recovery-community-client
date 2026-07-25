@@ -130,9 +130,22 @@
 
 .f3-toolbar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
 .f3-search {
-  display: flex; align-items: center; gap: 7px; flex: 1 1 220px; min-width: 0; padding: 9px 12px; border: 1px solid var(--f3-line); border-radius: 999px; background: #fff; color: var(--f3-muted);
+  display: flex; align-items: center; gap: 7px; flex: 1 1 220px; min-width: 0; height: 40px; padding: 0 12px; border: 1px solid var(--f3-line); border-radius: 999px; background: #fff; color: var(--f3-muted);
 }
-.f3-search input { flex: 1; min-width: 0; border: 0; outline: none; background: transparent; font: inherit; font-size: 13px; color: var(--f3-ink); }
+.f3-search input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  font: inherit;
+  font-size: 13px;
+  color: var(--f3-ink);
+  -webkit-appearance: none;
+  appearance: none;
+}
+.f3-search input::-webkit-search-decoration,
+.f3-search input::-webkit-search-cancel-button { -webkit-appearance: none; appearance: none; }
 .f3-search button { display: grid; place-items: center; border: 0; background: transparent; color: var(--f3-muted); cursor: pointer; }
 .f3-sort { display: flex; gap: 5px; flex: 0 0 auto; overflow-x: auto; }
 .f3-sort button {
