@@ -54,8 +54,9 @@
 }
 .forum-flags__row {
   display: grid;
-  grid-template-columns: 44px minmax(0, 1fr) auto;
-  gap: 16px;
+  /* count badge, avatar, body, actions — four grid items need four tracks */
+  grid-template-columns: 40px 40px minmax(0, 1fr) auto;
+  gap: 14px;
   align-items: center;
   margin-bottom: 10px;
   padding: 16px 18px;
@@ -116,7 +117,12 @@
 }
 
 @media (max-width: 640px) {
-  .forum-flags__row { grid-template-columns: 36px minmax(0, 1fr); }
+  .forum-flags { padding-top: 120px; }
+  .forum-flags__row {
+    grid-template-columns: 34px 34px minmax(0, 1fr);
+    gap: 10px;
+    padding: 14px;
+  }
   .forum-flags__actions {
     grid-column: 1 / -1;
     flex-direction: row;
