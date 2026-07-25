@@ -336,6 +336,7 @@ export default function UserManagement() {
                       >
                         {u.active ? "Active" : "Inactive"}
                       </span>
+                      {manageable && !isOwner && <button type="button" className="user-actions__mobile-trigger" onClick={() => setMobileActionUser(u)} aria-label={`Manage ${u.username}`}><MoreHorizontal size={19} /><span>Manage</span></button>}
                     </td>
 
                     <td className="user-cell__date" data-label="Joined">
@@ -368,7 +369,6 @@ export default function UserManagement() {
                             </button>
                           )}
                         </div>
-                        <button type="button" className="user-actions__mobile-trigger" onClick={() => setMobileActionUser(u)}><MoreHorizontal size={18} /> Manage</button>
                         </>
                       )}
                     </td>
