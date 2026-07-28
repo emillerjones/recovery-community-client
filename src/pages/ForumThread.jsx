@@ -522,6 +522,7 @@ export default function ForumThread() {
       <article className="forum-thread-post">
         <div className="forum-thread-topline">
           <span className="forum-category-pill"><ForumCategoryGlyph name={post.category_name} size={13} />{post.category_name}</span>
+          {(post.tags || []).map((tag) => <span className="forum-tag-pill" key={tag.tag_id}>#{tag.slug}</span>)}
           <div className="forum-post-meta">
             {post.pinned && <span className="forum-state forum-state--pinned"><Pin size={13} /> Pinned</span>}
             {post.locked && <span className="forum-state"><Lock size={13} /> Locked</span>}

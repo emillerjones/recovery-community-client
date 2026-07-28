@@ -1,69 +1,58 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import {
-  Bookmark,
-  Check,
-  Flame,
-  LayoutGrid,
-  LifeBuoy,
-  Lock,
-  MessageCircle,
-  Pin,
-  Plus,
-  Search,
-  ShieldCheck,
-  Sparkles,
-  TrendingUp,
-  User,
-  X,
+  Bell, Bookmark, Check, Hash, HeartHandshake, Lock, Megaphone,
+  MessageCircle, Plus, Search, Settings2, ShieldCheck,
+  TrendingUp, User, X,
 } from "lucide-react";
 import { useAuth } from "../auth/AuthContext";
 import MentionTextarea from "../components/MentionTextarea";
 import MemberAvatar from "../components/MemberAvatar";
-import ForumCategoryGlyph from "../components/ForumCategoryGlyph";
 import "./Forum3.css";
 
 const API = import.meta.env.VITE_API;
 const SEARCH_DEBOUNCE_MS = 350;
-const NEW_WINDOW_MS = 24 * 60 * 60 * 1000;
 
-const SORTS = [
-  { key: "recent", label: "Recent", icon: null },
-  { key: "discussed", label: "Discussed", icon: TrendingUp },
-  { key: "mine", label: "Mine", icon: User },
+const FILTERS = [
+  { key: "recent", label: "Latest" },
+  { key: "discussed", label: "Most discussed", icon: TrendingUp },
+  { key: "mine", label: "My posts", icon: User },
   { key: "saved", label: "Saved", icon: Bookmark },
 ];
 
 function timeAgo(value) {
   const seconds = Math.floor((Date.now() - new Date(value).getTime()) / 1000);
   if (seconds < 60) return "just now";
-  if (seconds < 3600) return `${Math.floor(seconds / 60)}m`;
-  if (seconds < 86400) return `${Math.floor(seconds / 3600)}h`;
-  if (seconds < 604800) return `${Math.floor(seconds / 86400)}d`;
+  if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
+  if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
+  if (seconds < 604800) return `${Math.floor(seconds / 86400)}d ago`;
   return new Date(value).toLocaleDateString(undefined, { month: "short", day: "numeric" });
 }
 
-function isNew(value) {
-  return Date.now() - new Date(value).getTime() < NEW_WINDOW_MS;
-}
-
-function PostRow({ post, showCategory }) {
+function PostCard({ post }) {
+  const reactionCount = Object.values(post.reactions || {}).reduce((sum, count) => sum + Number(count), 0);
   return (
-    <Link to={`/forum/${post.post_id}`} className="f3-row">
-      <MemberAvatar className="f3-row__avatar" username={post.author_username} avatarUrl={post.author_avatar_url} size={46} />
-      <div className="f3-row__body">
-        <div className="f3-row__line1">
-          <strong>{post.author_username}</strong>
-          <time>{timeAgo(post.latest_activity_at)}</time>
-          {showCategory && <span className="f3-row__category"><ForumCategoryGlyph name={post.category_name} size={11} /> {post.category_name}</span>}
-          {post.locked && <span className="f3-row__badge"><Lock size={11} /></span>}
-          {isNew(post.created_at) && <span className="f3-row__badge f3-row__badge--new"><Sparkles size={11} /> New</span>}
+    <article className={`f3-card ${post.category_slug === "announcements" ? "f3-card--announcement" : ""}`}>
+      <Link className="f3-card__link" to={`/forum/${post.post_id}`} aria-label={`Open ${post.title}`} />
+      <header className="f3-card__author">
+        <MemberAvatar username={post.author_username} avatarUrl={post.author_avatar_url} size={44} />
+        <div><strong>{post.author_username}</strong><span>{timeAgo(post.latest_activity_at)}</span></div>
+        {post.category_slug === "announcements" && <b className="f3-official"><Megaphone size={12} /> Official</b>}
+        {post.locked && <Lock className="f3-card__lock" size={15} />}
+      </header>
+      <div className="f3-card__content">
+        <div className="f3-card__tags">
+          {(post.tags || []).map((tag) => <span key={tag.tag_id}>#{tag.slug}</span>)}
         </div>
-        <h3>{post.title}</h3>
+        <h2>{post.title}</h2>
         <p>{post.body}</p>
-        <span className="f3-row__replies"><MessageCircle size={14} /> {post.comment_count} {post.comment_count === 1 ? "reply" : "replies"}</span>
       </div>
-    </Link>
+      <footer>
+        <span><MessageCircle size={15} /> {post.comment_count} {post.comment_count === 1 ? "reply" : "replies"}</span>
+        {reactionCount > 0 && <span><HeartHandshake size={15} /> {reactionCount} {reactionCount === 1 ? "reaction" : "reactions"}</span>}
+        {post.pinned && <strong>PINNED</strong>}
+      </footer>
+    </article>
   );
 }
 
@@ -72,21 +61,24 @@ export default function Forum3() {
   const navigate = useNavigate();
   const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
-  const activeCategory = searchParams.get("category") || "";
+  const view = searchParams.get("view") === "announcements" ? "announcements" : "community";
+  const activeTag = searchParams.get("tag") || "";
+  const isStaff = user?.role_id <= 50;
   const [categories, setCategories] = useState([]);
+  const [tags, setTags] = useState([]);
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [composerOpen, setComposerOpen] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
-  const [draft, setDraft] = useState({ category_id: "", title: "", body: "" });
-  const [draftMentions, setDraftMentions] = useState([]);
+  const [composerOpen, setComposerOpen] = useState(false);
+  const [tagManagerOpen, setTagManagerOpen] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("recent");
-  const [infoOpen, setInfoOpen] = useState(false);
+  const [draftMentions, setDraftMentions] = useState([]);
+  const [draft, setDraft] = useState({ title: "", body: "", tag_ids: [] });
+  const [newTagName, setNewTagName] = useState("");
   const [showLoginWelcome, setShowLoginWelcome] = useState(() => Boolean(location.state?.justLoggedIn));
-
   const headers = useMemo(() => ({ Authorization: `Bearer ${token}` }), [token]);
 
   useEffect(() => {
@@ -97,336 +89,169 @@ export default function Forum3() {
   }, [showLoginWelcome, navigate, location.pathname, location.search]);
 
   useEffect(() => {
-    const id = setTimeout(() => setSearch(searchInput.trim()), SEARCH_DEBOUNCE_MS);
+    const id = setTimeout(() => { setLoading(true); setSearch(searchInput.trim()); }, SEARCH_DEBOUNCE_MS);
     return () => clearTimeout(id);
   }, [searchInput]);
 
   useEffect(() => {
-    async function loadCategories() {
-      const response = await fetch(`${API}/api/forum/categories`, { headers });
-      if (!response.ok) throw new Error("Could not load forum categories.");
-      setCategories(await response.json());
-    }
-    loadCategories().catch((err) => setError(err.message));
-  }, [headers]);
+    Promise.all([
+      fetch(`${API}/api/forum/categories`, { headers }),
+      fetch(`${API}/api/forum/tags${isStaff ? "?all=true" : ""}`, { headers }),
+    ]).then(async ([categoryResponse, tagResponse]) => {
+      if (!categoryResponse.ok || !tagResponse.ok) throw new Error("Could not load the community forum.");
+      setCategories(await categoryResponse.json());
+      setTags(await tagResponse.json());
+    }).catch((requestError) => setError(requestError.message));
+  }, [headers, isStaff]);
 
   useEffect(() => {
-    async function loadPosts() {
-      setLoading(true);
-      setError("");
-      const params = new URLSearchParams();
-      if (activeCategory) params.set("category", activeCategory);
-      if (search) params.set("search", search);
-      const query = params.toString() ? `?${params.toString()}` : "";
-      const response = await fetch(`${API}/api/forum/posts${query}`, { headers });
-      if (!response.ok) throw new Error("Could not load conversations.");
-      setPosts(await response.json());
-      setLoading(false);
-    }
-    loadPosts().catch((err) => {
-      setError(err.message);
-      setLoading(false);
-    });
-  }, [activeCategory, search, headers]);
+    const params = new URLSearchParams();
+    if (view === "announcements") params.set("category", "announcements");
+    if (activeTag) params.set("tag", activeTag);
+    if (search) params.set("search", search);
+    fetch(`${API}/api/forum/posts?${params}`, { headers })
+      .then(async (response) => {
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.message || "Could not load conversations.");
+        setError("");
+        setPosts(view === "community"
+          ? data.filter((post) => !["announcements", "success-stories"].includes(post.category_slug))
+          : data);
+      })
+      .catch((requestError) => setError(requestError.message))
+      .finally(() => setLoading(false));
+  }, [view, activeTag, search, headers]);
 
-  useEffect(() => {
-    if (!composerOpen) return;
-    function onKeyDown(event) {
-      if (event.key === "Escape") setComposerOpen(false);
-    }
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [composerOpen]);
-
-  // Close the mobile "channel info" drawer whenever the active channel changes.
-  useEffect(() => { setInfoOpen(false); }, [activeCategory]);
-
-  const { pinnedPosts, regularPosts } = useMemo(() => {
-    let base = posts;
-    if (sort === "mine") base = posts.filter((post) => post.author_id === user?.id);
-    if (sort === "saved") base = posts.filter((post) => post.saved_by_me);
-
-    const sorted = [...base].sort((a, b) => {
-      if (sort === "discussed") return b.comment_count - a.comment_count;
-      return new Date(b.latest_activity_at) - new Date(a.latest_activity_at);
-    });
-
-    return {
-      pinnedPosts: sorted.filter((post) => post.pinned),
-      regularPosts: sorted.filter((post) => !post.pinned),
-    };
+  const visiblePosts = useMemo(() => {
+    let result = posts;
+    if (sort === "mine") result = result.filter((post) => post.author_id === user?.id);
+    if (sort === "saved") result = result.filter((post) => post.saved_by_me);
+    return [...result].sort((a, b) => sort === "discussed"
+      ? b.comment_count - a.comment_count
+      : new Date(b.latest_activity_at) - new Date(a.latest_activity_at));
   }, [posts, sort, user?.id]);
 
-  const trendingPosts = useMemo(
-    () => [...posts].filter((post) => !post.pinned).sort((a, b) => b.comment_count - a.comment_count).slice(0, 3),
-    [posts]
-  );
+  const announcementCategory = categories.find((category) => category.slug === "announcements");
+  const mainCategory = categories.find((category) => category.slug === "general-recovery")
+    || categories.find((category) => !["announcements", "success-stories"].includes(category.slug));
+  const composingAnnouncement = view === "announcements" && isStaff;
 
-  const totalPostCount = useMemo(
-    () => categories.reduce((sum, category) => sum + category.post_count, 0),
-    [categories]
-  );
-
-  const activeTodayCount = useMemo(
-    () => posts.filter((post) => isNew(post.latest_activity_at)).length,
-    [posts]
-  );
-
-  const activeCategoryData = categories.find((category) => category.slug === activeCategory);
-
-  function selectChannel(slug) {
-    setSearchParams(search ? (slug ? { category: slug, search } : { search }) : (slug ? { category: slug } : {}));
+  function setView(nextView) {
+    setLoading(true);
+    const next = {};
+    if (nextView === "announcements") next.view = "announcements";
+    setSearchParams(next);
   }
 
-  function openComposer() {
-    const selected = categories.find((category) => category.slug === activeCategory);
-    setDraft((current) => ({
-      ...current,
-      category_id: selected?.category_id ? String(selected.category_id) : current.category_id,
-    }));
-    setError("");
-    setComposerOpen(true);
+  function selectTag(slug) {
+    setLoading(true);
+    const next = {};
+    if (view === "announcements") next.view = "announcements";
+    if (slug) next.tag = slug;
+    setSearchParams(next);
+  }
+
+  function toggleDraftTag(tagId) {
+    setDraft((current) => {
+      const selected = current.tag_ids.includes(tagId);
+      if (!selected && current.tag_ids.length >= 3) return current;
+      return { ...current, tag_ids: selected ? current.tag_ids.filter((id) => id !== tagId) : [...current.tag_ids, tagId] };
+    });
   }
 
   async function createPost(event) {
     event.preventDefault();
+    const categoryId = composingAnnouncement ? announcementCategory?.category_id : mainCategory?.category_id;
+    if (!categoryId) return setError("The forum needs a Main Forum category before posting.");
     setSubmitting(true);
     setError("");
-
     const response = await fetch(`${API}/api/forum/posts`, {
       method: "POST",
       headers: { ...headers, "Content-Type": "application/json" },
       body: JSON.stringify({
-        ...draft,
-        category_id: Number(draft.category_id),
-        mentioned_user_ids: draftMentions.map((member) => member.user_id),
+        category_id: categoryId, title: draft.title, body: draft.body,
+        tag_ids: draft.tag_ids, mentioned_user_ids: draftMentions.map((member) => member.user_id),
       }),
     });
     const result = await response.json();
-
-    if (!response.ok) {
-      setError(result.message || "Could not publish that post.");
-      setSubmitting(false);
-      return;
-    }
-
+    setSubmitting(false);
+    if (!response.ok) return setError(result.message || "Could not publish that post.");
     navigate(`/forum/${result.post_id}`);
   }
 
-  const hasFilters = Boolean(activeCategory || search);
-  const visibleCount = pinnedPosts.length + regularPosts.length;
+  async function createTag(event) {
+    event.preventDefault();
+    const response = await fetch(`${API}/api/forum/tags`, {
+      method: "POST", headers: { ...headers, "Content-Type": "application/json" },
+      body: JSON.stringify({ name: newTagName }),
+    });
+    const result = await response.json();
+    if (!response.ok) return setError(result.message || "Could not create that tag.");
+    setTags((current) => [...current, { ...result, post_count: 0 }]);
+    setNewTagName("");
+  }
+
+  async function toggleTagActive(tag) {
+    const response = await fetch(`${API}/api/forum/tags/${tag.tag_id}`, {
+      method: "PATCH", headers: { ...headers, "Content-Type": "application/json" },
+      body: JSON.stringify({ name: tag.name, slug: tag.slug, description: tag.description, active: !tag.active }),
+    });
+    const result = await response.json();
+    if (!response.ok) return setError(result.message || "Could not update that tag.");
+    setTags((current) => current.map((item) => item.tag_id === tag.tag_id ? { ...item, ...result } : item));
+  }
 
   return (
-    <div className="f3-app">
-      {showLoginWelcome && (
-        <div className="f3-login-welcome" role="status">
-          <Check size={16} /> Welcome back, {user?.username || "friend"}. You&rsquo;re logged in.
-        </div>
-      )}
+    <main className="f3-page">
+      {showLoginWelcome && <div className="f3-login-welcome"><Check size={16} /> Welcome back, {user?.username}.</div>}
 
-      {/* ---------- Left rail: channel switcher ---------- */}
-      <nav className="f3-rail" aria-label="Forum channels">
-        <div className="f3-rail__head">
-          <p className="f3-eyebrow">Spaces</p>
-          <button type="button" className="f3-rail__compose" onClick={openComposer} aria-label="Start a conversation">
-            <Plus size={17} />
-          </button>
+      <section className="f3-hero">
+        <div className="f3-hero__copy">
+          <p className="f3-eyebrow">Private member community</p>
+          <h1>A place to be heard.</h1>
+          <p>Share what is happening, ask a question, or simply let the community know you&rsquo;re here.</p>
         </div>
-        <button className={`f3-channel f3-channel--all ${activeCategory === "" ? "is-active" : ""}`} onClick={() => selectChannel("")}>
-          <i><LayoutGrid size={16} /></i>
-          <span>All conversations</span>
-          <b>{totalPostCount}</b>
-        </button>
-        <div className="f3-rail__list">
-          {categories.map((category) => (
-            <button key={category.category_id} className={`f3-channel ${activeCategory === category.slug ? "is-active" : ""}`} onClick={() => selectChannel(category.slug)}>
-              <i><ForumCategoryGlyph name={category.name} size={16} /></i>
-              <span>{category.name}</span>
-              <b>{category.post_count}</b>
+        <button className="f3-create" onClick={() => setComposerOpen(true)}><Plus size={18} /> Start a post</button>
+      </section>
+
+      <section className="f3-shell">
+        <div className="f3-main">
+          <nav className="f3-views" aria-label="Forum sections">
+            <button className={view === "community" ? "is-active" : ""} onClick={() => setView("community")}>
+              <MessageCircle size={17} /><span><strong>Main forum</strong><small>Everyday community conversation</small></span>
             </button>
-          ))}
-        </div>
-        <Link to="/resources" className="f3-rail__resources"><LifeBuoy size={15} /> Need support now?</Link>
-      </nav>
-
-      {/* ---------- Main: feed for the active channel ---------- */}
-      <main className="f3-main">
-        <header className="f3-main__header">
-          <div className="f3-main__heading">
-            <p className="f3-eyebrow">{sort === "mine" ? "Filtered" : sort === "saved" ? "Filtered" : "Channel"}</p>
-            <h1>{sort === "mine" ? "Your posts" : sort === "saved" ? "Saved posts" : activeCategoryData?.name || "All conversations"}</h1>
-            {activeCategoryData?.description && sort !== "mine" && sort !== "saved" && <p>{activeCategoryData.description}</p>}
-          </div>
-          <div className="f3-main__actions">
-            <button type="button" className="f3-primary-button" onClick={openComposer}>
-              <Plus size={16} /> Start a conversation
+            <button className={view === "announcements" ? "is-active" : ""} onClick={() => setView("announcements")}>
+              <Megaphone size={17} /><span><strong>Announcements</strong><small>Updates from the team</small></span>
             </button>
-            <button type="button" className="f3-info-toggle" onClick={() => setInfoOpen((open) => !open)} aria-expanded={infoOpen}>
-              <ShieldCheck size={16} /> Channel info
-            </button>
-          </div>
-        </header>
+          </nav>
 
-        <div className="f3-toolbar">
-          <label className="f3-search">
-            <Search size={15} />
-            <input
-              type="search"
-              value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
-              placeholder="Search titles and posts…"
-              aria-label="Search conversations"
-            />
-            {searchInput && (
-              <button type="button" aria-label="Clear search" onClick={() => setSearchInput("")}><X size={13} /></button>
-            )}
-          </label>
-          <div className="f3-sort" role="group" aria-label="Sort conversations">
-            {SORTS.map(({ key, label, icon: Icon }) => (
-              <button key={key} className={sort === key ? "is-active" : ""} onClick={() => setSort(key)}>
-                {Icon && <Icon size={13} />} {label}
-              </button>
-            ))}
+          <div className="f3-tagbar" aria-label="Filter by tag">
+            <button className={!activeTag ? "is-active" : ""} onClick={() => selectTag("")}>All topics</button>
+            {tags.filter((tag) => tag.active).map((tag) => <button key={tag.tag_id} className={activeTag === tag.slug ? "is-active" : ""} onClick={() => selectTag(tag.slug)}>#{tag.slug}</button>)}
           </div>
+
+          <div className="f3-toolbar">
+            <label><Search size={16} /><input type="search" value={searchInput} onChange={(event) => setSearchInput(event.target.value)} placeholder="Search conversations" />{searchInput && <button onClick={() => setSearchInput("")} aria-label="Clear search"><X size={13} /></button>}</label>
+            <div>{FILTERS.map(({ key, label, icon: Icon }) => <button key={key} className={sort === key ? "is-active" : ""} onClick={() => setSort(key)}>{Icon && <Icon size={13} />}{label}</button>)}</div>
+          </div>
+
+          {error && <p className="f3-error" role="alert">{error}</p>}
+          {loading && <div className="f3-loading">Loading conversations…</div>}
+          {!loading && !error && visiblePosts.length === 0 && <div className="f3-empty"><HeartHandshake size={30} /><h2>{view === "announcements" ? "No announcements yet" : "No conversations found"}</h2><p>{activeTag ? "Try another tag or view all topics." : "A thoughtful question or honest update is enough to begin."}</p>{view === "community" && <button onClick={() => setComposerOpen(true)}>Start a post</button>}</div>}
+          {!loading && visiblePosts.length > 0 && <div className="f3-feed">{visiblePosts.map((post) => <PostCard key={post.post_id} post={post} />)}</div>}
         </div>
 
-        {error && <p className="f3-error" role="alert">{error}</p>}
+        <aside className="f3-side">
+          <section className="f3-side__welcome"><HeartHandshake size={22} /><h2>You belong here.</h2><p>You don&rsquo;t need perfect words. Share only what feels comfortable.</p></section>
+          <section><h2><Hash size={15} /> Browse topics</h2><div className="f3-topic-list">{tags.filter((tag) => tag.active).slice(0, 8).map((tag) => <button key={tag.tag_id} onClick={() => selectTag(tag.slug)}><span>#{tag.slug}</span><small>{tag.post_count || 0}</small></button>)}</div>{isStaff && <button className="f3-manage" onClick={() => setTagManagerOpen(true)}><Settings2 size={14} /> Manage staff tags</button>}</section>
+          <section><h2><Bell size={15} /> Stay connected</h2><p>New conversations appear in your notification list so early posts don&rsquo;t go unanswered.</p></section>
+          <section><h2><ShieldCheck size={15} /> Community care</h2><p>Be kind, protect privacy, and share from your own experience.</p><Link to="/guidelines">Read our guidelines →</Link></section>
+        </aside>
+      </section>
 
-        {pinnedPosts.length > 0 && (
-          <div className="f3-pinned-strip" aria-label="Pinned conversations">
-            <span className="f3-pinned-strip__label"><Pin size={12} /> Pinned</span>
-            <div className="f3-pinned-strip__list">
-              {pinnedPosts.map((post) => (
-                <Link key={post.post_id} to={`/forum/${post.post_id}`} className="f3-pinned-chip">{post.title}</Link>
-              ))}
-            </div>
-          </div>
-        )}
+      {composerOpen && <div className="f3-modal" onMouseDown={() => setComposerOpen(false)}><section role="dialog" aria-modal="true" onMouseDown={(event) => event.stopPropagation()}><button className="f3-close" onClick={() => setComposerOpen(false)} aria-label="Close"><X /></button><p className="f3-eyebrow">{composingAnnouncement ? "Staff announcement" : "New conversation"}</p><h2>{composingAnnouncement ? "Share an official update" : "What would you like to share?"}</h2><div className="f3-identity"><MemberAvatar username={user?.username} avatarUrl={user?.avatar_url} size={38} /><span>Posting as <strong>{user?.username}</strong></span></div><form onSubmit={createPost}><label>Title<input required maxLength={180} value={draft.title} onChange={(event) => setDraft({ ...draft, title: event.target.value })} placeholder="Give your post a clear title" /></label><label>Message<MentionTextarea token={token} rows={7} value={draft.body} onChange={(body) => setDraft((current) => ({ ...current, body }))} mentions={draftMentions} onMentionsChange={setDraftMentions} placeholder="You do not have to have the perfect words." /></label><fieldset><legend>Tags <small>Choose up to 3</small></legend><div className="f3-tag-picker">{tags.filter((tag) => tag.active).map((tag) => <button type="button" key={tag.tag_id} className={draft.tag_ids.includes(tag.tag_id) ? "is-active" : ""} onClick={() => toggleDraftTag(tag.tag_id)}>#{tag.slug}</button>)}</div></fieldset>{error && <p className="f3-error">{error}</p>}<footer><button type="button" onClick={() => setComposerOpen(false)}>Cancel</button><button className="f3-publish" disabled={submitting}>{submitting ? "Publishing…" : composingAnnouncement ? "Publish announcement" : "Publish post"}</button></footer></form></section></div>}
 
-        {loading && (
-          <div className="f3-skeleton-list" aria-hidden="true">
-            {[0, 1, 2, 3].map((i) => <div className="f3-skeleton-row" key={i} />)}
-          </div>
-        )}
-
-        {!loading && !error && visibleCount === 0 && sort === "mine" && (
-          <div className="f3-empty">
-            <User size={26} />
-            <h3>You haven&rsquo;t posted here yet.</h3>
-            <p>Whenever you start a conversation, it will show up in this view.</p>
-            <button onClick={openComposer}>Start a conversation</button>
-          </div>
-        )}
-
-        {!loading && !error && visibleCount === 0 && sort === "saved" && (
-          <div className="f3-empty">
-            <Bookmark size={26} />
-            <h3>Nothing saved yet.</h3>
-            <p>Save a post from its page to find it here later.</p>
-          </div>
-        )}
-
-        {!loading && !error && visibleCount === 0 && sort !== "mine" && sort !== "saved" && hasFilters && (
-          <div className="f3-empty">
-            <Search size={26} />
-            <h3>Nothing matches yet.</h3>
-            <p>Try a different word, or clear your filters and browse by space.</p>
-            <button onClick={() => { setSearchInput(""); setSearchParams({}); }}>Clear filters</button>
-          </div>
-        )}
-
-        {!loading && !error && visibleCount === 0 && sort !== "mine" && sort !== "saved" && !hasFilters && (
-          <div className="f3-empty">
-            <MessageCircle size={26} />
-            <h3>Be the first to start something here.</h3>
-            <p>A thoughtful question or honest update is enough.</p>
-            <button onClick={openComposer}>Start a conversation</button>
-          </div>
-        )}
-
-        {!loading && !error && regularPosts.length > 0 && (
-          <div className="f3-row-list">
-            {regularPosts.map((post) => <PostRow post={post} key={post.post_id} showCategory={activeCategory === ""} />)}
-          </div>
-        )}
-      </main>
-
-      {/* ---------- Right rail: channel info, collapses to a drawer on mobile ---------- */}
-      <aside className={`f3-info ${infoOpen ? "is-open" : ""}`}>
-        <button type="button" className="f3-info__close" onClick={() => setInfoOpen(false)} aria-label="Close channel info"><X size={18} /></button>
-
-        <section className="f3-info__stats" aria-label="Community activity">
-          <div><strong>{totalPostCount}</strong><span>Conversations</span></div>
-          <div><strong>{categories.length}</strong><span>Spaces</span></div>
-          <div><Flame size={13} /><strong>{activeTodayCount}</strong><span>Active today</span></div>
-        </section>
-
-        {trendingPosts.length > 0 && (
-          <section className="f3-info__block">
-            <h2><TrendingUp size={15} /> Trending now</h2>
-            <ol>
-              {trendingPosts.map((post, index) => (
-                <li key={post.post_id}>
-                  <Link to={`/forum/${post.post_id}`}>
-                    <span>{index + 1}</span>
-                    <span><strong>{post.title}</strong><small>{post.comment_count} replies</small></span>
-                  </Link>
-                </li>
-              ))}
-            </ol>
-          </section>
-        )}
-
-        <section className="f3-info__block">
-          <h2><ShieldCheck size={15} /> Community guidelines</h2>
-          <p>We&rsquo;re here to support one another with respect, compassion, and honesty.</p>
-          <ul>
-            <li><Check size={12} /> Be kind and respectful</li>
-            <li><Check size={12} /> Share from your own experience</li>
-            <li><Check size={12} /> Protect privacy and confidentiality</li>
-          </ul>
-          <Link to="/guidelines">Read the full guidelines &rarr;</Link>
-        </section>
-      </aside>
-      {infoOpen && <div className="f3-info-backdrop" role="presentation" onClick={() => setInfoOpen(false)} />}
-
-      {composerOpen && (
-        <div className="f3-modal-backdrop" role="presentation" onMouseDown={() => setComposerOpen(false)}>
-          <section className="f3-composer" role="dialog" aria-modal="true" aria-labelledby="new-post-title-3" onMouseDown={(e) => e.stopPropagation()}>
-            <button className="f3-modal-close" onClick={() => setComposerOpen(false)} aria-label="Close"><X /></button>
-            <p className="f3-eyebrow">New conversation</p>
-            <h2 id="new-post-title-3">What would you like to share?</h2>
-            <div className="f3-composer-identity"><MemberAvatar username={user?.username} avatarUrl={user?.avatar_url} size={38} /><span>Posting as <strong>{user?.username}</strong></span></div>
-            <form onSubmit={createPost}>
-              <label>Space
-                <select required value={draft.category_id} onChange={(e) => setDraft({ ...draft, category_id: e.target.value })}>
-                  <option value="">Choose a space</option>
-                  {categories.map((category) => <option key={category.category_id} value={category.category_id}>{category.name}</option>)}
-                </select>
-              </label>
-              <label>Title
-                <input required maxLength={180} value={draft.title} onChange={(e) => setDraft({ ...draft, title: e.target.value })} placeholder="Give the conversation a clear title" />
-              </label>
-              <label>Message
-                <MentionTextarea
-                  token={token}
-                  rows={8}
-                  value={draft.body}
-                  onChange={(body) => setDraft((current) => ({ ...current, body }))}
-                  mentions={draftMentions}
-                  onMentionsChange={setDraftMentions}
-                  placeholder="You do not have to have the perfect words."
-                />
-              </label>
-              {error && <p className="f3-error" role="alert">{error}</p>}
-              <div className="f3-composer-actions">
-                <button type="button" className="f3-secondary-button" onClick={() => setComposerOpen(false)}>Cancel</button>
-                <button className="f3-primary-button" disabled={submitting}>{submitting ? "Publishing…" : "Publish post"}</button>
-              </div>
-            </form>
-          </section>
-        </div>
-      )}
-    </div>
+      {tagManagerOpen && <div className="f3-modal" onMouseDown={() => setTagManagerOpen(false)}><section className="f3-tag-manager" role="dialog" aria-modal="true" onMouseDown={(event) => event.stopPropagation()}><button className="f3-close" onClick={() => setTagManagerOpen(false)} aria-label="Close"><X /></button><p className="f3-eyebrow">Staff tools</p><h2>Community tags</h2><p>Members can choose from this staff-created list when they post. Disable a tag to hide it without removing it from older posts.</p><form onSubmit={createTag}><label>New tag name<input required maxLength={40} value={newTagName} onChange={(event) => setNewTagName(event.target.value)} placeholder="Example: Weekly Check-in" /></label><button className="f3-publish">Add tag</button></form><div className="f3-managed-tags">{tags.map((tag) => <button type="button" className={tag.active ? "" : "is-disabled"} key={tag.tag_id} onClick={() => toggleTagActive(tag)}><span>#{tag.slug}<small>{tag.post_count || 0} posts</small></span><b>{tag.active ? "Disable" : "Enable"}</b></button>)}</div></section></div>}
+    </main>
   );
 }
