@@ -13,6 +13,9 @@ function timeAgo(value) {
 }
 
 function describe(notification) {
+  if (notification.type === "new_forum_post") {
+    return `${notification.actor_username} posted a new conversation: "${notification.post_title}"`;
+  }
   if (notification.type === "mention_in_comment") {
     return `${notification.actor_username} mentioned you in a reply on "${notification.post_title}"`;
   }
@@ -82,7 +85,7 @@ export default function NotificationBell() {
             )}
           </div>
           {notifications.length === 0 ? (
-            <p className="notif-bell__empty">Nothing yet. Replies and reactions to your posts will show up here.</p>
+            <p className="notif-bell__empty">Nothing yet. New conversations, replies, mentions, and reactions will show up here.</p>
           ) : (
             <ul>
               {notifications.map((notification) => (
