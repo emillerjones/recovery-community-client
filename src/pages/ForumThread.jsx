@@ -36,13 +36,13 @@ function buildCommentTree(comments) {
   return roots;
 }
 
-function Comment({ comment, depth, currentUserId, canModerate, token, replyingTo, setReplyingTo, replyBody, setReplyBody, replyMentions, setReplyMentions, submitReply, submitting, deleteComment, toggleCommentFlag, toggleCommentReaction, reactingTo }) {
+function Comment({ comment, depth, currentUserId, canDeleteOthers, token, replyingTo, setReplyingTo, replyBody, setReplyBody, replyMentions, setReplyMentions, submitReply, submitting, deleteComment, toggleCommentFlag, toggleCommentReaction, reactingTo }) {
   // This component displays ONE comment. Near the bottom, it maps over this
   // comment's children and renders another <Comment /> for every nested reply.
   const [confirmingDelete, setConfirmingDelete] = useState(false);
   const isRemoved = Boolean(comment.deleted_at);
   const isOwn = comment.author_id === currentUserId;
-  const canDelete = !isRemoved && (isOwn || canModerate);
+  const canDelete = !isRemoved && (isOwn || canDeleteOthers);
 
   return (
     <div className={`forum-comment depth-${Math.min(depth, 2)}`}>
@@ -73,8 +73,8 @@ function Comment({ comment, depth, currentUserId, canModerate, token, replyingTo
               {canDelete && (
                 confirmingDelete ? (
                   <span className="forum-inline-confirm">
-                    Delete this reply?
-                    <button onClick={() => deleteComment(comment.comment_id)}>Yes, delete</button>
+                    Delete this reply and all replies beneath it?
+                    <button onClick={() => deleteComment(comment.comment_id)}>Yes, delete all</button>
                     <button onClick={() => setConfirmingDelete(false)}>Cancel</button>
                   </span>
                 ) : (
@@ -113,13 +113,13 @@ function Comment({ comment, depth, currentUserId, canModerate, token, replyingTo
       </article>
       {/* Recursive rendering: every child reply uses this same Comment component.
           depth increases for each generation, while the CSS limits visual indentation. */}
-      {comment.children.map((child) => (
+      {!isRemoved && comment.children.map((child) => (
         <Comment
           key={child.comment_id}
           comment={child}
           depth={depth + 1}
           currentUserId={currentUserId}
-          canModerate={canModerate}
+          canDeleteOthers={canDeleteOthers}
           token={token}
           replyingTo={replyingTo}
           setReplyingTo={setReplyingTo}
@@ -161,6 +161,7 @@ export default function ForumThread() {
   const [reactingTo, setReactingTo] = useState(null);
   const headers = useMemo(() => ({ Authorization: `Bearer ${token}` }), [token]);
   const canModerate = user?.role_id <= 50;
+  const canDeleteOthers = user?.role_id <= 10;
   const isAuthor = post?.author_id === user?.id;
 
   const fetchThread = useCallback(async () => {
@@ -510,11 +511,11 @@ export default function ForumThread() {
                 <button className="forum-action-button" onClick={() => moderate({ locked: !post.locked })}><Lock size={15} /> {post.locked ? "Unlock" : "Lock"}</button>
               </>
             )}
-            {(isAuthor || canModerate) && (
+            {(isAuthor || canDeleteOthers) && (
               confirmingPostDelete ? (
                 <span className="forum-inline-confirm">
-                  Delete this post?
-                  <button onClick={deletePost}>Yes, delete</button>
+                  Delete this post and all of its replies?
+                  <button onClick={deletePost}>Yes, delete all</button>
                   <button onClick={() => setConfirmingPostDelete(false)}>Cancel</button>
                 </span>
               ) : (
@@ -546,7 +547,7 @@ export default function ForumThread() {
               comment={comment}
               depth={0}
               currentUserId={user?.id}
-              canModerate={canModerate}
+              canDeleteOthers={canDeleteOthers}
               token={token}
               replyingTo={replyingTo}
               setReplyingTo={setReplyingTo}
