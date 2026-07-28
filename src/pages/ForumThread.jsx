@@ -36,13 +36,32 @@ function buildCommentTree(comments) {
   return roots;
 }
 
-function Comment({ comment, depth, currentUserId, canDeleteOthers, token, replyingTo, setReplyingTo, replyBody, setReplyBody, replyMentions, setReplyMentions, submitReply, submitting, deleteComment, toggleCommentFlag, toggleCommentReaction, reactingTo }) {
+function editedLabel(content) {
+  if (!content.content_edited_at) return null;
+  const ownerChangedAnotherMember = content.content_edited_by_role_id === 1
+    && content.content_edited_by !== content.author_id;
+  return ownerChangedAnotherMember ? "Edited by owner" : "Edited";
+}
+
+function Comment({ comment, depth, currentUserId, canEditOwn, canEditOthers, canDeleteOthers, token, replyingTo, setReplyingTo, replyBody, setReplyBody, replyMentions, setReplyMentions, submitReply, submitting, editComment, deleteComment, toggleCommentFlag, toggleCommentReaction, reactingTo }) {
   // This component displays ONE comment. Near the bottom, it maps over this
   // comment's children and renders another <Comment /> for every nested reply.
   const [confirmingDelete, setConfirmingDelete] = useState(false);
+  const [editing, setEditing] = useState(false);
+  const [editBody, setEditBody] = useState(comment.body || "");
+  const [savingEdit, setSavingEdit] = useState(false);
   const isRemoved = Boolean(comment.deleted_at);
   const isOwn = comment.author_id === currentUserId;
+  const canEdit = !isRemoved && ((isOwn && canEditOwn) || canEditOthers);
   const canDelete = !isRemoved && (isOwn || canDeleteOthers);
+
+  async function saveEdit(event) {
+    event.preventDefault();
+    setSavingEdit(true);
+    const saved = await editComment(comment.comment_id, editBody);
+    setSavingEdit(false);
+    if (saved) setEditing(false);
+  }
 
   return (
     <div className={`forum-comment depth-${Math.min(depth, 2)}`}>
@@ -54,9 +73,19 @@ function Comment({ comment, depth, currentUserId, canDeleteOthers, token, replyi
           <>
             <div className="forum-comment-head forum-comment-head--reply">
               <MemberAvatar className="forum-avatar forum-avatar--small" username={comment.author_username} avatarUrl={comment.author_avatar_url} size={34} />
-              <div><strong>{comment.author_username}</strong><span>{formatDate(comment.created_at)}</span></div>
+              <div><strong>{comment.author_username}</strong><span>{formatDate(comment.created_at)}{editedLabel(comment) && <b className="forum-edited-label" title={`Last edited ${formatDate(comment.content_edited_at)}`}>{editedLabel(comment)}</b>}</span></div>
             </div>
-            <MentionText body={comment.body} mentions={comment.mentions} />
+            {editing ? (
+              <form className="forum-inline-reply" onSubmit={saveEdit}>
+                <textarea required autoFocus rows={4} value={editBody} onChange={(event) => setEditBody(event.target.value)} />
+                <div className="forum-inline-reply__actions">
+                  <button type="button" onClick={() => { setEditing(false); setEditBody(comment.body); }}>Cancel</button>
+                  <button disabled={savingEdit || !editBody.trim()}>{savingEdit ? "Saving…" : "Save changes"}</button>
+                </div>
+              </form>
+            ) : (
+              <MentionText body={comment.body} mentions={comment.mentions} />
+            )}
             {/* REACTION TRACE STEP 2B: This controls the reaction buttons shown
                 under ONE reply. It sends both the reply ID and reaction type
                 to toggleCommentReaction() farther down in this file. */}
@@ -70,6 +99,11 @@ function Comment({ comment, depth, currentUserId, canDeleteOthers, token, replyi
               <button className="forum-reply-button" onClick={() => setReplyingTo(replyingTo === comment.comment_id ? null : comment.comment_id)}>
                 <CornerDownRight size={15} /> Reply
               </button>
+              {canEdit && !editing && (
+                <button className="forum-reply-button" onClick={() => { setEditBody(comment.body); setEditing(true); }}>
+                  <Pencil size={14} /> Edit
+                </button>
+              )}
               {canDelete && (
                 confirmingDelete ? (
                   <span className="forum-inline-confirm">
@@ -119,6 +153,8 @@ function Comment({ comment, depth, currentUserId, canDeleteOthers, token, replyi
           comment={child}
           depth={depth + 1}
           currentUserId={currentUserId}
+          canEditOwn={canEditOwn}
+          canEditOthers={canEditOthers}
           canDeleteOthers={canDeleteOthers}
           token={token}
           replyingTo={replyingTo}
@@ -129,6 +165,7 @@ function Comment({ comment, depth, currentUserId, canDeleteOthers, token, replyi
           setReplyMentions={setReplyMentions}
           submitReply={submitReply}
           submitting={submitting}
+          editComment={editComment}
           deleteComment={deleteComment}
           toggleCommentFlag={toggleCommentFlag}
           toggleCommentReaction={toggleCommentReaction}
@@ -161,8 +198,11 @@ export default function ForumThread() {
   const [reactingTo, setReactingTo] = useState(null);
   const headers = useMemo(() => ({ Authorization: `Bearer ${token}` }), [token]);
   const canModerate = user?.role_id <= 50;
+  const canEditOwn = user?.role_id <= 50;
+  const canEditOthers = user?.role_id === 1;
   const canDeleteOthers = user?.role_id <= 10;
   const isAuthor = post?.author_id === user?.id;
+  const canEditPost = (isAuthor && canEditOwn) || canEditOthers;
 
   const fetchThread = useCallback(async () => {
     const response = await fetch(`${API}/api/forum/posts/${postId}`, { headers });
@@ -281,6 +321,26 @@ export default function ForumThread() {
     const refreshed = await fetchThread();
     setPost(refreshed.post);
     setComments(refreshed.comments);
+  }
+
+  async function editComment(commentId, body) {
+    setError("");
+    // COMMENT EDIT TRACE STEP 1: an authorized staff member's reply editor
+    // sends the new wording here. Continue at api/forum.js on the server.
+    const response = await fetch(`${API}/api/forum/posts/${postId}/comments/${commentId}`, {
+      method: "PATCH",
+      headers: { ...headers, "Content-Type": "application/json" },
+      body: JSON.stringify({ body }),
+    });
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      setError(result.message || "Could not save that reply.");
+      return false;
+    }
+    setComments((current) => current.map((comment) => (
+      comment.comment_id === commentId ? { ...comment, ...result } : comment
+    )));
+    return true;
   }
 
   async function togglePostFlag() {
@@ -483,7 +543,7 @@ export default function ForumThread() {
             <h1>{post.title}</h1>
             <div className="forum-comment-head forum-thread-author">
               <MemberAvatar className="forum-avatar" username={post.author_username} avatarUrl={post.author_avatar_url} size={42} />
-              <div><strong>{post.author_username}</strong><span>{formatDate(post.created_at)}{post.content_edited_at && <b className="forum-edited-label" title={`Last edited ${formatDate(post.content_edited_at)}`}>Edited</b>}</span></div>
+              <div><strong>{post.author_username}</strong><span>{formatDate(post.created_at)}{editedLabel(post) && <b className="forum-edited-label" title={`Last edited ${formatDate(post.content_edited_at)}`}>{editedLabel(post)}</b>}</span></div>
             </div>
             <MentionText className="forum-thread-body" body={post.body} mentions={post.mentions} />
             {/* REACTION TRACE STEP 2A: This controls the reaction buttons shown
@@ -502,7 +562,7 @@ export default function ForumThread() {
 
         {!editingPost && (
           <div className="forum-moderation">
-            {isAuthor && !post.locked && (
+            {canEditPost && (
               <button className="forum-action-button" onClick={startEditingPost}><Pencil size={15} /> Edit</button>
             )}
             {canModerate && (
@@ -547,6 +607,8 @@ export default function ForumThread() {
               comment={comment}
               depth={0}
               currentUserId={user?.id}
+              canEditOwn={canEditOwn}
+              canEditOthers={canEditOthers}
               canDeleteOthers={canDeleteOthers}
               token={token}
               replyingTo={replyingTo}
@@ -557,6 +619,7 @@ export default function ForumThread() {
               setReplyMentions={setReplyMentions}
               submitReply={submitReply}
               submitting={submitting}
+              editComment={editComment}
               deleteComment={deleteComment}
               toggleCommentFlag={toggleCommentFlag}
               toggleCommentReaction={toggleCommentReaction}
