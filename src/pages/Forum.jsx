@@ -273,7 +273,7 @@ export default function Forum() {
           </nav>
 
           <div className="forum-feed-tagbar" aria-label="Filter by tag">
-            <button className={!activeTags.length ? "is-active" : ""} onClick={() => selectTag("")}>All topics</button>
+            <button className={!activeTags.length ? "is-active" : ""} onClick={() => selectTag("")}>All tags</button>
             {tags.filter((tag) => tag.active).map((tag) => <button key={tag.tag_id} className={activeTags.includes(tag.slug) ? "is-active" : ""} aria-pressed={activeTags.includes(tag.slug)} onClick={() => selectTag(tag.slug)}>#{tag.slug}</button>)}
           </div>
 
@@ -284,15 +284,15 @@ export default function Forum() {
 
           {error && <p className="forum-feed-error" role="alert">{error}</p>}
           {loading && <div className="forum-feed-loading">Loading conversations…</div>}
-          {!loading && !error && posts.length === 0 && <div className="forum-feed-empty"><HeartHandshake size={30} /><h2>{view === "announcements" ? "No announcements yet" : "No conversations found"}</h2><p>{activeTags.length ? "Try removing a tag or view all topics." : "A thoughtful question or honest update is enough to begin."}</p>{view === "community" && <button onClick={() => setComposerOpen(true)}>Start a post</button>}</div>}
+          {!loading && !error && posts.length === 0 && <div className="forum-feed-empty"><HeartHandshake size={30} /><h2>{view === "announcements" ? "No announcements yet" : "No conversations found"}</h2><p>{activeTags.length ? "Try removing a tag or view all tags." : "A thoughtful question or honest update is enough to begin."}</p>{view === "community" && <button onClick={() => setComposerOpen(true)}>Start a post</button>}</div>}
           {pinnedPosts.length > 0 && <section className="forum-feed-pinned" aria-labelledby="pinned-posts-heading"><header><span><Pin size={15} /></span><div><h2 id="pinned-posts-heading">Pinned by staff</h2><p>Important conversations selected by the community team.</p></div></header><div className="forum-feed-feed">{pinnedPosts.map((post) => <PostCard key={post.post_id} post={post} />)}</div></section>}
-          {regularPosts.length > 0 && <section className="forum-feed-regular" aria-labelledby="latest-posts-heading"><header><h2 id="latest-posts-heading">Latest conversations</h2><span>{activeTags.length ? "Matching selected topics" : view === "announcements" ? "Staff updates" : "From across the community"}</span></header><div className="forum-feed-feed">{regularPosts.map((post) => <PostCard key={post.post_id} post={post} />)}</div></section>}
+          {regularPosts.length > 0 && <section className="forum-feed-regular" aria-labelledby="latest-posts-heading"><header><h2 id="latest-posts-heading">Latest conversations</h2><span>{activeTags.length ? "Matching selected tags" : view === "announcements" ? "Staff updates" : "From across the community"}</span></header><div className="forum-feed-feed">{regularPosts.map((post) => <PostCard key={post.post_id} post={post} />)}</div></section>}
           <div className="forum-feed-load-more" ref={loadMoreRef} aria-live="polite">{loadingMore ? "Loading more conversations…" : hasMore ? "Scroll for more" : posts.length > 0 ? "You’re all caught up" : ""}</div>
         </div>
 
         <aside className="forum-feed-side">
           <section className="forum-feed-side__welcome"><HeartHandshake size={22} /><h2>You belong here.</h2><p>You don&rsquo;t need perfect words. Share only what feels comfortable.</p></section>
-          <section><h2><Hash size={15} /> Browse topics</h2><div className="forum-feed-topic-list">{tags.filter((tag) => tag.active).slice(0, 8).map((tag) => <button key={tag.tag_id} onClick={() => selectTag(tag.slug)}><span>#{tag.slug}</span><small>{tag.post_count || 0}</small></button>)}</div>{isStaff && <button className="forum-feed-manage" onClick={() => setTagManagerOpen(true)}><Settings2 size={14} /> Manage staff tags</button>}</section>
+          <section><h2><Hash size={15} /> Browse tags</h2><div className="forum-feed-topic-list">{tags.filter((tag) => tag.active).slice(0, 8).map((tag) => <button key={tag.tag_id} onClick={() => selectTag(tag.slug)}><span>#{tag.slug}</span><small>{tag.post_count || 0}</small></button>)}</div>{isStaff && <button className="forum-feed-manage" onClick={() => setTagManagerOpen(true)}><Settings2 size={14} /> Manage staff tags</button>}</section>
           <section><h2><Bell size={15} /> Stay connected</h2><p>New conversations appear in your notification list so early posts don&rsquo;t go unanswered.</p></section>
           <section><h2><ShieldCheck size={15} /> Community care</h2><p>Be kind, protect privacy, and share from your own experience.</p><Link to="/guidelines">Read our guidelines →</Link></section>
         </aside>
