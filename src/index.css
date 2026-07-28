@@ -19,3 +19,14 @@ img {
   user-select: none;
   -webkit-user-drag: none;
 }
+
+/* iPhone Safari zooms the page when a focused form control renders below
+   16px. Keep every mobile text field safe here so new forms cannot quietly
+   reintroduce the zoom problem; checkboxes/radios retain native sizing. */
+@media (max-width: 768px) {
+  input:not([type="checkbox"]):not([type="radio"]),
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+}
