@@ -8,7 +8,7 @@ import MentionText from "../components/MentionText";
 import MentionTextarea from "../components/MentionTextarea";
 import MemberAvatar from "../components/MemberAvatar";
 import ForumCategoryGlyph from "../components/ForumCategoryGlyph";
-import "./Forum.css";
+import "./ForumThread.css";
 
 const API = import.meta.env.VITE_API;
 
@@ -517,11 +517,11 @@ export default function ForumThread() {
 
   return (
     <main className="forum-shell forum-thread-shell">
-      <Link to={`/forum?category=${post.category_slug}`} className="forum-back"><ArrowLeft size={17} /> Back to {post.category_name}</Link>
+      <Link to={post.category_slug === "announcements" ? "/forum?view=announcements" : "/forum"} className="forum-back"><ArrowLeft size={17} /> Back to {post.category_slug === "announcements" ? "announcements" : "main forum"}</Link>
 
       <article className="forum-thread-post">
         <div className="forum-thread-topline">
-          <span className="forum-category-pill"><ForumCategoryGlyph name={post.category_name} size={13} />{post.category_name}</span>
+          {post.category_slug === "announcements" && <span className="forum-category-pill"><ForumCategoryGlyph name={post.category_name} size={13} />Announcements</span>}
           {(post.tags || []).map((tag) => <span className="forum-tag-pill" key={tag.tag_id}>#{tag.slug}</span>)}
           <div className="forum-post-meta">
             {post.pinned && <span className="forum-state forum-state--pinned"><Pin size={13} /> Pinned</span>}

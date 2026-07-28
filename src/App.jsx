@@ -24,8 +24,6 @@ import Community2 from "./pages/Community2";
 import FAQ2 from "./pages/FAQ2";
 import DiscountLinks3 from "./pages/DiscountLinks3";
 import Forum from "./pages/Forum";
-import Forum2 from "./pages/Forum2";
-import Forum3 from "./pages/Forum3";
 import ForumThread from "./pages/ForumThread";
 import Messages from "./pages/Messages";
 import RequireAuth from "./components/RequireAuth";
@@ -72,8 +70,6 @@ export default function App() {
 
       <Route element={<RequireAuth><AppLayout /></RequireAuth>}>
         <Route path="/forum" element={<Forum />} />
-        <Route path="/forum2" element={<Forum2 />} />
-        <Route path="/forum3" element={<Forum3 />} />
         <Route path="/forum/:postId" element={<ForumThread />} />
         <Route path="/messages" element={<Messages />} />
         <Route path="/messages/:conversationId" element={<Messages />} />
