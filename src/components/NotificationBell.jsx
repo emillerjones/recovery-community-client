@@ -22,6 +22,12 @@ function describe(notification) {
   if (notification.type === "new_forum_post") {
     return `${notification.actor_username} posted a new conversation: "${notification.post_title}"`;
   }
+  if (notification.type === "comment_on_participated_post") {
+    return `${notification.actor_username} commented on a conversation you participated in: "${notification.post_title}"`;
+  }
+  if (notification.type === "reaction_on_participated_post") {
+    return `${notification.actor_username} reacted to a conversation you participated in: "${notification.post_title}"`;
+  }
   if (notification.type === "mention_in_comment") {
     return `${notification.actor_username} mentioned you in a reply on "${notification.post_title}"`;
   }
