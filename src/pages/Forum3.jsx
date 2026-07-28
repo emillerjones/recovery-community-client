@@ -62,7 +62,8 @@ export default function Forum3() {
   const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
   const view = searchParams.get("view") === "announcements" ? "announcements" : "community";
-  const activeTag = searchParams.get("tag") || "";
+  const activeTagKey = searchParams.get("tags") || "";
+  const activeTags = activeTagKey.split(",").filter(Boolean);
   const isStaff = user?.role_id <= 50;
   const [categories, setCategories] = useState([]);
   const [tags, setTags] = useState([]);
@@ -107,7 +108,7 @@ export default function Forum3() {
   useEffect(() => {
     const params = new URLSearchParams();
     if (view === "announcements") params.set("category", "announcements");
-    if (activeTag) params.set("tag", activeTag);
+    if (activeTagKey) params.set("tags", activeTagKey);
     if (search) params.set("search", search);
     fetch(`${API}/api/forum/posts?${params}`, { headers })
       .then(async (response) => {
@@ -120,7 +121,7 @@ export default function Forum3() {
       })
       .catch((requestError) => setError(requestError.message))
       .finally(() => setLoading(false));
-  }, [view, activeTag, search, headers]);
+  }, [view, activeTagKey, search, headers]);
 
   const visiblePosts = useMemo(() => {
     let result = posts;
@@ -140,6 +141,7 @@ export default function Forum3() {
     setLoading(true);
     const next = {};
     if (nextView === "announcements") next.view = "announcements";
+    if (activeTagKey) next.tags = activeTagKey;
     setSearchParams(next);
   }
 
@@ -147,7 +149,12 @@ export default function Forum3() {
     setLoading(true);
     const next = {};
     if (view === "announcements") next.view = "announcements";
-    if (slug) next.tag = slug;
+    if (slug) {
+      const selected = new Set(activeTags);
+      if (selected.has(slug)) selected.delete(slug);
+      else selected.add(slug);
+      if (selected.size) next.tags = [...selected].join(",");
+    }
     setSearchParams(next);
   }
 
@@ -226,8 +233,8 @@ export default function Forum3() {
           </nav>
 
           <div className="f3-tagbar" aria-label="Filter by tag">
-            <button className={!activeTag ? "is-active" : ""} onClick={() => selectTag("")}>All topics</button>
-            {tags.filter((tag) => tag.active).map((tag) => <button key={tag.tag_id} className={activeTag === tag.slug ? "is-active" : ""} onClick={() => selectTag(tag.slug)}>#{tag.slug}</button>)}
+            <button className={!activeTags.length ? "is-active" : ""} onClick={() => selectTag("")}>All topics</button>
+            {tags.filter((tag) => tag.active).map((tag) => <button key={tag.tag_id} className={activeTags.includes(tag.slug) ? "is-active" : ""} aria-pressed={activeTags.includes(tag.slug)} onClick={() => selectTag(tag.slug)}>#{tag.slug}</button>)}
           </div>
 
           <div className="f3-toolbar">
@@ -237,7 +244,7 @@ export default function Forum3() {
 
           {error && <p className="f3-error" role="alert">{error}</p>}
           {loading && <div className="f3-loading">Loading conversations…</div>}
-          {!loading && !error && visiblePosts.length === 0 && <div className="f3-empty"><HeartHandshake size={30} /><h2>{view === "announcements" ? "No announcements yet" : "No conversations found"}</h2><p>{activeTag ? "Try another tag or view all topics." : "A thoughtful question or honest update is enough to begin."}</p>{view === "community" && <button onClick={() => setComposerOpen(true)}>Start a post</button>}</div>}
+          {!loading && !error && visiblePosts.length === 0 && <div className="f3-empty"><HeartHandshake size={30} /><h2>{view === "announcements" ? "No announcements yet" : "No conversations found"}</h2><p>{activeTags.length ? "Try removing a tag or view all topics." : "A thoughtful question or honest update is enough to begin."}</p>{view === "community" && <button onClick={() => setComposerOpen(true)}>Start a post</button>}</div>}
           {!loading && visiblePosts.length > 0 && <div className="f3-feed">{visiblePosts.map((post) => <PostCard key={post.post_id} post={post} />)}</div>}
         </div>
 
