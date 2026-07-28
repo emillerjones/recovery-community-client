@@ -13,6 +13,12 @@ function timeAgo(value) {
 }
 
 function describe(notification) {
+  if (notification.type === "flagged_comment") {
+    return `${notification.actor_username} flagged a reply in "${notification.post_title}" for staff review`;
+  }
+  if (notification.type === "flagged_post") {
+    return `${notification.actor_username} flagged "${notification.post_title}" for staff review`;
+  }
   if (notification.type === "new_forum_post") {
     return `${notification.actor_username} posted a new conversation: "${notification.post_title}"`;
   }
