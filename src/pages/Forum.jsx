@@ -202,6 +202,10 @@ export default function Forum() {
 
   async function createPost(event) {
     event.preventDefault();
+    if (view === "announcements" && !isStaff) {
+      setComposerOpen(false);
+      return setError("Only moderators, administrators, and owners can publish announcements.");
+    }
     const categoryId = composingAnnouncement ? announcementCategory?.category_id : mainCategory?.category_id;
     if (!categoryId) return setError("The forum needs a Main Forum category before posting.");
     setSubmitting(true);
@@ -252,7 +256,7 @@ export default function Forum() {
           <h1>A place to be heard.</h1>
           <p>Share what is happening, ask a question, or simply let the community know you&rsquo;re here.</p>
         </div>
-        <button className="forum-feed-create" onClick={() => setComposerOpen(true)}><Plus size={18} /> Start a post</button>
+        {(view === "community" || isStaff) && <button className="forum-feed-create" onClick={() => setComposerOpen(true)}><Plus size={18} /> {view === "announcements" ? "Post an announcement" : "Start a post"}</button>}
       </section>
 
       <section className="forum-feed-shell">
