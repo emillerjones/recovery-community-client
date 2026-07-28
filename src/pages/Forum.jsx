@@ -50,7 +50,7 @@ function PostCard({ post }) {
       <footer>
         <span><MessageCircle size={15} /> {post.comment_count} {post.comment_count === 1 ? "reply" : "replies"}</span>
         {reactionCount > 0 && <span><HeartHandshake size={15} /> {reactionCount} {reactionCount === 1 ? "reaction" : "reactions"}</span>}
-        {post.pinned && <strong>PINNED</strong>}
+        {post.pinned && <strong>PINNED BY STAFF</strong>}
       </footer>
     </article>
   );
