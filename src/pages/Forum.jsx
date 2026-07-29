@@ -37,7 +37,6 @@ export default function Forum() {
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("recent");
-  const [newTagName, setNewTagName] = useState("");
   const [showLoginWelcome, setShowLoginWelcome] = useState(() => Boolean(location.state?.justLoggedIn));
   const loadMoreRef = useRef(null);
   const headers = useMemo(() => ({ Authorization: `Bearer ${token}` }), [token]);
@@ -171,18 +170,6 @@ export default function Forum() {
     setSort(nextSort);
   }
 
-  async function createTag(event) {
-    event.preventDefault();
-    const response = await fetch(`${API}/api/forum/tags`, {
-      method: "POST", headers: { ...headers, "Content-Type": "application/json" },
-      body: JSON.stringify({ name: newTagName }),
-    });
-    const result = await response.json();
-    if (!response.ok) return setError(result.message || "Could not create that tag.");
-    setTags((current) => [...current, { ...result, post_count: 0 }]);
-    setNewTagName("");
-  }
-
   async function toggleTagActive(tag) {
     const response = await fetch(`${API}/api/forum/tags/${tag.tag_id}`, {
       method: "PATCH", headers: { ...headers, "Content-Type": "application/json" },
@@ -279,9 +266,15 @@ export default function Forum() {
       {tagManagerOpen && (
         <ForumTagManagerModal
           tags={tags}
-          newTagName={newTagName}
-          setNewTagName={setNewTagName}
-          onCreateTag={createTag}
+          token={token}
+          onTagCreated={(newTag) => {
+            // TAG CREATE TRACE STEP 3: The modal finished the API request.
+            // Add the returned tag to Forum's shared list so the screen rerenders.
+            setTags((current) => [
+              ...current,
+              { ...newTag, post_count: 0 },
+            ]);
+          }}
           onToggleTagActive={toggleTagActive}
           onClose={() => setTagManagerOpen(false)}
         />
