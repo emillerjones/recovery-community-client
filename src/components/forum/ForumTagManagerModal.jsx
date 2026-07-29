@@ -7,7 +7,7 @@ export default function ForumTagManagerModal({
   tags,
   token,
   onTagCreated,
-  onToggleTagActive,
+  onTagUpdated,
   onClose,
 }) {
   const [newTagName, setNewTagName] = useState("");
@@ -38,6 +38,36 @@ export default function ForumTagManagerModal({
     // Tell Forum.jsx about it because Forum owns the shared list of tags.
     onTagCreated(result);
     setNewTagName("");
+  }
+
+  async function toggleTagActive(tag) {
+    setError("");
+
+    // TAG STATUS TRACE STEP 1: Clicking Enable or Disable runs this function.
+    // Ask the API to save the opposite of the tag's current active value.
+    const response = await fetch(`${API}/api/forum/tags/${tag.tag_id}`, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: tag.name,
+        slug: tag.slug,
+        description: tag.description,
+        active: !tag.active,
+      }),
+    });
+    const result = await response.json();
+
+    if (!response.ok) {
+      setError(result.message || "Could not update that tag.");
+      return;
+    }
+
+    // TAG STATUS TRACE STEP 2: The updated database row came back.
+    // Forum owns the shared tag list, so give the updated tag back to Forum.
+    onTagUpdated(result);
   }
 
   return (
@@ -77,7 +107,7 @@ export default function ForumTagManagerModal({
               type="button"
               className={tag.active ? "" : "is-disabled"}
               key={tag.tag_id}
-              onClick={() => onToggleTagActive(tag)}
+              onClick={() => toggleTagActive(tag)}
             >
               <span>
                 #{tag.slug}

@@ -170,21 +170,6 @@ export default function Forum() {
     setSort(nextSort);
   }
 
-  async function toggleTagActive(tag) {
-    const response = await fetch(`${API}/api/forum/tags/${tag.tag_id}`, {
-      method: "PATCH", headers: { ...headers, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name: tag.name,
-        slug: tag.slug,
-        description: tag.description,
-        active: !tag.active,
-      }),
-    });
-    const result = await response.json();
-    if (!response.ok) return setError(result.message || "Could not update that tag.");
-    setTags((current) => current.map((item) => item.tag_id === tag.tag_id ? { ...item, ...result } : item));
-  }
-
   return (
     <main className="forum-feed-page">
       {showLoginWelcome && (
@@ -275,7 +260,15 @@ export default function Forum() {
               { ...newTag, post_count: 0 },
             ]);
           }}
-          onToggleTagActive={toggleTagActive}
+          onTagUpdated={(updatedTag) => {
+            // TAG STATUS TRACE STEP 3: The modal finished the API request.
+            // Replace that tag in Forum's shared state with its updated version.
+            setTags((current) => current.map((tag) => (
+              tag.tag_id === updatedTag.tag_id
+                ? { ...tag, ...updatedTag }
+                : tag
+            )));
+          }}
           onClose={() => setTagManagerOpen(false)}
         />
       )}
