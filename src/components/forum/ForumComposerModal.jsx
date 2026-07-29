@@ -1,22 +1,78 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { X } from "lucide-react";
 import MentionTextarea from "../MentionTextarea";
 import MemberAvatar from "../MemberAvatar";
 
+const API = import.meta.env.VITE_API;
+
 export default function ForumComposerModal({
+  open,
   user,
   token,
+  categoryId,
+  canPublish,
   composingAnnouncement,
-  draft,
-  setDraft,
-  draftMentions,
-  setDraftMentions,
   tags,
-  onToggleTag,
-  error,
-  submitting,
-  onSubmit,
   onClose,
 }) {
+  const navigate = useNavigate();
+  const [draft, setDraft] = useState({ title: "", body: "", tag_ids: [] });
+  const [draftMentions, setDraftMentions] = useState([]);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
+
+  function toggleDraftTag(tagId) {
+    setDraft((current) => {
+      const selected = current.tag_ids.includes(tagId);
+      if (!selected && current.tag_ids.length >= 3) return current;
+      return {
+        ...current,
+        tag_ids: selected
+          ? current.tag_ids.filter((id) => id !== tagId)
+          : [...current.tag_ids, tagId],
+      };
+    });
+  }
+
+  async function createPost(event) {
+    // CREATE POST TRACE STEP 2: This function lives beside the form that calls
+    // it. Validate the form context, then send its local draft to the API.
+    // Continue at CREATE POST TRACE STEP 3 in server/api/forum.js.
+    event.preventDefault();
+    if (!canPublish) {
+      onClose();
+      return setError("Only moderators, administrators, and owners can publish announcements.");
+    }
+    if (!categoryId) return setError("The forum needs a Main Forum category before posting.");
+
+    setSubmitting(true);
+    setError("");
+    const response = await fetch(`${API}/api/forum/posts`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        category_id: categoryId,
+        title: draft.title,
+        body: draft.body,
+        tag_ids: draft.tag_ids,
+        mentioned_user_ids: draftMentions.map((member) => member.user_id),
+      }),
+    });
+    const result = await response.json();
+    setSubmitting(false);
+    if (!response.ok) return setError(result.message || "Could not publish that post.");
+
+    // CREATE POST TRACE STEP 6: The API returned PostgreSQL's new post_id, so
+    // take the member directly to the thread they just created.
+    navigate(`/forum/${result.post_id}`);
+  }
+
+  if (!open) return null;
+
   return (
     <div className="forum-feed-modal" onMouseDown={onClose}>
       <section
@@ -42,9 +98,9 @@ export default function ForumComposerModal({
           <span>Posting as <strong>{user?.username}</strong></span>
         </div>
 
-        {/* CREATE POST TRACE STEP 1: The Publish button submits this form. The
-            callback is Forum.jsx's createPost(), where the API request begins. */}
-        <form onSubmit={onSubmit}>
+        {/* CREATE POST TRACE STEP 1: The Publish button submits this form and
+            directly calls createPost(), defined above in this same file. */}
+        <form onSubmit={createPost}>
           <label>
             Title
             <input
@@ -75,7 +131,7 @@ export default function ForumComposerModal({
                   type="button"
                   key={tag.tag_id}
                   className={draft.tag_ids.includes(tag.tag_id) ? "is-active" : ""}
-                  onClick={() => onToggleTag(tag.tag_id)}
+                  onClick={() => toggleDraftTag(tag.tag_id)}
                 >
                   #{tag.slug}
                 </button>

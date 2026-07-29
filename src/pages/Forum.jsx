@@ -34,12 +34,9 @@ export default function Forum() {
   const [error, setError] = useState("");
   const [composerOpen, setComposerOpen] = useState(false);
   const [tagManagerOpen, setTagManagerOpen] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("recent");
-  const [draftMentions, setDraftMentions] = useState([]);
-  const [draft, setDraft] = useState({ title: "", body: "", tag_ids: [] });
   const [newTagName, setNewTagName] = useState("");
   const [showLoginWelcome, setShowLoginWelcome] = useState(() => Boolean(location.state?.justLoggedIn));
   const loadMoreRef = useRef(null);
@@ -174,48 +171,6 @@ export default function Forum() {
     setSort(nextSort);
   }
 
-  function toggleDraftTag(tagId) {
-    setDraft((current) => {
-      const selected = current.tag_ids.includes(tagId);
-      if (!selected && current.tag_ids.length >= 3) return current;
-      return {
-        ...current,
-        tag_ids: selected
-          ? current.tag_ids.filter((id) => id !== tagId)
-          : [...current.tag_ids, tagId],
-      };
-    });
-  }
-
-  async function createPost(event) {
-    // CREATE POST TRACE STEP 2: ForumComposerModal's form submits here. Gather
-    // the draft into JSON and POST it to the forum API. Continue at CREATE POST
-    // TRACE STEP 3 in recovery-community-server/api/forum.js.
-    event.preventDefault();
-    if (view === "announcements" && !isStaff) {
-      setComposerOpen(false);
-      return setError("Only moderators, administrators, and owners can publish announcements.");
-    }
-    const categoryId = composingAnnouncement ? announcementCategory?.category_id : mainCategory?.category_id;
-    if (!categoryId) return setError("The forum needs a Main Forum category before posting.");
-    setSubmitting(true);
-    setError("");
-    const response = await fetch(`${API}/api/forum/posts`, {
-      method: "POST",
-      headers: { ...headers, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        category_id: categoryId, title: draft.title, body: draft.body,
-        tag_ids: draft.tag_ids, mentioned_user_ids: draftMentions.map((member) => member.user_id),
-      }),
-    });
-    const result = await response.json();
-    setSubmitting(false);
-    if (!response.ok) return setError(result.message || "Could not publish that post.");
-    // CREATE POST TRACE STEP 6: The API returned the row PostgreSQL inserted.
-    // Use its new post_id to open the full thread page.
-    navigate(`/forum/${result.post_id}`);
-  }
-
   async function createTag(event) {
     event.preventDefault();
     const response = await fetch(`${API}/api/forum/tags`, {
@@ -305,25 +260,21 @@ export default function Forum() {
         />
       </section>
 
-      {/* SCREEN SECTION: The Start a post modal. Submitting it follows the
-          separate createPost() write path, not the forum-list query above. */}
-      {composerOpen && (
-        <ForumComposerModal
-          user={user}
-          token={token}
-          composingAnnouncement={composingAnnouncement}
-          draft={draft}
-          setDraft={setDraft}
-          draftMentions={draftMentions}
-          setDraftMentions={setDraftMentions}
-          tags={tags}
-          onToggleTag={toggleDraftTag}
-          error={error}
-          submitting={submitting}
-          onSubmit={createPost}
-          onClose={() => setComposerOpen(false)}
-        />
-      )}
+      {/* SCREEN SECTION: Forum keeps this mounted so an unfinished draft
+          survives closing and reopening. The modal owns its form state and
+          createPost() request; `open` controls whether it is visible. */}
+      <ForumComposerModal
+        open={composerOpen}
+        user={user}
+        token={token}
+        categoryId={composingAnnouncement
+          ? announcementCategory?.category_id
+          : mainCategory?.category_id}
+        canPublish={view !== "announcements" || isStaff}
+        composingAnnouncement={composingAnnouncement}
+        tags={tags}
+        onClose={() => setComposerOpen(false)}
+      />
 
       {tagManagerOpen && (
         <ForumTagManagerModal
