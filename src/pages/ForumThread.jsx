@@ -63,8 +63,11 @@ function Comment({ comment, depth, currentUserId, canEditOwn, canEditOthers, can
     if (saved) setEditing(false);
   }
 
+  // Keep the real depth in the class name. CSS adds indentation only at
+  // depths 1 and 2, so deeper recursive replies inherit that position
+  // without adding another margin on every generation.
   return (
-    <div className={`forum-comment depth-${Math.min(depth, 2)}`}>
+    <div className={`forum-comment depth-${depth}`}>
       <div className="forum-comment-line" />
       <article id={`comment-${comment.comment_id}`}>
         {isRemoved ? (
