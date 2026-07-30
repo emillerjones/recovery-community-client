@@ -4,7 +4,7 @@
   inset: 0;
   min-height: 100svh;
   overflow: hidden;
-  background: transparent;
+  background: #07100a;
 }
 
 .welcome-cover {
@@ -12,158 +12,256 @@
   inset: 0;
   min-height: 100svh;
   overflow: hidden;
-  background:
-    radial-gradient(circle at 82% 18%, rgba(208, 183, 124, 0.13), transparent 27%),
-    radial-gradient(circle at 12% 88%, rgba(89, 117, 91, 0.1), transparent 31%),
-    #f4f2e9;
-  color: #18281d;
-  box-shadow: 0 22px 70px rgba(15, 28, 19, 0.24);
-  will-change: transform;
+  background: #07100a;
+  color: #f4ead2;
+  will-change: opacity;
 }
 
-.welcome-cover::before {
+.welcome-grove {
   position: absolute;
+  inset: -2%;
+  background-position: center;
+  background-size: cover;
+  filter: brightness(1.16) saturate(1.08);
+  transform: scale(1.02);
+  animation: welcome-grove-arrive 2.4s ease-out both;
+  will-change: opacity, transform;
+}
+
+.welcome-grove::before,
+.welcome-grove::after {
+  position: absolute;
+  z-index: 2;
   inset: 0;
-  background-image: repeating-linear-gradient(
-    0deg,
-    rgba(39, 57, 43, 0.018) 0,
-    rgba(39, 57, 43, 0.018) 1px,
-    transparent 1px,
-    transparent 4px
-  );
   content: "";
-  opacity: 0.42;
+  pointer-events: none;
+}
+
+.welcome-grove::before {
+  background:
+    linear-gradient(180deg, rgba(2, 8, 4, 0.22), transparent 42%, rgba(1, 5, 2, 0.1)),
+    radial-gradient(circle at 50% 68%, transparent 0 16%, rgba(2, 7, 3, 0.14) 43%, rgba(1, 5, 2, 0.45) 100%);
+}
+
+.welcome-grove::after {
+  background:
+    radial-gradient(circle at 50% 72%, rgba(233, 174, 71, 0.24), transparent 18%),
+    linear-gradient(90deg, rgba(1, 6, 3, 0.2), transparent 24% 76%, rgba(1, 6, 3, 0.2));
+  opacity: 0.12;
+  animation: welcome-network-answer 1.7s 2.75s ease-in-out both;
+}
+
+.welcome-grove-canvas {
+  position: absolute !important;
+  z-index: 1;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
   pointer-events: none;
 }
 
 .welcome-brand {
   position: absolute;
-  z-index: 2;
-  top: clamp(24px, 5vh, 54px);
-  left: clamp(24px, 6vw, 92px);
+  z-index: 4;
+  top: clamp(24px, 4.5vh, 50px);
+  left: clamp(24px, 4vw, 68px);
   display: flex;
   align-items: center;
   gap: 12px;
+  animation: welcome-copy-arrive 0.8s 0.2s ease-out both;
 }
 
 .welcome-brand img {
   width: 48px;
   height: 48px;
   object-fit: contain;
+  filter: sepia(0.15) saturate(0.72) brightness(1.55);
 }
 
 .welcome-brand span {
-  color: #26372b;
+  color: #f1e4c8;
   font: 500 15px/1.15 Georgia, serif;
+  letter-spacing: 0.035em;
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.7);
 }
 
 .welcome-content {
   position: absolute;
-  z-index: 2;
-  top: 50%;
-  left: clamp(24px, 13vw, 200px);
-  width: min(850px, 74vw);
-  transform: translateY(-46%);
+  z-index: 4;
+  top: clamp(128px, 20vh, 210px);
+  left: 50%;
+  width: min(980px, calc(100vw - 48px));
+  text-align: center;
+  transform: translateX(-50%);
+  animation: welcome-copy-arrive 0.9s 0.42s ease-out both;
 }
 
 .welcome-eyebrow {
-  margin: 0 0 20px;
-  color: #687d6e;
+  margin: 0 0 16px;
+  color: #d3b77c;
   font-size: 10px;
   font-weight: 800;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.24em;
   text-transform: uppercase;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.85);
 }
 
 .welcome-content h1 {
   margin: 0;
-  max-width: 840px;
-  color: #16271b;
-  font: 500 clamp(4.2rem, 9vw, 8.4rem)/0.88 Georgia, serif;
-  letter-spacing: -0.065em;
+  color: #fff1d7;
+  font: 400 clamp(4rem, 7.6vw, 7.8rem)/0.9 Georgia, serif;
+  letter-spacing: -0.052em;
+  text-shadow: 0 4px 35px rgba(0, 0, 0, 0.78);
 }
 
 .welcome-personal {
-  margin: clamp(28px, 4vh, 44px) 0 0;
-  color: #637068;
-  font-size: clamp(15px, 1.5vw, 18px);
-  line-height: 1.65;
+  margin: clamp(20px, 3vh, 30px) 0 0;
+  color: rgba(255, 245, 224, 0.84);
+  font: 400 clamp(14px, 1.35vw, 18px)/1.65 Inter, sans-serif;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.88);
+  transition: color 0.6s ease;
 }
 
 .welcome-personal strong {
-  color: #263b2d;
+  color: #f3ddaa;
   font-weight: 750;
 }
 
 .welcome-content button {
   display: inline-flex;
   align-items: center;
-  gap: 24px;
-  margin-top: clamp(26px, 4vh, 42px);
-  padding: 11px 2px 10px;
-  border: 0;
-  border-bottom: 1px solid #b18a42;
-  background: transparent;
-  color: #23392a;
-  font: 750 14px Inter, sans-serif;
+  justify-content: center;
+  gap: 18px;
+  min-width: 250px;
+  min-height: 52px;
+  margin-top: clamp(22px, 3.5vh, 34px);
+  padding: 0 25px;
+  border: 1px solid rgba(219, 183, 107, 0.66);
+  border-radius: 13px;
+  background: linear-gradient(180deg, rgba(83, 92, 47, 0.92), rgba(47, 59, 29, 0.94));
+  box-shadow: 0 13px 34px rgba(0, 0, 0, 0.3), inset 0 1px rgba(255, 255, 255, 0.08);
+  color: #f2dfb6;
+  font: 750 12px Inter, sans-serif;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
   cursor: pointer;
-  transition: gap 180ms ease, color 180ms ease;
+  opacity: 0.56;
+  transform: translateY(8px);
+  transition: gap 180ms ease, border-color 180ms ease, background 180ms ease, opacity 0.65s ease, transform 0.65s ease;
 }
 
-.welcome-content button:hover { gap: 30px; color: #8a6728; }
+.welcome-content.is-ready button {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.welcome-content button:hover:not(:disabled) {
+  gap: 24px;
+  border-color: #e4c680;
+  background: linear-gradient(180deg, rgba(87, 95, 49, 0.94), rgba(51, 63, 31, 0.96));
+}
+
 .welcome-content button:disabled { cursor: wait; }
-.welcome-content button:focus-visible { outline: 3px solid rgba(58, 91, 66, 0.35); outline-offset: 5px; }
-
-.welcome-rule {
-  position: absolute;
-  z-index: 2;
-  right: 0;
-  bottom: clamp(62px, 10vh, 106px);
-  left: 0;
-  height: 1px;
-  background: linear-gradient(90deg, #9f7a36, #d6b86f 55%, rgba(214, 184, 111, 0.15));
-  transform: scaleX(0.22);
-  transform-origin: left center;
-}
+.welcome-content button:focus-visible { outline: 3px solid rgba(235, 202, 130, 0.5); outline-offset: 5px; }
 
 .welcome-footnote {
   position: absolute;
-  z-index: 2;
-  right: clamp(24px, 6vw, 92px);
-  bottom: clamp(25px, 5vh, 53px);
+  z-index: 4;
+  right: clamp(22px, 4vw, 68px);
+  bottom: clamp(20px, 3.5vh, 38px);
   margin: 0;
-  color: #78847c;
+  color: rgba(228, 215, 186, 0.58);
   font-size: 9px;
   font-weight: 750;
   letter-spacing: 0.18em;
   text-transform: uppercase;
+  text-shadow: 0 2px 15px rgba(0, 0, 0, 0.85);
 }
 
+@keyframes welcome-grove-arrive {
+  from { opacity: 0; transform: scale(1.055); }
+  to { opacity: 1; transform: scale(1.02); }
+}
+
+@keyframes welcome-copy-arrive {
+  from { opacity: 0; transform: translate(-50%, 10px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+@keyframes welcome-network-answer {
+  0% { opacity: 0.08; }
+  48% { opacity: 0.72; }
+  100% { opacity: 0.18; }
+}
+
+.welcome-brand { transform: none; }
+@keyframes welcome-brand-arrive {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.welcome-brand { animation-name: welcome-brand-arrive; }
+
 @media (max-width: 640px) {
-  .welcome-brand {
-    top: 25px;
-    left: 22px;
+  .welcome-grove {
+    inset: 0;
+    background-position: 50% center;
+    transform: none;
+    animation-name: welcome-grove-arrive-mobile;
   }
 
-  .welcome-brand img { width: 42px; height: 42px; }
-  .welcome-brand span { font-size: 13px; }
+  .welcome-grove::before {
+    background:
+      linear-gradient(180deg, rgba(2, 8, 4, 0.16), transparent 38%, rgba(1, 5, 2, 0.18)),
+      radial-gradient(circle at 50% 70%, transparent 0 13%, rgba(2, 7, 3, 0.12) 38%, rgba(1, 5, 2, 0.5) 100%);
+  }
+
+  .welcome-brand {
+    top: 22px;
+    left: 20px;
+  }
+
+  .welcome-brand img { width: 40px; height: 40px; }
+  .welcome-brand span { font-size: 12px; }
 
   .welcome-content {
-    top: 48%;
-    left: 24px;
-    width: calc(100vw - 48px);
-    transform: translateY(-42%);
+    top: 17vh;
+    width: calc(100vw - 36px);
   }
 
   .welcome-content h1 {
-    max-width: 92vw;
-    font-size: clamp(3.6rem, 18vw, 5.4rem);
+    font-size: clamp(3.2rem, 16vw, 4.8rem);
+    line-height: 0.92;
   }
 
-  .welcome-personal { font-size: 15px; }
-  .welcome-footnote { right: 22px; }
+  .welcome-personal {
+    margin-top: 18px;
+    font-size: 14px;
+  }
+
+  .welcome-content button {
+    min-width: min(260px, 85vw);
+    min-height: 50px;
+    margin-top: 22px;
+  }
+
+  .welcome-footnote {
+    right: 18px;
+    bottom: 16px;
+  }
+}
+
+@keyframes welcome-grove-arrive-mobile {
+  from { opacity: 0; transform: scale(1.035); }
+  to { opacity: 1; transform: scale(1); }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .welcome-grove,
+  .welcome-grove::after,
+  .welcome-brand,
+  .welcome-content {
+    animation: none;
+  }
+
   .welcome-content button { transition: none; }
 }
