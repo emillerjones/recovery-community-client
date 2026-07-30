@@ -34,6 +34,8 @@ export default function Messages() {
   const [pickerOpen, setPickerOpen] = useState(false);
   const [allUsers, setAllUsers] = useState([]);
   const [pickerSearch, setPickerSearch] = useState("");
+  const [pickerLoading, setPickerLoading] = useState(false);
+  const [pickerError, setPickerError] = useState("");
 
   const headers = useMemo(() => ({ Authorization: `Bearer ${token}` }), [token]);
   const activeConversation = conversations.find(
@@ -130,8 +132,18 @@ export default function Messages() {
   async function openPicker() {
     setPickerOpen(true);
     if (allUsers.length === 0) {
-      const response = await fetch(`${API}/api/users`, { headers });
-      if (response.ok) setAllUsers(await response.json());
+      setPickerLoading(true);
+      setPickerError("");
+      // NEW MESSAGE PICKER TRACE STEP 1: Ask the authenticated messages API
+      // for the safe member list. Continue in server/api/messages.js.
+      const response = await fetch(`${API}/api/messages/members`, { headers });
+      const result = await response.json().catch(() => null);
+      setPickerLoading(false);
+      if (!response.ok) {
+        setPickerError(result?.message || "Could not load the member list.");
+        return;
+      }
+      setAllUsers(result);
     }
   }
 
@@ -263,7 +275,9 @@ export default function Messages() {
               />
             </label>
             <ul className="dm-picker-list">
-              {pickableUsers.map((candidate) => (
+              {pickerLoading && <li className="dm-picker-empty">Loading members…</li>}
+              {!pickerLoading && pickerError && <li className="dm-picker-empty">{pickerError}</li>}
+              {!pickerLoading && !pickerError && pickableUsers.map((candidate) => (
                 <li key={candidate.user_id}>
                   <button onClick={() => startConversation(candidate.username)}>
                     <MemberAvatar className="dm-avatar dm-avatar--small" username={candidate.username} avatarUrl={candidate.avatar_url} size={30} />
@@ -271,7 +285,9 @@ export default function Messages() {
                   </button>
                 </li>
               ))}
-              {pickableUsers.length === 0 && <li className="dm-picker-empty">No members found.</li>}
+              {!pickerLoading && !pickerError && pickableUsers.length === 0 && (
+                <li className="dm-picker-empty">No members found.</li>
+              )}
             </ul>
           </section>
         </div>

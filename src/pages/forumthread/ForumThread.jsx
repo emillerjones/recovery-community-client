@@ -72,6 +72,8 @@ export default function ForumThread() {
   const isAuthor = post?.author_id === user?.id;
   const canEditPost = (isAuthor && canEditOwn) || canEditOthers;
 
+  // Run when the thread page first loads, then reload if the post ID
+  // or logged-in user's authentication changes.
   const fetchThread = useCallback(async () => {
     const response = await fetch(`${API}/api/forum/posts/${postId}`, { headers });
     const result = await response.json();
@@ -96,6 +98,17 @@ export default function ForumThread() {
     return () => { cancelled = true; };
   }, [fetchThread]);
 
+
+
+
+// This effect then listens for new comments while this thread is open.
+//
+// We join a socket room for this post so the server sends us only events
+// belonging to this thread. When a new comment arrives, setComments()
+// adds it to React state and the conversation rerenders immediately.
+//
+// The cleanup function leaves the room and removes the listener when the
+// user leaves this thread, preventing duplicate listeners and updates.
   useEffect(() => {
     if (!socket) return;
     const postIdNumber = Number(postId);
@@ -116,13 +129,21 @@ export default function ForumThread() {
     };
   }, [socket, postId]);
 
+
+
+// NOTIFICATION DEEP LINK:
+// A notification can link to a specific reply using a URL such as
+// /forum/13#comment-123.
+//
+// Wait until the comments have loaded and rendered. Then find the HTML
+// element with that comment ID and smoothly scroll it into view.
   useEffect(() => {
-    // MENTION TRACE STEP 12: Notification links include #comment-123. After
-    // comments render, find that exact reply and scroll it into view.
     if (!comments.length || !location.hash.startsWith("#comment-")) return;
     const target = document.getElementById(location.hash.slice(1));
     target?.scrollIntoView({ behavior: "smooth", block: "center" });
   }, [comments, location.hash]);
+
+
 
   async function submitReply(event, parentCommentId = null) {
     // TRACE STEP 2: The reply form's onSubmit calls this function.

@@ -8,7 +8,7 @@ import "./Home.css";
 // Lazy-loaded: pulls in three.js/R3F/three.quarks. Deferred until the browser
 // is idle after first paint (see `fireflyReady` below) so it never competes
 // with the hero photo/fonts for bandwidth on first load.
-const HeroFireflies = lazy(() => import("../HeroFireflies"));
+const HeroFireflies = lazy(() => import("./HeroFireflies"));
 
 const CONSTELLATION_NODES = [
   { x: 80, y: 190, r: 5 },
