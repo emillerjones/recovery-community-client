@@ -53,6 +53,21 @@ export default function Messages() {
   }, [loadConversations]);
 
   useEffect(() => {
+    if (!socket) return;
+
+    // LIVE CONVERSATION LIST:
+    // MessagesContext uses this event to update the navbar unread badge.
+    // This page also listens so a newly received message immediately moves
+    // or adds its conversation in the left column without a page refresh.
+    function onDmNotification() {
+      loadConversations();
+    }
+
+    socket.on("dm_notification", onDmNotification);
+    return () => socket.off("dm_notification", onDmNotification);
+  }, [socket, loadConversations]);
+
+  useEffect(() => {
     if (!conversationId) {
       setMessages([]);
       return;
