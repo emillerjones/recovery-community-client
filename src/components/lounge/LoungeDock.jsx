@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Flame, Send, Trash2, X } from "lucide-react";
+import { ChevronRight, Flame, Send, Trash2, X } from "lucide-react";
 import { useAuth } from "../../auth/AuthContext";
 import { useLounge } from "../../contexts/LoungeContext";
 import MemberAvatar from "../MemberAvatar";
@@ -142,11 +142,11 @@ export default function LoungeDock() {
         <span className="lounge-dock__icon"><Flame size={20} /></span>
         <span className="lounge-dock__copy">
           <strong>Community Lounge</strong>
-          <small>{activity.label} · {activity.detail}</small>
+          <small className="lounge-dock__activity">{activity.label} · {activity.detail}</small>
+          <small className="lounge-dock__invitation">Open group chat</small>
         </span>
-        {status.unread_count > 0 && <span className="lounge-dock__badge">
-          {status.unread_count > 99 ? "99+" : status.unread_count}
-        </span>}
+        {status.unread_count > 0 && <span className="lounge-dock__badge" aria-label="New Lounge messages" />}
+        <ChevronRight className="lounge-dock__chevron" size={18} aria-hidden="true" />
       </button>}
     </>
   );

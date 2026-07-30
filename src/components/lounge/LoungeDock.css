@@ -3,13 +3,14 @@
 .lounge-dock__copy { display: grid; gap: 2px; }
 .lounge-dock__copy strong { font: 700 14px/1.2 Inter, sans-serif; }
 .lounge-dock__copy small { color: rgba(255,255,255,.7); font: 500 11px/1.25 Inter, sans-serif; }
+.lounge-dock__invitation, .lounge-dock__chevron { display: none; }
 .lounge-activity--quiet .lounge-dock__icon, .lounge-activity--quiet .lounge-panel__fire { background: #d8d3bd; color: #526056; }
 .lounge-activity--warm .lounge-dock__icon, .lounge-activity--warm .lounge-panel__fire { background: #e5c47a; }
 .lounge-activity--glowing .lounge-dock__icon, .lounge-activity--glowing .lounge-panel__fire { background: #f0c665; box-shadow: 0 0 0 6px rgba(240,198,101,.1), 0 0 18px rgba(240,198,101,.28); }
 .lounge-activity--bright .lounge-dock__icon, .lounge-activity--bright .lounge-panel__fire { background: #f4b84f; box-shadow: 0 0 0 7px rgba(244,184,79,.13), 0 0 24px rgba(244,184,79,.42); }
 .lounge-activity--glowing .lounge-dock__icon > svg, .lounge-activity--glowing .lounge-panel__fire > svg { transform: scale(1.06); }
 .lounge-activity--bright .lounge-dock__icon > svg, .lounge-activity--bright .lounge-panel__fire > svg { transform: scale(1.16); }
-.lounge-dock__badge { display: grid; place-items: center; min-width: 24px; height: 24px; padding: 0 6px; border-radius: 999px; background: #e7c675; color: #263f30; font: 800 11px Inter, sans-serif; }
+.lounge-dock__badge { width: 9px; height: 9px; border: 2px solid #263f30; border-radius: 50%; background: #e7c675; }
 
 .lounge-backdrop { position: fixed; z-index: 94; inset: 0; border: 0; background: rgba(20,30,23,.28); backdrop-filter: blur(2px); }
 .lounge-panel { position: fixed; z-index: 95; right: 22px; bottom: 20px; display: grid; grid-template-rows: auto auto minmax(0,1fr) auto auto; width: min(400px, calc(100vw - 44px)); height: min(680px, calc(100dvh - 110px)); overflow: hidden; border: 1px solid rgba(38,63,48,.14); border-radius: 24px; background: #fbfaf5; color: #1d2d22; box-shadow: 0 24px 80px rgba(18,38,25,.3); opacity: 0; transform: translateY(26px) scale(.98); pointer-events: none; transition: opacity .2s ease, transform .25s ease; }
@@ -41,7 +42,15 @@
 .lounge-composer button:disabled { opacity: .4; cursor: default; }
 
 @media (max-width: 700px) {
-  .lounge-dock { right: 12px; bottom: calc(12px + env(safe-area-inset-bottom)); min-width: 0; width: calc(100vw - 24px); border-radius: 17px; }
+  .lounge-dock { right: 12px; bottom: calc(12px + env(safe-area-inset-bottom)); grid-template-columns: auto auto auto; gap: 9px; min-width: 0; width: auto; max-width: calc(100vw - 24px); padding: 9px 11px; border-color: rgba(38,63,48,.16); border-radius: 16px; background: rgba(251,250,245,.94); color: #263f30; box-shadow: 0 9px 28px rgba(26,45,33,.16); backdrop-filter: blur(12px); }
+  .lounge-dock__icon { width: 34px; height: 34px; }
+  .lounge-dock__copy { min-width: 128px; }
+  .lounge-dock__copy strong { font-size: 12px; }
+  .lounge-dock__copy small { color: #6f796f; font-size: 10px; }
+  .lounge-dock__activity { display: none; }
+  .lounge-dock__invitation, .lounge-dock__chevron { display: block; }
+  .lounge-dock__badge { position: absolute; top: 8px; left: 36px; border-color: #fbfaf5; background: #b46d45; }
+  .lounge-dock__chevron { color: #6f796f; }
   .lounge-panel { right: 0; bottom: 0; width: 100%; height: min(82dvh, 720px); border-radius: 24px 24px 0 0; transform: translateY(100%); }
   .lounge-message__delete { opacity: 1; }
 }
