@@ -142,7 +142,7 @@ export default function ForumControls({
 
       {filtersOpen && (
         <div className="forum-feed-filter-layer" role="presentation" onMouseDown={(event) => {
-          if (event.target === event.currentTarget) setFiltersOpen(false);
+          if (event.target === event.currentTarget) applyAndClose();
         }}>
           <section className="forum-feed-filter-panel" role="dialog" aria-modal="true" aria-labelledby="forum-filter-title">
             <header>
@@ -150,7 +150,7 @@ export default function ForumControls({
                 <p className="forum-feed-eyebrow">Refine the conversation list</p>
                 <h2 id="forum-filter-title">Filter conversations</h2>
               </div>
-              <button type="button" onClick={() => setFiltersOpen(false)} aria-label="Close filters"><X size={20} /></button>
+              <button type="button" onClick={() => applyAndClose()} aria-label="Apply and close filters"><X size={20} /></button>
             </header>
 
             <fieldset>
