@@ -1,5 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
+import { getAnalyticsSessionId } from "../utils/analytics";
 
 const API = import.meta.env.VITE_API;
 
@@ -55,7 +56,10 @@ export function AuthProvider({ children }) {
     const response = await fetch(API + "/api/users/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(credentials),
+      body: JSON.stringify({
+        ...credentials,
+        analyticsSessionId: getAnalyticsSessionId(),
+      }),
     });
     const text = await response.text();
 
@@ -72,6 +76,22 @@ export function AuthProvider({ children }) {
 
 
   const logout = () => {
+    if (token) {
+      // Logout clears the JWT locally, so send this authenticated event first.
+      // keepalive lets the small request finish during navigation/page closing.
+      fetch(API + "/api/analytics/events", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          eventType: "logout",
+          sessionId: getAnalyticsSessionId(),
+        }),
+        keepalive: true,
+      }).catch(() => {});
+    }
     setToken(null);
     setUser(null);
     localStorage.removeItem("token");
