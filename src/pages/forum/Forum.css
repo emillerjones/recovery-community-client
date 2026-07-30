@@ -43,9 +43,10 @@
 .forum-feed-filter-panel fieldset { margin:0; padding:16px 0; border:0; border-top:1px solid var(--forum-feed-line); }
 .forum-feed-filter-panel legend { padding:0 0 10px; color:#536056; font:800 10px Inter,sans-serif; letter-spacing:.09em; text-transform:uppercase; }
 .forum-feed-filter-panel legend small { margin-left:5px; color:#929a93; font-weight:500; letter-spacing:0; text-transform:none; }
-.forum-feed-filter-options { display:grid; grid-template-columns:repeat(3,1fr); gap:7px; }
+.forum-feed-filter-options { display:grid; grid-template-columns:repeat(2,1fr); gap:7px; }
 .forum-feed-filter-options button,.forum-feed-filter-tags button { display:flex; align-items:center; justify-content:space-between; gap:6px; min-height:39px; padding:8px 11px; border:1px solid var(--forum-feed-line); border-radius:10px; background:white; color:#647067; font:700 10.5px Inter,sans-serif; cursor:pointer; }
 .forum-feed-filter-options button.is-active,.forum-feed-filter-tags button.is-active { border-color:#8da28f; background:var(--forum-feed-sage); color:var(--forum-feed-green); }
+.forum-feed-mark-read { width:100%; min-height:40px; margin:0 0 17px; border:1px solid var(--forum-feed-line); border-radius:10px; background:#f4f5ef; color:var(--forum-feed-green); font:700 11px Inter,sans-serif; cursor:pointer; }
 .forum-feed-filter-tags { display:flex; flex-wrap:wrap; gap:7px; }
 .forum-feed-filter-panel>footer { display:flex; align-items:center; justify-content:space-between; gap:10px; padding-top:17px; border-top:1px solid var(--forum-feed-line); }
 .forum-feed-filter-panel>footer>button:first-child { border:0; background:transparent; color:var(--forum-feed-muted); font:750 11px Inter,sans-serif; cursor:pointer; }

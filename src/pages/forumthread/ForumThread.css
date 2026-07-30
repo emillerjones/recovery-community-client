@@ -515,6 +515,7 @@
 
 .forum-thread-replies { margin-top: 24px; padding: 34px 38px 38px; }
 .forum-thread-replies__heading { padding-bottom: 20px; border-bottom: 1px solid var(--forum-line); }
+.forum-thread-jump-new { margin:16px 0 2px; padding:8px 13px; border:1px solid #b4c2b3; border-radius:999px; background:#edf2e9; color:#264c39; font-weight:700; cursor:pointer; }
 .forum-comment-tree { display: grid; min-width: 0; max-width: 100%; gap: 10px; }
 .forum-comment { position: relative; width: auto; min-width: 0; max-width: 100%; margin-top: 8px; }
 .forum-comment.depth-1 { margin-left: 34px; }

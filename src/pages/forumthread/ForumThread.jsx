@@ -81,6 +81,15 @@ export default function ForumThread() {
     return result;
   }, [headers, postId]);
 
+  const markThreadRead = useCallback(() => {
+    // READ TRACE STEP 1: Once the member can see this thread, tell the server
+    // to save their latest read point. Continue at PATCH /posts/:id/read.
+    fetch(`${API}/api/forum/posts/${postId}/read`, {
+      method: "PATCH",
+      headers,
+    }).catch(() => {});
+  }, [headers, postId]);
+
   useEffect(() => {
     let cancelled = false;
     fetchThread()
@@ -89,6 +98,7 @@ export default function ForumThread() {
         setPost(result.post);
         setComments(result.comments);
         setLoading(false);
+        markThreadRead();
       })
       .catch((err) => {
         if (cancelled) return;
@@ -96,7 +106,7 @@ export default function ForumThread() {
         setLoading(false);
       });
     return () => { cancelled = true; };
-  }, [fetchThread]);
+  }, [fetchThread, markThreadRead]);
 
 
 
@@ -120,6 +130,7 @@ export default function ForumThread() {
       setComments((current) =>
         current.some((existing) => existing.comment_id === comment.comment_id) ? current : [...current, comment]
       );
+      if (document.visibilityState === "visible") markThreadRead();
     }
     socket.on("new_comment", onNewComment);
 
@@ -127,7 +138,7 @@ export default function ForumThread() {
       socket.emit("leave_thread", postIdNumber);
       socket.off("new_comment", onNewComment);
     };
-  }, [socket, postId]);
+  }, [socket, postId, markThreadRead]);
 
 
 
@@ -497,6 +508,16 @@ export default function ForumThread() {
 
       <section className="forum-thread-replies">
         <div className="forum-feed-heading forum-thread-replies__heading"><div><p className="forum-eyebrow">Community responses</p><h2>{comments.filter((c) => !c.deleted_at).length} {comments.filter((c) => !c.deleted_at).length === 1 ? "reply" : "replies"}</h2></div><span>Oldest first</span></div>
+        {post.first_unread_comment_id && (
+          <button
+            type="button"
+            className="forum-thread-jump-new"
+            onClick={() => document.getElementById(`comment-${post.first_unread_comment_id}`)
+              ?.scrollIntoView({ behavior: "smooth", block: "center" })}
+          >
+            Jump to first new reply
+          </button>
+        )}
         {error && <p className="forum-error" role="alert">{error}</p>}
         {commentTree.length === 0 && <div className="forum-empty"><h3>No replies yet.</h3><p>You can be the first person to respond.</p></div>}
         <div className="forum-comment-tree">

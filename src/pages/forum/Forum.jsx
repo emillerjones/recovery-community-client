@@ -188,6 +188,25 @@ export default function Forum() {
     setSearchParams(next);
   }
 
+  async function markAllRead() {
+    // READ TRACE STEP 1B: The filter panel's button reaches this authenticated
+    // request. Continue in server/api/forum.js at PATCH /posts/read-all.
+    try {
+      const response = await fetch(`${API}/api/forum/posts/read-all`, {
+        method: "PATCH",
+        headers,
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.message || "Could not mark conversations read.");
+      setError("");
+      setPosts((current) => current.map((post) => ({ ...post, is_unread: false })));
+      return true;
+    } catch (requestError) {
+      setError(requestError.message);
+      return false;
+    }
+  }
+
   return (
     <main className="forum-feed-page">
       {showLoginWelcome && (
@@ -230,6 +249,7 @@ export default function Forum() {
             onViewChange={setView}
             onSearchInputChange={setSearchInput}
             onApplyFilters={applyFilters}
+            onMarkAllRead={markAllRead}
           />
           <ForumPostList
             view={view}

@@ -10,6 +10,7 @@ import {
 
 const SCOPES = [
   { key: "all", label: "All posts" },
+  { key: "unread", label: "Unread" },
   { key: "mine", label: "My posts" },
   { key: "following", label: "Following" },
 ];
@@ -29,6 +30,7 @@ export default function ForumControls({
   onViewChange,
   onSearchInputChange,
   onApplyFilters,
+  onMarkAllRead,
 }) {
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [draftScope, setDraftScope] = useState(scope);
@@ -122,7 +124,7 @@ export default function ForumControls({
       {activeFilterCount > 0 && (
         <div className="forum-feed-active-filters" aria-label="Active conversation filters">
           {scope !== "all" && <button type="button" onClick={() => applyAndClose({ scope: "all", order, tags: activeTags })}>
-            {scope === "mine" ? "My posts" : "Following"} <X size={11} />
+            {SCOPES.find((option) => option.key === scope)?.label} <X size={11} />
           </button>}
           {order !== "recent" && <button type="button" onClick={() => applyAndClose({ scope, order: "recent", tags: activeTags })}>
             Most discussed <X size={11} />
@@ -167,6 +169,18 @@ export default function ForumControls({
                 </button>)}
               </div>
             </fieldset>
+
+            <button
+              type="button"
+              className="forum-feed-mark-read"
+              onClick={async () => {
+                if (!(await onMarkAllRead())) return;
+                setDraftScope("all");
+                applyAndClose({ scope: "all", order: draftOrder, tags: draftTags });
+              }}
+            >
+              Mark all conversations read
+            </button>
 
             <fieldset>
               <legend>Order by</legend>

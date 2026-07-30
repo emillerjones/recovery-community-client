@@ -54,6 +54,7 @@ export default function ForumPostCard({ post }) {
       </header>
       <div className="forum-feed-card__content">
         <div className="forum-feed-card__tags">
+          {post.is_unread && <span className="is-new">NEW</span>}
           {(post.tags || []).map((tag) => <span key={tag.tag_id}>#{tag.slug}</span>)}
         </div>
         <h2>{post.title}</h2>
