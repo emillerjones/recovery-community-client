@@ -167,6 +167,16 @@ export default function Forum() {
     // FORUM LIST TRACE STEP 2C: The filter panel sends three separate choices:
     // whose posts to show, how to order them, and which tags must match.
     // Updating them makes TRACE STEP 3 request a fresh page from the server.
+    const currentTagsKey = [...activeTags].sort().join(",");
+    const nextTagsKey = [...nextFilters.tags].sort().join(",");
+    if (
+      nextFilters.scope === scope
+      && nextFilters.order === order
+      && nextTagsKey === currentTagsKey
+    ) {
+      // Closing an unchanged panel should leave the already-loaded cards alone.
+      return;
+    }
     setPosts([]);
     setPage(0);
     setLoading(true);
