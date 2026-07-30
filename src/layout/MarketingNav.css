@@ -189,6 +189,10 @@
   text-transform: uppercase;
 }
 
+.nav-online { display: inline-flex; align-items: center; gap: 7px; padding: 8px 11px; border: 1px solid currentColor; border-radius: 999px; background: rgba(255,255,255,.08); color: inherit; font: 700 11px Inter, sans-serif; opacity: .78; cursor: pointer; }
+.nav-online i, .mobile-nav__lounge i { width: 7px; height: 7px; border-radius: 50%; background: #72bf78; box-shadow: 0 0 0 3px rgba(114,191,120,.14); }
+.site-header--solid .nav-online, .site-header--dark-text .nav-online, .site-header--scrolled .nav-online { border-color: rgba(35,54,41,.14); background: rgba(255,255,255,.48); }
+
 .site-header--scrolled .nav-identity,
 .site-header--solid .nav-identity,
 .site-header--dark-text .nav-identity {
@@ -536,6 +540,8 @@
     display: none;
   }
 
+  .nav-online { display: none; }
+
   .site-logo__mark {
     width: 38px;
     height: 38px;
@@ -758,6 +764,10 @@
   .mobile-nav__member-shortcuts strong { font-size: 14px; }
   .mobile-nav__member-shortcuts small { overflow: hidden; color: rgba(27,34,28,.48); font-size: 9px; font-weight: 500; text-overflow: ellipsis; white-space: nowrap; }
   .mobile-nav__member-shortcuts a:active, .mobile-nav__member-shortcuts a.active { background: #e5eadf; }
+  .mobile-nav__lounge { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; align-items: center; width: 100%; padding: 14px 16px; border: 1px solid rgba(44,58,45,.13); border-radius: 16px; background: #263f30; color: #fff; text-align: left; }
+  .mobile-nav__lounge span { display: flex; align-items: center; gap: 7px; color: rgba(255,255,255,.68); font: 600 10px Inter, sans-serif; }
+  .mobile-nav__lounge strong { grid-column: 1; font: 700 14px Inter, sans-serif; }
+  .mobile-nav__lounge > svg { grid-column: 2; grid-row: 1 / 3; }
   .mobile-nav__admin { margin: 0; padding: 0; overflow: hidden; border-radius: 16px; box-shadow: none; }
   .mobile-nav__section-trigger { width: 100%; min-height: 66px; display: grid; grid-template-columns: 38px 1fr auto; align-items: center; gap: 11px; padding: 10px 13px; border: 0; background: transparent; color: var(--nav-ink); text-align: left; }
   .mobile-nav__section-trigger > span:nth-child(2) { display: grid; gap: 3px; }
