@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { X } from "lucide-react";
 import MentionTextarea from "../../components/MentionTextarea";
@@ -19,8 +19,63 @@ export default function ForumComposerModal({
   const navigate = useNavigate();
   const [draft, setDraft] = useState({ title: "", body: "", tag_ids: [] });
   const [draftMentions, setDraftMentions] = useState([]);
+  const [storedDraft, setStoredDraft] = useState(null);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const draftStorageKey = useMemo(() => {
+    const userId = user?.id || user?.user_id;
+    if (!userId) return null;
+    const postType = composingAnnouncement ? "announcement" : "community";
+    return `forum-post-draft:${userId}:${postType}`;
+  }, [composingAnnouncement, user?.id, user?.user_id]);
+  const hasDraftContent = Boolean(
+    draft.title.trim() || draft.body.trim() || draft.tag_ids.length
+  );
+
+  useEffect(() => {
+    if (!open || !draftStorageKey || hasDraftContent) return;
+    try {
+      const stored = JSON.parse(localStorage.getItem(draftStorageKey));
+      if (!stored?.title?.trim() && !stored?.body?.trim() && !stored?.tag_ids?.length) return;
+      Promise.resolve().then(() => setStoredDraft(stored));
+    } catch {
+      localStorage.removeItem(draftStorageKey);
+    }
+  }, [draftStorageKey, hasDraftContent, open]);
+
+  useEffect(() => {
+    if (!open || !draftStorageKey || storedDraft) return;
+    const timeoutId = window.setTimeout(() => {
+      if (!hasDraftContent) {
+        localStorage.removeItem(draftStorageKey);
+        return;
+      }
+      localStorage.setItem(draftStorageKey, JSON.stringify({
+        ...draft,
+        mentions: draftMentions,
+        savedAt: new Date().toISOString(),
+      }));
+    }, 400);
+    return () => window.clearTimeout(timeoutId);
+  }, [draft, draftMentions, draftStorageKey, hasDraftContent, open, storedDraft]);
+
+  function discardDraft() {
+    if (draftStorageKey) localStorage.removeItem(draftStorageKey);
+    setDraft({ title: "", body: "", tag_ids: [] });
+    setDraftMentions([]);
+    setStoredDraft(null);
+    setError("");
+  }
+
+  function restoreDraft() {
+    setDraft({
+      title: storedDraft.title || "",
+      body: storedDraft.body || "",
+      tag_ids: Array.isArray(storedDraft.tag_ids) ? storedDraft.tag_ids : [],
+    });
+    setDraftMentions(Array.isArray(storedDraft.mentions) ? storedDraft.mentions : []);
+    setStoredDraft(null);
+  }
 
   function toggleDraftTag(tagId) {
     setDraft((current) => {
@@ -68,6 +123,9 @@ export default function ForumComposerModal({
 
     // CREATE POST TRACE STEP 6: The API returned PostgreSQL's new post_id, so
     // take the member directly to the thread they just created.
+    if (draftStorageKey) localStorage.removeItem(draftStorageKey);
+    setDraft({ title: "", body: "", tag_ids: [] });
+    setDraftMentions([]);
     navigate(`/forum/${result.post_id}`);
   }
 
@@ -98,9 +156,22 @@ export default function ForumComposerModal({
           <span>Posting as <strong>{user?.username}</strong></span>
         </div>
 
+        {storedDraft && (
+          <div className="forum-draft-recovery" role="status">
+            <div>
+              <strong>Continue your unfinished post?</strong>
+              <span>This draft was saved on this device.</span>
+            </div>
+            <div>
+              <button type="button" onClick={discardDraft}>Discard</button>
+              <button type="button" onClick={restoreDraft}>Continue writing</button>
+            </div>
+          </div>
+        )}
+
         {/* CREATE POST TRACE STEP 1: The Publish button submits this form and
             directly calls createPost(), defined above in this same file. */}
-        <form onSubmit={createPost}>
+        {!storedDraft && <form onSubmit={createPost}>
           <label>
             Title
             <input
@@ -139,6 +210,12 @@ export default function ForumComposerModal({
             </div>
           </fieldset>
           {error && <p className="forum-feed-error">{error}</p>}
+          {hasDraftContent && (
+            <div className="forum-draft-status">
+              <span>Draft saved on this device</span>
+              <button type="button" onClick={discardDraft}>Discard draft</button>
+            </div>
+          )}
           <footer>
             <button type="button" onClick={onClose}>Cancel</button>
             <button className="forum-feed-publish" disabled={submitting}>
@@ -149,7 +226,7 @@ export default function ForumComposerModal({
                   : "Publish post"}
             </button>
           </footer>
-        </form>
+        </form>}
       </section>
     </div>
   );
