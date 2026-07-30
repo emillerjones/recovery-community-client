@@ -1,4 +1,4 @@
-import { SHAWN_MEMORIAL } from "../data/publicStories";
+import { SHAWN_MEMORIAL } from "../../data/publicStories";
 import "./ShawnMemorial.css";
 
 export default function ShawnMemorial({ id, compact = false }) {

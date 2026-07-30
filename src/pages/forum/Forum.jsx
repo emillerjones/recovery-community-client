@@ -1,12 +1,13 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { Check, Plus } from "lucide-react";
-import { useAuth } from "../auth/AuthContext";
-import ForumComposerModal from "../components/forum/ForumComposerModal";
-import ForumControls from "../components/forum/ForumControls";
-import ForumPostList from "../components/forum/ForumPostList";
-import ForumSidebar from "../components/forum/ForumSidebar";
-import ForumTagManagerModal from "../components/forum/ForumTagManagerModal";
+import { useAuth } from "../../auth/AuthContext";
+import WelcomeOverlay from "../../components/WelcomeOverlay";
+import ForumComposerModal from "./ForumComposerModal";
+import ForumControls from "./ForumControls";
+import ForumPostList from "./ForumPostList";
+import ForumSidebar from "./ForumSidebar";
+import ForumTagManagerModal from "./ForumTagManagerModal";
 import "./Forum.css";
 
 const API = import.meta.env.VITE_API;
@@ -19,6 +20,7 @@ export default function Forum() {
   const [searchParams, setSearchParams] = useSearchParams();
   const view = searchParams.get("view") === "announcements" ? "announcements" : "community";
   const activeTagKey = searchParams.get("tags") || "";
+  const showWelcomeOverlay = searchParams.get("welcome") === "1";
   const activeTags = activeTagKey.split(",").filter(Boolean);
   const isStaff = user?.role_id <= 50;
   const [categories, setCategories] = useState([]);
@@ -270,6 +272,19 @@ export default function Forum() {
             )));
           }}
           onClose={() => setTagManagerOpen(false)}
+        />
+      )}
+
+      {/* The real forum above is already loaded behind this fixed layer.
+          Opening the doors removes only the overlay; it does not load a
+          second forum or navigate away from this page. */}
+      {showWelcomeOverlay && (
+        <WelcomeOverlay
+          onComplete={() => {
+            const nextParams = new URLSearchParams(searchParams);
+            nextParams.delete("welcome");
+            setSearchParams(nextParams, { replace: true });
+          }}
         />
       )}
     </main>

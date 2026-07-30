@@ -1,14 +1,13 @@
-import { Routes, Route } from "react-router-dom";
-import Home from "./pages/Home";
-import Community from "./pages/Community";
-import DiscountLinks from "./pages/DiscountLinks";
-import Guidelines from "./pages/Guidelines";
-import Stories from "./pages/Stories";
-import MyStory from "./pages/MyStory";
-import Contact from "./pages/Contact";
+import { Navigate, Routes, Route } from "react-router-dom";
+import Home from "./pages/marketing/Home";
+import Community from "./pages/marketing/Community";
+import DiscountLinks from "./pages/marketing/DiscountLinks";
+import Guidelines from "./pages/marketing/Guidelines";
+import Stories from "./pages/marketing/Stories";
+import MyStory from "./pages/marketing/MyStory";
+import Contact from "./pages/marketing/Contact";
 
-import Login from "./pages/Login";
-import Register from "./pages/Register";
+import Register from "./pages/auth/Register";
 
 
 
@@ -17,20 +16,19 @@ import ForumFlags from "./pages/admin/ForumFlags";
 import RequireRole from "./components/RequireRole";
 import MarketingLayout from "./layout/MarketingLayout";
 import AppLayout from "./layout/AppLayout";
-import About from "./pages/About";
-import Resources from "./pages/Resources";
-import FAQ from "./pages/FAQ";
-import Community2 from "./pages/Community2";
-import FAQ2 from "./pages/FAQ2";
-import DiscountLinks3 from "./pages/DiscountLinks3";
-import Forum from "./pages/Forum";
-import ForumThread from "./pages/ForumThread";
+import About from "./pages/marketing/About";
+import Resources from "./pages/marketing/Resources";
+import FAQ from "./pages/marketing/FAQ";
+import Community2 from "./pages/marketing/Community2";
+import FAQ2 from "./pages/marketing/FAQ2";
+import DiscountLinks3 from "./pages/marketing/DiscountLinks3";
+import Forum from "./pages/forum/Forum";
+import ForumThread from "./pages/forumthread/ForumThread";
 import Messages from "./pages/Messages";
 import RequireAuth from "./components/RequireAuth";
-import VerifyEmail from "./pages/VerifyEmail";
+import VerifyEmail from "./pages/auth/VerifyEmail";
 import MembershipAdmin from "./pages/admin/MembershipAdmin";
-import Profile from "./pages/Profile";
-import Welcome from "./pages/Welcome";
+import Profile from "./pages/profile/Profile";
 
 
 
@@ -42,11 +40,12 @@ export default function App() {
           of using the compact login drawer. All three signup flows use it. */}
       <Route path="/register" element={<Register />} />
       <Route path="/verify-email" element={<VerifyEmail />} />
-      <Route path="/login" element={<Login />} />
 
       {/* Marketing/logged-out routes — transparent hero nav */}
       <Route path="/" element={<MarketingLayout />}>
         <Route index element={<Home />} />
+        {/* Direct /login visits show the homepage behind the login drawer. */}
+        <Route path="login" element={<Home />} />
         <Route path="stories" element={<Stories />} />
         <Route path="mystory" element={<MyStory />} />
         <Route path="community" element={<Community />} />
@@ -59,14 +58,15 @@ export default function App() {
         <Route path="community2" element={<Community2 />} />
         <Route path="faq2" element={<FAQ2 />} />
         <Route path="discountlinks3" element={<DiscountLinks3 />} />
-        {/* <Route path="login" element={<Login />} />
-        <Route path="register" element={<Register />} /> */}
       </Route>
 
       {/* App/logged-in routes — solid utility nav */}
       {/* Full-bleed, no site nav — this is a one-time ceremonial screen, not a
           normal app page. */}
-      <Route path="/welcome" element={<RequireAuth><Welcome /></RequireAuth>} />
+      <Route
+        path="/welcome"
+        element={<RequireAuth><Navigate to="/forum?welcome=1" replace /></RequireAuth>}
+      />
 
       <Route element={<RequireAuth><AppLayout /></RequireAuth>}>
         <Route path="/forum" element={<Forum />} />

@@ -3,7 +3,7 @@ import * as PhosphorIcons from "@phosphor-icons/react/ssr";
 import { MagnifyingGlass, X } from "@phosphor-icons/react";
 import {
   AVATAR_CATEGORIES, AVATAR_COLORS, avatarColor, buildAvatarCatalog, parsePresetAvatar,
-} from "./avatarOptions";
+} from "../../utils/avatarOptions";
 import "./AvatarStudio.css";
 
 const CATALOG = buildAvatarCatalog(PhosphorIcons);

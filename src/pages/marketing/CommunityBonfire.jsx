@@ -18,10 +18,10 @@ import {
   Vector3 as QVector3,
   Vector4 as QVector4,
 } from "three.quarks";
-import { PUBLIC_STORIES } from "../data/publicStories";
-import { useSoftGlowTexture } from "./useSoftGlowTexture";
+import { PUBLIC_STORIES } from "../../data/publicStories";
+import { useSoftGlowTexture } from "../../hooks/useSoftGlowTexture";
 import { SceneErrorBoundary } from "./SceneErrorBoundary";
-import { usePrefersReducedMotion, supportsWebGL } from "./motionSupport";
+import { usePrefersReducedMotion, supportsWebGL } from "../../utils/motionSupport";
 import "./CommunityBonfire.css";
 
 // --- the flame itself: a handful of additive sprites + a flickering point light ---

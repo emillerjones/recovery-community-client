@@ -1,5 +1,5 @@
 import * as PhosphorIcons from "@phosphor-icons/react/ssr";
-import { avatarColor, parsePresetAvatar } from "./avatarOptions";
+import { avatarColor, parsePresetAvatar } from "../utils/avatarOptions";
 
 export default function PresetAvatar({ value, size = 82, fallback = "?", className = "" }) {
   const preset = parsePresetAvatar(value);

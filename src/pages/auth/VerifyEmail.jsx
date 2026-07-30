@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import "./Registration.css";
+import "./Register.css";
 
 const API = import.meta.env.VITE_API;
 

@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { X } from "lucide-react";
-import MentionTextarea from "../MentionTextarea";
-import MemberAvatar from "../MemberAvatar";
+import MentionTextarea from "../../components/MentionTextarea";
+import MemberAvatar from "../../components/MemberAvatar";
 
 const API = import.meta.env.VITE_API;
 

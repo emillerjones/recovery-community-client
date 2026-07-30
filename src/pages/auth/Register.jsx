@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { useAuth } from "../auth/AuthContext";
-import "./Registration.css";
+import { useAuth } from "../../auth/AuthContext";
+import "./Register.css";
 
 const API = import.meta.env.VITE_API;
 

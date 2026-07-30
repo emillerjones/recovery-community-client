@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, MessageSquarePlus, Search, Send, X } from "lucide-react";
 import { useAuth } from "../auth/AuthContext";
-import { useMessages } from "../notifications/MessagesContext";
+import { useMessages } from "../contexts/MessagesContext";
 import MemberAvatar from "../components/MemberAvatar";
 import "./Messages.css";
 

@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { MessageCircle } from "lucide-react";
-import { useMessages } from "../notifications/MessagesContext";
+import { useMessages } from "../contexts/MessagesContext";
 import "./NotificationBell.css";
 
 export default function MessagesBell() {

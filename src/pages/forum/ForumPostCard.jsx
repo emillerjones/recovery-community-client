@@ -5,7 +5,7 @@ import {
   Megaphone,
   MessageCircle,
 } from "lucide-react";
-import MemberAvatar from "../MemberAvatar";
+import MemberAvatar from "../../components/MemberAvatar";
 
 function timeAgo(value) {
   const seconds = Math.floor((Date.now() - new Date(value).getTime()) / 1000);

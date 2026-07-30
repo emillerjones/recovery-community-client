@@ -1,14 +1,14 @@
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { Link, useOutletContext } from "react-router-dom";
-import heroPhoto from "../assets/images/hero-lake.jpg";
-import { PUBLIC_STORIES } from "../data/publicStories";
-import { usePrefersReducedMotion, supportsWebGL } from "./motionSupport";
+import heroPhoto from "../../assets/images/hero-lake.jpg";
+import { PUBLIC_STORIES } from "../../data/publicStories";
+import { usePrefersReducedMotion, supportsWebGL } from "../../utils/motionSupport";
 import "./Home.css";
 
 // Lazy-loaded: pulls in three.js/R3F/three.quarks. Deferred until the browser
 // is idle after first paint (see `fireflyReady` below) so it never competes
 // with the hero photo/fonts for bandwidth on first load.
-const HeroFireflies = lazy(() => import("./HeroFireflies"));
+const HeroFireflies = lazy(() => import("../HeroFireflies"));
 
 const CONSTELLATION_NODES = [
   { x: 80, y: 190, r: 5 },

@@ -1,6 +1,6 @@
 import { lazy, Suspense, useState } from "react";
 import { useOutletContext } from "react-router-dom";
-import { PUBLIC_STORIES, SHAWN_MEMORIAL } from "../data/publicStories";
+import { PUBLIC_STORIES, SHAWN_MEMORIAL } from "../../data/publicStories";
 import StoryReader from "./StoryReader";
 import ShawnMemorial from "./ShawnMemorial";
 import "./Stories.css";

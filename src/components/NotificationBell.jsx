@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Bell } from "lucide-react";
-import { useNotifications } from "../notifications/NotificationsContext";
+import { useNotifications } from "../contexts/NotificationsContext";
 import "./NotificationBell.css";
 
 function timeAgo(value) {

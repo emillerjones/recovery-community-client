@@ -1,8 +1,8 @@
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import { AuthProvider } from "./auth/AuthContext";
-import { NotificationsProvider } from "./notifications/NotificationsContext";
-import { MessagesProvider } from "./notifications/MessagesContext";
+import { NotificationsProvider } from "./contexts/NotificationsContext";
+import { MessagesProvider } from "./contexts/MessagesContext";
 import App from "./App.jsx";
 import "./index.css";
 

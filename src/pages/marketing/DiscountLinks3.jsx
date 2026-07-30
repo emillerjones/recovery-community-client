@@ -1,4 +1,4 @@
-import TechniqueNote from "../components/TechniqueNote";
+import TechniqueNote from "../../components/TechniqueNote";
 import DiscountLinks from "./DiscountLinks";
 import "./DiscountLinks3.css";
 

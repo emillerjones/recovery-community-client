@@ -1,14 +1,14 @@
 import { lazy, Suspense, useEffect, useMemo, useState } from "react";
-import { useAuth } from "../auth/AuthContext";
-import MemberAvatar from "../components/MemberAvatar";
-import { memberInitials } from "../components/memberAvatarUtils";
+import { useAuth } from "../../auth/AuthContext";
+import MemberAvatar from "../../components/MemberAvatar";
+import { memberInitials } from "../../components/memberAvatarUtils";
 import "./Profile.css";
 
 const API = import.meta.env.VITE_API;
 const ROLE_LABELS = { 1: "Owner", 10: "Administrator", 50: "Moderator", 100: "Member" };
 // Phosphor contains thousands of exports, so the browser downloads the avatar
 // studio only when somebody actually opens it (or already has a preset avatar).
-const AvatarStudio = lazy(() => import("../components/AvatarStudio"));
+const AvatarStudio = lazy(() => import("./AvatarStudio"));
 
 export default function Profile() {
   const { token, updateUser } = useAuth();

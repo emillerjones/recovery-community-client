@@ -1,5 +1,5 @@
 /* Global resets only — page/component-specific styles live in
-   their own .css files (Home.css, Navbar.css, Auth.css, etc.) */
+   their own .css files (Home.css, Navbar.css, etc.) */
 
 * {
   box-sizing: border-box;

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import "./MyStory.css";
-import heroPhoto from "../assets/images/mystory.jpg";
+import heroPhoto from "../../assets/images/mystory.jpg";
 
 // PLACEHOLDER COPY — replace with Lainie's real story. Tone is intentionally
 // silly/joking per request until real content is provided.

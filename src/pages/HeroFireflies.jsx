@@ -16,7 +16,7 @@ import {
   Vector3 as QVector3,
   Vector4 as QVector4,
 } from "three.quarks";
-import { useSoftGlowTexture } from "./useSoftGlowTexture";
+import { useSoftGlowTexture } from "../hooks/useSoftGlowTexture";
 
 // A sparse field of slow, twinkling light motes drifting over the hero photo.
 function Fireflies({ reduced }) {
