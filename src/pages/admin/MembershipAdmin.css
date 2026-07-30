@@ -1,10 +1,10 @@
-.membership-admin { max-width: 1120px; margin: 0 auto; padding: 140px 5vw 90px; color: #1b221c; font-family: Inter, sans-serif; }
+.membership-admin { max-width: 1120px; min-height: 100vh; margin: 0 auto; padding: 140px 5vw 90px; background: linear-gradient(180deg,#f1f3ed 0,#faf9f5 360px); box-shadow: 0 0 0 100vmax #faf9f5; clip-path: inset(0 -100vmax); color: #1b221c; font-family: Inter, sans-serif; }
 .membership-admin > header span { color: #71816f; font-size: 11px; font-weight: 750; letter-spacing: .1em; text-transform: uppercase; }
 .membership-admin > header h1 { font: 500 clamp(2rem,4vw,3rem)/1.1 Fraunces,serif; margin: 8px 0; }
 .membership-admin > header p, .membership-help { color: rgba(27,34,28,.6); line-height: 1.55; }
 .membership-notice { display: flex; justify-content: space-between; gap: 15px; margin: 28px 0; padding: 14px 17px; border-radius: 10px; background: #e4ecdf; color: #345036; }
 .membership-notice button { border: 0; background: none; font-size: 20px; cursor: pointer; }
-.membership-section { margin-top: 34px; padding: 26px; border-radius: 18px; background: #fff; box-shadow: 0 12px 35px rgba(27,34,28,.07); }
+.membership-section { margin-top: 34px; padding: 26px; border: 1px solid rgba(30,42,34,.1); border-radius: 18px; background: rgba(246,242,234,.84); box-shadow: 0 12px 35px rgba(27,34,28,.055); }
 .membership-section h2 { font: 500 1.45rem Fraunces,serif; margin: 0; }
 .membership-section__title { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; }
 .membership-section__title span { display: grid; place-items: center; min-width: 25px; height: 25px; border-radius: 50%; background: #e5ebe1; font-size: 12px; font-weight: 700; }
@@ -17,11 +17,11 @@
 .application-card dt { color: rgba(27,34,28,.48); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; }
 .application-card dd { margin: 7px 0 0; line-height: 1.55; white-space: pre-wrap; }
 .application-card__actions { justify-content: flex-end; }
-.application-card button, .membership-list button { border: 1px solid rgba(27,34,28,.14); background: #fff; border-radius: 9px; padding: 9px 14px; cursor: pointer; }
+.application-card button, .membership-list button { border: 1px solid rgba(27,34,28,.14); background: rgba(255,255,255,.58); border-radius: 9px; padding: 9px 14px; cursor: pointer; }
 .membership-primary { border: 0 !important; border-radius: 9px; padding: 11px 16px; background: #2c3a2d !important; color: #fff; font-weight: 700; cursor: pointer; }
 .membership-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
 .membership-form { display: grid; gap: 12px; margin: 20px 0 24px; }
-.membership-form input { box-sizing: border-box; width: 100%; padding: 11px 12px; border: 1px solid rgba(27,34,28,.16); border-radius: 9px; font: inherit; }
+.membership-form input { box-sizing: border-box; width: 100%; padding: 11px 12px; border: 1px solid rgba(27,34,28,.16); border-radius: 9px; background: rgba(255,255,255,.62); font: inherit; }
 .membership-form label { display: flex; align-items: center; gap: 8px; color: rgba(27,34,28,.62); font-size: 13px; }
 .membership-form label input { width: 80px; }
 .membership-form__row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
@@ -30,5 +30,5 @@
 .new-code { display: grid; grid-template-columns: 1fr auto; gap: 7px 12px; align-items: center; margin-top: 18px; padding: 14px; border-radius: 10px; background: #f5eddc; }
 .new-code span { grid-column: 1/-1; font-size: 11px; text-transform: uppercase; color: #78623b; }
 .new-code strong { font-family: monospace; font-size: 18px; letter-spacing: .08em; overflow-wrap: anywhere; }
-.new-code button { border: 0; background: #fff; padding: 7px 10px; border-radius: 7px; cursor: pointer; }
+.new-code button { border: 0; background: rgba(255,255,255,.65); padding: 7px 10px; border-radius: 7px; cursor: pointer; }
 @media (max-width: 800px) { .membership-columns, .application-card dl { grid-template-columns: 1fr; } .membership-admin { padding: 110px 4vw 60px; } .membership-section { padding: 20px; } .application-card__identity { align-items: flex-start; flex-direction: column; } }

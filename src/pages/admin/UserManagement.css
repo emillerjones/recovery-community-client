@@ -1,7 +1,11 @@
 .user-management {
   max-width: 1100px;
+  min-height: 100vh;
   margin: 0 auto;
   padding: 150px 5vw 100px;
+  background: linear-gradient(180deg, #f1f3ed 0, #faf9f5 360px);
+  box-shadow: 0 0 0 100vmax #faf9f5;
+  clip-path: inset(0 -100vmax);
   font-family: "Inter", sans-serif;
   color: #1b221c;
 }
@@ -36,7 +40,7 @@
   padding: 12px 20px;
   border-radius: 30px;
   border: 1px solid rgba(27, 34, 28, 0.12);
-  background: #fff;
+  background: rgba(255, 255, 255, 0.6);
   min-width: 280px;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
@@ -66,7 +70,8 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 32px;
-  background: #fff;
+  background: rgba(246, 242, 234, 0.84);
+  border: 1px solid rgba(30, 42, 34, 0.08);
   border-radius: 16px;
   padding: 22px 28px;
   margin-bottom: 24px;
@@ -113,14 +118,15 @@
 .user-table {
   width: 100%;
   border-collapse: collapse;
-  background: #fff;
+  background: rgba(246, 242, 234, 0.86);
+  border: 1px solid rgba(30, 42, 34, 0.09);
   border-radius: 18px;
   overflow: hidden;
   box-shadow: 0 1px 0 rgba(27, 34, 28, 0.04), 0 18px 44px rgba(27, 34, 28, 0.07);
 }
 
 .user-table thead {
-  background: #f6f2ea;
+  background: #e9eee6;
 }
 
 .user-table th {
@@ -197,7 +203,7 @@
   padding: 7px 12px;
   border-radius: 20px;
   border: 1px solid rgba(27, 34, 28, 0.12);
-  background: #fff;
+  background: rgba(255, 255, 255, 0.58);
   cursor: pointer;
   transition: border-color 0.2s ease;
 }
@@ -301,15 +307,15 @@
   .user-stats__breakdown-item { padding: 0; background: transparent; font-size: 9px; }
   .user-mobile-filters { display: flex; gap: 7px; overflow-x: auto; margin: 0 -14px 14px; padding: 0 14px 4px; scrollbar-width: none; }
   .user-mobile-filters::-webkit-scrollbar { display: none; }
-  .user-mobile-filters button { min-height: 38px; flex: 0 0 auto; padding: 0 14px; border: 1px solid rgba(44,58,45,.12); border-radius: 999px; background: #fff; color: rgba(27,34,28,.62); font: 650 11px Inter,sans-serif; }
+  .user-mobile-filters button { min-height: 38px; flex: 0 0 auto; padding: 0 14px; border: 1px solid rgba(44,58,45,.12); border-radius: 999px; background: rgba(246,242,234,.82); color: rgba(27,34,28,.62); font: 650 11px Inter,sans-serif; }
   .user-mobile-filters button.is-selected { border-color: #2c3a2d; background: #2c3a2d; color: #fff; }
 
   /* The desktop table becomes a stack of touch-friendly member cards. */
   .user-table { display: block; overflow: visible; background: transparent; box-shadow: none; }
   .user-table thead { display: none; }
   .user-table tbody { display: grid; gap: 9px; }
-  .user-table tbody tr { position: relative; display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 10px 12px; padding: 14px; border: 1px solid rgba(27,34,28,.07); border-radius: 15px; background: #fff; box-shadow: 0 6px 20px rgba(27,34,28,.045); }
-  .user-table tbody tr:hover { background: #fff; }
+  .user-table tbody tr { position: relative; display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 10px 12px; padding: 14px; border: 1px solid rgba(27,34,28,.08); border-radius: 15px; background: rgba(246,242,234,.88); box-shadow: 0 6px 20px rgba(27,34,28,.04); }
+  .user-table tbody tr:hover { background: rgba(246,242,234,.88); }
   .user-table tbody tr.user-table__empty { display: block; }
   .user-table__empty td { padding: 28px 12px; }
   .user-table td { display: block; padding: 0; border: 0; }
@@ -333,11 +339,11 @@
   .user-actions__mobile-trigger span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 
   .user-mobile-actions-backdrop { position: fixed; z-index: 1200; inset: 0; display: grid; align-items: end; background: rgba(15,22,17,.58); backdrop-filter: blur(5px); }
-  .user-mobile-actions { padding: 20px 18px calc(18px + env(safe-area-inset-bottom,0px)); border-radius: 22px 22px 0 0; background: #f8f8f4; box-shadow: 0 -20px 60px rgba(0,0,0,.22); }
+  .user-mobile-actions { padding: 20px 18px calc(18px + env(safe-area-inset-bottom,0px)); border-radius: 22px 22px 0 0; background: #f6f2ea; box-shadow: 0 -20px 60px rgba(0,0,0,.22); }
   .user-mobile-actions header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 14px; }
   .user-mobile-actions header small { color: #738171; font-size: 9px; font-weight: 750; letter-spacing: .1em; text-transform: uppercase; }
   .user-mobile-actions h2 { margin: 4px 0 0; font: 500 1.45rem Fraunces,serif; }
-  .user-mobile-actions header button { width: 38px; height: 38px; display: grid; place-items: center; border: 1px solid rgba(27,34,28,.1); border-radius: 50%; background: #fff; }
+  .user-mobile-actions header button { width: 38px; height: 38px; display: grid; place-items: center; border: 1px solid rgba(27,34,28,.1); border-radius: 50%; background: rgba(255,255,255,.58); }
   .user-mobile-actions > button { width: 100%; min-height: 50px; border: 0; border-top: 1px solid rgba(27,34,28,.08); background: transparent; color: #2c3a2d; font: 700 14px Inter,sans-serif; text-align: left; }
   .user-mobile-actions > button.is-danger { color: #9b3e35; }
   .user-mobile-actions > button.is-cancel { margin-top: 8px; border: 0; border-radius: 12px; background: #e8ece4; text-align: center; }

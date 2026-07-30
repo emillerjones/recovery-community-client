@@ -1,7 +1,11 @@
 .forum-flags {
   max-width: 1000px;
+  min-height: 100vh;
   margin: 0 auto;
   padding: 150px 5vw 100px;
+  background: linear-gradient(180deg, #f1f3ed 0, #faf9f5 360px);
+  box-shadow: 0 0 0 100vmax #faf9f5;
+  clip-path: inset(0 -100vmax);
   font-family: "Inter", sans-serif;
   color: #1b221c;
 }
@@ -62,7 +66,8 @@
   padding: 16px 18px;
   border: 1px solid rgba(27, 34, 28, 0.1);
   border-radius: 16px;
-  background: #fff;
+  background: rgba(246, 242, 234, 0.84);
+  box-shadow: 0 8px 26px rgba(27, 34, 28, 0.045);
 }
 .forum-flags__count {
   display: grid;
