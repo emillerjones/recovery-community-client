@@ -31,6 +31,7 @@ function pageKeyFor(pathname) {
     "/admin/membership": "admin_membership",
     "/admin/users": "admin_users",
     "/admin/forum-flags": "admin_forum_flags",
+    "/admin/stats": "admin_stats",
   }[pathname] || null;
 }
 

@@ -29,6 +29,7 @@ import RequireAuth from "./components/RequireAuth";
 import VerifyEmail from "./pages/auth/VerifyEmail";
 import MembershipAdmin from "./pages/admin/MembershipAdmin";
 import Profile from "./pages/profile/Profile";
+import AnalyticsAdmin from "./pages/admin/AnalyticsAdmin";
 
 
 
@@ -74,6 +75,14 @@ export default function App() {
         <Route path="/messages" element={<Messages />} />
         <Route path="/messages/:conversationId" element={<Messages />} />
         <Route path="/profile" element={<Profile />} />
+        <Route
+          path="/admin/stats"
+          element={
+            <RequireRole maxRoleId={1}>
+              <AnalyticsAdmin />
+            </RequireRole>
+          }
+        />
         <Route
           path="/admin/membership"
           element={

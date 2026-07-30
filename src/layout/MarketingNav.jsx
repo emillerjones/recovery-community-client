@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { BadgePercent, BookHeart, BookOpen, ChevronRight, CircleHelp, Flag, Heart, HeartHandshake, LayoutGrid, LifeBuoy, LogOut, Mail, MessageCircle, ScrollText, ShieldCheck, ShoppingBag, Sparkles, UserCheck, UsersRound } from "lucide-react";
+import { BadgePercent, BarChart3, BookHeart, BookOpen, ChevronRight, CircleHelp, Flag, Heart, HeartHandshake, LayoutGrid, LifeBuoy, LogOut, Mail, MessageCircle, ScrollText, ShieldCheck, ShoppingBag, Sparkles, UserCheck, UsersRound } from "lucide-react";
 import { useAuth } from "../auth/AuthContext";
 import NotificationBell from "../components/NotificationBell";
 import MessagesBell from "../components/MessagesBell";
@@ -56,6 +56,7 @@ const ROLE_LABELS = {
 };
 
 const ADMIN_LINKS = [
+  { to: "/admin/stats", label: "Stats", description: "Private community activity", icon: BarChart3, ownerOnly: true },
   { to: "/admin/users", label: "Users", description: "Roles and member accounts", icon: UsersRound },
   { to: "/admin/membership", label: "Admissions", description: "Applications and invite codes", icon: UserCheck },
   { to: "/admin/forum-flags", label: "Flagged", description: "Review reported forum content", icon: Flag },
@@ -133,6 +134,7 @@ export default function MarketingNav({ onLogin, onRegister }) {
   const [navTextTheme, setNavTextTheme] = useState("light");
   const headerRef = useRef(null);
   const location = useLocation();
+  const visibleAdminLinks = ADMIN_LINKS.filter((link) => !link.ownerOnly || user?.role_id === 1);
 
   /*
     Nav theme by page.
@@ -274,7 +276,7 @@ export default function MarketingNav({ onLogin, onRegister }) {
         {token ? (
           <>
             {user?.role_id <= 10 && (
-              <NavDropdown label="Admin" links={ADMIN_LINKS} closeMenu={closeMenu} align="right" icon={ShieldCheck} />
+              <NavDropdown label="Admin" links={visibleAdminLinks} closeMenu={closeMenu} align="right" icon={ShieldCheck} />
             )}
             <MessagesBell />
             <NotificationBell />
@@ -333,7 +335,7 @@ export default function MarketingNav({ onLogin, onRegister }) {
                     <span><strong>Admin tools</strong><small>Users, admissions, and flagged content</small></span>
                     <ChevronRight size={18} />
                   </button>
-                  {mobileExpanded === "Admin" && <div className="mobile-nav__section-links">{ADMIN_LINKS.map((link) => <NavLink key={link.to} to={link.to} onClick={closeMenu}>{link.label}<ChevronRight size={16} /></NavLink>)}</div>}
+                  {mobileExpanded === "Admin" && <div className="mobile-nav__section-links">{visibleAdminLinks.map((link) => <NavLink key={link.to} to={link.to} onClick={closeMenu}>{link.label}<ChevronRight size={16} /></NavLink>)}</div>}
                 </section>
               )}
             </>
