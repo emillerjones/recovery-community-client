@@ -1,18 +1,22 @@
+import { useState } from "react";
 import {
-  Bookmark,
+  Check,
   Megaphone,
   MessageCircle,
   Search,
-  TrendingUp,
-  User,
+  SlidersHorizontal,
   X,
 } from "lucide-react";
 
-const FILTERS = [
+const SCOPES = [
+  { key: "all", label: "All posts" },
+  { key: "mine", label: "My posts" },
+  { key: "saved", label: "Saved posts" },
+];
+
+const ORDERS = [
   { key: "recent", label: "Latest" },
-  { key: "discussed", label: "Most discussed", icon: TrendingUp },
-  { key: "mine", label: "My posts", icon: User },
-  { key: "saved", label: "Saved", icon: Bookmark },
+  { key: "discussed", label: "Most discussed" },
 ];
 
 export default function ForumControls({
@@ -20,18 +24,49 @@ export default function ForumControls({
   tags,
   activeTags,
   searchInput,
-  sort,
+  scope,
+  order,
   onViewChange,
-  onTagChange,
   onSearchInputChange,
-  onSortChange,
+  onApplyFilters,
 }) {
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const [draftScope, setDraftScope] = useState(scope);
+  const [draftOrder, setDraftOrder] = useState(order);
+  const [draftTags, setDraftTags] = useState(activeTags);
+  const activeFilterCount = activeTags.length
+    + (scope !== "all" ? 1 : 0)
+    + (order !== "recent" ? 1 : 0);
+
+  function openFilters() {
+    setDraftScope(scope);
+    setDraftOrder(order);
+    setDraftTags(activeTags);
+    setFiltersOpen(true);
+  }
+
+  function toggleDraftTag(slug) {
+    setDraftTags((current) => current.includes(slug)
+      ? current.filter((tag) => tag !== slug)
+      : [...current, slug]);
+  }
+
+  function applyAndClose(next = {
+    scope: draftScope,
+    order: draftOrder,
+    tags: draftTags,
+  }) {
+    onApplyFilters(next);
+    setFiltersOpen(false);
+  }
+
   return (
     <>
       {/* FORUM LIST TRACE STEP 1A: These section buttons call the callback
           supplied by Forum.jsx. Continue there in setView(). */}
       <nav className="forum-feed-views" aria-label="Forum sections">
         <button
+          type="button"
           className={view === "community" ? "is-active" : ""}
           onClick={() => onViewChange("community")}
           aria-current={view === "community" ? "page" : undefined}
@@ -43,6 +78,7 @@ export default function ForumControls({
           </span>
         </button>
         <button
+          type="button"
           className={view === "announcements" ? "is-active" : ""}
           onClick={() => onViewChange("announcements")}
           aria-current={view === "announcements" ? "page" : undefined}
@@ -55,29 +91,9 @@ export default function ForumControls({
         </button>
       </nav>
 
-      {/* FORUM LIST TRACE STEP 1B: Tag clicks call Forum.jsx's selectTag(). */}
-      <div className="forum-feed-tagbar" aria-label="Filter by tag">
-        <button
-          className={!activeTags.length ? "is-active" : ""}
-          onClick={() => onTagChange("")}
-        >
-          All tags
-        </button>
-        {tags.filter((tag) => tag.active).map((tag) => (
-          <button
-            key={tag.tag_id}
-            className={activeTags.includes(tag.slug) ? "is-active" : ""}
-            aria-pressed={activeTags.includes(tag.slug)}
-            onClick={() => onTagChange(tag.slug)}
-          >
-            #{tag.slug}
-          </button>
-        ))}
-      </div>
-
-      {/* FORUM LIST TRACE STEP 1C: A sort button sends its key back to
-          Forum.jsx's selectSort(). Search text follows the same state flow. */}
-      <div className="forum-feed-toolbar">
+      {/* FORUM LIST TRACE STEP 1B: Search remains immediate. The Filters
+          button collects scope, order, and tags before one server request. */}
+      <div className="forum-feed-toolbar forum-feed-toolbar--condensed">
         <label>
           <Search size={16} />
           <input
@@ -87,24 +103,114 @@ export default function ForumControls({
             placeholder="Search conversations"
           />
           {searchInput && (
-            <button onClick={() => onSearchInputChange("")} aria-label="Clear search">
+            <button
+              type="button"
+              onClick={() => onSearchInputChange("")}
+              aria-label="Clear search"
+            >
               <X size={13} />
             </button>
           )}
         </label>
-        <div>
-          {FILTERS.map(({ key, label, icon: Icon }) => (
-            <button
-              key={key}
-              className={sort === key ? "is-active" : ""}
-              onClick={() => onSortChange(key)}
-            >
-              {Icon && <Icon size={13} />}
-              {label}
-            </button>
-          ))}
-        </div>
+        <button type="button" className="forum-feed-filter-trigger" onClick={openFilters}>
+          <SlidersHorizontal size={16} />
+          Filters
+          {activeFilterCount > 0 && <span>{activeFilterCount}</span>}
+        </button>
       </div>
+
+      {activeFilterCount > 0 && (
+        <div className="forum-feed-active-filters" aria-label="Active conversation filters">
+          {scope !== "all" && <button type="button" onClick={() => applyAndClose({ scope: "all", order, tags: activeTags })}>
+            {scope === "mine" ? "My posts" : "Saved posts"} <X size={11} />
+          </button>}
+          {order !== "recent" && <button type="button" onClick={() => applyAndClose({ scope, order: "recent", tags: activeTags })}>
+            Most discussed <X size={11} />
+          </button>}
+          {activeTags.map((slug) => <button type="button" key={slug} onClick={() => applyAndClose({
+            scope,
+            order,
+            tags: activeTags.filter((tag) => tag !== slug),
+          })}>
+            #{slug} <X size={11} />
+          </button>)}
+          <button type="button" className="forum-feed-active-filters__clear" onClick={() => applyAndClose({ scope: "all", order: "recent", tags: [] })}>
+            Clear all
+          </button>
+        </div>
+      )}
+
+      {filtersOpen && (
+        <div className="forum-feed-filter-layer" role="presentation" onMouseDown={(event) => {
+          if (event.target === event.currentTarget) setFiltersOpen(false);
+        }}>
+          <section className="forum-feed-filter-panel" role="dialog" aria-modal="true" aria-labelledby="forum-filter-title">
+            <header>
+              <div>
+                <p className="forum-feed-eyebrow">Refine the conversation list</p>
+                <h2 id="forum-filter-title">Filter conversations</h2>
+              </div>
+              <button type="button" onClick={() => setFiltersOpen(false)} aria-label="Close filters"><X size={20} /></button>
+            </header>
+
+            <fieldset>
+              <legend>Show</legend>
+              <div className="forum-feed-filter-options">
+                {SCOPES.map((option) => <button
+                  type="button"
+                  key={option.key}
+                  className={draftScope === option.key ? "is-active" : ""}
+                  aria-pressed={draftScope === option.key}
+                  onClick={() => setDraftScope(option.key)}
+                >
+                  {option.label}{draftScope === option.key && <Check size={14} />}
+                </button>)}
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <legend>Order by</legend>
+              <div className="forum-feed-filter-options">
+                {ORDERS.map((option) => <button
+                  type="button"
+                  key={option.key}
+                  className={draftOrder === option.key ? "is-active" : ""}
+                  aria-pressed={draftOrder === option.key}
+                  onClick={() => setDraftOrder(option.key)}
+                >
+                  {option.label}{draftOrder === option.key && <Check size={14} />}
+                </button>)}
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <legend>Tags <small>Choose any that apply</small></legend>
+              <div className="forum-feed-filter-tags">
+                {tags.filter((tag) => tag.active).map((tag) => <button
+                  type="button"
+                  key={tag.tag_id}
+                  className={draftTags.includes(tag.slug) ? "is-active" : ""}
+                  aria-pressed={draftTags.includes(tag.slug)}
+                  onClick={() => toggleDraftTag(tag.slug)}
+                >
+                  #{tag.slug}{draftTags.includes(tag.slug) && <Check size={12} />}
+                </button>)}
+              </div>
+            </fieldset>
+
+            <footer>
+              <button type="button" onClick={() => {
+                setDraftScope("all");
+                setDraftOrder("recent");
+                setDraftTags([]);
+              }}>Clear all</button>
+              <button type="button" className="forum-feed-publish" onClick={() => applyAndClose()}>
+                Show results
+              </button>
+            </footer>
+          </section>
+        </div>
+      )}
     </>
   );
 }

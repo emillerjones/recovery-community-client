@@ -38,7 +38,8 @@ export default function Forum() {
   const [tagManagerOpen, setTagManagerOpen] = useState(false);
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
-  const [sort, setSort] = useState("recent");
+  const [scope, setScope] = useState("all");
+  const [order, setOrder] = useState("recent");
   const [showLoginWelcome, setShowLoginWelcome] = useState(() => Boolean(location.state?.justLoggedIn));
   const loadMoreRef = useRef(null);
   const headers = useMemo(() => ({ Authorization: `Bearer ${token}` }), [token]);
@@ -76,7 +77,7 @@ export default function Forum() {
   }, [headers, isStaff]);
 
   useEffect(() => {
-    // FORUM LIST TRACE STEP 3: A section, tag, search, sort, or page change
+    // FORUM LIST TRACE STEP 3: A section, tag, search, scope, order, or page change
     // reaches this effect. Put those choices in the URL and ask the server for
     // only the matching page. Continue at TRACE STEP 4 in server/api/forum.js.
     const controller = new AbortController();
@@ -84,7 +85,8 @@ export default function Forum() {
     params.set("section", view);
     if (activeTagKey) params.set("tags", activeTagKey);
     if (search) params.set("search", search);
-    params.set("sort", sort);
+    params.set("scope", scope);
+    params.set("order", order);
     params.set("page", String(page));
     fetch(`${API}/api/forum/posts?${params}`, { headers, signal: controller.signal })
       .then(async (response) => {
@@ -103,7 +105,7 @@ export default function Forum() {
       .catch((requestError) => { if (requestError.name !== "AbortError") setError(requestError.message); })
       .finally(() => { if (!controller.signal.aborted) { setLoading(false); setLoadingMore(false); } });
     return () => controller.abort();
-  }, [view, activeTagKey, search, sort, page, headers]);
+  }, [view, activeTagKey, search, scope, order, page, headers]);
 
   useEffect(() => {
     // Infinite scrolling does not load the entire posts table. When this
@@ -161,15 +163,19 @@ export default function Forum() {
     setSearchParams(next);
   }
 
-  function selectSort(nextSort) {
-    // FORUM LIST TRACE STEP 2C: Latest / Most discussed / My posts / Saved
-    // comes here. setSort() changes state, so TRACE STEP 3 makes a fresh API
-    // request instead of filtering an old complete list in the browser.
-    if (nextSort === sort) return;
+  function applyFilters(nextFilters) {
+    // FORUM LIST TRACE STEP 2C: The filter panel sends three separate choices:
+    // whose posts to show, how to order them, and which tags must match.
+    // Updating them makes TRACE STEP 3 request a fresh page from the server.
     setPosts([]);
     setPage(0);
     setLoading(true);
-    setSort(nextSort);
+    setScope(nextFilters.scope);
+    setOrder(nextFilters.order);
+    const next = {};
+    if (view === "announcements") next.view = "announcements";
+    if (nextFilters.tags.length) next.tags = nextFilters.tags.join(",");
+    setSearchParams(next);
   }
 
   return (
@@ -183,9 +189,15 @@ export default function Forum() {
       <section className="forum-feed-hero">
         <div className="forum-feed-hero__copy">
           <p className="forum-feed-eyebrow">Private member community</p>
-          <h1>A place to be heard.</h1>
+          <h1>
+            <span className="forum-feed-hero__desktop-title">A place to be heard.</span>
+            <span className="forum-feed-hero__mobile-title">Community Forum</span>
+          </h1>
           <p>
-            Share what is happening, ask a question, or simply let the community know you&rsquo;re here.
+            <span className="forum-feed-hero__desktop-description">
+              Share what is happening, ask a question, or simply let the community know you&rsquo;re here.
+            </span>
+            <span className="forum-feed-hero__mobile-description">A place to be heard.</span>
           </p>
         </div>
         {(view === "community" || isStaff) && (
@@ -203,11 +215,11 @@ export default function Forum() {
             tags={tags}
             activeTags={activeTags}
             searchInput={searchInput}
-            sort={sort}
+            scope={scope}
+            order={order}
             onViewChange={setView}
-            onTagChange={selectTag}
             onSearchInputChange={setSearchInput}
-            onSortChange={selectSort}
+            onApplyFilters={applyFilters}
           />
           <ForumPostList
             view={view}
