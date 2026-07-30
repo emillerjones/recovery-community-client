@@ -190,7 +190,8 @@
 }
 
 .nav-online { display: inline-flex; align-items: center; gap: 7px; padding: 8px 11px; border: 1px solid currentColor; border-radius: 999px; background: rgba(255,255,255,.08); color: inherit; font: 700 11px Inter, sans-serif; opacity: .78; cursor: pointer; }
-.nav-online i, .mobile-nav__lounge i { width: 7px; height: 7px; border-radius: 50%; background: #72bf78; box-shadow: 0 0 0 3px rgba(114,191,120,.14); }
+.nav-online > svg, .mobile-nav__lounge span > svg { color: #d6aa4c; }
+.nav-online.lounge-activity--glowing > svg, .nav-online.lounge-activity--bright > svg, .mobile-nav__lounge.lounge-activity--glowing span > svg, .mobile-nav__lounge.lounge-activity--bright span > svg { color: #f0c565; filter: drop-shadow(0 0 4px rgba(240,197,101,.55)); }
 .site-header--solid .nav-online, .site-header--dark-text .nav-online, .site-header--scrolled .nav-online { border-color: rgba(35,54,41,.14); background: rgba(255,255,255,.48); }
 
 .site-header--scrolled .nav-identity,

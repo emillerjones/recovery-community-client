@@ -167,11 +167,22 @@ export function LoungeProvider({ children }) {
       return;
     }
     let cancelled = false;
-    fetch(`${API}/api/lounge/status`, { headers })
-      .then((response) => response.ok ? response.json() : null)
-      .then((data) => { if (!cancelled && data) setStatus(data); })
-      .catch(() => {});
-    return () => { cancelled = true; };
+
+    function refreshStatus() {
+      fetch(`${API}/api/lounge/status`, { headers })
+        .then((response) => response.ok ? response.json() : null)
+        .then((data) => { if (!cancelled && data) setStatus(data); })
+        .catch(() => {});
+    }
+
+    refreshStatus();
+    // Recalculate the rolling one-hour activity window while the page stays
+    // open, so a bright fire naturally cools down when conversation quiets.
+    const intervalId = window.setInterval(refreshStatus, 60_000);
+    return () => {
+      cancelled = true;
+      window.clearInterval(intervalId);
+    };
   }, [headers, token]);
 
   const value = {

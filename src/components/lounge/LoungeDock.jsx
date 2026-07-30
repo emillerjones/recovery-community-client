@@ -3,25 +3,8 @@ import { Flame, Send, Trash2, X } from "lucide-react";
 import { useAuth } from "../../auth/AuthContext";
 import { useLounge } from "../../contexts/LoungeContext";
 import MemberAvatar from "../MemberAvatar";
+import { getLoungeActivity } from "../../utils/loungeActivity";
 import "./LoungeDock.css";
-
-function relativeActivity(status) {
-  if (status.messages_last_hour >= 3) {
-    return `${status.messages_last_hour} messages this hour`;
-  }
-  if (status.last_message_at) {
-    const minutes = Math.max(
-      0,
-      Math.floor((Date.now() - new Date(status.last_message_at)) / 60000)
-    );
-    if (minutes < 1) return "Active just now";
-    if (minutes < 60) return `Active ${minutes}m ago`;
-  }
-  if (status.participants_today > 0) {
-    return `${status.participants_today} chatted today`;
-  }
-  return "Leave a message by the fire";
-}
 
 function messageTime(value) {
   return new Date(value).toLocaleTimeString([], {
@@ -48,6 +31,7 @@ export default function LoungeDock() {
   } = useLounge();
   const [draft, setDraft] = useState("");
   const listRef = useRef(null);
+  const activity = getLoungeActivity(status);
 
   useEffect(() => {
     if (!isOpen || !listRef.current) return;
@@ -70,12 +54,12 @@ export default function LoungeDock() {
         onClick={closeLounge}
       />}
 
-      <aside className={`lounge-panel ${isOpen ? "is-open" : ""}`} aria-hidden={!isOpen}>
+      <aside className={`lounge-panel lounge-activity--${activity.level} ${isOpen ? "is-open" : ""}`} aria-hidden={!isOpen}>
         <header className="lounge-panel__header">
           <span className="lounge-panel__fire"><Flame size={21} /></span>
           <div>
             <h2>Community Lounge</h2>
-            <p><i /> {status.online_count} online across the community</p>
+            <p>{activity.label} · {activity.detail}</p>
           </div>
           <button type="button" onClick={closeLounge} aria-label="Close Lounge"><X /></button>
         </header>
@@ -91,7 +75,7 @@ export default function LoungeDock() {
               />
             ))}
           </div>
-          <span>{relativeActivity(status)}</span>
+          <span>{activity.detail}</span>
         </div>
 
         <div className="lounge-messages" ref={listRef} aria-live="polite">
@@ -154,11 +138,11 @@ export default function LoungeDock() {
         </form>
       </aside>
 
-      {!isOpen && <button type="button" className="lounge-dock" onClick={openLounge}>
+      {!isOpen && <button type="button" className={`lounge-dock lounge-activity--${activity.level}`} onClick={openLounge}>
         <span className="lounge-dock__icon"><Flame size={20} /></span>
         <span className="lounge-dock__copy">
           <strong>Community Lounge</strong>
-          <small><i /> {status.online_count} online · {relativeActivity(status)}</small>
+          <small>{activity.label} · {activity.detail}</small>
         </span>
         {status.unread_count > 0 && <span className="lounge-dock__badge">
           {status.unread_count > 99 ? "99+" : status.unread_count}

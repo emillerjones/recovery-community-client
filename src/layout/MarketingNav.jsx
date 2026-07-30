@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { BadgePercent, BarChart3, BookHeart, BookOpen, ChevronRight, CircleHelp, Flag, Heart, HeartHandshake, LayoutGrid, LifeBuoy, LogOut, Mail, MessageCircle, ScrollText, ShieldCheck, ShoppingBag, Sparkles, UserCheck, UsersRound } from "lucide-react";
+import { BadgePercent, BarChart3, BookHeart, BookOpen, ChevronRight, CircleHelp, Flag, Flame, Heart, HeartHandshake, LayoutGrid, LifeBuoy, LogOut, Mail, MessageCircle, ScrollText, ShieldCheck, ShoppingBag, Sparkles, UserCheck, UsersRound } from "lucide-react";
 import { useAuth } from "../auth/AuthContext";
 import NotificationBell from "../components/NotificationBell";
 import MessagesBell from "../components/MessagesBell";
 import MemberAvatar from "../components/MemberAvatar";
 import { useLounge } from "../contexts/LoungeContext";
+import { getLoungeActivity } from "../utils/loungeActivity";
 import logo from "../assets/icons/logo.png";
 import "./MarketingNav.css";
 
@@ -130,6 +131,7 @@ function MemberMoreDropdown({ closeMenu }) {
 export default function MarketingNav({ onLogin, onRegister }) {
   const { token, logout, user } = useAuth();
   const { status: loungeStatus, openLounge } = useLounge();
+  const loungeActivity = getLoungeActivity(loungeStatus);
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [mobileExpanded, setMobileExpanded] = useState(null);
@@ -277,8 +279,8 @@ export default function MarketingNav({ onLogin, onRegister }) {
       <div className="site-header__actions">
         {token ? (
           <>
-            <button type="button" className="nav-online" onClick={openLounge}>
-              <i /> {loungeStatus.online_count} online
+            <button type="button" className={`nav-online lounge-activity--${loungeActivity.level}`} onClick={openLounge}>
+              <Flame size={14} /> {loungeActivity.shortLabel}
             </button>
             {user?.role_id <= 10 && (
               <NavDropdown label="Admin" links={visibleAdminLinks} closeMenu={closeMenu} align="right" icon={ShieldCheck} />
@@ -333,11 +335,11 @@ export default function MarketingNav({ onLogin, onRegister }) {
                 <NavLink to="/messages" onClick={closeMenu}><MessageCircle size={21} /><strong>Messages</strong><small>Private conversations</small></NavLink>
               </div>
 
-              <button type="button" className="mobile-nav__lounge" onClick={() => {
+              <button type="button" className={`mobile-nav__lounge lounge-activity--${loungeActivity.level}`} onClick={() => {
                 closeMenu();
                 openLounge();
               }}>
-                <span><i /> {loungeStatus.online_count} members online</span>
+                <span><Flame size={13} /> {loungeActivity.label}</span>
                 <strong>Open Community Lounge</strong>
                 <ChevronRight size={18} />
               </button>

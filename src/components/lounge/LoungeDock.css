@@ -3,7 +3,12 @@
 .lounge-dock__copy { display: grid; gap: 2px; }
 .lounge-dock__copy strong { font: 700 14px/1.2 Inter, sans-serif; }
 .lounge-dock__copy small { color: rgba(255,255,255,.7); font: 500 11px/1.25 Inter, sans-serif; }
-.lounge-dock__copy i, .lounge-panel__header p i { display: inline-block; width: 7px; height: 7px; margin-right: 3px; border-radius: 50%; background: #81cb86; box-shadow: 0 0 0 3px rgba(129,203,134,.13); }
+.lounge-activity--quiet .lounge-dock__icon, .lounge-activity--quiet .lounge-panel__fire { background: #d8d3bd; color: #526056; }
+.lounge-activity--warm .lounge-dock__icon, .lounge-activity--warm .lounge-panel__fire { background: #e5c47a; }
+.lounge-activity--glowing .lounge-dock__icon, .lounge-activity--glowing .lounge-panel__fire { background: #f0c665; box-shadow: 0 0 0 6px rgba(240,198,101,.1), 0 0 18px rgba(240,198,101,.28); }
+.lounge-activity--bright .lounge-dock__icon, .lounge-activity--bright .lounge-panel__fire { background: #f4b84f; box-shadow: 0 0 0 7px rgba(244,184,79,.13), 0 0 24px rgba(244,184,79,.42); }
+.lounge-activity--glowing .lounge-dock__icon > svg, .lounge-activity--glowing .lounge-panel__fire > svg { transform: scale(1.06); }
+.lounge-activity--bright .lounge-dock__icon > svg, .lounge-activity--bright .lounge-panel__fire > svg { transform: scale(1.16); }
 .lounge-dock__badge { display: grid; place-items: center; min-width: 24px; height: 24px; padding: 0 6px; border-radius: 999px; background: #e7c675; color: #263f30; font: 800 11px Inter, sans-serif; }
 
 .lounge-backdrop { position: fixed; z-index: 94; inset: 0; border: 0; background: rgba(20,30,23,.28); backdrop-filter: blur(2px); }
