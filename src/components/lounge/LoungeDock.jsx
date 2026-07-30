@@ -103,7 +103,7 @@ export default function LoungeDock() {
                 />
                 <div>
                   <header>
-                    <strong>{message.author_username}</strong>
+                    <strong>{ownMessage ? "You" : message.author_username}</strong>
                     <time dateTime={message.created_at}>{messageTime(message.created_at)}</time>
                   </header>
                   {message.deleted_at ? (
