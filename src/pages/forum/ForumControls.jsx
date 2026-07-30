@@ -34,6 +34,7 @@ export default function ForumControls({
         <button
           className={view === "community" ? "is-active" : ""}
           onClick={() => onViewChange("community")}
+          aria-current={view === "community" ? "page" : undefined}
         >
           <MessageCircle size={17} />
           <span>
@@ -44,6 +45,7 @@ export default function ForumControls({
         <button
           className={view === "announcements" ? "is-active" : ""}
           onClick={() => onViewChange("announcements")}
+          aria-current={view === "announcements" ? "page" : undefined}
         >
           <Megaphone size={17} />
           <span>
