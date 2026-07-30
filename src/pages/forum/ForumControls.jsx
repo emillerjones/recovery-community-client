@@ -11,7 +11,7 @@ import {
 const SCOPES = [
   { key: "all", label: "All posts" },
   { key: "mine", label: "My posts" },
-  { key: "saved", label: "Saved posts" },
+  { key: "following", label: "Following" },
 ];
 
 const ORDERS = [
@@ -122,7 +122,7 @@ export default function ForumControls({
       {activeFilterCount > 0 && (
         <div className="forum-feed-active-filters" aria-label="Active conversation filters">
           {scope !== "all" && <button type="button" onClick={() => applyAndClose({ scope: "all", order, tags: activeTags })}>
-            {scope === "mine" ? "My posts" : "Saved posts"} <X size={11} />
+            {scope === "mine" ? "My posts" : "Following"} <X size={11} />
           </button>}
           {order !== "recent" && <button type="button" onClick={() => applyAndClose({ scope, order: "recent", tags: activeTags })}>
             Most discussed <X size={11} />

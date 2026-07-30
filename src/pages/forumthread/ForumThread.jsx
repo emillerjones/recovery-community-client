@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
-import { ArrowLeft, Bookmark, Flag, Lock, Pencil, Pin, Trash2 } from "lucide-react";
+import { ArrowLeft, Bell, Flag, Lock, Pencil, Pin, Trash2 } from "lucide-react";
 import { useAuth } from "../../auth/AuthContext";
 import { useNotifications } from "../../contexts/NotificationsContext";
 import ReactionBar from "../../components/ReactionBar";
@@ -246,10 +246,10 @@ export default function ForumThread() {
     setPost((current) => ({ ...current, flagged_by_me: !isFlagged }));
   }
 
-  async function togglePostSave() {
-    const isSaved = post.saved_by_me;
-    const response = await fetch(`${API}/api/forum/posts/${postId}/save`, {
-      method: isSaved ? "DELETE" : "POST",
+  async function togglePostFollow() {
+    const isFollowing = post.followed_by_me;
+    const response = await fetch(`${API}/api/forum/posts/${postId}/follow`, {
+      method: isFollowing ? "DELETE" : "POST",
       headers: { ...headers, "Content-Type": "application/json" },
     });
     if (!response.ok) {
@@ -257,7 +257,13 @@ export default function ForumThread() {
       setError(result.message || "Could not update that.");
       return;
     }
-    setPost((current) => ({ ...current, saved_by_me: !isSaved }));
+    setPost((current) => ({
+      ...current,
+      followed_by_me: !isFollowing,
+      // The private count excludes the author, so following your own post
+      // changes notification behavior without changing this number.
+      follower_count: current.follower_count,
+    }));
   }
 
   async function toggleCommentFlag(commentId, isFlagged) {
@@ -477,9 +483,14 @@ export default function ForumThread() {
                 <Flag size={15} /> {post.flagged_by_me ? "Flagged" : "Flag"}
               </button>
             )}
-            <button className={`forum-action-button ${post.saved_by_me ? "is-saved" : ""}`} onClick={togglePostSave}>
-              <Bookmark size={15} fill={post.saved_by_me ? "currentColor" : "none"} /> {post.saved_by_me ? "Saved" : "Save"}
+            <button className={`forum-action-button ${post.followed_by_me ? "is-following" : ""}`} onClick={togglePostFollow}>
+              <Bell size={15} fill={post.followed_by_me ? "currentColor" : "none"} /> {post.followed_by_me ? "Following" : "Follow"}
             </button>
+            {isAuthor && Number(post.follower_count) > 0 && (
+              <span className="forum-follower-count">
+                {post.follower_count} {Number(post.follower_count) === 1 ? "member is" : "members are"} following
+              </span>
+            )}
           </div>
         )}
       </article>

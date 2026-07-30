@@ -510,7 +510,8 @@
 .forum-action-button--danger { margin-left: auto; color: #843e36; background: rgba(245, 223, 219, 0.48); }
 .forum-action-button--danger:hover { border-color: rgba(132, 62, 54, 0.16); background: #f5dfdb; }
 .forum-action-button.is-flagged, .forum-reply-button.is-flagged { color: #843e36; background: #f5dfdb; }
-.forum-action-button.is-saved { color: #263d2e; background: #dfe8dc; }
+.forum-action-button.is-following { color: #263d2e; background: #dfe8dc; }
+.forum-follower-count { align-self:center; color:#748078; font-size:11px; }
 
 .forum-thread-replies { margin-top: 24px; padding: 34px 38px 38px; }
 .forum-thread-replies__heading { padding-bottom: 20px; border-bottom: 1px solid var(--forum-line); }
