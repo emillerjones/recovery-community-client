@@ -139,6 +139,9 @@ export default function MarketingNav({ onLogin, onRegister }) {
   const headerRef = useRef(null);
   const location = useLocation();
   const visibleAdminLinks = ADMIN_LINKS.filter((link) => !link.ownerOnly || user?.role_id === 1);
+  const loungeAvailable = ["/forum", "/messages", "/profile", "/admin"].some(
+    (path) => location.pathname === path || location.pathname.startsWith(`${path}/`),
+  );
 
   /*
     Nav theme by page.
@@ -279,9 +282,11 @@ export default function MarketingNav({ onLogin, onRegister }) {
       <div className="site-header__actions">
         {token ? (
           <>
-            <button type="button" className={`nav-online lounge-activity--${loungeActivity.level}`} onClick={openLounge}>
-              <Flame size={14} /> {loungeActivity.shortLabel}
-            </button>
+            {loungeAvailable && (
+              <button type="button" className={`nav-online lounge-activity--${loungeActivity.level}`} onClick={openLounge}>
+                <Flame size={14} /> {loungeActivity.shortLabel}
+              </button>
+            )}
             {user?.role_id <= 10 && (
               <NavDropdown label="Admin" links={visibleAdminLinks} closeMenu={closeMenu} align="right" icon={ShieldCheck} />
             )}
@@ -335,14 +340,16 @@ export default function MarketingNav({ onLogin, onRegister }) {
                 <NavLink to="/messages" onClick={closeMenu}><MessageCircle size={21} /><strong>Messages</strong><small>Private conversations</small></NavLink>
               </div>
 
-              <button type="button" className={`mobile-nav__lounge lounge-activity--${loungeActivity.level}`} onClick={() => {
-                closeMenu();
-                openLounge();
-              }}>
-                <span><Flame size={13} /> {loungeActivity.label}</span>
-                <strong>Open Community Lounge</strong>
-                <ChevronRight size={18} />
-              </button>
+              {loungeAvailable && (
+                <button type="button" className={`mobile-nav__lounge lounge-activity--${loungeActivity.level}`} onClick={() => {
+                  closeMenu();
+                  openLounge();
+                }}>
+                  <span><Flame size={13} /> {loungeActivity.label}</span>
+                  <strong>Open Community Lounge</strong>
+                  <ChevronRight size={18} />
+                </button>
+              )}
 
               {user?.role_id <= 10 && (
                 <section className={`mobile-nav__admin ${mobileExpanded === "Admin" ? "is-open" : ""}`}>
