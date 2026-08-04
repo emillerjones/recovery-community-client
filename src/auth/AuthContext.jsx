@@ -26,7 +26,17 @@ export function AuthProvider({ children }) {
     if (!token) return;
     let cancelled = false;
     fetch(API + "/api/users/me", { headers: { Authorization: `Bearer ${token}` } })
-      .then((response) => response.ok ? response.json() : null)
+      .then((response) => {
+        if (response.status === 401) {
+          if (!cancelled) {
+            setToken(null);
+            setUser(null);
+            localStorage.removeItem("token");
+          }
+          return null;
+        }
+        return response.ok ? response.json() : null;
+      })
       .then((profile) => {
         if (!cancelled && profile) setUser((current) => ({ ...current, ...profile, id: profile.user_id }));
       })
@@ -75,7 +85,7 @@ export function AuthProvider({ children }) {
   };
 
 
-  const logout = () => {
+  const logout = useCallback(() => {
     if (token) {
       // Logout clears the JWT locally, so send this authenticated event first.
       // keepalive lets the small request finish during navigation/page closing.
@@ -95,7 +105,7 @@ export function AuthProvider({ children }) {
     setToken(null);
     setUser(null);
     localStorage.removeItem("token");
-  };
+  }, [token]);
 
 
   const updateUser = useCallback((profile) => setUser((current) => ({ ...current, ...profile, id: profile.user_id || current?.id })), []);

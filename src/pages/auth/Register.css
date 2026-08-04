@@ -7,6 +7,7 @@
 .registration-intro, .registration-muted { color: rgba(27,34,28,.65); line-height: 1.65; }
 .registration-intro { max-width: 620px; margin-bottom: 34px; }
 .registration-form { display: grid; gap: 21px; }
+.registration-form--narrow { max-width: 430px; margin: 28px auto 0; text-align: left; }
 .registration-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
 .registration-form label:not(.registration-check) { display: grid; gap: 7px; font-size: 13px; font-weight: 650; color: #354338; }
 .registration-form em { font-weight: 400; color: #788079; }
@@ -20,6 +21,7 @@
 .registration-primary { min-height: 49px; border: 0; border-radius: 11px; padding: 0 22px; background: #2c3a2d; color: #fff; font: inherit; font-weight: 700; cursor: pointer; }
 .registration-primary:disabled { opacity: .55; cursor: wait; }
 .registration-primary--link { display: inline-flex; align-items: center; justify-content: center; text-decoration: none; margin-top: 18px; }
+.registration-back--centered { margin: 0; text-align: center; }
 .registration-error { color: #a3472f; line-height: 1.5; }
 .registration-login { text-align: center; color: rgba(27,34,28,.55); margin: 26px 0 0; font-size: 14px; }
 .registration-login button { border: 0; background: none; color: #2c3a2d; font-weight: 700; text-decoration: underline; cursor: pointer; }

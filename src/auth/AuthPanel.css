@@ -204,6 +204,13 @@
   margin: 0;
 }
 
+.ap-success {
+  margin: 0;
+  color: #406149;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
 /* ── Divider ── */
 .ap-divider {
   display: flex;
@@ -244,6 +251,8 @@
   border-color: rgba(44, 58, 45, 0.34);
   transform: translateY(-1px);
 }
+
+.ap-switch-btn--spaced { margin-top: 1.5rem; }
 
 /* ── Footer switch text ── */
 .ap-footer {

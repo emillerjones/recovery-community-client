@@ -27,6 +27,7 @@ import ForumThread from "./pages/forumthread/ForumThread";
 import Messages from "./pages/Messages";
 import RequireAuth from "./components/RequireAuth";
 import VerifyEmail from "./pages/auth/VerifyEmail";
+import ResetPassword from "./pages/auth/ResetPassword";
 import MembershipAdmin from "./pages/admin/MembershipAdmin";
 import Profile from "./pages/profile/Profile";
 import AnalyticsAdmin from "./pages/admin/AnalyticsAdmin";
@@ -41,6 +42,7 @@ export default function App() {
           of using the compact login drawer. All three signup flows use it. */}
       <Route path="/register" element={<Register />} />
       <Route path="/verify-email" element={<VerifyEmail />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
 
       {/* Marketing/logged-out routes — transparent hero nav */}
       <Route path="/" element={<MarketingLayout />}>

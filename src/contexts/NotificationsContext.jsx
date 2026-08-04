@@ -8,7 +8,7 @@ const API = import.meta.env.VITE_API;
 const NotificationsContext = createContext();
 
 export function NotificationsProvider({ children }) {
-  const { token } = useAuth();
+  const { token, logout } = useAuth();
   const [unreadCount, setUnreadCount] = useState(0);
   const [notifications, setNotifications] = useState([]);
   const [socket, setSocket] = useState(null);
@@ -52,13 +52,14 @@ export function NotificationsProvider({ children }) {
         return [notification, ...withoutOldCopy];
       });
     });
+    newSocket.on("session_revoked", logout);
 
     return () => {
       cancelled = true;
       newSocket.disconnect();
       socketRef.current = null;
     };
-  }, [token]);
+  }, [token, logout]);
 
   const fetchNotifications = useCallback(async () => {
     if (!token) return;

@@ -20,6 +20,8 @@ export default function AuthPanel({ mode, onClose, onSwitchMode }) {
   const [loading, setLoading] = useState(false);
   const [submittedEmail, setSubmittedEmail] = useState("");
   const [resendMessage, setResendMessage] = useState("");
+  const [recovering, setRecovering] = useState(false);
+  const [recoveryMessage, setRecoveryMessage] = useState("");
   const panelRef = useRef(null);
   const isLogin = mode === "login";
 
@@ -36,11 +38,25 @@ export default function AuthPanel({ mode, onClose, onSwitchMode }) {
   useEffect(() => {
     const first = panelRef.current?.querySelector("input");
     if (first) setTimeout(() => first.focus(), 300);
-  }, [mode]);
+  }, [mode, recovering]);
 
   function switchMode(nextMode) {
     setError(null);
+    setRecovering(false);
+    setRecoveryMessage("");
     onSwitchMode(nextMode);
+  }
+
+  function showRecovery() {
+    setError(null);
+    setRecoveryMessage("");
+    setRecovering(true);
+  }
+
+  function showLogin() {
+    setError(null);
+    setRecoveryMessage("");
+    setRecovering(false);
   }
 
   async function handleSubmit(e) {
@@ -54,7 +70,17 @@ export default function AuthPanel({ mode, onClose, onSwitchMode }) {
     const password = data.get("password");
 
     try {
-      if (isLogin) {
+      if (recovering) {
+        setRecoveryMessage("");
+        const response = await fetch(`${import.meta.env.VITE_API}/api/password-reset/request`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email }),
+        });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.message || "Could not request a reset link.");
+        setRecoveryMessage(result.message);
+      } else if (isLogin) {
         await login({ email, password });
         onClose();
         navigate("/forum", { state: { justLoggedIn: true } });
@@ -97,7 +123,7 @@ export default function AuthPanel({ mode, onClose, onSwitchMode }) {
         ref={panelRef}
         role="dialog"
         aria-modal="true"
-        aria-label={isLogin ? "Log in" : "Create an account"}
+        aria-label={recovering ? "Reset password" : isLogin ? "Log in" : "Create an account"}
       >
         {/* Close button */}
         <button
@@ -124,17 +150,19 @@ export default function AuthPanel({ mode, onClose, onSwitchMode }) {
 
         {/* Heading */}
         <h2 className="ap-title">
-          {isLogin ? "Welcome back." : "Join the community."}
+          {recovering ? "Reset your password." : isLogin ? "Welcome back." : "Join the community."}
         </h2>
         <p className="ap-sub">
-          {isLogin
+          {recovering
+            ? "We'll email you a secure, one-use reset link."
+            : isLogin
             ? "Good to see you."
             : "A safe space to find your way forward."}
         </p>
 
         {/* Form */}
         <form className="ap-form" onSubmit={handleSubmit}>
-          {!isLogin && (
+          {!isLogin && !recovering && (
             <label className="ap-label">
               <span>Username</span>
               <input
@@ -160,8 +188,9 @@ export default function AuthPanel({ mode, onClose, onSwitchMode }) {
             />
           </label>
 
-          <label className="ap-label">
-            <span>Password</span>
+          {!recovering && (
+            <label className="ap-label">
+              <span>Password</span>
             <input
               className="ap-input"
               type="password"
@@ -170,13 +199,14 @@ export default function AuthPanel({ mode, onClose, onSwitchMode }) {
               autoComplete={isLogin ? "current-password" : "new-password"}
               required
             />
-          </label>
+            </label>
+          )}
 
-          {isLogin && (
+          {isLogin && !recovering && (
             <button
               type="button"
               className="ap-forgot"
-              onClick={() => {/* TODO: forgot password */}}
+              onClick={showRecovery}
             >
               Forgot your password?
             </button>
@@ -189,6 +219,8 @@ export default function AuthPanel({ mode, onClose, onSwitchMode }) {
           >
             {loading
               ? "Just a moment…"
+              : recovering
+              ? "Email me a reset link"
               : isLogin
               ? "Log in"
               : "Create account"}
@@ -199,28 +231,35 @@ export default function AuthPanel({ mode, onClose, onSwitchMode }) {
             <button className="ap-switch-btn" type="button" onClick={resendVerification}>Send a new verification link</button>
           )}
           {resendMessage && <p className="ap-sub" role="status">{resendMessage}</p>}
+          {recoveryMessage && <p className="ap-success" role="status">{recoveryMessage}</p>}
         </form>
 
-        {/* Divider */}
-        <div className="ap-divider">
-          <span /><p>or</p><span />
-        </div>
+        {recovering ? (
+          <button className="ap-switch-btn ap-switch-btn--spaced" type="button" onClick={showLogin}>Back to login</button>
+        ) : (
+          <>
+            {/* Divider */}
+            <div className="ap-divider">
+              <span /><p>or</p><span />
+            </div>
 
-        {/* Switch mode */}
-        <button
-          className="ap-switch-btn"
-          type="button"
-          onClick={() => switchMode(isLogin ? "register" : "login")}
-        >
-          {isLogin ? "Create an account" : "Already have an account? Log in"}
-        </button>
+            {/* Switch mode */}
+            <button
+              className="ap-switch-btn"
+              type="button"
+              onClick={() => switchMode(isLogin ? "register" : "login")}
+            >
+              {isLogin ? "Create an account" : "Already have an account? Log in"}
+            </button>
 
-        <p className="ap-footer">
-          {isLogin
-            ? <>Need an account? <button type="button" onClick={() => switchMode("register")}>Sign up here.</button></>
-            : <>Already a member? <button type="button" onClick={() => switchMode("login")}>Log in.</button></>
-          }
-        </p>
+            <p className="ap-footer">
+              {isLogin
+                ? <>Need an account? <button type="button" onClick={() => switchMode("register")}>Sign up here.</button></>
+                : <>Already a member? <button type="button" onClick={() => switchMode("login")}>Log in.</button></>
+              }
+            </p>
+          </>
+        )}
       </aside>
     </>
   );
