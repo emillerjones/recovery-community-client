@@ -19,6 +19,7 @@ import AppLayout from "./layout/AppLayout";
 import About from "./pages/marketing/About";
 import Resources from "./pages/marketing/Resources";
 import FAQ from "./pages/marketing/FAQ";
+import Privacy from "./pages/marketing/Privacy";
 import Community2 from "./pages/marketing/Community2";
 import DiscountLinks3 from "./pages/marketing/DiscountLinks3";
 import Forum from "./pages/forum/Forum";
@@ -57,6 +58,7 @@ export default function App() {
         <Route path="about" element={<About />} />
         <Route path="resources" element={<Resources />} />
         <Route path="faq" element={<FAQ />} />
+        <Route path="privacy" element={<Privacy />} />
         <Route path="community2" element={<Community2 />} />
         <Route path="discountlinks3" element={<DiscountLinks3 />} />
       </Route>

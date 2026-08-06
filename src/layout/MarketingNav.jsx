@@ -24,6 +24,7 @@ const COMMUNITY_LINKS = [
 const LEARN_LINKS = [
   { to: "/resources", label: "Resources", description: "Practical recovery information", icon: BookOpen },
   { to: "/faq", label: "FAQ", description: "Answers to common questions", icon: CircleHelp },
+  { to: "/privacy", label: "Privacy", description: "How we handle and protect your information", icon: ShieldCheck },
 ];
 
 const SUPPORT_LINKS = [

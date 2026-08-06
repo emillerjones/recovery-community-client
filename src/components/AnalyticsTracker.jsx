@@ -25,6 +25,7 @@ function pageKeyFor(pathname) {
     "/about": "about",
     "/resources": "resources",
     "/faq": "faq",
+    "/privacy": "privacy",
     "/forum": "forum",
     "/profile": "profile",
     "/admin/membership": "admin_membership",
