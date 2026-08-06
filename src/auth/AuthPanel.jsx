@@ -83,7 +83,7 @@ export default function AuthPanel({ mode, onClose, onSwitchMode }) {
       } else if (isLogin) {
         await login({ email, password });
         onClose();
-        navigate("/forum", { state: { justLoggedIn: true } });
+        navigate("/today", { state: { justLoggedIn: true } });
       } else {
         const username = data.get("username");
         await register({ username, email, password });

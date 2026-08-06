@@ -14,6 +14,7 @@ function pageKeyFor(pathname) {
     "/login": "login",
     "/register": "register",
     "/verify-email": "verify_email",
+    "/today": "community_home",
     "/stories": "stories",
     "/mystory": "stories",
     "/community": "community",

@@ -137,7 +137,7 @@ export default function MarketingNav({ onLogin, onRegister }) {
   const headerRef = useRef(null);
   const location = useLocation();
   const visibleAdminLinks = ADMIN_LINKS.filter((link) => !link.ownerOnly || user?.role_id === 1);
-  const loungeAvailable = ["/forum", "/messages", "/profile", "/admin"].some(
+  const loungeAvailable = ["/today", "/forum", "/messages", "/profile", "/admin"].some(
     (path) => location.pathname === path || location.pathname.startsWith(`${path}/`),
   );
 
@@ -258,6 +258,7 @@ export default function MarketingNav({ onLogin, onRegister }) {
       <nav className="main-nav" aria-label="Primary navigation">
         {token ? (
           <>
+            <NavLink to="/today" className="main-nav__link main-nav__link--forum">Today</NavLink>
             <NavLink to="/forum" className="main-nav__link main-nav__link--forum">Forum</NavLink>
             <NavLink to="/resources" className="main-nav__link">Resources</NavLink>
             <MemberMoreDropdown closeMenu={closeMenu} />
@@ -334,6 +335,7 @@ export default function MarketingNav({ onLogin, onRegister }) {
               </NavLink>
 
               <div className="mobile-nav__member-shortcuts">
+                <NavLink to="/today" className="mobile-nav__member-home" onClick={closeMenu}><Flame size={21} /><strong>Today</strong><small>Your community home</small></NavLink>
                 <NavLink to="/forum" onClick={closeMenu}><LayoutGrid size={21} /><strong>Forum</strong><small>Community posts</small></NavLink>
                 <NavLink to="/messages" onClick={closeMenu}><MessageCircle size={21} /><strong>Messages</strong><small>Private conversations</small></NavLink>
               </div>
