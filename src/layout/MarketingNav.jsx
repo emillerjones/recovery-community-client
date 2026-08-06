@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { BadgePercent, BarChart3, BookHeart, BookOpen, ChevronRight, CircleHelp, Flag, Flame, Heart, HeartHandshake, LayoutGrid, LifeBuoy, LogOut, Mail, MessageCircle, ScrollText, ShieldCheck, ShoppingBag, Sparkles, UserCheck, UsersRound } from "lucide-react";
+import { BadgePercent, BarChart3, BookHeart, BookOpen, ChevronRight, CircleHelp, Flag, Flame, Heart, HeartHandshake, LayoutGrid, LogOut, Mail, MessageCircle, ScrollText, ShieldCheck, ShoppingBag, Sparkles, UserCheck, UsersRound } from "lucide-react";
 import { useAuth } from "../auth/AuthContext";
 import NotificationBell from "../components/NotificationBell";
 import MessagesBell from "../components/MessagesBell";
@@ -24,7 +24,6 @@ const COMMUNITY_LINKS = [
 const LEARN_LINKS = [
   { to: "/resources", label: "Resources", description: "Practical recovery information", icon: BookOpen },
   { to: "/faq", label: "FAQ", description: "Answers to common questions", icon: CircleHelp },
-  { to: "/faq2", label: "FAQ 2", description: "Explore the alternate FAQ", icon: LifeBuoy },
 ];
 
 const SUPPORT_LINKS = [
