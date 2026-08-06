@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { BadgePercent, BarChart3, BookHeart, BookOpen, ChevronRight, CircleHelp, Flag, Flame, Heart, HeartHandshake, LayoutGrid, LogOut, Mail, MessageCircle, ScrollText, ShieldCheck, ShoppingBag, Sparkles, UserCheck, UsersRound } from "lucide-react";
+import { BadgePercent, BarChart3, BookHeart, BookOpen, ChevronRight, CircleHelp, Flag, Flame, Heart, HeartHandshake, LayoutGrid, LogOut, Mail, MessageCircle, ScrollText, ShieldCheck, ShoppingBag, UserCheck, UsersRound } from "lucide-react";
 import { useAuth } from "../auth/AuthContext";
 import NotificationBell from "../components/NotificationBell";
 import MessagesBell from "../components/MessagesBell";
@@ -31,7 +31,6 @@ const SUPPORT_LINKS = [
   { to: "/donate", label: "Donate - Inactive", description: "Future community giving", icon: Heart },
   { to: "/merch", label: "Merch - Inactive", description: "Future community merchandise", icon: ShoppingBag },
   { to: "/discountlinks", label: "Discount", description: "Community partner savings", icon: BadgePercent },
-  { to: "/discountlinks3", label: "Discount 3 — Spatial Rail", description: "Explore the spatial discount rail", icon: Sparkles },
 ];
 
 const ABOUT_LINKS = [
