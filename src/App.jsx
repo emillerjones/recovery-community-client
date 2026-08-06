@@ -20,7 +20,6 @@ import About from "./pages/marketing/About";
 import Resources from "./pages/marketing/Resources";
 import FAQ from "./pages/marketing/FAQ";
 import Privacy from "./pages/marketing/Privacy";
-import Community2 from "./pages/marketing/Community2";
 import Forum from "./pages/forum/Forum";
 import ForumThread from "./pages/forumthread/ForumThread";
 import Messages from "./pages/Messages";
@@ -58,7 +57,6 @@ export default function App() {
         <Route path="resources" element={<Resources />} />
         <Route path="faq" element={<FAQ />} />
         <Route path="privacy" element={<Privacy />} />
-        <Route path="community2" element={<Community2 />} />
       </Route>
 
       {/* App/logged-in routes — solid utility nav */}
