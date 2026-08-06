@@ -117,93 +117,101 @@ export default function CommunityHome() {
 
   const recentNotifications = notifications.slice(0, 3);
   const totalUnread = unreadMessages + unreadNotifications + Number(loungeStatus.unread_count || 0);
+  const unreadFollowed = followedPosts.filter((post) => post.is_unread).length;
+  const today = new Date().toLocaleDateString(undefined, {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+  });
 
   return (
-    <main className="community-home">
-      <section className="community-home__hero" data-nav-theme="light">
-        <div className="community-home__hero-glow" aria-hidden="true" />
-        <div className="community-home__inner community-home__hero-inner">
+    <main className="community-home" data-nav-theme="dark">
+      <div className="community-home__shell">
+        <header className="community-home__topbar">
           <div>
-            <p className="community-home__eyebrow">Community home</p>
-            <h1>{greeting()}, <span>{user?.username}.</span></h1>
-            <p>Here is what is happening in your community today.</p>
+            <p className="community-home__date">Today · {today}</p>
+            <h1>{greeting()}, {user?.username}.</h1>
+            <p>Your personal view of what needs attention and what is happening now.</p>
           </div>
-          <div className="community-home__pulse" aria-label={`${totalUnread} unread community updates`}>
-            <strong>{totalUnread}</strong>
-            <span>unread<br />updates</span>
+          <div className="community-home__identity">
+            <MemberAvatar username={user?.username} avatarUrl={user?.avatar_url} size={50} />
+            <span><strong>{totalUnread}</strong><small>unread updates</small></span>
           </div>
-        </div>
-      </section>
+        </header>
 
-      <div className="community-home__inner community-home__body">
         {error && <p className="community-home__error">{error} You can still use the links below.</p>}
 
-        <section className={`community-home__lounge lounge-activity--${loungeActivity.level}`}>
-          <div className="community-home__lounge-fire"><Flame size={27} /></div>
-          <div className="community-home__lounge-copy">
-            <p className="community-home__eyebrow">Happening now</p>
-            <h2>{loungeActivity.label}</h2>
-            <p>{loungeActivity.detail}. Drop in for a quick conversation or simply listen for a while.</p>
+        <section className="community-home__attention" aria-labelledby="attention-title">
+          <div className="community-home__section-label">
+            <span />
+            <p id="attention-title">Needs your attention</p>
           </div>
-          <div className="community-home__lounge-people">
-            <div>
-              {loungeStatus.recent_people.map((person) => (
-                <MemberAvatar
-                  key={person.user_id}
-                  username={person.username}
-                  avatarUrl={person.avatar_url}
-                  size={38}
-                />
-              ))}
-            </div>
-            <span>{loungeStatus.participants_today || 0} participated today</span>
+          <div className="community-home__metrics">
+            <Link to="/messages"><MessageCircle /><span><strong>{unreadMessages}</strong><small>Unread messages</small></span><ArrowRight /></Link>
+            <Link to="/forum"><Bell /><span><strong>{unreadNotifications}</strong><small>New notifications</small></span><ArrowRight /></Link>
+            <Link to="/forum"><LayoutGrid /><span><strong>{unreadFollowed}</strong><small>Followed updates</small></span><ArrowRight /></Link>
+            <button type="button" onClick={openLounge}><Flame /><span><strong>{loungeStatus.unread_count || 0}</strong><small>Lounge messages</small></span><ArrowRight /></button>
           </div>
-          <button type="button" onClick={openLounge}>Open Lounge <ArrowRight size={17} /></button>
         </section>
 
-        <div className="community-home__grid">
-          <section className="community-home__panel community-home__panel--conversations">
-            <header>
-              <div><p className="community-home__eyebrow">For you</p><h2>Your conversations</h2></div>
-              <Link to="/forum">Open forum <ArrowRight size={15} /></Link>
-            </header>
+        <div className="community-home__dashboard">
+          <div className="community-home__main-column">
+            <section className={`community-home__lounge lounge-activity--${loungeActivity.level}`}>
+              <header>
+                <div className="community-home__lounge-status"><span /><p>Happening now</p></div>
+                <div className="community-home__lounge-people">
+                  {loungeStatus.recent_people.map((person) => (
+                    <MemberAvatar key={person.user_id} username={person.username} avatarUrl={person.avatar_url} size={36} />
+                  ))}
+                </div>
+              </header>
+              <div className="community-home__lounge-body">
+                <span className="community-home__lounge-fire"><Flame size={27} /></span>
+                <div><h2>{loungeActivity.label}</h2><p>{loungeActivity.detail}. Drop in, say hello, or listen for a while.</p></div>
+              </div>
+              <footer>
+                <span>{loungeStatus.participants_today || 0} participated today</span>
+                <button type="button" onClick={openLounge}>Open Lounge <ArrowRight size={17} /></button>
+              </footer>
+            </section>
 
-            <div className="community-home__summary-row">
-              <Link to="/messages"><MessageCircle size={18} /><strong>{unreadMessages}</strong><span>unread messages</span></Link>
-              <Link to="/forum"><Bell size={18} /><strong>{unreadNotifications}</strong><span>new notifications</span></Link>
-            </div>
-
-            <div className="community-home__activity-list">
-              {recentNotifications.map((notification) => (
-                <Link to={notificationPath(notification)} key={notification.notification_id} className={!notification.read_at ? "is-unread" : undefined}>
-                  <span className="community-home__activity-icon"><Bell size={15} /></span>
-                  <span><strong>{notificationCopy(notification)}</strong><small>{timeAgo(notification.created_at)}</small></span>
-                  <ArrowRight size={15} />
-                </Link>
-              ))}
-              {!loading && recentNotifications.length === 0 && (
-                <p className="community-home__empty">Nothing new yet. New replies and mentions will appear here.</p>
-              )}
-            </div>
-
-            {followedPosts.length > 0 && (
-              <div className="community-home__followed">
-                <h3>Conversations you follow</h3>
-                {followedPosts.map((post) => (
-                  <Link to={`/forum/${post.post_id}`} key={post.post_id}>
-                    <span>{post.is_unread ? "New" : timeAgo(post.latest_activity_at)}</span>
-                    <strong>{post.title}</strong>
-                    <small>{post.comment_count} {post.comment_count === 1 ? "reply" : "replies"}</small>
+            <section className="community-home__module community-home__latest">
+              <header>
+                <div><p>Latest</p><h2>Activity for you</h2></div>
+                <Link to="/forum">Open forum <ArrowRight size={15} /></Link>
+              </header>
+              <div className="community-home__activity-list">
+                {recentNotifications.map((notification) => (
+                  <Link to={notificationPath(notification)} key={notification.notification_id} className={!notification.read_at ? "is-unread" : undefined}>
+                    <span className="community-home__activity-icon"><Bell size={15} /></span>
+                    <span><strong>{notificationCopy(notification)}</strong><small>{timeAgo(notification.created_at)}</small></span>
+                    <ArrowRight size={15} />
                   </Link>
                 ))}
+                {!loading && recentNotifications.length === 0 && <p className="community-home__empty">You are caught up. New replies and mentions will appear here.</p>}
               </div>
-            )}
-          </section>
+            </section>
 
-          <aside className="community-home__side">
-            <section className="community-home__panel community-home__announcements">
+            <section className="community-home__module community-home__followed">
+              <header><div><p>Keep up</p><h2>Conversations you follow</h2></div></header>
+              {followedPosts.length > 0 ? (
+                <div className="community-home__followed-list">
+                  {followedPosts.map((post) => (
+                    <Link to={`/forum/${post.post_id}`} key={post.post_id}>
+                      <span>{post.is_unread ? "New" : timeAgo(post.latest_activity_at)}</span>
+                      <strong>{post.title}</strong>
+                      <small>{post.comment_count} {Number(post.comment_count) === 1 ? "reply" : "replies"}</small>
+                    </Link>
+                  ))}
+                </div>
+              ) : !loading && <p className="community-home__empty">Follow a forum conversation and its updates will appear here.</p>}
+            </section>
+          </div>
+
+          <aside className="community-home__rail">
+            <section className="community-home__module community-home__announcements">
               <header>
-                <div><p className="community-home__eyebrow">From the team</p><h2>Announcements</h2></div>
+                <div><p>From the team</p><h2>Announcements</h2></div>
                 <Megaphone size={21} />
               </header>
               {announcements.map((post) => (
@@ -217,10 +225,8 @@ export default function CommunityHome() {
               <Link className="community-home__text-link" to="/forum?view=announcements">All announcements <ArrowRight size={14} /></Link>
             </section>
 
-            <section className="community-home__panel community-home__messages">
-              <header>
-                <div><p className="community-home__eyebrow">Private connection</p><h2>Recent messages</h2></div>
-              </header>
+            <section className="community-home__module community-home__messages">
+              <header><div><p>Private</p><h2>Recent messages</h2></div></header>
               {conversations.map((conversation) => (
                 <Link to={`/messages/${conversation.conversation_id}`} key={conversation.conversation_id}>
                   <MemberAvatar username={conversation.other_username} avatarUrl={conversation.other_avatar_url} size={38} />
@@ -231,14 +237,15 @@ export default function CommunityHome() {
               {!loading && conversations.length === 0 && <p className="community-home__empty">No private conversations yet.</p>}
               <Link className="community-home__text-link" to="/messages">Open messages <ArrowRight size={14} /></Link>
             </section>
+
+            <section className="community-home__quick">
+              <p>Quick actions</p>
+              <Link to="/forum"><LayoutGrid /><span><strong>Forum</strong><small>Join a conversation</small></span><ArrowRight /></Link>
+              <button type="button" onClick={openLounge}><HeartHandshake /><span><strong>Lounge</strong><small>Talk in real time</small></span><ArrowRight /></button>
+              <Link to="/profile"><UserRound /><span><strong>Profile</strong><small>Update your account</small></span><ArrowRight /></Link>
+            </section>
           </aside>
         </div>
-
-        <section className="community-home__paths">
-          <Link to="/forum"><LayoutGrid /><span><strong>Join a conversation</strong><small>Read, reply, or start a forum post.</small></span><ArrowRight /></Link>
-          <button type="button" onClick={openLounge}><HeartHandshake /><span><strong>Talk in real time</strong><small>Open the member Lounge.</small></span><ArrowRight /></button>
-          <Link to="/profile"><UserRound /><span><strong>Make it yours</strong><small>Update your profile and avatar.</small></span><ArrowRight /></Link>
-        </section>
       </div>
     </main>
   );
