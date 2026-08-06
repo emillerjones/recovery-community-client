@@ -13,6 +13,9 @@ function timeAgo(value) {
 }
 
 function describe(notification) {
+  if (notification.type === "pending_membership_application") {
+    return `${notification.actor_username} verified their email and is awaiting membership review`;
+  }
   if (notification.type === "flagged_comment") {
     return `${notification.actor_username} flagged a reply in "${notification.post_title}" for staff review`;
   }
@@ -74,6 +77,10 @@ export default function NotificationBell() {
   async function openNotification(notification) {
     if (!notification.read_at) await markRead(notification.notification_id);
     setOpen(false);
+    if (notification.type === "pending_membership_application") {
+      navigate("/admin/membership");
+      return;
+    }
     // MENTION TRACE STEP 11: A reply-level alert carries comment_id. Add it as
     // a hash so ForumThread can scroll directly to #comment-that-id.
     const commentHash = notification.comment_id ? `#comment-${notification.comment_id}` : "";
