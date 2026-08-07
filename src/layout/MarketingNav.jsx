@@ -28,7 +28,7 @@ const LEARN_LINKS = [
 
 const SUPPORT_LINKS = [
   { to: "/donate", label: "Donate - Inactive", description: "Future community giving", icon: Heart },
-  { to: "/merch", label: "Merch - Inactive", description: "Future community merchandise", icon: ShoppingBag },
+  { to: "https://www.etsy.com/shop/TheExitDrugRecovery", label: "Merch", description: "Shop Recovery With The Exit Drug merchandise", icon: ShoppingBag, external: true },
   { to: "/discountlinks", label: "Discount", description: "Community partner savings", icon: BadgePercent },
 ];
 
@@ -79,6 +79,14 @@ const MEMBER_MORE_GROUPS = [
 // Set to true to give the desktop and mobile navbar a solid background after scrolling.
 const ENABLE_SOLID_NAV_ON_SCROLL = false;
 
+function NavigationLink({ link, children, ...props }) {
+  if (link.external) {
+    return <a href={link.to} target="_blank" rel="noopener noreferrer" {...props}>{children}</a>;
+  }
+
+  return <NavLink to={link.to} {...props}>{children}</NavLink>;
+}
+
 function NavDropdown({ label, links, closeMenu, align = "left", icon: TriggerIcon }) {
   return (
     <div className={`main-nav__dropdown ${align === "right" ? "main-nav__dropdown--right" : ""}`}>
@@ -91,10 +99,10 @@ function NavDropdown({ label, links, closeMenu, align = "left", icon: TriggerIco
       </button>
       <div className="main-nav__dropdown-panel">
         {links.map((link) => (
-          <NavLink key={link.to} to={link.to} className={`main-nav__dropdown-link ${link.icon ? "main-nav__dropdown-link--rich" : ""}`} onClick={closeMenu}>
+          <NavigationLink key={link.to} link={link} className={`main-nav__dropdown-link ${link.icon ? "main-nav__dropdown-link--rich" : ""}`} onClick={closeMenu}>
             {link.icon && <link.icon size={17} />}
             <span><strong>{link.label}</strong>{link.description && <small>{link.description}</small>}</span>
-          </NavLink>
+          </NavigationLink>
         ))}
       </div>
     </div>
@@ -114,10 +122,10 @@ function MemberMoreDropdown({ closeMenu }) {
             <span className="member-more__heading">{group.label}</span>
             {group.links.map((link) => {
               const Icon = link.icon;
-              return <NavLink key={link.to} to={link.to} className="member-more__link" onClick={closeMenu}>
+              return <NavigationLink key={link.to} link={link} className="member-more__link" onClick={closeMenu}>
                 <Icon size={17} />
                 <span><strong>{link.label}</strong><small>{link.description}</small></span>
-              </NavLink>;
+              </NavigationLink>;
             })}
           </section>
         ))}
@@ -373,7 +381,7 @@ export default function MarketingNav({ onLogin, onRegister }) {
               const isOpen = mobileExpanded === group.label;
               return <div className={`mobile-nav__explore-group ${isOpen ? "is-open" : ""}`} key={group.label}>
                 <button type="button" onClick={() => setMobileExpanded((current) => current === group.label ? null : group.label)} aria-expanded={isOpen}>{group.label}<ChevronRight size={18} /></button>
-                {isOpen && <div>{group.links.map((link) => <NavLink key={link.to} to={link.to} onClick={closeMenu}>{link.label}</NavLink>)}</div>}
+                {isOpen && <div>{group.links.map((link) => <NavigationLink key={link.to} link={link} onClick={closeMenu}>{link.label}</NavigationLink>)}</div>}
               </div>;
             })}
           </section>

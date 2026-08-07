@@ -42,7 +42,7 @@ export default function MarketingFooter() {
           <div>
             <h3>Support</h3>
             <NavLink to="/donate">Donate</NavLink>
-            <NavLink to="/merch">Merch</NavLink>
+            <a href="https://www.etsy.com/shop/TheExitDrugRecovery" target="_blank" rel="noopener noreferrer">Merch</a>
             <NavLink to="/discountlinks">Discount Partners</NavLink>
           </div>
           <div>
