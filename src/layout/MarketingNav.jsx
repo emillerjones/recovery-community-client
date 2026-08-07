@@ -16,7 +16,7 @@ const HOME_LINKS = [
 
 const COMMUNITY_LINKS = [
   { to: "/community", label: "Inside the Community", description: "Meet the mission and member space", icon: UsersRound },
-  { to: "/guidelines", label: "Culture", description: "Shared values and community guidelines", icon: ScrollText },
+  { to: "/guidelines", label: "Guidelines", description: "Shared values and community guidelines", icon: ScrollText },
   { to: "/stories", label: "Stories", description: "Member experiences and recovery stories", icon: BookHeart },
 ];
 
