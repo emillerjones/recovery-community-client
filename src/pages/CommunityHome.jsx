@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   ArrowRight,
+  Activity,
   Bell,
   Camera,
   Flame,
@@ -10,6 +11,7 @@ import {
   MessageCircle,
   Plus,
   Radio,
+  Sparkles,
   UsersRound,
 } from "lucide-react";
 import { useAuth } from "../auth/AuthContext";
@@ -18,7 +20,6 @@ import { useLounge } from "../contexts/LoungeContext";
 import { useMessages } from "../contexts/MessagesContext";
 import { useNotifications } from "../contexts/NotificationsContext";
 import ForumComposerModal from "./forum/ForumComposerModal";
-import ForumPostCard from "./forum/ForumPostCard";
 import { getLoungeActivity } from "../utils/loungeActivity";
 import "./CommunityHome.css";
 
@@ -64,7 +65,7 @@ export default function CommunityHome() {
   const { unreadCount: unreadMessages } = useMessages();
   const { unreadCount: unreadNotifications, notifications, fetchNotifications } = useNotifications();
   const [announcements, setAnnouncements] = useState([]);
-  const [latestPosts, setLatestPosts] = useState([]);
+  const [pulse, setPulse] = useState({ summary: {}, week: [], activity: [] });
   const [followedPosts, setFollowedPosts] = useState([]);
   const [conversations, setConversations] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -82,21 +83,21 @@ export default function CommunityHome() {
       try {
         const responses = await Promise.all([
           fetch(`${API}/api/forum/posts?section=announcements&scope=all&order=recent&page=0`, { headers }),
-          fetch(`${API}/api/forum/posts?section=community&scope=all&order=recent&page=0`, { headers }),
           fetch(`${API}/api/forum/posts?section=community&scope=following&order=recent&page=0`, { headers }),
           fetch(`${API}/api/messages/conversations`, { headers }),
           fetch(`${API}/api/forum/categories`, { headers }),
           fetch(`${API}/api/forum/tags`, { headers }),
+          fetch(`${API}/api/lounge/pulse`, { headers }),
         ]);
         if (responses.some((response) => !response.ok)) throw new Error("Some community updates could not be loaded.");
-        const [announcementData, latestData, followedData, conversationData, categoryData, tagData] = await Promise.all(responses.map((response) => response.json()));
+        const [announcementData, followedData, conversationData, categoryData, tagData, pulseData] = await Promise.all(responses.map((response) => response.json()));
         if (!cancelled) {
           setAnnouncements(announcementData.posts.slice(0, 2));
-          setLatestPosts(latestData.posts.slice(0, 5));
           setFollowedPosts(followedData.posts.slice(0, 3));
           setConversations(conversationData.slice(0, 3));
           setCategories(categoryData);
           setTags(tagData);
+          setPulse(pulseData);
           setError("");
         }
       } catch (requestError) {
@@ -116,6 +117,15 @@ export default function CommunityHome() {
   const recentNotifications = notifications.slice(0, 3);
   const totalUnread = unreadMessages + unreadNotifications + Number(loungeStatus.unread_count || 0);
   const today = new Date().toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric" });
+  const pulseSummary = pulse.summary || {};
+  const contributionsToday = Number(pulseSummary.posts_today || 0) + Number(pulseSummary.replies_today || 0);
+  const busiestDay = Math.max(1, ...pulse.week.map((day) => Number(day.total || 0)));
+
+  function activityCopy(activity) {
+    if (activity.activity_type === "post") return "started a conversation";
+    if (activity.activity_type === "reply") return "joined a conversation";
+    return "sent support";
+  }
 
   return (
     <main className="community-home" data-nav-theme="dark">
@@ -159,14 +169,46 @@ export default function CommunityHome() {
               <i><Camera size={17} /> Add a post</i>
             </button>
 
-            <header className="community-home__feed-heading">
-              <div><p>Community activity</p><h2>What people are sharing</h2></div>
-              <Link to="/forum">See the full Forum <ArrowRight size={15} /></Link>
-            </header>
-            <div className="community-home__post-list">
-              {latestPosts.map((post) => <ForumPostCard key={post.post_id} post={post} token={token} />)}
-              {!loading && latestPosts.length === 0 && <p className="community-home__empty">No posts yet. You can start the first conversation.</p>}
-            </div>
+            <section className="community-home__pulse-board">
+              <header className="community-home__feed-heading">
+                <div><p>Community Pulse</p><h2>The community at a glance</h2></div>
+                <span className="community-home__live-label"><i /> Live overview</span>
+              </header>
+
+              <div className="community-home__pulse-visual">
+                <div className="community-home__orbit" aria-hidden="true"><i /><i /><i /></div>
+                <div className="community-home__pulse-center"><Activity size={25} /><strong>{contributionsToday}</strong><small>contributions today</small></div>
+                <div className="community-home__pulse-stat stat-posts"><strong>{pulseSummary.posts_today || 0}</strong><span>new conversations</span></div>
+                <div className="community-home__pulse-stat stat-replies"><strong>{pulseSummary.replies_today || 0}</strong><span>replies shared</span></div>
+                <div className="community-home__pulse-stat stat-support"><strong>{pulseSummary.reactions_today || 0}</strong><span>supportive reactions</span></div>
+                <div className="community-home__pulse-stat stat-people"><strong>{pulseSummary.participants_today || 0}</strong><span>people participating</span></div>
+              </div>
+
+              <div className="community-home__week">
+                <header><span><strong>Last seven days</strong><small>Posts, replies, and support</small></span><Sparkles size={17} /></header>
+                <div className="community-home__week-chart">
+                  {pulse.week.map((day) => {
+                    const date = new Date(`${String(day.day).slice(0, 10)}T12:00:00`);
+                    return <div key={day.day} title={`${day.total} contributions`}><span><i style={{ height: `${Math.max(5, (Number(day.total) / busiestDay) * 100)}%` }} /></span><small>{date.toLocaleDateString(undefined, { weekday: "short" }).slice(0, 1)}</small></div>;
+                  })}
+                </div>
+              </div>
+            </section>
+
+            <section className="community-home__activity-stream">
+              <header className="community-home__feed-heading"><div><p>Right now</p><h2>The community is moving</h2></div><Link to="/forum">Open Forum <ArrowRight size={15} /></Link></header>
+              <div>
+                {pulse.activity.map((activity, index) => (
+                  <Link to={`/forum/${activity.post_id}`} key={`${activity.activity_type}-${activity.actor_id}-${activity.created_at}-${index}`}>
+                    <span className="community-home__timeline-mark"><i /></span>
+                    <MemberAvatar username={activity.username} avatarUrl={activity.avatar_url} size={38} />
+                    <span><strong>{activity.username} {activityCopy(activity)}</strong><small>{activity.title} · {timeAgo(activity.created_at)}</small></span>
+                    <ArrowRight size={14} />
+                  </Link>
+                ))}
+                {!loading && !pulse.activity.length && <p className="community-home__empty">The community is quiet right now. Your contribution can begin the day.</p>}
+              </div>
+            </section>
           </div>
 
           <aside className="community-home__rail">
