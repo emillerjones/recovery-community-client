@@ -40,6 +40,7 @@ export default function PhotoUploader({ photos, onChange, token, compact = false
   const latestPhotos = useRef(photos);
   const previousPhotos = useRef(photos);
   const [selectionError, setSelectionError] = useState("");
+  const [dragActive, setDragActive] = useState(false);
 
   useEffect(() => {
     latestPhotos.current = photos;
@@ -76,9 +77,8 @@ export default function PhotoUploader({ photos, onChange, token, compact = false
     }
   }
 
-  function chooseFiles(event) {
-    const selected = [...event.target.files];
-    event.target.value = "";
+  function addFiles(fileList) {
+    const selected = [...fileList];
     setSelectionError("");
     const available = MAX_PHOTOS - photos.length;
     if (selected.length > available) {
@@ -105,6 +105,30 @@ export default function PhotoUploader({ photos, onChange, token, compact = false
     });
   }
 
+  function chooseFiles(event) {
+    addFiles(event.target.files);
+    event.target.value = "";
+  }
+
+  function handleDrag(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    if (photos.length < MAX_PHOTOS) setDragActive(true);
+  }
+
+  function handleDragLeave(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    if (!event.currentTarget.contains(event.relatedTarget)) setDragActive(false);
+  }
+
+  function handleDrop(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    setDragActive(false);
+    if (photos.length < MAX_PHOTOS) addFiles(event.dataTransfer.files);
+  }
+
   async function removePhoto(photo) {
     updatePhoto(photo.client_id, { status: "removing" });
     if (photo.media_id) {
@@ -122,13 +146,19 @@ export default function PhotoUploader({ photos, onChange, token, compact = false
   }
 
   return (
-    <div className={`photo-uploader ${compact ? "is-compact" : ""}`}>
+    <div
+      className={`photo-uploader ${compact ? "is-compact" : ""} ${dragActive ? "is-dragging" : ""}`}
+      onDragEnter={handleDrag}
+      onDragOver={handleDrag}
+      onDragLeave={handleDragLeave}
+      onDrop={handleDrop}
+    >
       <div className="photo-uploader__toolbar">
         <label htmlFor={inputId} className={photos.length >= MAX_PHOTOS ? "is-disabled" : ""}>
           {compact ? <Camera size={18} /> : <ImagePlus size={18} />}
           <span>{compact ? "Photo" : photos.length ? "Add more photos" : "Add photos"}</span>
         </label>
-        {!compact && <small>{photos.length}/{MAX_PHOTOS} · JPG, PNG, WebP or phone photo · 5 MB each</small>}
+        {!compact && <small>{photos.length}/{MAX_PHOTOS} · JPG, PNG, WebP or phone photo · 5 MB each · drag and drop</small>}
         <input
           id={inputId}
           type="file"
@@ -138,6 +168,8 @@ export default function PhotoUploader({ photos, onChange, token, compact = false
           onChange={chooseFiles}
         />
       </div>
+
+      {dragActive && <div className="photo-uploader__drop-message">Drop photos here</div>}
 
       {selectionError && <p className="photo-uploader__error" role="alert">{selectionError}</p>}
       {photos.length > 0 && (
