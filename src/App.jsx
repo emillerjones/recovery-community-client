@@ -7,8 +7,7 @@ import Stories from "./pages/marketing/Stories";
 import MyStory from "./pages/marketing/MyStory";
 import Contact from "./pages/marketing/Contact";
 import CommunityHome from "./pages/CommunityHome";
-import CommunityWall from "./pages/wall/CommunityWall";
-import CommunityGrove from "./pages/grove/CommunityGrove";
+import CommunityJourney from "./pages/journey/CommunityJourney";
 
 import Register from "./pages/auth/Register";
 
@@ -72,8 +71,7 @@ export default function App() {
 
       <Route element={<RequireAuth><AppLayout /></RequireAuth>}>
         <Route path="/today" element={<CommunityHome />} />
-        <Route path="/wall" element={<CommunityWall />} />
-        <Route path="/grove" element={<CommunityGrove />} />
+        <Route path="/journey" element={<CommunityJourney />} />
         <Route path="/forum" element={<Forum />} />
         <Route path="/forum/:postId" element={<ForumThread />} />
         <Route path="/messages" element={<Messages />} />

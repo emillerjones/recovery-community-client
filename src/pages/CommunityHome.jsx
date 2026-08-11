@@ -3,12 +3,12 @@ import { Link } from "react-router-dom";
 import {
   ArrowRight,
   Bell,
+  Compass,
   Flame,
   HeartHandshake,
   LayoutGrid,
   Megaphone,
   MessageCircle,
-  Sprout,
   UserRound,
 } from "lucide-react";
 import { useAuth } from "../auth/AuthContext";
@@ -241,8 +241,8 @@ export default function CommunityHome() {
 
             <section className="community-home__quick">
               <p>Quick actions</p>
+              <Link to="/journey"><Compass /><span><strong>Journey</strong><small>Travel recent conversations</small></span><ArrowRight /></Link>
               <Link to="/forum"><LayoutGrid /><span><strong>Forum</strong><small>Join a conversation</small></span><ArrowRight /></Link>
-              <Link to="/grove"><Sprout /><span><strong>Grove</strong><small>Check in with the community</small></span><ArrowRight /></Link>
               <button type="button" onClick={openLounge}><HeartHandshake /><span><strong>Lounge</strong><small>Talk in real time</small></span><ArrowRight /></button>
               <Link to="/profile"><UserRound /><span><strong>Profile</strong><small>Update your account</small></span><ArrowRight /></Link>
             </section>
