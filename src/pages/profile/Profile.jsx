@@ -9,12 +9,14 @@ const ROLE_LABELS = { 1: "Owner", 10: "Administrator", 50: "Moderator", 100: "Me
 // Phosphor contains thousands of exports, so the browser downloads the avatar
 // studio only when somebody actually opens it (or already has a preset avatar).
 const AvatarStudio = lazy(() => import("./AvatarStudio"));
+const AvatarPhotoModal = lazy(() => import("./AvatarPhotoModal"));
 
 export default function Profile() {
   const { token, updateUser } = useAuth();
   const [profile, setProfile] = useState(null);
   const [form, setForm] = useState({ bio: "", phoneNumber: "", dateOfBirth: "", gender: "", avatarPreset: "" });
   const [avatarStudioOpen, setAvatarStudioOpen] = useState(false);
+  const [avatarPhotoOpen, setAvatarPhotoOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
@@ -94,6 +96,20 @@ export default function Profile() {
     if (!saved) setForm((current) => ({ ...current, avatarPreset: previousAvatar }));
   }
 
+  function openPhotoUpload() {
+    setAvatarStudioOpen(false);
+    setAvatarPhotoOpen(true);
+  }
+
+  function photoSaved(data) {
+    setProfile(data);
+    setForm((current) => ({ ...current, avatarPreset: data.avatar_url || "" }));
+    updateUser(data);
+    setMessage("Your new profile photo was saved.");
+    setError("");
+    setAvatarPhotoOpen(false);
+  }
+
   if (loading) return <main className="profile-page"><p className="profile-loading">Loading your profile…</p></main>;
   if (!profile) return <main className="profile-page"><p className="profile-error">{error}</p></main>;
 
@@ -110,7 +126,7 @@ export default function Profile() {
             <span className="profile-avatar-edit">Edit</span>
           </button>
           <div><span className="profile-eyebrow">My profile</span><h1>{profile.username}</h1><p>{ROLE_LABELS[profile.role_id] || "Member"} · Joined {new Date(profile.created_at).toLocaleDateString(undefined, { month: "long", year: "numeric" })}</p></div>
-          <button className="profile-choose-avatar" type="button" onClick={() => setAvatarStudioOpen(true)}>Choose avatar</button>
+          <button className="profile-choose-avatar" type="button" onClick={() => setAvatarStudioOpen(true)}>Change avatar</button>
         </header>
 
         <form className="profile-form" onSubmit={saveProfile}>
@@ -138,7 +154,8 @@ export default function Profile() {
       </section>
       {/* PROFILE SCREEN: this dialog sits over the page after the avatar circle
           is clicked. "Use this avatar" immediately saves the chosen preset. */}
-      {avatarStudioOpen && <Suspense fallback={<div className="avatar-studio-loading">Loading avatar choices…</div>}><AvatarStudio value={form.avatarPreset} fallback={memberInitials(profile.username)} onClose={() => setAvatarStudioOpen(false)} onChoose={chooseAvatar} /></Suspense>}
+      {avatarStudioOpen && <Suspense fallback={<div className="avatar-studio-loading">Loading avatar choices…</div>}><AvatarStudio value={form.avatarPreset} fallback={memberInitials(profile.username)} onClose={() => setAvatarStudioOpen(false)} onChoose={chooseAvatar} onUpload={openPhotoUpload} /></Suspense>}
+      {avatarPhotoOpen && <Suspense fallback={<div className="avatar-studio-loading">Loading photo editor…</div>}><AvatarPhotoModal token={token} onClose={() => setAvatarPhotoOpen(false)} onSaved={photoSaved} /></Suspense>}
     </main>
   );
 }

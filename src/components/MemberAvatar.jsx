@@ -1,5 +1,7 @@
 import { lazy, Suspense } from "react";
 import { memberInitials } from "./memberAvatarUtils";
+import { useAuth } from "../auth/AuthContext";
+import ProtectedImage from "./forumPhotos/ProtectedImage";
 import "./MemberAvatar.css";
 
 // The full Phosphor preset renderer is deliberately split into a separate
@@ -7,7 +9,9 @@ import "./MemberAvatar.css";
 const PresetAvatar = lazy(() => import("./PresetAvatar"));
 
 export default function MemberAvatar({ username, avatarUrl, size = 38, className = "" }) {
+  const { token } = useAuth();
   const fallback = memberInitials(username);
+  const uploadedAvatar = /^media:(\d+)$/.exec(avatarUrl || "");
 
   return (
     <span
@@ -16,7 +20,9 @@ export default function MemberAvatar({ username, avatarUrl, size = 38, className
       aria-label={`${username || "Member"}'s avatar`}
       role="img"
     >
-      {avatarUrl?.startsWith("preset:") ? (
+      {uploadedAvatar ? (
+        <ProtectedImage mediaId={uploadedAvatar[1]} token={token} variant="avatar" fallback={fallback} className="member-avatar__photo" alt="" />
+      ) : avatarUrl?.startsWith("preset:") ? (
         <Suspense fallback={fallback}>
           <PresetAvatar value={avatarUrl} fallback={fallback} size={size} />
         </Suspense>

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import * as PhosphorIcons from "@phosphor-icons/react/ssr";
-import { MagnifyingGlass, X } from "@phosphor-icons/react";
+import { Camera, MagnifyingGlass, X } from "@phosphor-icons/react";
 import {
   AVATAR_CATEGORIES, AVATAR_COLORS, avatarColor, buildAvatarCatalog, parsePresetAvatar,
 } from "../../utils/avatarOptions";
@@ -9,7 +9,7 @@ import "./AvatarStudio.css";
 const CATALOG = buildAvatarCatalog(PhosphorIcons);
 const PAGE_SIZE = 120;
 
-export default function AvatarStudio({ value, fallback, onChoose, onClose }) {
+export default function AvatarStudio({ value, fallback, onChoose, onClose, onUpload }) {
   const existing = parsePresetAvatar(value);
   const [selectedIcon, setSelectedIcon] = useState(existing?.icon || CATALOG[0]?.name || "Butterfly");
   const [selectedColor, setSelectedColor] = useState(existing?.color || "forest");
@@ -49,6 +49,7 @@ export default function AvatarStudio({ value, fallback, onChoose, onClose }) {
           <div className="avatar-studio__colors" aria-label="Avatar background color">
             {AVATAR_COLORS.map((color) => <button key={color.key} type="button" className={selectedColor === color.key ? "is-selected" : ""} style={{ background: color.background }} title={color.label} aria-label={color.label} onClick={() => setSelectedColor(color.key)} />)}
           </div>
+          <button className="avatar-studio__upload" type="button" onClick={onUpload}><Camera size={20} />Upload a photo</button>
         </div>
 
         <div className="avatar-studio__tools">
@@ -66,7 +67,7 @@ export default function AvatarStudio({ value, fallback, onChoose, onClose }) {
         {visibleCount < filtered.length && <button className="avatar-studio__more" type="button" onClick={() => setVisibleCount((count) => count + PAGE_SIZE)}>Show more icons</button>}
         {filtered.length === 0 && <p className="avatar-studio__empty">No matching icons. Try another word or category.</p>}
 
-        <footer><button type="button" onClick={onClose}>Cancel</button><button type="button" className="avatar-studio__save" onClick={() => onChoose(`preset:${selectedIcon}:${selectedColor}`)}>Use this avatar</button></footer>
+        <footer><button type="button" className="avatar-studio__initials" onClick={() => onChoose("")}>Use initials</button><button type="button" onClick={onClose}>Cancel</button><button type="button" className="avatar-studio__save" onClick={() => onChoose(`preset:${selectedIcon}:${selectedColor}`)}>Use this avatar</button></footer>
       </section>
     </div>
   );
