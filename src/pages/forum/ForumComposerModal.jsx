@@ -21,7 +21,6 @@ export default function ForumComposerModal({
   composingAnnouncement,
   tags,
   onClose,
-  onPublished,
 }) {
   const navigate = useNavigate();
   const [draft, setDraft] = useState({ title: "", body: "", tag_ids: [] });
@@ -148,8 +147,7 @@ export default function ForumComposerModal({
     setDraft({ title: "", body: "", tag_ids: [] });
     setDraftMentions([]);
     setPhotos([]);
-    if (onPublished) onPublished(result);
-    else navigate(`/forum/${result.post_id}`);
+    navigate(`/forum/${result.post_id}`);
   }
 
   if (!open) return null;

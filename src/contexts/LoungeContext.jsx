@@ -26,6 +26,7 @@ export function LoungeProvider({ children }) {
     participants_today: 0,
     last_message_at: null,
     recent_people: [],
+    online_members: [],
   });
   const [nextCursor, setNextCursor] = useState(null);
   const [hasMore, setHasMore] = useState(false);
@@ -109,8 +110,12 @@ export function LoungeProvider({ children }) {
   useEffect(() => {
     if (!socket) return;
 
-    function onPresence({ online_count }) {
-      setStatus((current) => ({ ...current, online_count }));
+    function onPresence({ online_count, online_members }) {
+      setStatus((current) => ({
+        ...current,
+        online_count,
+        online_members: online_members || [],
+      }));
     }
 
     function onMessage(message) {

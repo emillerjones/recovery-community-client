@@ -3,19 +3,22 @@ import { Link } from "react-router-dom";
 import {
   ArrowRight,
   Bell,
-  Compass,
+  Camera,
   Flame,
-  HeartHandshake,
   LayoutGrid,
   Megaphone,
   MessageCircle,
-  UserRound,
+  Plus,
+  Radio,
+  UsersRound,
 } from "lucide-react";
 import { useAuth } from "../auth/AuthContext";
 import MemberAvatar from "../components/MemberAvatar";
 import { useLounge } from "../contexts/LoungeContext";
 import { useMessages } from "../contexts/MessagesContext";
 import { useNotifications } from "../contexts/NotificationsContext";
+import ForumComposerModal from "./forum/ForumComposerModal";
+import ForumPostCard from "./forum/ForumPostCard";
 import { getLoungeActivity } from "../utils/loungeActivity";
 import "./CommunityHome.css";
 
@@ -59,49 +62,41 @@ export default function CommunityHome() {
   const { token, user } = useAuth();
   const { status: loungeStatus, openLounge } = useLounge();
   const { unreadCount: unreadMessages } = useMessages();
-  const {
-    unreadCount: unreadNotifications,
-    notifications,
-    fetchNotifications,
-  } = useNotifications();
+  const { unreadCount: unreadNotifications, notifications, fetchNotifications } = useNotifications();
   const [announcements, setAnnouncements] = useState([]);
+  const [latestPosts, setLatestPosts] = useState([]);
   const [followedPosts, setFollowedPosts] = useState([]);
   const [conversations, setConversations] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [tags, setTags] = useState([]);
+  const [composerOpen, setComposerOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const loungeActivity = getLoungeActivity(loungeStatus);
-
-  const headers = useMemo(
-    () => ({ Authorization: `Bearer ${token}` }),
-    [token]
-  );
+  const headers = useMemo(() => ({ Authorization: `Bearer ${token}` }), [token]);
 
   useEffect(() => {
     let cancelled = false;
-
     async function loadHome() {
       setLoading(true);
       try {
-        const [announcementResponse, followedResponse, conversationResponse] = await Promise.all([
+        const responses = await Promise.all([
           fetch(`${API}/api/forum/posts?section=announcements&scope=all&order=recent&page=0`, { headers }),
+          fetch(`${API}/api/forum/posts?section=community&scope=all&order=recent&page=0`, { headers }),
           fetch(`${API}/api/forum/posts?section=community&scope=following&order=recent&page=0`, { headers }),
           fetch(`${API}/api/messages/conversations`, { headers }),
+          fetch(`${API}/api/forum/categories`, { headers }),
+          fetch(`${API}/api/forum/tags`, { headers }),
         ]);
-
-        if (!announcementResponse.ok || !followedResponse.ok || !conversationResponse.ok) {
-          throw new Error("Some community updates could not be loaded.");
-        }
-
-        const [announcementData, followedData, conversationData] = await Promise.all([
-          announcementResponse.json(),
-          followedResponse.json(),
-          conversationResponse.json(),
-        ]);
-
+        if (responses.some((response) => !response.ok)) throw new Error("Some community updates could not be loaded.");
+        const [announcementData, latestData, followedData, conversationData, categoryData, tagData] = await Promise.all(responses.map((response) => response.json()));
         if (!cancelled) {
           setAnnouncements(announcementData.posts.slice(0, 2));
+          setLatestPosts(latestData.posts.slice(0, 5));
           setFollowedPosts(followedData.posts.slice(0, 3));
           setConversations(conversationData.slice(0, 3));
+          setCategories(categoryData);
+          setTags(tagData);
           setError("");
         }
       } catch (requestError) {
@@ -110,145 +105,120 @@ export default function CommunityHome() {
         if (!cancelled) setLoading(false);
       }
     }
-
     loadHome();
     fetchNotifications();
     return () => { cancelled = true; };
   }, [fetchNotifications, headers]);
 
+  const mainCategory = categories.find((category) => category.slug === "general-recovery")
+    || categories.find((category) => !["announcements", "success-stories"].includes(category.slug));
+  const onlineMembers = loungeStatus.online_members || [];
   const recentNotifications = notifications.slice(0, 3);
   const totalUnread = unreadMessages + unreadNotifications + Number(loungeStatus.unread_count || 0);
-  const unreadFollowed = followedPosts.filter((post) => post.is_unread).length;
-  const today = new Date().toLocaleDateString(undefined, {
-    weekday: "long",
-    month: "long",
-    day: "numeric",
-  });
+  const today = new Date().toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric" });
 
   return (
     <main className="community-home" data-nav-theme="dark">
       <div className="community-home__shell">
-        <header className="community-home__topbar">
-          <div>
-            <p className="community-home__date">Today · {today}</p>
+        <section className="community-home__welcome">
+          <div className="community-home__welcome-copy">
+            <p className="community-home__eyebrow"><span /> Member home · {today}</p>
             <h1>{greeting()}, {user?.username}.</h1>
-            <p>Your personal view of what needs attention and what is happening now.</p>
+            <p>This is your place to see who is here, catch up, and join what matters today.</p>
+            <div className="community-home__welcome-actions">
+              <button type="button" onClick={() => setComposerOpen(true)}><Plus size={17} /> Share something</button>
+              <button type="button" className="is-secondary" onClick={openLounge}><Flame size={17} /> Open Lounge</button>
+            </div>
           </div>
-          <div className="community-home__identity">
-            <MemberAvatar username={user?.username} avatarUrl={user?.avatar_url} size={50} />
-            <span><strong>{totalUnread}</strong><small>unread updates</small></span>
-          </div>
-        </header>
-
-        {error && <p className="community-home__error">{error} You can still use the links below.</p>}
-
-        <section className="community-home__attention" aria-labelledby="attention-title">
-          <div className="community-home__section-label">
-            <span />
-            <p id="attention-title">Needs your attention</p>
-          </div>
-          <div className="community-home__metrics">
-            <Link to="/messages"><MessageCircle /><span><strong>{unreadMessages}</strong><small>Unread messages</small></span><ArrowRight /></Link>
-            <Link to="/forum"><Bell /><span><strong>{unreadNotifications}</strong><small>New notifications</small></span><ArrowRight /></Link>
-            <Link to="/forum"><LayoutGrid /><span><strong>{unreadFollowed}</strong><small>Followed updates</small></span><ArrowRight /></Link>
-            <button type="button" onClick={openLounge}><Flame /><span><strong>{loungeStatus.unread_count || 0}</strong><small>Lounge messages</small></span><ArrowRight /></button>
+          <div className="community-home__welcome-presence">
+            <div className="community-home__avatar-stack">
+              {onlineMembers.slice(0, 5).map((member) => (
+                <MemberAvatar key={member.user_id} username={member.username} avatarUrl={member.avatar_url} size={45} />
+              ))}
+              {!onlineMembers.length && <MemberAvatar username={user?.username} avatarUrl={user?.avatar_url} size={45} />}
+            </div>
+            <span><strong>{loungeStatus.online_count || "…"}</strong><small>{loungeStatus.online_count ? `${Number(loungeStatus.online_count) === 1 ? "member is" : "members are"} here now` : "checking who’s here"}</small></span>
+            <i aria-hidden="true" />
           </div>
         </section>
 
-        <div className="community-home__dashboard">
-          <div className="community-home__main-column">
-            <section className={`community-home__lounge lounge-activity--${loungeActivity.level}`}>
-              <header>
-                <div className="community-home__lounge-status"><span /><p>Happening now</p></div>
-                <div className="community-home__lounge-people">
-                  {loungeStatus.recent_people.map((person) => (
-                    <MemberAvatar key={person.user_id} username={person.username} avatarUrl={person.avatar_url} size={36} />
-                  ))}
-                </div>
-              </header>
-              <div className="community-home__lounge-body">
-                <span className="community-home__lounge-fire"><Flame size={27} /></span>
-                <div><h2>{loungeActivity.label}</h2><p>{loungeActivity.detail}. Drop in, say hello, or listen for a while.</p></div>
-              </div>
-              <footer>
-                <span>{loungeStatus.participants_today || 0} participated today</span>
-                <button type="button" onClick={openLounge}>Open Lounge <ArrowRight size={17} /></button>
-              </footer>
-            </section>
+        {error && <p className="community-home__error">{error} You can still use the community links.</p>}
 
-            <section className="community-home__module community-home__latest">
-              <header>
-                <div><p>Latest</p><h2>Activity for you</h2></div>
-                <Link to="/forum">Open forum <ArrowRight size={15} /></Link>
-              </header>
-              <div className="community-home__activity-list">
-                {recentNotifications.map((notification) => (
-                  <Link to={notificationPath(notification)} key={notification.notification_id} className={!notification.read_at ? "is-unread" : undefined}>
-                    <span className="community-home__activity-icon"><Bell size={15} /></span>
-                    <span><strong>{notificationCopy(notification)}</strong><small>{timeAgo(notification.created_at)}</small></span>
-                    <ArrowRight size={15} />
-                  </Link>
-                ))}
-                {!loading && recentNotifications.length === 0 && <p className="community-home__empty">You are caught up. New replies and mentions will appear here.</p>}
-              </div>
-            </section>
+        <section className="community-home__pulse" aria-label="Your community updates">
+          <Link to="/messages"><MessageCircle /><span><strong>{unreadMessages}</strong><small>Unread messages</small></span></Link>
+          <Link to="/forum"><Bell /><span><strong>{unreadNotifications}</strong><small>Notifications</small></span></Link>
+          <button type="button" onClick={openLounge}><Flame /><span><strong>{loungeStatus.unread_count || 0}</strong><small>Lounge updates</small></span></button>
+          <span className="community-home__caught-up">{totalUnread ? `${totalUnread} things waiting for you` : "You’re all caught up"}</span>
+        </section>
 
-            <section className="community-home__module community-home__followed">
-              <header><div><p>Keep up</p><h2>Conversations you follow</h2></div></header>
-              {followedPosts.length > 0 ? (
-                <div className="community-home__followed-list">
-                  {followedPosts.map((post) => (
-                    <Link to={`/forum/${post.post_id}`} key={post.post_id}>
-                      <span>{post.is_unread ? "New" : timeAgo(post.latest_activity_at)}</span>
-                      <strong>{post.title}</strong>
-                      <small>{post.comment_count} {Number(post.comment_count) === 1 ? "reply" : "replies"}</small>
-                    </Link>
-                  ))}
-                </div>
-              ) : !loading && <p className="community-home__empty">Follow a forum conversation and its updates will appear here.</p>}
-            </section>
+        <div className="community-home__layout">
+          <div className="community-home__feed">
+            <button className="community-home__composer" type="button" onClick={() => setComposerOpen(true)}>
+              <MemberAvatar username={user?.username} avatarUrl={user?.avatar_url} size={46} />
+              <span><strong>What would you like to share?</strong><small>A thought, a photo, a question, or simply where you are today.</small></span>
+              <i><Camera size={17} /> Add a post</i>
+            </button>
+
+            <header className="community-home__feed-heading">
+              <div><p>Community activity</p><h2>What people are sharing</h2></div>
+              <Link to="/forum">See the full Forum <ArrowRight size={15} /></Link>
+            </header>
+            <div className="community-home__post-list">
+              {latestPosts.map((post) => <ForumPostCard key={post.post_id} post={post} token={token} />)}
+              {!loading && latestPosts.length === 0 && <p className="community-home__empty">No posts yet. You can start the first conversation.</p>}
+            </div>
           </div>
 
           <aside className="community-home__rail">
-            <section className="community-home__module community-home__announcements">
-              <header>
-                <div><p>From the team</p><h2>Announcements</h2></div>
-                <Megaphone size={21} />
-              </header>
-              {announcements.map((post) => (
-                <Link to={`/forum/${post.post_id}`} key={post.post_id}>
-                  <small>{timeAgo(post.latest_activity_at)}</small>
-                  <strong>{post.title}</strong>
-                  <span>{post.body}</span>
-                </Link>
-              ))}
-              {!loading && announcements.length === 0 && <p className="community-home__empty">No announcements right now.</p>}
+            <section className="community-home__card community-home__online">
+              <header><div><p>Community room</p><h2>Who’s here</h2></div><Radio size={19} /></header>
+              <p className="community-home__online-intro">People currently connected to the members area.</p>
+              <div className="community-home__people">
+                {onlineMembers.map((member) => (
+                  <div key={member.user_id}>
+                    <span className="community-home__person-avatar"><MemberAvatar username={member.username} avatarUrl={member.avatar_url} size={42} /><i /></span>
+                    <span><strong>{member.user_id === user?.id ? "You" : member.username}</strong><small>Here now</small></span>
+                  </div>
+                ))}
+                {!onlineMembers.length && <p className="community-home__empty">You’re the first one here. Others will appear as they arrive.</p>}
+              </div>
+              <div className="community-home__connect-actions">
+                <button type="button" onClick={openLounge}>Say hello in the Lounge</button>
+                <Link to="/messages">Message a member</Link>
+              </div>
+            </section>
+
+            <section className={`community-home__card community-home__lounge lounge-activity--${loungeActivity.level}`}>
+              <header><div><p>Live conversation</p><h2>{loungeActivity.label}</h2></div><Flame size={20} /></header>
+              <p>{loungeActivity.detail}. Drop in, say hello, or listen for a while.</p>
+              <footer><span>{loungeStatus.participants_today || 0} participated today</span><button type="button" onClick={openLounge}>Open Lounge <ArrowRight size={15} /></button></footer>
+            </section>
+
+            <section className="community-home__card community-home__announcements">
+              <header><div><p>From the team</p><h2>Announcements</h2></div><Megaphone size={20} /></header>
+              {announcements.map((post) => <Link to={`/forum/${post.post_id}`} key={post.post_id}><small>{timeAgo(post.latest_activity_at)}</small><strong>{post.title}</strong><span>{post.body}</span></Link>)}
+              {!loading && !announcements.length && <p className="community-home__empty">No announcements right now.</p>}
               <Link className="community-home__text-link" to="/forum?view=announcements">All announcements <ArrowRight size={14} /></Link>
             </section>
 
-            <section className="community-home__module community-home__messages">
-              <header><div><p>Private</p><h2>Recent messages</h2></div></header>
-              {conversations.map((conversation) => (
-                <Link to={`/messages/${conversation.conversation_id}`} key={conversation.conversation_id}>
-                  <MemberAvatar username={conversation.other_username} avatarUrl={conversation.other_avatar_url} size={38} />
-                  <span><strong>{conversation.other_username}</strong><small>{conversation.last_message_body || "Say hello."}</small></span>
-                  {conversation.unread_count > 0 && <b>{conversation.unread_count}</b>}
-                </Link>
-              ))}
-              {!loading && conversations.length === 0 && <p className="community-home__empty">No private conversations yet.</p>}
-              <Link className="community-home__text-link" to="/messages">Open messages <ArrowRight size={14} /></Link>
+            <section className="community-home__card community-home__for-you">
+              <header><div><p>Your connections</p><h2>For you</h2></div><UsersRound size={20} /></header>
+              {recentNotifications.map((notification) => <Link to={notificationPath(notification)} key={notification.notification_id}><Bell size={14} /><span><strong>{notificationCopy(notification)}</strong><small>{timeAgo(notification.created_at)}</small></span></Link>)}
+              {!loading && !recentNotifications.length && followedPosts.map((post) => <Link to={`/forum/${post.post_id}`} key={post.post_id}><LayoutGrid size={14} /><span><strong>{post.title}</strong><small>{timeAgo(post.latest_activity_at)}</small></span></Link>)}
+              {!loading && !recentNotifications.length && !followedPosts.length && <p className="community-home__empty">Replies, mentions, and followed conversations will appear here.</p>}
             </section>
 
-            <section className="community-home__quick">
-              <p>Quick actions</p>
-              <Link to="/journey"><Compass /><span><strong>Journey</strong><small>Travel recent conversations</small></span><ArrowRight /></Link>
-              <Link to="/forum"><LayoutGrid /><span><strong>Forum</strong><small>Join a conversation</small></span><ArrowRight /></Link>
-              <button type="button" onClick={openLounge}><HeartHandshake /><span><strong>Lounge</strong><small>Talk in real time</small></span><ArrowRight /></button>
-              <Link to="/profile"><UserRound /><span><strong>Profile</strong><small>Update your account</small></span><ArrowRight /></Link>
+            <section className="community-home__card community-home__messages">
+              <header><div><p>Private</p><h2>Recent messages</h2></div></header>
+              {conversations.map((conversation) => <Link to={`/messages/${conversation.conversation_id}`} key={conversation.conversation_id}><MemberAvatar username={conversation.other_username} avatarUrl={conversation.other_avatar_url} size={38} /><span><strong>{conversation.other_username}</strong><small>{conversation.last_message_body || "Say hello."}</small></span>{conversation.unread_count > 0 && <b>{conversation.unread_count}</b>}</Link>)}
+              {!loading && !conversations.length && <p className="community-home__empty">No private conversations yet.</p>}
+              <Link className="community-home__text-link" to="/messages">Open messages <ArrowRight size={14} /></Link>
             </section>
           </aside>
         </div>
       </div>
+
+      <ForumComposerModal open={composerOpen} user={user} token={token} categoryId={mainCategory?.category_id} canPublish composingAnnouncement={false} tags={tags} onClose={() => setComposerOpen(false)} />
     </main>
   );
 }
