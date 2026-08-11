@@ -2,6 +2,7 @@ import { HeartHandshake, Pin } from "lucide-react";
 import ForumPostCard from "./ForumPostCard";
 
 export default function ForumPostList({
+  token,
   view,
   activeTags,
   posts,
@@ -50,7 +51,7 @@ export default function ForumPostList({
           </header>
           <div className="forum-feed-feed">
             {pinnedPosts.map((post) => (
-              <ForumPostCard key={post.post_id} post={post} />
+              <ForumPostCard key={post.post_id} post={post} token={token} />
             ))}
           </div>
         </section>
@@ -71,7 +72,7 @@ export default function ForumPostList({
           </header>
           <div className="forum-feed-feed">
             {regularPosts.map((post) => (
-              <ForumPostCard key={post.post_id} post={post} />
+              <ForumPostCard key={post.post_id} post={post} token={token} />
             ))}
           </div>
         </section>

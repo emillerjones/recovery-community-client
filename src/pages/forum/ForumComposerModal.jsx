@@ -3,6 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { X } from "lucide-react";
 import MentionTextarea from "../../components/MentionTextarea";
 import MemberAvatar from "../../components/MemberAvatar";
+import PhotoUploader from "../../components/forumPhotos/PhotoUploader";
+import {
+  discardPendingPhotos,
+  photosReady,
+  readyMediaIds,
+} from "../../components/forumPhotos/photoUploadUtils";
 
 const API = import.meta.env.VITE_API;
 
@@ -19,6 +25,7 @@ export default function ForumComposerModal({
   const navigate = useNavigate();
   const [draft, setDraft] = useState({ title: "", body: "", tag_ids: [] });
   const [draftMentions, setDraftMentions] = useState([]);
+  const [photos, setPhotos] = useState([]);
   const [storedDraft, setStoredDraft] = useState(null);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
@@ -29,14 +36,14 @@ export default function ForumComposerModal({
     return `forum-post-draft:${userId}:${postType}`;
   }, [composingAnnouncement, user?.id, user?.user_id]);
   const hasDraftContent = Boolean(
-    draft.title.trim() || draft.body.trim() || draft.tag_ids.length
+    draft.title.trim() || draft.body.trim() || draft.tag_ids.length || photos.length
   );
 
   useEffect(() => {
     if (!open || !draftStorageKey || hasDraftContent) return;
     try {
       const stored = JSON.parse(localStorage.getItem(draftStorageKey));
-      if (!stored?.title?.trim() && !stored?.body?.trim() && !stored?.tag_ids?.length) return;
+      if (!stored?.title?.trim() && !stored?.body?.trim() && !stored?.tag_ids?.length && !stored?.photos?.length) return;
       Promise.resolve().then(() => setStoredDraft(stored));
     } catch {
       localStorage.removeItem(draftStorageKey);
@@ -53,16 +60,26 @@ export default function ForumComposerModal({
       localStorage.setItem(draftStorageKey, JSON.stringify({
         ...draft,
         mentions: draftMentions,
+        photos: photos.filter((photo) => photo.status === "ready").map((photo) => ({
+          client_id: `saved-${photo.media_id}`,
+          media_id: photo.media_id,
+          width: photo.width,
+          height: photo.height,
+          format: photo.format,
+          status: "ready",
+        })),
         savedAt: new Date().toISOString(),
       }));
     }, 400);
     return () => window.clearTimeout(timeoutId);
-  }, [draft, draftMentions, draftStorageKey, hasDraftContent, open, storedDraft]);
+  }, [draft, draftMentions, draftStorageKey, hasDraftContent, open, photos, storedDraft]);
 
   function discardDraft() {
+    discardPendingPhotos(photos, token);
     if (draftStorageKey) localStorage.removeItem(draftStorageKey);
     setDraft({ title: "", body: "", tag_ids: [] });
     setDraftMentions([]);
+    setPhotos([]);
     setStoredDraft(null);
     setError("");
   }
@@ -74,6 +91,7 @@ export default function ForumComposerModal({
       tag_ids: Array.isArray(storedDraft.tag_ids) ? storedDraft.tag_ids : [],
     });
     setDraftMentions(Array.isArray(storedDraft.mentions) ? storedDraft.mentions : []);
+    setPhotos(Array.isArray(storedDraft.photos) ? storedDraft.photos : []);
     setStoredDraft(null);
   }
 
@@ -100,6 +118,7 @@ export default function ForumComposerModal({
       return setError("Only moderators, administrators, and owners can publish announcements.");
     }
     if (!categoryId) return setError("The forum needs a Main Forum category before posting.");
+    if (!photosReady(photos)) return setError("Wait for every photo to finish uploading.");
 
     setSubmitting(true);
     setError("");
@@ -115,6 +134,7 @@ export default function ForumComposerModal({
         body: draft.body,
         tag_ids: draft.tag_ids,
         mentioned_user_ids: draftMentions.map((member) => member.user_id),
+        media_ids: readyMediaIds(photos),
       }),
     });
     const result = await response.json();
@@ -126,6 +146,7 @@ export default function ForumComposerModal({
     if (draftStorageKey) localStorage.removeItem(draftStorageKey);
     setDraft({ title: "", body: "", tag_ids: [] });
     setDraftMentions([]);
+    setPhotos([]);
     navigate(`/forum/${result.post_id}`);
   }
 
@@ -194,6 +215,7 @@ export default function ForumComposerModal({
               placeholder="You do not have to have the perfect words."
             />
           </label>
+          <PhotoUploader photos={photos} onChange={setPhotos} token={token} />
           <fieldset>
             <legend>Tags <small>Choose up to 3</small></legend>
             <div className="forum-feed-tag-picker">
@@ -218,9 +240,11 @@ export default function ForumComposerModal({
           )}
           <footer>
             <button type="button" onClick={onClose}>Cancel</button>
-            <button className="forum-feed-publish" disabled={submitting}>
+            <button className="forum-feed-publish" disabled={submitting || !photosReady(photos)}>
               {submitting
                 ? "Publishing…"
+                : !photosReady(photos)
+                  ? "Uploading photos…"
                 : composingAnnouncement
                   ? "Publish announcement"
                   : "Publish post"}

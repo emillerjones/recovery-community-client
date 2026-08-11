@@ -252,6 +252,7 @@ export default function Forum() {
             onMarkAllRead={markAllRead}
           />
           <ForumPostList
+            token={token}
             view={view}
             activeTags={activeTags}
             posts={posts}

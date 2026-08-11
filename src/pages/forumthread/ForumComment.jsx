@@ -4,11 +4,14 @@ import MemberAvatar from "../../components/MemberAvatar";
 import MentionText from "../../components/MentionText";
 import MentionTextarea from "../../components/MentionTextarea";
 import ReactionBar from "../../components/ReactionBar";
+import ForumPhotoGallery from "../../components/forumPhotos/ForumPhotoGallery";
+import PhotoUploader from "../../components/forumPhotos/PhotoUploader";
+import { photosReady } from "../../components/forumPhotos/photoUploadUtils";
 
 export default function ForumComment({
   comment, depth, currentUserId, canEditOwn, canEditOthers, canDeleteOthers,
-  token, replyingTo, setReplyingTo, replyBody, setReplyBody, replyMentions,
-  setReplyMentions, submitReply, submitting, editComment, deleteComment,
+  token, replyingTo, toggleReplyTo, replyBody, setReplyBody, replyMentions,
+  setReplyMentions, replyPhotos, setReplyPhotos, submitReply, submitting, editComment, deleteComment,
   toggleCommentFlag, toggleCommentReaction, reactingTo, formatDate,
   editedLabel,
 }) {
@@ -88,6 +91,7 @@ export default function ForumComment({
             ) : (
               <MentionText body={comment.body} mentions={comment.mentions} />
             )}
+            {!editing && <ForumPhotoGallery images={comment.images} token={token} label={`Photo from ${comment.author_username}`} />}
 
             {/* REACTION TRACE STEP 2B: These buttons belong to one comment or
                 nested reply. A click sends its ID and the selected type back
@@ -104,9 +108,7 @@ export default function ForumComment({
             <div className="forum-comment-actions">
               <button
                 className="forum-reply-button"
-                onClick={() => setReplyingTo(
-                  replyingTo === comment.comment_id ? null : comment.comment_id
-                )}
+                onClick={() => toggleReplyTo(comment.comment_id)}
               >
                 <CornerDownRight size={15} /> Reply
               </button>
@@ -164,12 +166,13 @@ export default function ForumComment({
                   onMentionsChange={setReplyMentions}
                   placeholder={`Reply to ${comment.author_username}`}
                 />
+                <PhotoUploader photos={replyPhotos} onChange={setReplyPhotos} token={token} compact />
                 <div className="forum-inline-reply__actions">
-                  <button type="button" onClick={() => setReplyingTo(null)}>
+                  <button type="button" onClick={() => toggleReplyTo(comment.comment_id)}>
                     Cancel
                   </button>
-                  <button disabled={submitting}>
-                    {submitting ? "Replying…" : "Reply"}
+                  <button disabled={submitting || !photosReady(replyPhotos)}>
+                    {submitting ? "Replying…" : !photosReady(replyPhotos) ? "Uploading…" : "Reply"}
                   </button>
                 </div>
               </form>
@@ -190,11 +193,13 @@ export default function ForumComment({
           canDeleteOthers={canDeleteOthers}
           token={token}
           replyingTo={replyingTo}
-          setReplyingTo={setReplyingTo}
+          toggleReplyTo={toggleReplyTo}
           replyBody={replyBody}
           setReplyBody={setReplyBody}
           replyMentions={replyMentions}
           setReplyMentions={setReplyMentions}
+          replyPhotos={replyPhotos}
+          setReplyPhotos={setReplyPhotos}
           submitReply={submitReply}
           submitting={submitting}
           editComment={editComment}

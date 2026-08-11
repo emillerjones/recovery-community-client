@@ -6,6 +6,7 @@ import {
   MessageCircle,
 } from "lucide-react";
 import MemberAvatar from "../../components/MemberAvatar";
+import ForumPhotoGallery from "../../components/forumPhotos/ForumPhotoGallery";
 
 function timeAgo(value) {
   const seconds = Math.floor((Date.now() - new Date(value).getTime()) / 1000);
@@ -16,7 +17,7 @@ function timeAgo(value) {
   return new Date(value).toLocaleDateString(undefined, { month: "short", day: "numeric" });
 }
 
-export default function ForumPostCard({ post }) {
+export default function ForumPostCard({ post, token }) {
   // FORUM LIST TRACE STEP 7: Forum.jsx maps one object from its `posts` state
   // into this component. That object began as one row from the posts table;
   // the list SQL also attached its author, tags, comment count, and reactions.
@@ -59,6 +60,7 @@ export default function ForumPostCard({ post }) {
         </div>
         <h2>{post.title}</h2>
         <p>{post.body}</p>
+        <ForumPhotoGallery images={post.images} token={token} compact label={`Photo from ${post.author_username}`} />
       </div>
       <footer>
         <span>

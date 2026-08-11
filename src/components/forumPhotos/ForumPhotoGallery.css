@@ -1,0 +1,19 @@
+.forum-photo-gallery { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:7px; width:min(720px,100%); margin:18px 0; }
+.forum-photo-gallery button { position:relative; min-width:0; height:clamp(180px,30vw,340px); overflow:hidden; padding:0; border:0; border-radius:13px; background:#e8ebe6; cursor:zoom-in; }
+.forum-photo-gallery.count-1 { grid-template-columns:1fr; }
+.forum-photo-gallery.count-1 button { height:min(58vw,520px); }
+.forum-photo-gallery.count-3 button:first-child { grid-row:span 2; height:100%; }
+.forum-photo-gallery button>img,.forum-photo-gallery button>.protected-image-state { width:100%; height:100%; object-fit:cover; transition:transform .25s ease; }
+.forum-photo-gallery button:hover>img { transform:scale(1.018); }
+.forum-photo-gallery.is-compact { position:relative; z-index:2; grid-template-columns:repeat(3,minmax(0,1fr)); gap:5px; margin:12px 0 0; pointer-events:none; }
+.forum-photo-gallery.is-compact button,.forum-photo-gallery.is-compact.count-1 button { height:120px; border-radius:10px; cursor:default; }
+.forum-photo-gallery.is-compact button>span { position:absolute; inset:0; display:grid; place-items:center; background:rgba(22,31,25,.52); color:white; font-size:20px; font-weight:750; }
+.forum-photo-viewer { position:fixed; z-index:1200; inset:0; display:grid; place-items:center; padding:55px 70px; background:rgba(10,14,11,.94); backdrop-filter:blur(12px); }
+.forum-photo-viewer>img,.forum-photo-viewer>.protected-image-state { max-width:100%; max-height:100%; object-fit:contain; }
+.forum-photo-viewer button { position:absolute; z-index:1; display:grid; place-items:center; width:46px; height:46px; padding:0; border:1px solid rgba(255,255,255,.16); border-radius:50%; background:rgba(255,255,255,.09); color:white; cursor:pointer; }
+.forum-photo-viewer button:hover { background:rgba(255,255,255,.17); }
+.forum-photo-viewer__close { top:18px; right:18px; }
+.forum-photo-viewer__previous { left:18px; }
+.forum-photo-viewer__next { right:18px; }
+.forum-photo-viewer__count { position:absolute; bottom:20px; padding:6px 10px; border-radius:999px; background:rgba(0,0,0,.38); color:white; font-size:11px; }
+@media(max-width:650px){.forum-photo-gallery button{height:42vw}.forum-photo-gallery.count-1 button{height:min(82vw,480px)}.forum-photo-gallery.is-compact button,.forum-photo-gallery.is-compact.count-1 button{height:92px}.forum-photo-viewer{padding:58px 10px}.forum-photo-viewer__previous,.forum-photo-viewer__next{top:auto;bottom:16px}.forum-photo-viewer__count{bottom:27px}}

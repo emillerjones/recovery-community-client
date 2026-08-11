@@ -9,6 +9,13 @@ import MentionTextarea from "../../components/MentionTextarea";
 import MemberAvatar from "../../components/MemberAvatar";
 import ForumCategoryGlyph from "../../components/ForumCategoryGlyph";
 import ForumComment from "./ForumComment";
+import ForumPhotoGallery from "../../components/forumPhotos/ForumPhotoGallery";
+import PhotoUploader from "../../components/forumPhotos/PhotoUploader";
+import {
+  discardPendingPhotos,
+  photosReady,
+  readyMediaIds,
+} from "../../components/forumPhotos/photoUploadUtils";
 import "./ForumThread.css";
 
 const API = import.meta.env.VITE_API;
@@ -57,8 +64,10 @@ export default function ForumThread() {
   const [replyingTo, setReplyingTo] = useState(null);
   const [replyBody, setReplyBody] = useState("");
   const [replyMentions, setReplyMentions] = useState([]);
+  const [replyPhotos, setReplyPhotos] = useState([]);
   const [mainReply, setMainReply] = useState("");
   const [mainReplyMentions, setMainReplyMentions] = useState([]);
+  const [mainReplyPhotos, setMainReplyPhotos] = useState([]);
   const [submitting, setSubmitting] = useState(false);
   const [editingPost, setEditingPost] = useState(false);
   const [postDraft, setPostDraft] = useState({ title: "", body: "" });
@@ -166,6 +175,11 @@ export default function ForumThread() {
     // form the member used.
     const body = parentCommentId ? replyBody : mainReply;
     const selectedMentions = parentCommentId ? replyMentions : mainReplyMentions;
+    const selectedPhotos = parentCommentId ? replyPhotos : mainReplyPhotos;
+    if (!photosReady(selectedPhotos)) {
+      setError("Wait for every photo to finish uploading.");
+      return;
+    }
     setSubmitting(true);
     setError("");
 
@@ -180,6 +194,7 @@ export default function ForumThread() {
         body,
         parent_comment_id: parentCommentId,
         mentioned_user_ids: selectedMentions.map((member) => member.user_id),
+        media_ids: readyMediaIds(selectedPhotos),
       }),
     });
 
@@ -197,8 +212,10 @@ export default function ForumThread() {
     setMainReply("");
     setReplyBody("");
     setReplyMentions([]);
+    setReplyPhotos([]);
     setReplyingTo(null);
     setMainReplyMentions([]);
+    setMainReplyPhotos([]);
     setSubmitting(false);
 
     // TRACE STEP 5: Ask the server for the entire updated thread. Store the
@@ -206,6 +223,21 @@ export default function ForumThread() {
     const refreshed = await fetchThread();
     setPost(refreshed.post);
     setComments(refreshed.comments);
+  }
+
+  function toggleInlineReply(commentId) {
+    if (replyingTo !== commentId && replyPhotos.length) {
+      discardPendingPhotos(replyPhotos, token);
+    }
+    if (replyingTo === commentId) {
+      discardPendingPhotos(replyPhotos, token);
+      setReplyingTo(null);
+    } else {
+      setReplyingTo(commentId);
+    }
+    setReplyBody("");
+    setReplyMentions([]);
+    setReplyPhotos([]);
   }
 
   async function deleteComment(commentId) {
@@ -453,6 +485,7 @@ export default function ForumThread() {
               <div><strong>{post.author_username}</strong><span>{formatDate(post.created_at)}{editedLabel(post) && <b className="forum-edited-label" title={`Last edited ${formatDate(post.content_edited_at)}`}>{editedLabel(post)}</b>}</span></div>
             </div>
             <MentionText className="forum-thread-body" body={post.body} mentions={post.mentions} />
+            <ForumPhotoGallery images={post.images} token={token} label={`Photo from ${post.author_username}`} />
             {/* REACTION TRACE STEP 2A: This controls the reaction buttons shown
                 directly under the main forum post. `onReact` points to the
                 togglePostReaction() function above. This is where the prop gets
@@ -534,11 +567,13 @@ export default function ForumThread() {
               canDeleteOthers={canDeleteOthers}
               token={token}
               replyingTo={replyingTo}
-              setReplyingTo={setReplyingTo}
+              toggleReplyTo={toggleInlineReply}
               replyBody={replyBody}
               setReplyBody={setReplyBody}
               replyMentions={replyMentions}
               setReplyMentions={setReplyMentions}
+              replyPhotos={replyPhotos}
+              setReplyPhotos={setReplyPhotos}
               submitReply={submitReply}
               submitting={submitting}
               editComment={editComment}
@@ -572,9 +607,10 @@ export default function ForumThread() {
             onMentionsChange={setMainReplyMentions}
             placeholder="Share support, experience, or a thoughtful question."
           />
+          <PhotoUploader photos={mainReplyPhotos} onChange={setMainReplyPhotos} token={token} compact />
           <div className="forum-main-reply__footer">
             <span>Speak from experience and leave room for someone else&rsquo;s path.</span>
-            <button className="forum-primary-button" disabled={submitting}>{submitting ? "Replying…" : "Post reply"}</button>
+            <button className="forum-primary-button" disabled={submitting || !photosReady(mainReplyPhotos)}>{submitting ? "Replying…" : !photosReady(mainReplyPhotos) ? "Uploading photo…" : "Post reply"}</button>
           </div>
         </form>
       )}
