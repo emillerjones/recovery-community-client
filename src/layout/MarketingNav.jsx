@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { BadgePercent, BarChart3, BookHeart, BookOpen, ChevronRight, CircleHelp, Flag, Flame, Heart, HeartHandshake, LayoutGrid, LogOut, Mail, MessageCircle, ScrollText, ShieldCheck, ShoppingBag, UserCheck, UsersRound } from "lucide-react";
+import { BadgePercent, BarChart3, BookHeart, BookOpen, ChevronRight, CircleHelp, Flag, Flame, Heart, HeartHandshake, LayoutGrid, LogOut, Mail, MessageCircle, ScrollText, ShieldCheck, ShoppingBag, StickyNote, UserCheck, UsersRound } from "lucide-react";
 import { useAuth } from "../auth/AuthContext";
 import NotificationBell from "../components/NotificationBell";
 import MessagesBell from "../components/MessagesBell";
@@ -145,7 +145,7 @@ export default function MarketingNav({ onLogin, onRegister }) {
   const headerRef = useRef(null);
   const location = useLocation();
   const visibleAdminLinks = ADMIN_LINKS.filter((link) => !link.ownerOnly || user?.role_id === 1);
-  const loungeAvailable = ["/today", "/forum", "/messages", "/profile", "/admin"].some(
+  const loungeAvailable = ["/today", "/wall", "/forum", "/messages", "/profile", "/admin"].some(
     (path) => location.pathname === path || location.pathname.startsWith(`${path}/`),
   );
 
@@ -267,6 +267,7 @@ export default function MarketingNav({ onLogin, onRegister }) {
         {token ? (
           <>
             <NavLink to="/today" className="main-nav__link main-nav__link--forum">Today</NavLink>
+            <NavLink to="/wall" className="main-nav__link main-nav__link--forum">Wall</NavLink>
             <NavLink to="/forum" className="main-nav__link main-nav__link--forum">Forum</NavLink>
             <NavLink to="/resources" className="main-nav__link">Resources</NavLink>
             <MemberMoreDropdown closeMenu={closeMenu} />
@@ -345,7 +346,8 @@ export default function MarketingNav({ onLogin, onRegister }) {
               <div className="mobile-nav__member-shortcuts">
                 <NavLink to="/today" className="mobile-nav__member-home" onClick={closeMenu}><Flame size={21} /><strong>Today</strong><small>Your community home</small></NavLink>
                 <NavLink to="/forum" onClick={closeMenu}><LayoutGrid size={21} /><strong>Forum</strong><small>Community posts</small></NavLink>
-                <NavLink to="/messages" onClick={closeMenu}><MessageCircle size={21} /><strong>Messages</strong><small>Private conversations</small></NavLink>
+                <NavLink to="/wall" onClick={closeMenu}><StickyNote size={21} /><strong>Wall</strong><small>Our living community</small></NavLink>
+                <NavLink to="/messages" className="mobile-nav__member-messages" onClick={closeMenu}><MessageCircle size={21} /><strong>Messages</strong><small>Private conversations</small></NavLink>
               </div>
 
               {loungeAvailable && (

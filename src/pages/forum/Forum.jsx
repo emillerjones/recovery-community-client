@@ -34,7 +34,7 @@ export default function Forum() {
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(false);
   const [error, setError] = useState("");
-  const [composerOpen, setComposerOpen] = useState(false);
+  const [composerOpen, setComposerOpen] = useState(() => Boolean(location.state?.openComposer));
   const [tagManagerOpen, setTagManagerOpen] = useState(false);
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
@@ -50,6 +50,11 @@ export default function Forum() {
     const id = setTimeout(() => setShowLoginWelcome(false), 4000);
     return () => clearTimeout(id);
   }, [showLoginWelcome, navigate, location.pathname, location.search]);
+
+  useEffect(() => {
+    if (!location.state?.openComposer) return;
+    navigate(`${location.pathname}${location.search}`, { replace: true, state: null });
+  }, [location.pathname, location.search, location.state, navigate]);
 
   useEffect(() => {
     const id = setTimeout(() => {
