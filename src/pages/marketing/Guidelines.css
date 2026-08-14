@@ -556,19 +556,17 @@
 }
 
 .guidelines-index a.is-active {
+  position: relative;
   color: #1d2c20;
 }
 
-.guidelines-index a.is-active span {
-  position: relative;
-}
-
-.guidelines-index a.is-active span::after {
+.guidelines-index a.is-active::after {
   content: "";
   position: absolute;
-  inset: -5px;
+  inset: 3px -8px;
   border: 1px solid #b68b48;
-  border-radius: 50%;
+  border-radius: 999px;
+  pointer-events: none;
 }
 
 .guidelines-page ::selection {
@@ -726,7 +724,7 @@
 
   .guidelines-index {
     display: grid;
-    grid-template-columns: repeat(7, minmax(0, 1fr));
+    grid-template-columns: repeat(8, minmax(0, 1fr));
     grid-column: 1 / -1;
     gap: 5px;
     width: 100%;
@@ -759,7 +757,7 @@
     color: #f0c77d;
   }
 
-  .guidelines-index a.is-active span:first-child::after {
+  .guidelines-index a.is-active::after {
     display: none;
   }
 
