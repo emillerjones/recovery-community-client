@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import {
   Ban,
   Heart,
+  Image,
   LockKeyhole,
   Mail,
   MegaphoneOff,
@@ -17,95 +18,110 @@ const GUIDELINES = [
   {
     number: "01",
     icon: LockKeyhole,
-    title: "Confidentiality",
+    title: "Respect Everyone’s Privacy — What’s Shared Stays in the Private Group Forum",
     text: (
       <>
-        All information shared in the group should remain confidential and is not
-        to leave the group. Privacy is of the highest importance. (Familiarize
-        yourself with the privacy settings of Facebook Groups. Please understand
-        that there is always slight risk when sharing information online.)
+        Protecting the privacy and trust of every member is essential to
+        maintaining a safe environment. Please do not share, repeat, screenshot,
+        copy, or distribute another member’s posts, comments, personal
+        experiences, or identifying information outside of our group forum. What
+        members share here should stay here. Please note that sharing information
+        online may involve certain risks.
       </>
     ),
   },
   {
     number: "02",
-    icon: Ban,
-    title: "No Illegal Activity",
+    icon: Heart,
+    title: "Be Kind and Considerate",
     text: (
       <>
-        You may not use our service for any unlawful purposes. We do not endorse
-        going against your current local laws regarding substance use or
-        possession. We are not here to tell you how to break or circumvent the
-        law or advise you on how to pass a drug test. Posts asking about the
-        chances of getting caught or likelihood of success in a criminal act are
-        not allowed. Do not post information on how to smuggle, ship, hide,
-        manufacture, or distribute illegal substances.
+        Treat everyone with kindness, consideration and compassion. Always be
+        mindful of another member’s feelings and communicate respectfully.
+        Differences in opinions and experiences are welcome, but personal attacks
+        are not. We’re here to support one another, not judge or criticize.
       </>
     ),
   },
   {
     number: "03",
-    icon: Heart,
-    title: "Acceptance",
+    icon: UsersRound,
+    title: "We Are Non-Judgmental & All-Inclusive",
     text: (
       <>
-        The group accepts members just as they are and remains non-judgmental at
-        all times. We remain open-minded and kind to all.
+        We remain non-judgmental and all-inclusive towards all members at all
+        times. All member posts and comments should refrain from using profanity,
+        jokes, sarcasm, disrespect and negativity that could incite offense to
+        another member. We may not always see eye to eye, and that’s okay. Let’s
+        agree to disagree with care and understanding.
       </>
     ),
   },
   {
     number: "04",
-    icon: MessageCircle,
-    title: "Stay On Topic",
+    icon: MegaphoneOff,
+    title: "No Sales, Promotions, Spam or Unsolicited Advice",
     text: (
       <>
-        We discuss things related only to cannabis, substance
-        dependence/addiction and recovery. We refrain from topics that are
-        political or religious in nature.
+        We do not post spam, advertisements, promotional content, sales,
+        irrelevant links or unsolicited advice. This includes, but is not limited
+        to, promoting or selling products, businesses, or services of any kind.
       </>
     ),
   },
   {
     number: "05",
-    icon: UsersRound,
-    title: "Sharing",
-    text: <>Focus on the person sharing and do not offer unsolicited advice.</>,
-    callout: (
+    icon: Ban,
+    title: "No Illegal Activity",
+    text: (
       <>
-        <strong>Meme Sharing Rules:</strong> The definition of a meme is as
-        follows: a humorous image, video, piece of text, etc. that is copied
-        (often with slight variations). All memes must be within our guidelines
-        and on topic.
+        Do not use our service for any unlawful purposes. We do not endorse going
+        against your current local laws regarding substance use or possession. We
+        are not here to advise on how to circumvent the law. Posts asking about
+        how to pass a drug test or the likelihood of success in a criminal act
+        are prohibited. Do not post information on how to smuggle, ship, hide,
+        manufacture, or distribute illegal substances.
       </>
     ),
   },
   {
     number: "06",
-    icon: MegaphoneOff,
-    title: "No Spamming, Advertisements, Trolling",
+    icon: MessageCircle,
+    title: "Stay on Topic",
     text: (
       <>
-        Spam, or the repetitive display of the same text again and again, is not
-        allowed. Advertising for the purpose of selling, soliciting or promoting
-        something is also prohibited. Trolling, defined as a deliberately
-        offensive or provocative online posting with the aim of upsetting
-        someone or eliciting an angry response, is forbidden.
+        Our group forum is intended only to provide a supportive space for
+        members to share their personal experiences, challenges, questions, and
+        insights related to cannabis, substance use, addiction, and recovery. We
+        do not allow discussions centered on religion, politics, or other
+        unrelated subjects.
       </>
     ),
   },
   {
     number: "07",
-    icon: ShieldCheck,
-    title: "Admins/Moderators",
+    icon: Image,
+    title: "Image & Meme Sharing",
     text: (
       <>
-        The admins/moderators are here to lead the group and facilitate the
-        discussion. They reserve the right to remove any post/comment at any
-        time. They also reserve the right to deny/block membership due to
-        noncompliance with these guidelines. Please respect that the
-        admins/moderators are generous volunteers and are not paid
-        professionals.
+        Any sharing of an image or meme must be accompanied by original written
+        text from the member posting. All images and memes posted alone, that go
+        against guidelines or are off-topic will be declined.
+      </>
+    ),
+  },
+  {
+    number: "08",
+    icon: ShieldCheck,
+    title: "Admin & Moderators",
+    text: (
+      <>
+        The admin/moderators are here to closely facilitate activity and uphold
+        group forum guidelines. They reserve the right to remove membership,
+        posts, and comments due to noncompliance with the rules. Please note that
+        moderators are generous volunteers and are not paid professionals. For
+        any questions or concerns, all members may contact the Admin, Lainie Ruth,
+        through private message or on the “Contact Us” page.
       </>
     ),
   },
@@ -145,7 +161,7 @@ export default function Guidelines() {
         <div className="guidelines-inner guidelines-hero__inner">
           <div className="guidelines-hero__copy">
             <p className="guidelines-eyebrow">Our community culture</p>
-            <h1 className="guidelines-title">Guidelines</h1>
+            <h1 className="guidelines-title">GUIDELINES</h1>
             <p className="guidelines-intro">
               All members must agree to follow these guidelines and acknowledge
               the disclaimer below:
@@ -228,7 +244,7 @@ export default function Guidelines() {
 
             <Link className="guidelines-contact-card" to="/contact">
               <Mail />
-              <span>Please contact our founder, <strong>Ruth</strong>, for any questions, concerns, or kudos.</span>
+              <span>Please contact our Admin, <strong>Lainie Ruth</strong>, with any questions or concerns.</span>
             </Link>
           </div>
         </div>
@@ -239,11 +255,11 @@ export default function Guidelines() {
           <div className="guidelines-disclaimer" data-nav-theme="light">
             <div className="guidelines-disclaimer__icon"><ShieldCheck /></div>
             <p>
-              <strong>Disclaimer:</strong> Recovery With The Exit Drug is a
-              volunteer support group sharing practical information. This is not
-              a professional or medical organization. The information provided
-              in this group is for informational and educational purposes only
-              and is not a substitute for professional care.
+              <strong>Disclaimer:</strong> Recovery with The Exit Drug’s private
+              forum is a free peer-to-peer support group. This is not a
+              professional or medical organization. Anything provided in this
+              group forum is for supportive and informational purposes only. We
+              are not a substitute for professional or medical care.
             </p>
           </div>
         </div>
