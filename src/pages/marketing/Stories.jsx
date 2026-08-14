@@ -1,14 +1,9 @@
-import { lazy, Suspense, useState } from "react";
+import { useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import { PUBLIC_STORIES, SHAWN_MEMORIAL } from "../../data/publicStories";
 import StoryReader from "./StoryReader";
 import ShawnMemorial from "./ShawnMemorial";
 import "./Stories.css";
-
-// Lazy-loaded: this pulls in three.js/R3F/postprocessing/three.quarks, which
-// is a heavy stack we don't want in the app's main bundle. Splitting it into
-// its own chunk means only people who reach /stories ever download it.
-const CommunityBonfire = lazy(() => import("./CommunityBonfire"));
 
 export default function Stories() {
   const { onRegister } = useOutletContext();
@@ -27,8 +22,7 @@ export default function Stories() {
       </section>
       <ShawnMemorial id="stories-shawn" />
 
-      {/* Experimental — comment out the line below to disable/remove the 3D bonfire section. */}
-      <Suspense fallback={null}><CommunityBonfire onSelectStory={(story) => setActive({ story })} /></Suspense>
+      {/* The experimental CommunityBonfire section is intentionally hidden. */}
 
       {active && <StoryReader {...active} returnLabel="Return to the archive" onClose={() => setActive(null)} />}
     </main>
