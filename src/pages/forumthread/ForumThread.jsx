@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
-import { ArrowLeft, Bell, Flag, Lock, MessageCircle, Pencil, Pin, Trash2, X } from "lucide-react";
+import { ArrowLeft, Bell, Flag, Lock, MessageCircle, Pencil, Pin, Plus, Send, Trash2 } from "lucide-react";
 import { useAuth } from "../../auth/AuthContext";
 import { useNotifications } from "../../contexts/NotificationsContext";
 import ReactionBar from "../../components/ReactionBar";
@@ -68,7 +68,7 @@ export default function ForumThread() {
   const [mainReply, setMainReply] = useState("");
   const [mainReplyMentions, setMainReplyMentions] = useState([]);
   const [mainReplyPhotos, setMainReplyPhotos] = useState([]);
-  const [mainReplyOpen, setMainReplyOpen] = useState(false);
+  const [replyToolsOpen, setReplyToolsOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [editingPost, setEditingPost] = useState(false);
   const [postDraft, setPostDraft] = useState({ title: "", body: "" });
@@ -82,23 +82,9 @@ export default function ForumThread() {
   const isAuthor = post?.author_id === user?.id;
   const canEditPost = (isAuthor && canEditOwn) || canEditOthers;
 
-  useEffect(() => {
-    if (!mainReplyOpen) return undefined;
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    const focusTimer = window.setTimeout(() => {
-      document.querySelector(".forum-quick-reply textarea")?.focus();
-    }, 0);
-    const closeOnEscape = (event) => {
-      if (event.key === "Escape") setMainReplyOpen(false);
-    };
-    window.addEventListener("keydown", closeOnEscape);
-    return () => {
-      window.clearTimeout(focusTimer);
-      window.removeEventListener("keydown", closeOnEscape);
-      document.body.style.overflow = previousOverflow;
-    };
-  }, [mainReplyOpen]);
+  function focusMainReply() {
+    document.querySelector(".forum-persistent-reply textarea")?.focus();
+  }
 
   // Run when the thread page first loads, then reload if the post ID
   // or logged-in user's authentication changes.
@@ -236,7 +222,7 @@ export default function ForumThread() {
     setMainReplyMentions([]);
     setMainReplyPhotos([]);
     setSubmitting(false);
-    if (!parentCommentId) setMainReplyOpen(false);
+    if (!parentCommentId) setReplyToolsOpen(false);
 
     // TRACE STEP 5: Ask the server for the entire updated thread. Store the
     // returned post/comments in state so React rerenders the new reply.
@@ -523,7 +509,7 @@ export default function ForumThread() {
         {!editingPost && (
           <div className="forum-moderation">
             {!post.locked && (
-              <button className="forum-reply-button forum-thread-reply-cta" onClick={() => setMainReplyOpen(true)}>
+              <button className="forum-reply-button forum-thread-reply-cta" onClick={focusMainReply}>
                 <MessageCircle size={15} /> Reply to post
               </button>
             )}
@@ -613,74 +599,52 @@ export default function ForumThread() {
         </div>
       </section>
 
-      {post.locked ? (
+      {post.locked && (
         <div className="forum-locked-note"><Lock size={18} /> This conversation is locked. Existing replies are still available to read.</div>
-      ) : (
-        /* TRACE STEP 1: Start tracing here. This is the large reply form the
-           member sees. Clicking "Post reply" submits this form, and onSubmit
-           calls submitReply(event) above. No parent ID means a top-level reply. */
-        <form className="forum-main-reply" onSubmit={(event) => submitReply(event)}>
-          <p className="forum-eyebrow">Join the conversation</p>
-          <h2>Leave a reply</h2>
-          {/* This controls the large reply box at the bottom of the thread. */}
-          <MentionTextarea
-            token={token}
-            rows={5}
-            value={mainReply}
-            onChange={setMainReply}
-            mentions={mainReplyMentions}
-            onMentionsChange={setMainReplyMentions}
-            placeholder="Share support, experience, or a thoughtful question."
-          />
-          <PhotoUploader photos={mainReplyPhotos} onChange={setMainReplyPhotos} token={token} compact />
-          <div className="forum-main-reply__footer">
-            <span>Speak from experience and leave room for someone else&rsquo;s path.</span>
-            <button className="forum-primary-button" disabled={submitting || !photosReady(mainReplyPhotos)}>{submitting ? "Replying…" : !photosReady(mainReplyPhotos) ? "Uploading photo…" : "Post reply"}</button>
-          </div>
-        </form>
       )}
 
       {!post.locked && (
-        <button className="forum-sticky-reply" type="button" onClick={() => setMainReplyOpen(true)}>
-          <MessageCircle size={18} /> <span>Write a reply…</span>
-        </button>
-      )}
-
-      {mainReplyOpen && !post.locked && (
-        <div className="forum-quick-reply-backdrop" role="presentation" onMouseDown={() => setMainReplyOpen(false)}>
-          <section
-            className="forum-quick-reply"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="quick-reply-title"
-            onMouseDown={(event) => event.stopPropagation()}
-          >
-            <button className="forum-quick-reply__close" type="button" aria-label="Close reply box" onClick={() => setMainReplyOpen(false)}>
-              <X size={20} />
-            </button>
-            <p className="forum-eyebrow">Replying to the original post</p>
-            <h2 id="quick-reply-title">Leave a reply</h2>
-            <form onSubmit={(event) => submitReply(event)}>
+        /* This fixed form posts a top-level reply while the member keeps their place. */
+        <form className="forum-persistent-reply" onSubmit={(event) => submitReply(event)}>
+          <div className="forum-persistent-reply__inner">
+            <div className="forum-persistent-reply__row">
               <MentionTextarea
                 token={token}
-                rows={5}
+                rows={1}
                 value={mainReply}
                 onChange={setMainReply}
                 mentions={mainReplyMentions}
                 onMentionsChange={setMainReplyMentions}
-                placeholder="Share support, experience, or a thoughtful question."
+                placeholder={`Comment as ${user?.username || "a member"}`}
               />
-              <PhotoUploader photos={mainReplyPhotos} onChange={setMainReplyPhotos} token={token} compact />
-              {error && <p className="forum-error" role="alert">{error}</p>}
-              <div className="forum-quick-reply__actions">
-                <button className="forum-secondary-button" type="button" onClick={() => setMainReplyOpen(false)}>Cancel</button>
-                <button className="forum-primary-button" disabled={submitting || !photosReady(mainReplyPhotos)}>
-                  {submitting ? "Replying…" : !photosReady(mainReplyPhotos) ? "Uploading photo…" : "Post reply"}
+              <div className="forum-persistent-reply__actions">
+                <PhotoUploader photos={mainReplyPhotos} onChange={setMainReplyPhotos} token={token} compact />
+                <button
+                  className={`forum-persistent-reply__tool ${replyToolsOpen ? "is-active" : ""}`}
+                  type="button"
+                  aria-label="More reply options"
+                  aria-expanded={replyToolsOpen}
+                  onClick={() => setReplyToolsOpen((open) => !open)}
+                >
+                  <Plus size={21} />
+                </button>
+                <button
+                  className="forum-persistent-reply__send"
+                  aria-label={submitting ? "Posting reply" : "Post reply"}
+                  disabled={submitting || !mainReply.trim() || !photosReady(mainReplyPhotos)}
+                >
+                  <Send size={18} />
                 </button>
               </div>
-            </form>
-          </section>
-        </div>
+            </div>
+            {replyToolsOpen && (
+              <div className="forum-persistent-reply__tools">
+                Add up to four photos with the camera button. Type <strong>@</strong> to mention a member.
+              </div>
+            )}
+            {error && <p className="forum-error" role="alert">{error}</p>}
+          </div>
+        </form>
       )}
     </main>
   );
