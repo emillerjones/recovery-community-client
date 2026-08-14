@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
-import { ArrowLeft, Bell, Flag, Lock, MessageCircle, Pencil, Pin, Plus, Send, Trash2 } from "lucide-react";
+import { ArrowLeft, Bell, Flag, Lock, MessageCircle, Pencil, Pin, Send, Trash2 } from "lucide-react";
 import { useAuth } from "../../auth/AuthContext";
 import { useNotifications } from "../../contexts/NotificationsContext";
 import ReactionBar from "../../components/ReactionBar";
@@ -68,7 +68,6 @@ export default function ForumThread() {
   const [mainReply, setMainReply] = useState("");
   const [mainReplyMentions, setMainReplyMentions] = useState([]);
   const [mainReplyPhotos, setMainReplyPhotos] = useState([]);
-  const [replyToolsOpen, setReplyToolsOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [editingPost, setEditingPost] = useState(false);
   const [postDraft, setPostDraft] = useState({ title: "", body: "" });
@@ -222,7 +221,6 @@ export default function ForumThread() {
     setMainReplyMentions([]);
     setMainReplyPhotos([]);
     setSubmitting(false);
-    if (!parentCommentId) setReplyToolsOpen(false);
 
     // TRACE STEP 5: Ask the server for the entire updated thread. Store the
     // returned post/comments in state so React rerenders the new reply.
@@ -620,15 +618,6 @@ export default function ForumThread() {
               <div className="forum-persistent-reply__actions">
                 <PhotoUploader photos={mainReplyPhotos} onChange={setMainReplyPhotos} token={token} compact />
                 <button
-                  className={`forum-persistent-reply__tool ${replyToolsOpen ? "is-active" : ""}`}
-                  type="button"
-                  aria-label="More reply options"
-                  aria-expanded={replyToolsOpen}
-                  onClick={() => setReplyToolsOpen((open) => !open)}
-                >
-                  <Plus size={21} />
-                </button>
-                <button
                   className="forum-persistent-reply__send"
                   aria-label={submitting ? "Posting reply" : "Post reply"}
                   disabled={submitting || !mainReply.trim() || !photosReady(mainReplyPhotos)}
@@ -637,11 +626,6 @@ export default function ForumThread() {
                 </button>
               </div>
             </div>
-            {replyToolsOpen && (
-              <div className="forum-persistent-reply__tools">
-                Add up to four photos with the camera button. Type <strong>@</strong> to mention a member.
-              </div>
-            )}
             {error && <p className="forum-error" role="alert">{error}</p>}
           </div>
         </form>
