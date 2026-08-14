@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
-import { ArrowLeft, Bell, Flag, Lock, MessageCircle, Pencil, Pin, Send, Trash2 } from "lucide-react";
+import { ArrowLeft, Bell, Flag, Lock, Pencil, Pin, Send, Trash2 } from "lucide-react";
 import { useAuth } from "../../auth/AuthContext";
 import { useNotifications } from "../../contexts/NotificationsContext";
 import ReactionBar from "../../components/ReactionBar";
@@ -80,10 +80,6 @@ export default function ForumThread() {
   const canDeleteOthers = user?.role_id <= 10;
   const isAuthor = post?.author_id === user?.id;
   const canEditPost = (isAuthor && canEditOwn) || canEditOthers;
-
-  function focusMainReply() {
-    document.querySelector(".forum-persistent-reply textarea")?.focus();
-  }
 
   // Run when the thread page first loads, then reload if the post ID
   // or logged-in user's authentication changes.
@@ -506,11 +502,6 @@ export default function ForumThread() {
 
         {!editingPost && (
           <div className="forum-moderation">
-            {!post.locked && (
-              <button className="forum-reply-button forum-thread-reply-cta" onClick={focusMainReply}>
-                <MessageCircle size={15} /> Reply to post
-              </button>
-            )}
             {canEditPost && (
               <button className="forum-action-button" onClick={startEditingPost}><Pencil size={15} /> Edit</button>
             )}

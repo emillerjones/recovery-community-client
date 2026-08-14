@@ -503,7 +503,6 @@
 }
 .forum-action-button { border-color: rgba(51, 86, 64, 0.1); background: rgba(223, 232, 220, 0.62); }
 .forum-action-button:hover, .forum-reply-button:hover { border-color: rgba(51, 86, 64, 0.2); background: var(--forum-sage); }
-.forum-thread-reply-cta { border-color: rgba(51, 86, 64, 0.18); background: #dfe8dc; }
 .forum-action-button--danger { margin-left: auto; color: #843e36; background: rgba(245, 223, 219, 0.48); }
 .forum-action-button--danger:hover { border-color: rgba(132, 62, 54, 0.16); background: #f5dfdb; }
 .forum-action-button.is-flagged, .forum-reply-button.is-flagged { color: #843e36; background: #f5dfdb; }
