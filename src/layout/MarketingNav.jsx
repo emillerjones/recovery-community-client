@@ -29,7 +29,7 @@ const LEARN_LINKS = [
 const SUPPORT_LINKS = [
   { to: "/donate", label: "Donate - Inactive", description: "Future community giving", icon: Heart },
   { to: "https://www.etsy.com/shop/TheExitDrugRecovery", label: "Merch", description: "Shop Recovery With The Exit Drug merchandise", icon: ShoppingBag, external: true },
-  { to: "/discountlinks", label: "Discount", description: "Community partner savings", icon: BadgePercent },
+  { to: "/discountlinks", label: "Discounts", description: "Community partner savings", icon: BadgePercent },
 ];
 
 const ABOUT_LINKS = [

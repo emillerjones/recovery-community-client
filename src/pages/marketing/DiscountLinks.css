@@ -315,6 +315,40 @@
 .discount-arrow svg { width: 15px; height: 15px; }
 .discount-card:hover .discount-arrow { background: #26382b; color: #fffaf0; }
 
+/* ---------- Discount directions ---------- */
+
+.discount-guide-section {
+  padding: 0 0 72px;
+  background: #eee8dc;
+}
+
+.discount-guide {
+  padding: 52px;
+  border: 1px solid rgba(73, 83, 68, 0.13);
+  background: rgba(251, 248, 241, 0.82);
+  box-shadow: 0 22px 60px rgba(43, 49, 41, 0.07);
+}
+
+.discount-guide__intro { max-width: 850px; }
+.discount-guide__intro h2 { max-width: 760px; margin: 12px 0 20px; color: #26382b; font: 500 clamp(2rem, 4vw, 3.4rem)/1.04 "Fraunces", serif; }
+.discount-guide__intro > p:not(.discount-eyebrow) { margin: 0; color: #58685b; font-size: 1rem; line-height: 1.75; }
+.discount-guide__highlights { display: grid; gap: 10px; margin-top: 24px; }
+.discount-guide__highlights p { display: flex; align-items: flex-start; gap: 10px; margin: 0; color: #35533e; font-weight: 650; line-height: 1.55; }
+.discount-guide__highlights svg { flex: 0 0 auto; width: 19px; margin-top: 2px; color: #789167; }
+.discount-guide__intro .discount-guide__updated { margin-top: 19px; color: #846638; font-size: 0.86rem; font-style: italic; }
+
+.discount-guide__columns { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-top: 42px; }
+.discount-guide__card { padding: 30px; border: 1px solid rgba(73, 83, 68, 0.13); background: #f8f5ee; }
+.discount-guide__card-heading { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; color: #9a7238; }
+.discount-guide__card-heading svg { width: 23px; }
+.discount-guide__card h3 { margin: 0; color: #26382b; font: 500 1.65rem "Fraunces", serif; }
+.discount-guide__card ol,
+.discount-guide__card ul { display: grid; gap: 12px; margin: 0; padding-left: 22px; color: #526055; line-height: 1.58; }
+.discount-guide__card li::marker { color: #9a7238; font-weight: 800; }
+.discount-guide__contact { display: flex; align-items: flex-start; gap: 11px; margin-top: 24px; padding-top: 20px; border-top: 1px solid rgba(73, 83, 68, 0.13); color: #35533e; font-size: 0.84rem; line-height: 1.55; text-decoration: none; overflow-wrap: anywhere; }
+.discount-guide__contact svg { flex: 0 0 auto; width: 19px; margin-top: 2px; color: #9a7238; }
+.discount-guide__contact strong { color: #6b5230; }
+
 /* ---------- Affiliate notice ---------- */
 
 .discount-disclaimer-section {
@@ -373,6 +407,10 @@
   .discount-card:nth-last-child(-n + 2) { border-bottom: 1px solid rgba(73, 83, 68, 0.13); }
   .discount-card:last-child { border-bottom: 0; }
   .discount-disclaimer { grid-template-columns: 1fr; padding: 28px 24px; }
+  .discount-guide-section { padding-bottom: 48px; }
+  .discount-guide { padding: 30px 20px; }
+  .discount-guide__columns { grid-template-columns: 1fr; margin-top: 32px; }
+  .discount-guide__card { padding: 24px 20px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

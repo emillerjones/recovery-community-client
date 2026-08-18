@@ -2,8 +2,12 @@ import { useEffect, useState } from "react";
 import {
   Candy,
   Cable,
+  CircleCheck,
+  ClipboardList,
   ExternalLink,
+  Info,
   Leaf,
+  Mail,
   PackageCheck,
   ShieldAlert,
   Shirt,
@@ -138,11 +142,10 @@ export default function DiscountLinks() {
       <section className="discount-hero" data-nav-theme="light">
         <div className="discount-inner discount-hero__inner">
           <div className="discount-hero__copy">
-            <p className="discount-eyebrow">Community perks</p>
-            <h1>Discount links and codes.</h1>
+            <p className="discount-eyebrow">A Discount For You, A Donation For Us</p>
+            <h1>Cannabis-Friendly Discount Codes & Links.</h1>
             <p className="discount-intro">
-              A gathered list of partner links, referral links, and discount codes
-              connected to the Recovery With The Exit Drug community.
+              This page is a curated collection of partner, referral, and discount links supporting the Recovery With The Exit Drug community.
             </p>
             <nav className="discount-index" aria-label="Discount categories">
               {discountCategories.map((category, index) => {
@@ -229,6 +232,54 @@ export default function DiscountLinks() {
             </section>
             );
           })}
+        </div>
+      </section>
+
+      <section className="discount-guide-section">
+        <div className="discount-inner discount-guide">
+          <header className="discount-guide__intro">
+            <p className="discount-eyebrow">Using your discount</p>
+            <h2>Save on products while supporting our community.</h2>
+            <p>
+              Explore cannabis-friendly brands offering our community exclusive
+              discounts on high-quality cannabis products. When you use our
+              referral links and discount codes, a portion of your purchase is
+              donated to our nonprofit organization.
+            </p>
+            <div className="discount-guide__highlights">
+              <p><CircleCheck /> These contributions help us sustain and expand the resources we provide to our community free of charge.</p>
+              <p><CircleCheck /> Thank you for supporting our mission!</p>
+            </div>
+            <p className="discount-guide__updated">This list is updated often, so please check back to see new brand discounts!</p>
+          </header>
+
+          <div className="discount-guide__columns">
+            <article className="discount-guide__card">
+              <div className="discount-guide__card-heading"><ClipboardList /><h3>Directions</h3></div>
+              <ol>
+                <li>Select a brand from our list.</li>
+                <li>Click “COPY” to copy the brand’s discount code.</li>
+                <li>Click the brand’s link to visit their website.</li>
+                <li>Add your desired products to your cart.</li>
+                <li>At checkout, enter or paste our discount code in the “Coupon/Promo/Discount Code” field.</li>
+                <li>Your discount will be applied to your order total.</li>
+              </ol>
+            </article>
+
+            <article className="discount-guide__card">
+              <div className="discount-guide__card-heading"><Info /><h3>Notes</h3></div>
+              <ul>
+                <li>Our discount codes can be used unlimited times.</li>
+                <li>Feel free to share codes with friends, but please do not promote them publicly online.</li>
+                <li>Discount codes cannot be combined with other promotional codes.</li>
+                <li>Some brands may require a minimum purchase amount for the discount to apply.</li>
+              </ul>
+              <a className="discount-guide__contact" href="mailto:thesoberstoner420@gmail.com">
+                <Mail />
+                <span>For issues with a link or discount code, or for product recommendations, contact our Founder/Admin, Lainie Ruth, at <strong>thesoberstoner420@gmail.com</strong>.</span>
+              </a>
+            </article>
+          </div>
         </div>
       </section>
 
