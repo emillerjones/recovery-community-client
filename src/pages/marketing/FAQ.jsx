@@ -37,8 +37,8 @@ const FAQ_GROUPS = [
       },
       {
         q: "Is my information private?",
-        a: "[Placeholder — real privacy practices needed before this goes live: who can see journal entries, whether messages are private, data retention, and any third-party analytics.]",
-        needsReview: true,
+        a: "Please visit our ‘Privacy’ page from the website’s menu for a detailed guide on our privacy policies and the safety of your information.",
+        needsReview: false,
       },
     ],
   },
@@ -50,7 +50,22 @@ const FAQ_GROUPS = [
       {
         q: "Is this free?",
         a: "We do not actively ask for donations, but we gratefully accept them thru our 'Donation' page to help support and sustain our organization.",
-        needsReview: true,
+        needsReview: false,
+      },
+      {
+        q: "Do we accept donations?",
+        a: (
+          <>
+            Yes. However, we do not require members to donate, but we gratefully accept them through our 'Donation' page to help support and sustain our organization. Any donations over $15 will come with a mailed handwritten thank you note plus free stickers for you to enjoy and share with your friends.
+
+            <br />
+            <br />
+
+            <strong>Note:</strong> Any donations are not tax-deductible.
+          </>
+        ),
+        searchText: "Yes. However, we do not require members to donate, but we gratefully accept donations through our Donation page. Donations over $15 include a handwritten thank you note and stickers. Donations are not tax-deductible.",
+        needsReview: false,
       },
       {
         q: "What happened to the Facebook group?",
@@ -143,7 +158,9 @@ export default function FAQ() {
       items: group.items.filter(
         (item) =>
           item.q.toLowerCase().includes(normalizedQuery) ||
-          item.a.toLowerCase().includes(normalizedQuery)
+          (typeof item.a === "string" ? item.a : item.searchText || "")
+            .toLowerCase()
+            .includes(normalizedQuery)
       ),
     }));
   }, [normalizedQuery]);
@@ -159,11 +176,11 @@ export default function FAQ() {
         <div className="faq-hero__glow" aria-hidden="true" />
         <div className="faq-container faq-hero__inner">
           <div className="faq-hero__copy">
-            <p className="faq-kicker">A clear place to begin</p>
-            <h1>Good questions deserve honest answers.</h1>
+            <p className="faq-kicker">Good Questions. Real Answers.</p>
+            <h1>FAQs — Frequently Asked Questions</h1>
             <p className="faq-hero__intro">
-              The essentials about this community, cannabis substitution,
-              privacy, and finding your place here.
+              The essentials about this organization, community, privacy,
+              and finding your place here.
             </p>
             <nav className="faq-hero__nav" aria-label="FAQ categories">
               {FAQ_GROUPS.map((group, index) => {

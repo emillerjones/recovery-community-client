@@ -24,7 +24,7 @@ export default function ShawnMemorial({ id, compact = false }) {
         <div className="smem__words">
           <p>First member · Founding light</p>
           <h2>Shawn</h2>
-          <blockquote>{SHAWN_MEMORIAL.line}</blockquote>
+          {/* <blockquote>{SHAWN_MEMORIAL.line}</blockquote> */}
           <div>{memorialParagraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div>
           <strong>Rest in peace, Shawn.</strong>
           <div className="smem__dedication" aria-label="A life remembered, a light that remains"><i />A life remembered <span>◆</span> A light that remains<i /></div>
