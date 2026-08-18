@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { ExternalLink, RotateCcw, Save } from "lucide-react";
+import { ExternalLink, Plus, RotateCcw, Save, Trash2 } from "lucide-react";
 import { useAuth } from "../../auth/AuthContext";
 import "./FAQAdmin.css";
 
@@ -71,6 +71,36 @@ export default function FAQAdmin() {
     }));
   }
 
+  function addQuestion(groupIndex) {
+    setDraft((current) => ({
+      ...current,
+      groups: current.groups.map((group, index) => index !== groupIndex ? group : {
+        ...group,
+        items: [...group.items, {
+          id: `question-${crypto.randomUUID()}`,
+          question: "",
+          answer: "",
+        }],
+      }),
+    }));
+    setNotice("New question added. Complete it, then save and publish.");
+  }
+
+  function deleteQuestion(groupIndex, itemIndex) {
+    const group = draft.groups[groupIndex];
+    const item = group.items[itemIndex];
+    if (group.items.length === 1) return;
+    if (!window.confirm(`Remove “${item.question || "this new question"}”? It will not be permanently deleted until you save and publish.`)) return;
+    setDraft((current) => ({
+      ...current,
+      groups: current.groups.map((currentGroup, index) => index !== groupIndex ? currentGroup : {
+        ...currentGroup,
+        items: currentGroup.items.filter((_, innerIndex) => innerIndex !== itemIndex),
+      }),
+    }));
+    setNotice("Question removed from this draft. Save and publish to make it permanent.");
+  }
+
   async function save(event) {
     event.preventDefault();
     setSaving(true);
@@ -131,11 +161,15 @@ export default function FAQAdmin() {
             <div className="faq-admin__questions">
               {group.items.map((item, itemIndex) => (
                 <article key={item.id}>
-                  <span>Question {itemIndex + 1}</span>
+                  <div className="faq-admin__question-heading">
+                    <span>Question {itemIndex + 1}</span>
+                    <button type="button" onClick={() => deleteQuestion(groupIndex, itemIndex)} disabled={group.items.length === 1} title={group.items.length === 1 ? "Each section needs at least one question" : "Delete this question"}><Trash2 size={15} /> Delete</button>
+                  </div>
                   <label>Question<input value={item.question} maxLength={240} onChange={(event) => updateItem(groupIndex, itemIndex, "question", event.target.value)} required /></label>
                   <label>Answer<textarea rows="5" value={item.answer} maxLength={5000} onChange={(event) => updateItem(groupIndex, itemIndex, "answer", event.target.value)} required /></label>
                 </article>
               ))}
+              <button className="faq-admin__add-question" type="button" onClick={() => addQuestion(groupIndex)} disabled={group.items.length >= 30}><Plus size={17} /> Add question</button>
             </div>
           </section>
         ))}
