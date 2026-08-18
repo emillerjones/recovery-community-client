@@ -31,6 +31,7 @@ const SUPPORT_LINKS = [
   { to: "/donate", label: "Donate - Inactive", description: "Future community giving", icon: Heart },
   { to: "https://www.etsy.com/shop/TheExitDrugRecovery", label: "Merch", description: "Shop Recovery With The Exit Drug merchandise", icon: ShoppingBag, external: true },
   { to: "/discountlinks", label: "Discounts", description: "Community partner savings", icon: BadgePercent },
+  { to: "/discountlinks2", label: "Discount Links 2", description: "Owner-managed partner discounts", icon: BadgePercent },
 ];
 
 const ABOUT_LINKS = [

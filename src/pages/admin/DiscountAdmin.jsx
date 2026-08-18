@@ -63,14 +63,6 @@ export default function DiscountAdmin() {
     return () => window.removeEventListener("beforeunload", warn);
   }, [dirty]);
 
-  function updateHero(field, value) {
-    setDraft((current) => ({ ...current, hero: { ...current.hero, [field]: value } }));
-  }
-
-  function updateGuide(field, value) {
-    setDraft((current) => ({ ...current, guide: { ...current.guide, [field]: value } }));
-  }
-
   function updateCategory(categoryIndex, field, value) {
     setDraft((current) => ({ ...current, categories: current.categories.map((category, index) => index === categoryIndex ? { ...category, [field]: value } : category) }));
   }
@@ -194,23 +186,6 @@ export default function DiscountAdmin() {
       {notice && <div className={`faq-admin__notice ${notice.includes("live") ? "is-success" : ""}`} role="status">{notice}<button type="button" onClick={() => setNotice("")}>×</button></div>}
 
       <form onSubmit={save}>
-        <section className="faq-admin__section">
-          <div className="faq-admin__section-heading"><span>Public page</span><h2>Page copy</h2></div>
-          <div className="faq-admin__fields">
-            <label>Small heading<input value={draft.hero.eyebrow} maxLength={120} onChange={(event) => updateHero("eyebrow", event.target.value)} required /></label>
-            <label>Page title<input value={draft.hero.title} maxLength={180} onChange={(event) => updateHero("title", event.target.value)} required /></label>
-            <label>Introduction<textarea rows="3" value={draft.hero.intro} maxLength={800} onChange={(event) => updateHero("intro", event.target.value)} required /></label>
-            <label>Guide title<input value={draft.guide.title} maxLength={180} onChange={(event) => updateGuide("title", event.target.value)} required /></label>
-            <label>Guide introduction<textarea rows="4" value={draft.guide.intro} maxLength={1200} onChange={(event) => updateGuide("intro", event.target.value)} required /></label>
-            <label>Update reminder<textarea rows="2" value={draft.guide.updated} maxLength={500} onChange={(event) => updateGuide("updated", event.target.value)} required /></label>
-            <div className="discount-admin__two-fields">
-              <label>Contact wording<input value={draft.guide.contactText} maxLength={800} onChange={(event) => updateGuide("contactText", event.target.value)} required /></label>
-              <label>Contact email<input type="email" value={draft.guide.contactEmail} maxLength={254} onChange={(event) => updateGuide("contactEmail", event.target.value)} required /></label>
-            </div>
-            <label>Important disclaimer<textarea rows="3" value={draft.disclaimer} maxLength={1200} onChange={(event) => setDraft((current) => ({ ...current, disclaimer: event.target.value }))} required /></label>
-          </div>
-        </section>
-
         {draft.categories.map((category, categoryIndex) => (
           <section className="faq-admin__section discount-admin__category" key={category.id}>
             <div className="discount-admin__category-heading">

@@ -1,4 +1,4 @@
-.discount-admin__two-fields,.discount-admin__category-fields { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.discount-admin__category-fields { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
 .discount-admin__category-fields .is-wide { grid-column:1/-1; }
 .discount-admin select { width:100%; padding:12px 13px; border:1px solid #cbd5c9; border-radius:10px; background:#fff; color:#233128; font:500 15px/1.5 Inter,sans-serif; }
 .discount-admin__category-heading { display:flex; align-items:flex-start; justify-content:space-between; gap:18px; margin-bottom:22px; }
@@ -31,4 +31,4 @@
 .discount-admin__add { display:flex; align-items:center; justify-content:center; gap:7px; min-height:46px; border:1px dashed #94aa96; border-radius:12px; background:#f3f7f1; color:#355a3d; font-weight:800; cursor:pointer; }
 .discount-admin__add-category { width:min(1120px,100%); margin:0 auto 22px; }
 .discount-admin__empty { margin:0; padding:18px; color:#737f75; text-align:center; }
-@media(max-width:760px){.discount-admin__two-fields,.discount-admin__category-fields,.discount-admin__code-fields{grid-template-columns:1fr}.discount-admin__category-fields .is-wide{grid-column:auto}.discount-admin__category-heading{align-items:flex-start;flex-direction:column}.discount-admin__brand summary{align-items:center;flex-wrap:wrap}.discount-admin__brand summary::after{margin-left:0}.discount-admin__brand summary em{margin-left:auto}.discount-admin__brand-actions{display:grid;grid-template-columns:1fr 1fr}.discount-admin__brand-actions button,.discount-admin__brand-actions a{justify-content:center}.discount-admin__brand-actions .is-danger{grid-column:1/-1;margin-left:0}}
+@media(max-width:760px){.discount-admin__category-fields,.discount-admin__code-fields{grid-template-columns:1fr}.discount-admin__category-fields .is-wide{grid-column:auto}.discount-admin__category-heading{align-items:flex-start;flex-direction:column}.discount-admin__brand summary{align-items:center;flex-wrap:wrap}.discount-admin__brand summary::after{margin-left:0}.discount-admin__brand summary em{margin-left:auto}.discount-admin__brand-actions{display:grid;grid-template-columns:1fr 1fr}.discount-admin__brand-actions button,.discount-admin__brand-actions a{justify-content:center}.discount-admin__brand-actions .is-danger{grid-column:1/-1;margin-left:0}}
