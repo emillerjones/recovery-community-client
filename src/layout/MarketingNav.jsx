@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { BadgePercent, BarChart3, BookHeart, BookOpen, ChevronRight, CircleHelp, Flag, Flame, Heart, HeartHandshake, LayoutGrid, LogOut, Mail, MessageCircle, ScrollText, ShieldCheck, ShoppingBag, UserCheck, UsersRound } from "lucide-react";
+import { BadgePercent, BarChart3, BookHeart, BookOpen, ChevronRight, CircleHelp, FilePenLine, Flag, Flame, Heart, HeartHandshake, LayoutGrid, LogOut, Mail, MessageCircle, ScrollText, ShieldCheck, ShoppingBag, UserCheck, UsersRound } from "lucide-react";
 import { useAuth } from "../auth/AuthContext";
 import NotificationBell from "../components/NotificationBell";
 import MessagesBell from "../components/MessagesBell";
@@ -56,6 +56,7 @@ const ROLE_LABELS = {
 };
 
 const ADMIN_LINKS = [
+  { to: "/admin/faq-editor", label: "Edit FAQ2", description: "Owner-managed FAQ2 content", icon: FilePenLine, ownerOnly: true },
   { to: "/admin/stats", label: "Stats", description: "Private community activity", icon: BarChart3, ownerOnly: true },
   { to: "/admin/users", label: "Users", description: "Roles and member accounts", icon: UsersRound },
   { to: "/admin/membership", label: "Admissions", description: "Applications and invite codes", icon: UserCheck },

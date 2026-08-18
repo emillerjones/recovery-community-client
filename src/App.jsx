@@ -20,6 +20,7 @@ import AppLayout from "./layout/AppLayout";
 import About from "./pages/marketing/About";
 import Resources from "./pages/marketing/Resources";
 import FAQ from "./pages/marketing/FAQ";
+import FAQ2 from "./pages/marketing/FAQ2";
 import Privacy from "./pages/marketing/Privacy";
 import Forum from "./pages/forum/Forum";
 import ForumThread from "./pages/forumthread/ForumThread";
@@ -30,6 +31,7 @@ import ResetPassword from "./pages/auth/ResetPassword";
 import MembershipAdmin from "./pages/admin/MembershipAdmin";
 import Profile from "./pages/profile/Profile";
 import AnalyticsAdmin from "./pages/admin/AnalyticsAdmin";
+import FAQAdmin from "./pages/admin/FAQAdmin";
 
 
 
@@ -57,6 +59,7 @@ export default function App() {
         <Route path="about" element={<About />} />
         <Route path="resources" element={<Resources />} />
         <Route path="faq" element={<FAQ />} />
+        <Route path="faq2" element={<FAQ2 />} />
         <Route path="privacy" element={<Privacy />} />
       </Route>
 
@@ -75,6 +78,14 @@ export default function App() {
         <Route path="/messages" element={<Messages />} />
         <Route path="/messages/:conversationId" element={<Messages />} />
         <Route path="/profile" element={<Profile />} />
+        <Route
+          path="/admin/faq-editor"
+          element={
+            <RequireRole maxRoleId={1}>
+              <FAQAdmin />
+            </RequireRole>
+          }
+        />
         <Route
           path="/admin/stats"
           element={
