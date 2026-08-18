@@ -2,6 +2,7 @@ import { Navigate, Routes, Route } from "react-router-dom";
 import Home from "./pages/marketing/Home";
 import Community from "./pages/marketing/Community";
 import DiscountLinks from "./pages/marketing/DiscountLinks";
+import DiscountLinks2 from "./pages/marketing/DiscountLinks2";
 import Guidelines from "./pages/marketing/Guidelines";
 import Stories from "./pages/marketing/Stories";
 import MyStory from "./pages/marketing/MyStory";
@@ -32,6 +33,7 @@ import MembershipAdmin from "./pages/admin/MembershipAdmin";
 import Profile from "./pages/profile/Profile";
 import AnalyticsAdmin from "./pages/admin/AnalyticsAdmin";
 import FAQAdmin from "./pages/admin/FAQAdmin";
+import DiscountAdmin from "./pages/admin/DiscountAdmin";
 
 
 
@@ -56,6 +58,7 @@ export default function App() {
         <Route path="guidelines" element={<Guidelines />} />
         <Route path="contact" element={<Contact />} />
         <Route path="discountlinks" element={<DiscountLinks />} />
+        <Route path="discountlinks2" element={<DiscountLinks2 />} />
         <Route path="about" element={<About />} />
         <Route path="resources" element={<Resources />} />
         <Route path="faq" element={<FAQ />} />
@@ -78,6 +81,14 @@ export default function App() {
         <Route path="/messages" element={<Messages />} />
         <Route path="/messages/:conversationId" element={<Messages />} />
         <Route path="/profile" element={<Profile />} />
+        <Route
+          path="/admin/discount-editor"
+          element={
+            <RequireRole maxRoleId={1}>
+              <DiscountAdmin />
+            </RequireRole>
+          }
+        />
         <Route
           path="/admin/faq-editor"
           element={
