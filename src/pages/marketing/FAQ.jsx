@@ -10,11 +10,11 @@ const FAQ_GROUPS = [
     items: [
       {
         q: "Who is this community for?",
-        a: "Anyone using cannabis to reduce or replace their use of alcohol, opioids, or other dangerous substances — or anyone curious whether this approach might help them. There's no single right way to recover here, and no one is asked to follow a specific program.",
+        a: "Anyone using cannabis to reduce or replace their use of alcohol, narcotics, or other dangerous substances — or anyone curious whether this approach might help them or a loved one. Recovery with The Exit Drug is not a program, rather it is a community for like-minded people to find support and resources. We are all-inclusive, meaning we accept anyone in recovery with whatever program or treatment path they might be using.",
       },
       {
         q: "Is this replacing AA, NA, or other recovery programs?",
-        a: "No. Many of our members use cannabis substitution as a medication-assisted-treatment (MAT) alongside other programs such as Alcoholics Anonymous, Narcotics Anonymous, 12-Step Groups, HAMS, SMART Recovery, Moderation Management, Refuge Recovery, Celebrate Recovery, etc or other alternative paths of their own making. — This isn’t a replacement for those — it's another option that can work alongside them.",
+        a: "No. Many of our members use cannabis as a medication-assisted-treatment (MAT) or as a harm-reduction tool alongside other programs such as Alcoholics Anonymous, Narcotics Anonymous, 12-Step Programs, SMART Recovery, Moderation Management, Refuge Recovery, Celebrate Recovery, etc, or other alternative pathways. — We are not a replacement for those — we are  another option that can work alongside them.",
       },
       {
         q: "Do I have to use cannabis to be part of this community?",
@@ -49,7 +49,7 @@ const FAQ_GROUPS = [
     items: [
       {
         q: "Is this free?",
-        a: "We do not actively ask for donations, but we gratefully accept them thru our 'Donation' page to help support and sustain our organization.",
+        a: "Yes. Recovery with The Exit Drug is a nonprofit organization. All resources provided are available for free for our members.",
         needsReview: false,
       },
       {
@@ -69,7 +69,7 @@ const FAQ_GROUPS = [
       },
       {
         q: "What happened to the Facebook group?",
-        a: "Our Facebook group called 'Maintaining My Recovery With Cannabis: Support Group' will continue to be available indefinitely. Our hope is to fully transition the support group over to this website for better safety, moderation control, and easier access for our members.",
+        a: "Our Facebook group called 'Maintaining My Recovery With Cannabis: Support Group' will continue to be available for members indefinitely. Our hope is to fully transition the Facebook support group over to this website for better safety, moderation control, and easier access for our members.",
       },
     ],
   },
