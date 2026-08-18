@@ -36,6 +36,7 @@ export default function DiscountAdmin() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [notice, setNotice] = useState("");
+  const [openBrandIds, setOpenBrandIds] = useState(() => new Set());
   const dirty = useMemo(() => Boolean(draft && savedContent && JSON.stringify(draft) !== JSON.stringify(savedContent)), [draft, savedContent]);
 
   useEffect(() => {
@@ -104,12 +105,13 @@ export default function DiscountAdmin() {
   }
 
   function addBrand(categoryIndex) {
+    const brandId = `brand-${crypto.randomUUID()}`;
     setDraft((current) => ({
       ...current,
       categories: current.categories.map((category, index) => index !== categoryIndex ? category : {
         ...category,
         brands: [...category.brands, {
-          id: `brand-${crypto.randomUUID()}`,
+          id: brandId,
           name: "",
           code: "",
           url: "",
@@ -119,7 +121,17 @@ export default function DiscountAdmin() {
         }],
       }),
     }));
+    setOpenBrandIds((current) => new Set(current).add(brandId));
     setNotice("New brand added. Complete its required fields before publishing.");
+  }
+
+  function setBrandOpen(brandId, isOpen) {
+    setOpenBrandIds((current) => {
+      const next = new Set(current);
+      if (isOpen) next.add(brandId);
+      else next.delete(brandId);
+      return next;
+    });
   }
 
   function deleteBrand(categoryIndex, brandIndex) {
@@ -204,7 +216,7 @@ export default function DiscountAdmin() {
 
             <div className="discount-admin__brand-list">
               {category.brands.map((brand, brandIndex) => (
-                <details className={`discount-admin__brand ${brand.active ? "" : "is-hidden"}`} key={brand.id} open={!brand.name}>
+                <details className={`discount-admin__brand ${brand.active ? "" : "is-hidden"}`} key={brand.id} open={openBrandIds.has(brand.id)} onToggle={(event) => setBrandOpen(brand.id, event.currentTarget.open)}>
                   <summary>
                     {brand.logo ? <img src={brand.logo} alt="" onError={(event) => { event.currentTarget.style.visibility = "hidden"; }} /> : <span className="discount-admin__logo-placeholder">Logo</span>}
                     <span className="discount-admin__brand-summary"><strong>{brand.name || "New brand"}</strong><small>{brand.code === null ? "No code needed" : brand.code || "Code not entered"}</small></span>
