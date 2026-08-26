@@ -22,8 +22,8 @@ export default function MarketingFooter() {
           </NavLink>
 
           <p>
-            A welcoming community exploring cannabis as a path away from alcohol,
-            opioids, and other harmful substances.
+            The first-ever established harm-reduction community utilizing cannabis as an “exit-drug” away from alcohol,
+            narcotics and other harmful substances, while supporting individuals towards a gateway of recovery and healthier living.
           </p>
         </div>
 
