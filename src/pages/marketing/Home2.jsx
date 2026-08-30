@@ -7,34 +7,34 @@ import "./Home2.css";
 const FEATURED_STORIES = [PUBLIC_STORIES[0], PUBLIC_STORIES[2], PUBLIC_STORIES[4]];
 
 const PRINCIPLES = [
-  ["01", "Harm-Reduction Saves Lives", "We meet people where they are with dignity, kindness and respect."],
-  ["02", "Recovery has Many Pathways", "No single program, label, or treatment model works for everyone."],
-  ["03", "MAT & Plant-Medicine is Health Care", "Evidence-based care can help heal both the brain and the body."],
-  ["04", "Connection & Compassion Heal", "Understanding and support move recovery beyond shame and stigma."],
+  ["01", "Harm-Reduction Saves Lives", "We promote harm-reduction that is an evidence-based approach to address substance use disorders through prevention, treatment, and recovery that ‘meets people where they are at’ with dignity, kindness and respect regardless of condition or circumstance."],
+  ["02", "Recovery has Many Pathways", "We recognize that recovery is deeply personal and what works for one person may not work for another. Approaching all recovery methods with openness and without judgment is far more effective than shaming someone because their path to recovery looks different from the traditional approach."],
+  ["03", "Medication-Assisted-Treatment (MAT) & Plant-Medicine is Health Care", "These modalities are healthcare because they treat substance use disorders and mental health as real medical conditions. They use science, clinical evidence, and history to heal the brain and the body."],
+  ["04", "Connection & Compassion Heal; Shame & Stigma Hurt", "By placing compassion and connection at the center of recovery, we can help foster healing while also contributing to a broader cultural shift from shame and stigma toward understanding and support."],
 ];
 
 const SUPPORT_PATHS = [
   {
     eyebrow: "I need connection",
-    title: "Find peer support",
-    text: "Join a moderated community shaped by lived experience, mutual respect, and encouragement.",
-    action: "Join our support community",
+    title: "Peer support group",
+    text: "A first of its kind moderated community support forum of like-minded individuals sharing personal experience about cannabis and recovery.",
+    action: "Join Our Support Community Here",
     icon: <MessagesSquare size={24} />,
     register: true,
   },
   {
     eyebrow: "I want to understand",
-    title: "Learn about harm reduction",
-    text: "Explore educational articles, scientific research, and practical recovery resources.",
-    action: "Find resources",
+    title: "Education",
+    text: "A list of informational articles, scientific research, and other resources to learn about cannabis, recovery and more.",
+    action: "Find Resources Here",
     icon: <BookOpen size={24} />,
     to: "/resources",
   },
   {
     eyebrow: "I need some hope",
-    title: "Read real recovery stories",
-    text: "Hear directly from people whose recovery includes cannabis as one part of their path.",
-    action: "Read their stories",
+    title: "Recovery stories",
+    text: "Real voices publicly sharing their journeys of recovery with cannabis to help inspire others.",
+    action: "Read Recovery Stories",
     icon: <Sparkles size={24} />,
     to: "/stories",
   },
@@ -50,9 +50,9 @@ export default function Home2() {
         <div className="home2-shell home2-hero__inner">
           <div className="home2-hero__copy">
             <p className="home2-eyebrow"><span /> Established 2013</p>
-            <h1>A recovery community with room for <em>your path.</em></h1>
-            <p className="home2-hero__lead">Recovery with The Exit-Drug supports people who use cannabis to reduce or replace dangerous and addictive substances.</p>
-            <p className="home2-hero__support">Find peer support, trusted information, honest recovery stories, and connection without judgment.</p>
+            <h1>Recovery with<br /><em>The Exit-Drug</em></h1>
+            <p className="home2-hero__lead">A recovery support community for people using cannabis to reduce or replace dangerous and addictive substances.</p>
+            <p className="home2-hero__support">Find peer support, educational resources, recovery stories, and connection without judgment.</p>
             <div className="home2-hero__actions">
               <button type="button" onClick={onRegister}>Join the community <ArrowRight size={17} /></button>
               <a href="#home2-start">Find your starting point <ArrowDown size={17} /></a>
@@ -115,14 +115,14 @@ export default function Home2() {
       <section className="home2-purpose">
         <div className="home2-shell home2-purpose__inner">
           <p className="home2-eyebrow"><span /> Our founding purpose</p>
-          <blockquote>The mission of Recovery with The Exit-Drug is to develop a recovery support community for people who use cannabis as harm-reduction therapy from dangerous or addictive substances.</blockquote>
+          <blockquote>The mission of Recovery with The Exit-Drug (formerly known as Maintaining My Recovery with Cannabis/MMRC) is to develop a recovery support community of people who use cannabis as a form of harm-reduction therapy from dangerous or addictive substances.</blockquote>
           <p>We provide support through personal experiences, educational resources, and peer support programs—while upholding a culture of inclusiveness and mutual respect.</p>
         </div>
       </section>
 
       <section className="home2-principles">
         <div className="home2-shell">
-          <header className="home2-section-head"><div><span>Our roots</span><h2>Principles We Uphold</h2></div><p>The beliefs that guide how we welcome, educate, and support this community.</p></header>
+          <header className="home2-section-head"><div><span>Our roots</span><h2>Principles We Uphold</h2></div><p>The following principles are what guide and shape our mission.</p></header>
           <div className="home2-principles__grid">
             {PRINCIPLES.map(([number, title, text]) => (
               <article key={number}><span>{number}</span><h3>{title}</h3><p>{text}</p></article>
@@ -139,7 +139,7 @@ export default function Home2() {
       </section>
 
       <section className="home2-disclaimer">
-        <div className="home2-shell"><ShieldCheck size={20} /><p><strong>Recovery with The Exit Drug is a volunteer support group sharing practical information.</strong> We are not a professional or medical organization, and our information is not a substitute for professional care.</p></div>
+        <div className="home2-shell"><ShieldCheck size={20} /><p><strong>Recovery with The Exit Drug is a volunteer support group sharing practical information.</strong> This is not a professional or medical organization. The information provided is for informational and educational purposes only and is not a substitute for professional care.</p></div>
       </section>
     </main>
   );
