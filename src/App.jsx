@@ -1,5 +1,6 @@
 import { Navigate, Routes, Route } from "react-router-dom";
 import Home from "./pages/marketing/Home";
+import Home2 from "./pages/marketing/Home2";
 import Community from "./pages/marketing/Community";
 import DiscountLinks from "./pages/marketing/DiscountLinks";
 import Guidelines from "./pages/marketing/Guidelines";
@@ -48,6 +49,7 @@ export default function App() {
       {/* Marketing/logged-out routes — transparent hero nav */}
       <Route path="/" element={<MarketingLayout />}>
         <Route index element={<Home />} />
+        <Route path="home2" element={<Home2 />} />
         {/* Direct /login visits show the homepage behind the login drawer. */}
         <Route path="login" element={<Home />} />
         <Route path="stories" element={<Stories />} />
