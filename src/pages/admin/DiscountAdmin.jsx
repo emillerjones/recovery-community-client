@@ -170,7 +170,7 @@ export default function DiscountAdmin() {
       setSavedContent(data.content);
       setDraft(clone(data.content));
       setRevision(data.revision);
-      setNotice("Discount2 changes are live.");
+      setNotice("Discount Links changes are live.");
     } catch (error) {
       setNotice(error.message);
     } finally {
@@ -179,20 +179,20 @@ export default function DiscountAdmin() {
   }
 
   function discard() {
-    if (!dirty || window.confirm("Discard your unsaved Discount2 changes?")) {
+    if (!dirty || window.confirm("Discard your unsaved Discount Links changes?")) {
       setDraft(clone(savedContent));
       setNotice("Unsaved changes discarded.");
     }
   }
 
-  if (loading) return <main className="faq-admin discount-admin"><p>Loading Discount2 editor…</p></main>;
-  if (!draft) return <main className="faq-admin discount-admin"><div className="faq-admin__notice is-error">{notice || "Discount2 could not be loaded."}</div></main>;
+  if (loading) return <main className="faq-admin discount-admin"><p>Loading Discount Links editor…</p></main>;
+  if (!draft) return <main className="faq-admin discount-admin"><div className="faq-admin__notice is-error">{notice || "Discount Links could not be loaded."}</div></main>;
 
   return (
     <main className="faq-admin discount-admin">
       <header className="faq-admin__header">
-        <div><span>Owner tool</span><h1>Edit Discount2</h1><p>Add, update, hide, reorder, or remove discount brands. Changes affect only the independent <strong>/discountlinks2</strong> page.</p></div>
-        <a href="/discountlinks2" target="_blank" rel="noreferrer">Open Discount2 <ExternalLink size={16} /></a>
+        <div><span>Owner tool</span><h1>Edit Discount Links</h1><p>Add, update, hide, reorder, or remove discount brands on the public <strong>/discountlinks</strong> page.</p></div>
+        <a href="/discountlinks" target="_blank" rel="noreferrer">Open Discount Links <ExternalLink size={16} /></a>
       </header>
 
       {notice && <div className={`faq-admin__notice ${notice.includes("live") ? "is-success" : ""}`} role="status">{notice}<button type="button" onClick={() => setNotice("")}>×</button></div>}

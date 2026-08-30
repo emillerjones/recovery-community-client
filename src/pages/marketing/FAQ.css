@@ -908,3 +908,8 @@
     opacity: 1;
   }
 }
+.faq .faq-item__answer p { white-space: pre-line; }
+.faq-state { display: grid; place-items: center; align-content: center; min-height: 100vh; padding: 120px 24px; background: #eee8dc; color: #203326; text-align: center; }
+.faq-state h1 { margin: 0; font: 500 clamp(2rem, 5vw, 4rem)/1.05 "Fraunces", serif; }
+.faq-state p { max-width: 560px; color: #647066; }
+.faq-state a { color: #6f5734; font-weight: 750; }

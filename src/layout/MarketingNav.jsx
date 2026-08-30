@@ -23,15 +23,13 @@ const COMMUNITY_LINKS = [
 const LEARN_LINKS = [
   { to: "/resources", label: "Resources", description: "Practical recovery information", icon: BookOpen },
   { to: "/faq", label: "FAQ", description: "Answers to common questions", icon: CircleHelp },
-  { to: "/faq2", label: "FAQ2", description: "Owner-managed answers to common questions", icon: CircleHelp },
   { to: "/privacy", label: "Privacy", description: "How we handle and protect your information", icon: ShieldCheck },
 ];
 
 const SUPPORT_LINKS = [
   { to: "/donate", label: "Donate - Inactive", description: "Future community giving", icon: Heart },
   { to: "https://www.etsy.com/shop/TheExitDrugRecovery", label: "Merch", description: "Shop Recovery With The Exit Drug merchandise", icon: ShoppingBag, external: true },
-  { to: "/discountlinks", label: "Discounts", description: "Community partner savings", icon: BadgePercent },
-  { to: "/discountlinks2", label: "Discount Links 2", description: "Owner-managed partner discounts", icon: BadgePercent },
+  { to: "/discountlinks", label: "Discount Links", description: "Community partner savings", icon: BadgePercent },
 ];
 
 const ABOUT_LINKS = [
@@ -58,8 +56,8 @@ const ROLE_LABELS = {
 };
 
 const ADMIN_LINKS = [
-  { to: "/admin/discount-editor", label: "Edit Discount2", description: "Owner-managed discount brands", icon: BadgePercent, ownerOnly: true },
-  { to: "/admin/faq-editor", label: "Edit FAQ2", description: "Owner-managed FAQ2 content", icon: FilePenLine, ownerOnly: true },
+  { to: "/admin/discount-editor", label: "Edit Discount Links", description: "Owner-managed discount brands", icon: BadgePercent, ownerOnly: true },
+  { to: "/admin/faq-editor", label: "Edit FAQ", description: "Owner-managed FAQ content", icon: FilePenLine, ownerOnly: true },
   { to: "/admin/stats", label: "Stats", description: "Private community activity", icon: BarChart3, ownerOnly: true },
   { to: "/admin/users", label: "Users", description: "Roles and member accounts", icon: UsersRound },
   { to: "/admin/membership", label: "Admissions", description: "Applications and invite codes", icon: UserCheck },

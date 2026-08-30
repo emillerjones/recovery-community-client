@@ -1,82 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import { Link, useOutletContext } from "react-router-dom";
 import "./FAQ.css";
 
-const FAQ_GROUPS = [
-  {
-    title: "About This Community",
-    shortTitle: "Community",
-    icon: "leaf",
-    items: [
-      {
-        q: "Who is this community for?",
-        a: "Anyone using cannabis to reduce or replace their use of alcohol, narcotics, or other dangerous substances — or anyone curious whether this approach might help them or a loved one. Recovery with The Exit Drug is not a program, rather it is a community for like-minded people to find support and resources. We are all-inclusive, meaning we accept anyone in recovery with whatever program or treatment path they might be using.",
-      },
-      {
-        q: "Is this replacing AA, NA, or other recovery programs?",
-        a: "No. Many of our members use cannabis as a medication-assisted-treatment (MAT) or as a harm-reduction tool alongside other programs such as Alcoholics Anonymous, Narcotics Anonymous, 12-Step Programs, SMART Recovery, Moderation Management, Refuge Recovery, Celebrate Recovery, etc, or other alternative pathways. — We are not a replacement for those — we are  another option that can work alongside them.",
-      },
-      {
-        q: "Do I have to use cannabis to be part of this community?",
-        a: "No. This community exists for people exploring cannabis as part of their recovery, but you don't have to be actively using it to belong here — many people are simply researching whether this approach is right for them.",
-      },
-    ],
-  },
-  {
-    title: "Privacy & Trust",
-    shortTitle: "Privacy & trust",
-    icon: "shield",
-    items: [
-      {
-        q: "Is this medical advice?",
-        a: "No. Recovery With The Exit Drug is a peer support community, not a medical or professional organization. Nothing here is a substitute for professional care. If you need medical or psychiatric support, please seek it from a licensed provider.",
-      },
-      {
-        q: "Is cannabis substitution legal?",
-        a: "Cannabis laws vary by state and country. We encourage members to understand the laws where they live. This community does not provide legal advice.",
-      },
-      {
-        q: "Is my information private?",
-        a: "Please visit our ‘Privacy’ page from the website’s menu for a detailed guide on our privacy policies and the safety of your information.",
-        needsReview: false,
-      },
-    ],
-  },
-  {
-    title: "Joining",
-    shortTitle: "Joining",
-    icon: "door",
-    items: [
-      {
-        q: "Is this free?",
-        a: "Yes. Recovery with The Exit Drug is a nonprofit organization. All resources provided are available for free for our members.",
-        needsReview: false,
-      },
-      {
-        q: "Do we accept donations?",
-        a: (
-          <>
-            Yes. However, we do not require members to donate, but we gratefully accept them through our 'Donation' page to help support and sustain our organization. Any donations over $15 will come with a mailed handwritten thank you note plus free stickers for you to enjoy and share with your friends.
+const API = import.meta.env.VITE_API;
 
-            <br />
-            <br />
-
-            <strong>Note:</strong> Any donations are not tax-deductible.
-          </>
-        ),
-        searchText: "Yes. However, we do not require members to donate, but we gratefully accept donations through our Donation page. Donations over $15 include a handwritten thank you note and stickers. Donations are not tax-deductible.",
-        needsReview: false,
-      },
-      {
-        q: "What happened to the Facebook group?",
-        a: "Our Facebook group called 'Maintaining My Recovery With Cannabis: Support Group' will continue to be available for members indefinitely. Our hope is to fully transition the Facebook support group over to this website for better safety, moderation control, and easier access for our members.",
-      },
-    ],
-  },
-];
-
-const groupId = (title) =>
-  `faq-${title.toLowerCase().replaceAll(" ", "-").replaceAll("&", "and")}`;
+function groupId(group) {
+  return `faq-${group.key}`;
+}
 
 function CategoryIcon({ type }) {
   if (type === "shield") {
@@ -87,7 +17,6 @@ function CategoryIcon({ type }) {
       </svg>
     );
   }
-
   if (type === "door") {
     return (
       <svg viewBox="0 0 64 64" aria-hidden="true">
@@ -97,7 +26,6 @@ function CategoryIcon({ type }) {
       </svg>
     );
   }
-
   return (
     <svg viewBox="0 0 64 64" aria-hidden="true">
       <path d="M32 57c-1-17 0-31 4-43M35 34C20 33 11 25 9 12c14 0 24 7 28 20M34 42c13-1 21-8 25-20-13-1-22 5-25 18" />
@@ -120,21 +48,17 @@ function ConversationArt() {
 }
 
 function useActiveChapter(ids) {
-  const [active, setActive] = useState(ids[0]);
+  const [active, setActive] = useState(null);
 
   useEffect(() => {
     const sections = ids.map((id) => document.getElementById(id)).filter(Boolean);
     if (!sections.length || !("IntersectionObserver" in window)) return undefined;
-
     const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) setActive(entry.target.id);
-        });
-      },
+      (entries) => entries.forEach((entry) => {
+        if (entry.isIntersecting) setActive(entry.target.id);
+      }),
       { rootMargin: "-30% 0px -60% 0px", threshold: 0 }
     );
-
     sections.forEach((section) => observer.observe(section));
     return () => observer.disconnect();
   }, [ids]);
@@ -142,33 +66,62 @@ function useActiveChapter(ids) {
   return active;
 }
 
-const CHAPTER_IDS = FAQ_GROUPS.map((group) => groupId(group.title));
-
 export default function FAQ() {
   const { onRegister } = useOutletContext();
-  const questionCount = FAQ_GROUPS.reduce((total, group) => total + group.items.length, 0);
-  const activeChapter = useActiveChapter(CHAPTER_IDS);
+  const [content, setContent] = useState(null);
+  const [error, setError] = useState("");
   const [query, setQuery] = useState("");
+
+  useEffect(() => {
+    const controller = new AbortController();
+    fetch(`${API}/api/faq2`, { signal: controller.signal })
+      .then(async (response) => {
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(data.message || "FAQ could not be loaded.");
+        return data;
+      })
+      .then((data) => setContent(data.content))
+      .catch((fetchError) => {
+        if (fetchError.name !== "AbortError") setError(fetchError.message);
+      });
+    return () => controller.abort();
+  }, []);
+
+  const chapterIds = useMemo(
+    () => (content?.groups || []).map((group) => groupId(group)),
+    [content]
+  );
+  const activeChapter = useActiveChapter(chapterIds);
   const normalizedQuery = query.trim().toLowerCase();
-
   const filteredGroups = useMemo(() => {
-    if (!normalizedQuery) return FAQ_GROUPS;
-    return FAQ_GROUPS.map((group) => ({
+    if (!content) return [];
+    if (!normalizedQuery) return content.groups;
+    return content.groups.map((group) => ({
       ...group,
-      items: group.items.filter(
-        (item) =>
-          item.q.toLowerCase().includes(normalizedQuery) ||
-          (typeof item.a === "string" ? item.a : item.searchText || "")
-            .toLowerCase()
-            .includes(normalizedQuery)
-      ),
+      items: group.items.filter((item) =>
+        item.question.toLowerCase().includes(normalizedQuery)
+        || item.answer.toLowerCase().includes(normalizedQuery)),
     }));
-  }, [normalizedQuery]);
-
+  }, [content, normalizedQuery]);
+  const questionCount = useMemo(
+    () => (content?.groups || []).reduce((total, group) => total + group.items.length, 0),
+    [content]
+  );
   const matchCount = useMemo(
     () => filteredGroups.reduce((total, group) => total + group.items.length, 0),
     [filteredGroups]
   );
+
+  if (!content) {
+    return (
+      <main className="faq">
+        <div className="faq-state">
+          <h1>{error ? "FAQ is temporarily unavailable." : "Loading FAQ…"}</h1>
+          {error && <><p>{error}</p><Link to="/contact">Contact us</Link></>}
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="faq">
@@ -176,26 +129,13 @@ export default function FAQ() {
         <div className="faq-hero__glow" aria-hidden="true" />
         <div className="faq-container faq-hero__inner">
           <div className="faq-hero__copy">
-            <p className="faq-kicker">Good Questions. Real Answers.</p>
-            <h1>FAQs — Frequently Asked Questions</h1>
-            <p className="faq-hero__intro">
-              The essentials about this organization, community, privacy,
-              and finding your place here.
-            </p>
+            <p className="faq-kicker">{content.hero.kicker}</p>
+            <h1>{content.hero.title}</h1>
+            <p className="faq-hero__intro">{content.hero.intro}</p>
             <nav className="faq-hero__nav" aria-label="FAQ categories">
-              {FAQ_GROUPS.map((group, index) => {
-                const id = groupId(group.title);
-                return (
-                  <a
-                    href={`#${id}`}
-                    key={group.title}
-                    className={activeChapter === id ? "is-active" : undefined}
-                    aria-current={activeChapter === id ? "true" : undefined}
-                  >
-                    <span>0{index + 1}</span>
-                    {group.shortTitle}
-                  </a>
-                );
+              {content.groups.map((group, index) => {
+                const id = groupId(group);
+                return <a href={`#${id}`} key={group.key} className={activeChapter === id ? "is-active" : undefined} aria-current={activeChapter === id ? "true" : undefined}><span>0{index + 1}</span>{group.shortTitle}</a>;
               })}
             </nav>
           </div>
@@ -208,88 +148,36 @@ export default function FAQ() {
           <aside className="faq-index">
             <p className="faq-index__label">Search</p>
             <div className="faq-search">
-              <input
-                type="search"
-                value={query}
-                onChange={(event) => setQuery(event.target.value)}
-                placeholder="Search questions…"
-                aria-label="Search frequently asked questions"
-              />
-              {query && (
-                <button type="button" onClick={() => setQuery("")} aria-label="Clear search">
-                  ×
-                </button>
-              )}
+              <input type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search questions…" aria-label="Search frequently asked questions" />
+              {query && <button type="button" onClick={() => setQuery("")} aria-label="Clear search">×</button>}
             </div>
-            {normalizedQuery && (
-              <p className="faq-search__count">
-                {matchCount} {matchCount === 1 ? "result" : "results"} for “{query.trim()}”
-              </p>
-            )}
-
+            {normalizedQuery && <p className="faq-search__count">{matchCount} {matchCount === 1 ? "result" : "results"} for “{query.trim()}”</p>}
             <p className="faq-index__label">On this page</p>
             <nav aria-label="FAQ contents">
-              {FAQ_GROUPS.map((group, index) => {
-                const id = groupId(group.title);
-                return (
-                  <a
-                    href={`#${id}`}
-                    key={group.title}
-                    className={activeChapter === id ? "is-active" : undefined}
-                    aria-current={activeChapter === id ? "true" : undefined}
-                  >
-                    <span>0{index + 1}</span>
-                    {group.shortTitle}
-                  </a>
-                );
+              {content.groups.map((group, index) => {
+                const id = groupId(group);
+                return <a href={`#${id}`} key={group.key} className={activeChapter === id ? "is-active" : undefined} aria-current={activeChapter === id ? "true" : undefined}><span>0{index + 1}</span>{group.shortTitle}</a>;
               })}
             </nav>
-            <div className="faq-index__count">
-              <strong>{questionCount}</strong>
-              <span>questions<br />in three chapters</span>
-            </div>
+            <div className="faq-index__count"><strong>{questionCount}</strong><span>questions<br />in {content.groups.length} chapters</span></div>
           </aside>
 
           <div className="faq-chapters">
             {filteredGroups.map((group, groupIndex) => (
-              <section className="faq-chapter" id={groupId(group.title)} data-chapter={`0${groupIndex + 1}`} key={group.title}>
+              <section className="faq-chapter" id={groupId(group)} data-chapter={`0${groupIndex + 1}`} key={group.key}>
                 <header className="faq-chapter__header">
-                  <div className="faq-chapter__mark">
-                    <CategoryIcon type={group.icon} />
-                  </div>
-                  <div>
-                    <p>Chapter 0{groupIndex + 1}</p>
-                    <h2>{group.title}</h2>
-                  </div>
+                  <div className="faq-chapter__mark"><CategoryIcon type={group.icon} /></div>
+                  <div><p>Chapter 0{groupIndex + 1}</p><h2>{group.title}</h2></div>
                   <span>{group.items.length} questions</span>
                 </header>
-
                 {group.items.length === 0 ? (
                   <p className="faq-chapter__empty">No questions in this chapter match “{query.trim()}”.</p>
                 ) : (
                   <div className="faq-list">
                     {group.items.map((item, itemIndex) => (
-                      <details
-                        className={`faq-item ${item.needsReview ? "faq-item--review" : ""}`}
-                        key={item.q}
-                        open={normalizedQuery ? true : groupIndex === 0 && itemIndex === 0}
-                      >
-                        <summary>
-                          <span className="faq-item__number">
-                            {String(itemIndex + 1).padStart(2, "0")}
-                          </span>
-                          <span className="faq-item__question">{item.q}</span>
-                          <i aria-hidden="true" />
-                        </summary>
-                        <div className="faq-item__answer">
-                          <span className="faq-item__answer-mark">A</span>
-                          <div>
-                            {item.needsReview && (
-                              <span className="faq-item__tag">Needs owner review</span>
-                            )}
-                            <p>{item.a}</p>
-                          </div>
-                        </div>
+                      <details className="faq-item" key={item.id} open={normalizedQuery ? true : groupIndex === 0 && itemIndex === 0}>
+                        <summary><span className="faq-item__number">{String(itemIndex + 1).padStart(2, "0")}</span><span className="faq-item__question">{item.question}</span><i aria-hidden="true" /></summary>
+                        <div className="faq-item__answer"><span className="faq-item__answer-mark">A</span><div><p>{item.answer}</p></div></div>
                       </details>
                     ))}
                   </div>
@@ -301,19 +189,12 @@ export default function FAQ() {
       </section>
 
       <section className="faq-closing" data-nav-theme="light">
-        <div className="faq-closing__rings" aria-hidden="true">
-          <i />
-          <i />
-          <i />
-        </div>
+        <div className="faq-closing__rings" aria-hidden="true"><i /><i /><i /></div>
         <div className="faq-container faq-closing__inner">
           <p className="faq-kicker">The question after the questions</p>
           <h2>Still wondering whether you belong here?</h2>
           <p>You do not need to have everything figured out before joining the conversation.</p>
-          <button type="button" onClick={onRegister}>
-            Join the community
-            <span>→</span>
-          </button>
+          <button type="button" onClick={onRegister}>Join the community<span>→</span></button>
         </div>
       </section>
     </main>

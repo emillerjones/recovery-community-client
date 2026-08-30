@@ -114,7 +114,7 @@ export default function FAQAdmin() {
       setSavedContent(data.content);
       setDraft(clone(data.content));
       setRevision(data.revision);
-      setNotice("FAQ2 changes are live.");
+      setNotice("FAQ changes are live.");
     } catch (error) {
       setNotice(error.message);
     } finally {
@@ -123,20 +123,20 @@ export default function FAQAdmin() {
   }
 
   function discard() {
-    if (!dirty || window.confirm("Discard your unsaved FAQ2 changes?")) {
+    if (!dirty || window.confirm("Discard your unsaved FAQ changes?")) {
       setDraft(clone(savedContent));
       setNotice("Unsaved changes discarded.");
     }
   }
 
-  if (loading) return <main className="faq-admin"><p>Loading FAQ2 editor…</p></main>;
-  if (!draft) return <main className="faq-admin"><div className="faq-admin__notice is-error">{notice || "FAQ2 could not be loaded."}</div></main>;
+  if (loading) return <main className="faq-admin"><p>Loading FAQ editor…</p></main>;
+  if (!draft) return <main className="faq-admin"><div className="faq-admin__notice is-error">{notice || "FAQ could not be loaded."}</div></main>;
 
   return (
     <main className="faq-admin">
       <header className="faq-admin__header">
-        <div><span>Owner tool</span><h1>Edit FAQ2</h1><p>Changes saved here appear only on the independent <strong>/faq2</strong> page. The existing FAQ remains untouched.</p></div>
-        <a href="/faq2" target="_blank" rel="noreferrer">Open FAQ2 <ExternalLink size={16} /></a>
+        <div><span>Owner tool</span><h1>Edit FAQ</h1><p>Changes saved here appear on the public <strong>/faq</strong> page.</p></div>
+        <a href="/faq" target="_blank" rel="noreferrer">Open FAQ <ExternalLink size={16} /></a>
       </header>
 
       {notice && <div className={`faq-admin__notice ${notice.includes("live") ? "is-success" : ""}`} role="status">{notice}<button type="button" onClick={() => setNotice("")}>×</button></div>}

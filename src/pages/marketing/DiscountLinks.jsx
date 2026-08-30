@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import {
   Candy,
   Cable,
@@ -14,105 +15,27 @@ import {
 } from "lucide-react";
 import "./DiscountLinks.css";
 
-const discountCategories = [
-  {
-    title: "Apparel & Advocacy",
-    icon: Shirt,
-    desc: "Wear the message and support the movement.",
-    links: [
-      { name: "Etsy #EXITDRUG Advocate T-Shirt", code: "EXITDRUG", url: "https://www.etsy.com/shop/TheExitDrugRecovery", logo: "https://cdn2.lnk.bi/uploads/6288789_20231123040640893-100.jpg" },
-      { name: "LJXLDN", code: "SOBERSTONER", url: "https://www.ljxlondon.co.uk/?ref=SOBERSTONER", logo: "https://cdn2.lnk.bi/uploads/4284813_20230307111410592-100.jpg" },
-      { name: "8000 Kicks", code: "SOBERSTONER", url: "https://www.8000kicks.com/discount/SOBERSTONER?ref=SOBERSTONER", logo: "https://cdn2.lnk.bi/uploads/4284752_20230307104743168-100.jpg" },
-    ],
-  },
-  {
-    title: "CBD, Hemp & Cannabis Wellness",
-    icon: Leaf,
-    desc: "Products some members use as part of their recovery routines.",
-    links: [
-      { name: "Coast Smokes", code: "SOBERSTONER", url: "https://coastsmokes.co/", logo: "https://cdn2.lnk.bi/uploads/11432104_20251005051805110-100.jpg" },
-      { name: "Healer CBD", code: "SOBERSTONER", url: "https://healercbd.com/coupon/soberstoner/?ref=237", logo: "https://cdn2.lnk.bi/uploads/9524041_20250320012844606-100.jpg" },
-      { name: "Plain Jane", code: "SOBERSTONER", url: "https://plainjane.com/soberstoner", logo: "https://cdn2.lnk.bi/uploads/4570716_20230424095736500-100.jpg" },
-      { name: "Pungent Greens CBD", code: "SOBERSTONER", url: "https://pungentgreens.com/collections/all", logo: "https://cdn2.lnk.bi/uploads/7808780_20240701224418947-100.jpg" },
-      { name: "Earthy Now", code: "SOBERSTONER", url: "https://www.earthynow.com", logo: "https://cdn2.lnk.bi/uploads/12010744_20251202212756356-100.png" },
-    ],
-  },
-  {
-    title: "Vaporizers & Devices",
-    icon: Cable,
-    desc: "Device discounts and accessories from partner links.",
-    links: [
-      { name: "DYNAVAP", code: "SOBERSTONER", url: "https://www.dynavap.com/?ref=LAINIERUTH", logo: "https://cdn2.lnk.bi/uploads/8407012_20240930212435937-100.jpg" },
-      { name: "AirVape", code: "SOBERSTONER", url: "https://airvapeusa.com/SOBERSTONER", logo: "https://cdn2.lnk.bi/uploads/12838899_20260328062943817-100.png" },
-      { name: "Rokin Vapes", code: "SOBERSTONER", url: "https://bit.ly/360uWcr", logo: "https://cdn2.lnk.bi/uploads/4284780_20230307105956885-100.png" },
-      { name: "Pulsar", code: "SOBERSTONER", url: "https://www.pulsarvaporizers.com", logo: "https://cdn2.lnk.bi/uploads/9515343_20250319004625306-100.jpg" },
-      { name: "Alien Flower Monkey", code: "SOBERSTONER15", url: "https://smokeafm.com/?sca_ref=922024.6EpRtEAC5x", logo: "https://cdn2.lnk.bi/uploads/4284774_20230307105612588-100.jpg" },
-      { name: "BOMB Official", code: "SOBERSTONER", url: "https://bombofficial.com/?ref=soberstoner", logo: "https://cdn2.lnk.bi/uploads/10646015_20250724011135189-100.png" },
-      { name: "Waxmaid", code: "SOBERSTONER", url: "https://www.waxmaidstore.com/?ref=soberstoner", logo: "https://cdn2.lnk.bi/uploads/9356221_20250222235905748-100.jpg" },
-      { name: "SoloPipe", code: "SOBERSTONER", url: "https://solopipe.com/?sca_ref=2760079.oNHfbS04OY", logo: "https://cdn2.lnk.bi/uploads/10667499_20250725215639957-100.jpg" },
-      { name: "PuffShot", code: "SOBERSTONER", url: "https://www.puffshotlife.com/?coupon_code=soberstoner", logo: "https://cdn2.lnk.bi/uploads/9688992_20250412061839539-100.jpg" },
-      { name: "PieceMaker", code: "SOBERSTONER", url: "https://www.piecemaker.com/SOBERSTONER", logo: "https://cdn2.lnk.bi/uploads/12182626_20251230065926148-100.png" },
-    ],
-  },
-  {
-    title: "Storage, Filters & Accessories",
-    icon: PackageCheck,
-    desc: "Practical tools for safer storage, odor control, and daily use.",
-    links: [
-      { name: "Skunk Bags", code: "SOBERSTONER", url: "https://skunkbags.com/soberstoner", logo: "https://cdn2.lnk.bi/uploads/11114314_20250905044301743-100.jpg" },
-      { name: "Stashlogix", code: "SOBERSTONER", url: "https://www.dynavap.com/search?q=Stash%20logix&ref=LAINIERUTH&type=product", logo: "https://cdn2.lnk.bi/uploads/4284689_20230307102237950-100.jpg" },
-      { name: "VonSploof Smoke Filters", code: "SOBERSTONER", url: "https://vonsploof.com/soberstoner", logo: "https://cdn2.lnk.bi/uploads/10695815_20250729010653464-100.jpg" },
-      { name: "Wakit Grinders", code: "SOBERSTONER", url: "https://www.wakitgrinders.com/coupon/soberstoner/", logo: "https://cdn2.lnk.bi/uploads/9688921_20250412055734915-100.png" },
-      { name: "King Palm", code: "SOBERSTONER", url: "https://kingpalm.com", logo: "https://cdn2.lnk.bi/uploads/13010017_20260422071349419-100.jpg" },
-      { name: "DaySavers", code: "SOBERSTONER", url: "https://daysavers.com/?ref=SOBERSTONER", logo: "https://cdn2.lnk.bi/uploads/12773570_20260320020532176-100.jpg" },
-      { name: "Hemp Wick Bee Line", code: "SOBERSTONER", url: "https://www.hempwickbeeline.com/shop", logo: "https://cdn2.lnk.bi/uploads/6586149_20240104102734627-100.jpg" },
-      { name: "MooseLabs", code: "SOBERSTONER", url: "https://i.refs.cc/0m9M7O2m?smile_ref=eyJzbWlsZV9zb3VyY2UiOiJzbWlsZV91aSIsInNtaWxlX21lZGl1bSI6IiIsInNtaWxlX2NhbXBhaWduIjoicmVmZXJyYWxfcHJvZ3JhbSIsInNtaWxlX2N1c3RvbWVyX2lkIjoxODIzMjg1NTA4fQ%3D%3D", logo: "https://cdn2.lnk.bi/uploads/5351224_20230809175814716-100.png" },
-    ],
-  },
-  {
-    title: "Gummies, Mints & Beverages",
-    icon: Candy,
-    desc: "Partner links for edible-style products, mints, and drinks.",
-    links: [
-      { name: "Snoozy Gummy Discount Link", code: null, note: "Use this link, then click “Redeem Coupon.”", url: "https://snwbl.io/snoozy/SOBERSTONER", logo: "https://cdn2.lnk.bi/uploads/9153322_20250128220112811-100.png" },
-      { name: "VitaBar", code: "SOBERSTONER", url: "https://snwbl.io/vitabar/SOBERSTONER", logo: "https://cdn2.lnk.bi/uploads/6452592_20231213215737236-100.png" },
-      { name: "Nokkomo Mouth Watering Mints", code: "SOBERSTONER", url: "https://nokkomomints.com/?sca_ref=9800224.dqeOoKF1R8tZSvIC", logo: "https://cdn2.lnk.bi/uploads/11559300_20251017005222148-100.png" },
-      { name: "Mitra9 Beverages", code: "SOBERSTONER", url: "https://mitra-9.com/?ref=SOBERSTONER", logo: "https://cdn2.lnk.bi/uploads/12067418_20251211013838861-100.jpg" },
-    ],
-  },
-];
-
-const categoryId = (title) =>
-  `discount-${title.toLowerCase().replaceAll("&", "and").replaceAll(/[^a-z0-9]+/g, "-").replace(/-$/, "")}`;
-
-const CATEGORY_IDS = discountCategories.map((category) => categoryId(category.title));
+const API = import.meta.env.VITE_API;
+const ICONS = { candy: Candy, cable: Cable, leaf: Leaf, package: PackageCheck, shirt: Shirt };
+const categoryId = (category) => `discount-${category.id}`;
 
 function useActiveCategory(ids) {
-  const [active, setActive] = useState(ids[0]);
-
+  const [active, setActive] = useState(null);
   useEffect(() => {
     const sections = ids.map((id) => document.getElementById(id)).filter(Boolean);
     if (!sections.length || !("IntersectionObserver" in window)) return undefined;
-
     const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) setActive(entry.target.id);
-        });
-      },
+      (entries) => entries.forEach((entry) => { if (entry.isIntersecting) setActive(entry.target.id); }),
       { rootMargin: "-30% 0px -60% 0px", threshold: 0 }
     );
-
     sections.forEach((section) => observer.observe(section));
     return () => observer.disconnect();
   }, [ids]);
-
   return active;
 }
 
 function CopyCodeButton({ code }) {
   const [copied, setCopied] = useState(false);
-
   function handleCopy(event) {
     event.preventDefault();
     event.stopPropagation();
@@ -121,46 +44,45 @@ function CopyCodeButton({ code }) {
       window.setTimeout(() => setCopied(false), 1600);
     });
   }
-
-  return (
-    <button
-      type="button"
-      className={`discount-copy ${copied ? "is-copied" : ""}`}
-      onClick={handleCopy}
-      aria-label={`Copy code ${code}`}
-    >
-      {copied ? "Copied" : "Copy"}
-    </button>
-  );
+  return <button type="button" className={`discount-copy ${copied ? "is-copied" : ""}`} onClick={handleCopy} aria-label={`Copy code ${code}`}>{copied ? "Copied" : "Copy"}</button>;
 }
 
 export default function DiscountLinks() {
-  const activeCategory = useActiveCategory(CATEGORY_IDS);
+  const [content, setContent] = useState(null);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const controller = new AbortController();
+    fetch(`${API}/api/discount2`, { signal: controller.signal })
+      .then(async (response) => {
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(data.message || "Discount links could not be loaded.");
+        return data;
+      })
+      .then((data) => setContent(data.content))
+      .catch((fetchError) => { if (fetchError.name !== "AbortError") setError(fetchError.message); });
+    return () => controller.abort();
+  }, []);
+
+  const categoryIds = useMemo(() => (content?.categories || []).map(categoryId), [content]);
+  const activeCategory = useActiveCategory(categoryIds);
+
+  if (!content) {
+    return <main className="discount-page"><div className="discount-state"><h1>{error ? "Discount links are temporarily unavailable." : "Loading discount links…"}</h1>{error && <><p>{error}</p><Link to="/contact">Contact us</Link></>}</div></main>;
+  }
 
   return (
     <main className="discount-page">
       <section className="discount-hero" data-nav-theme="light">
         <div className="discount-inner discount-hero__inner">
           <div className="discount-hero__copy">
-            <p className="discount-eyebrow">A Discount For You, A Donation For Us</p>
-            <h1>Cannabis-Friendly Discount Codes & Links.</h1>
-            <p className="discount-intro">
-              This page is a curated collection of partner, referral, and discount links supporting the Recovery With The Exit Drug community.
-            </p>
+            <p className="discount-eyebrow">{content.hero.eyebrow}</p>
+            <h1>{content.hero.title}</h1>
+            <p className="discount-intro">{content.hero.intro}</p>
             <nav className="discount-index" aria-label="Discount categories">
-              {discountCategories.map((category, index) => {
-                const id = categoryId(category.title);
-                return (
-                  <a
-                    href={`#${id}`}
-                    key={category.title}
-                    className={activeCategory === id ? "is-active" : undefined}
-                    aria-current={activeCategory === id ? "true" : undefined}
-                  >
-                    <span>0{index + 1}</span>
-                    {category.title}
-                  </a>
-                );
+              {content.categories.map((category, index) => {
+                const id = categoryId(category);
+                return <a href={`#${id}`} key={category.id} className={activeCategory === id ? "is-active" : undefined} aria-current={activeCategory === id ? "true" : undefined}><span>0{index + 1}</span>{category.title}</a>;
               })}
             </nav>
           </div>
@@ -177,59 +99,34 @@ export default function DiscountLinks() {
 
       <section className="discount-section">
         <div className="discount-inner discount-category-list">
-          {discountCategories.map((category, categoryIndex) => {
-            const CategoryIcon = category.icon;
+          {content.categories.map((category, categoryIndex) => {
+            const CategoryIcon = ICONS[category.icon] || Leaf;
+            const visibleBrands = category.brands.filter((brand) => brand.active);
             return (
-            <section className="discount-category" id={categoryId(category.title)} key={category.title}>
-              <div className="discount-category__head">
-                <span className="discount-category__number">0{categoryIndex + 1}</span>
-                <span className="discount-category__icon"><CategoryIcon /></span>
-                <h2>{category.title}</h2>
-                <p>{category.desc}</p>
-              </div>
-
-              <div className="discount-grid">
-                {category.links.map((link) => (
-                  <div key={link.name} className="discount-card discount-feature-card">
-                    <a
-                      href={link.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="discount-card__link-overlay"
-                      aria-label={link.name}
-                    />
-                    <img
-                      src={link.logo}
-                      alt=""
-                      referrerPolicy="no-referrer"
-                      className="discount-card__logo"
-                      onError={(e) => { e.target.style.display = "none"; }}
-                    />
-
-                    <div className="discount-card__body">
-                      <div>
-                        <h3>{link.name}</h3>
-                        {link.note && <p>{link.note}</p>}
-                      </div>
-
-                      <div className="discount-card__bottom">
-                        {link.code ? (
-                          <span className="discount-code discount-code-row">
-                            Code: <strong>{link.code}</strong>
-                            <CopyCodeButton code={link.code} />
-                          </span>
-                        ) : (
-                          <span className="discount-code discount-code--none">
-                            No code needed
-                          </span>
-                        )}
-                        <span className="discount-arrow"><ExternalLink /></span>
+              <section className="discount-category" id={categoryId(category)} key={category.id}>
+                <div className="discount-category__head">
+                  <span className="discount-category__number">0{categoryIndex + 1}</span>
+                  <span className="discount-category__icon"><CategoryIcon /></span>
+                  <h2>{category.title}</h2>
+                  <p>{category.description}</p>
+                </div>
+                <div className="discount-grid">
+                  {visibleBrands.map((brand) => (
+                    <div key={brand.id} className="discount-card discount-feature-card">
+                      <a href={brand.url} target="_blank" rel="noopener noreferrer" className="discount-card__link-overlay" aria-label={brand.name} />
+                      {brand.logo && <img src={brand.logo} alt="" referrerPolicy="no-referrer" className="discount-card__logo" onError={(event) => { event.currentTarget.style.display = "none"; }} />}
+                      <div className="discount-card__body">
+                        <div><h3>{brand.name}</h3>{brand.note && <p>{brand.note}</p>}</div>
+                        <div className="discount-card__bottom">
+                          {brand.code ? <span className="discount-code discount-code-row">Code: <strong>{brand.code}</strong><CopyCodeButton code={brand.code} /></span> : <span className="discount-code discount-code--none">No code needed</span>}
+                          <span className="discount-arrow"><ExternalLink /></span>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-            </section>
+                  ))}
+                  {!visibleBrands.length && <p className="discount-empty">No active discounts in this category right now.</p>}
+                </div>
+              </section>
             );
           })}
         </div>
@@ -238,60 +135,28 @@ export default function DiscountLinks() {
       <section className="discount-guide-section">
         <div className="discount-inner discount-guide">
           <header className="discount-guide__intro">
-            <p className="discount-eyebrow">Using your discount</p>
-            <h2>Save on products while supporting our community.</h2>
-            <p>
-              Explore cannabis-friendly brands offering our community exclusive
-              discounts on high-quality cannabis products. When you use our
-              referral links and discount codes, a portion of your purchase is
-              donated to our nonprofit organization.
-            </p>
-            <div className="discount-guide__highlights">
-              <p><CircleCheck /> These contributions help us sustain and expand the resources we provide to our community free of charge.</p>
-              <p><CircleCheck /> Thank you for supporting our mission!</p>
-            </div>
-            <p className="discount-guide__updated">This list is updated often, so please check back to see new brand discounts!</p>
+            <p className="discount-eyebrow">{content.guide.eyebrow}</p>
+            <h2>{content.guide.title}</h2>
+            <p>{content.guide.intro}</p>
+            <div className="discount-guide__highlights">{content.guide.highlights.map((highlight) => <p key={highlight}><CircleCheck /> {highlight}</p>)}</div>
+            <p className="discount-guide__updated">{content.guide.updated}</p>
           </header>
-
           <div className="discount-guide__columns">
             <article className="discount-guide__card">
               <div className="discount-guide__card-heading"><ClipboardList /><h3>Directions</h3></div>
-              <ol>
-                <li>Select a brand from our list.</li>
-                <li>Click “COPY” to copy the brand’s discount code.</li>
-                <li>Click the brand’s link to visit their website.</li>
-                <li>Add your desired products to your cart.</li>
-                <li>At checkout, enter or paste our discount code in the “Coupon/Promo/Discount Code” field.</li>
-                <li>Your discount will be applied to your order total.</li>
-              </ol>
+              <ol>{content.guide.directions.map((direction) => <li key={direction}>{direction}</li>)}</ol>
             </article>
-
             <article className="discount-guide__card">
               <div className="discount-guide__card-heading"><Info /><h3>Notes</h3></div>
-              <ul>
-                <li>Our discount codes can be used unlimited times.</li>
-                <li>Feel free to share codes with friends, but please do not promote them publicly online.</li>
-                <li>Discount codes cannot be combined with other promotional codes.</li>
-                <li>Some brands may require a minimum purchase amount for the discount to apply.</li>
-              </ul>
-              <a className="discount-guide__contact" href="mailto:thesoberstoner420@gmail.com">
-                <Mail />
-                <span>For issues with a link or discount code, or for product recommendations, contact our Founder/Admin, Lainie Ruth, at <strong>thesoberstoner420@gmail.com</strong>.</span>
-              </a>
+              <ul>{content.guide.notes.map((note) => <li key={note}>{note}</li>)}</ul>
+              <a className="discount-guide__contact" href={`mailto:${content.guide.contactEmail}`}><Mail /><span>{content.guide.contactText} <strong>{content.guide.contactEmail}</strong>.</span></a>
             </article>
           </div>
         </div>
       </section>
 
       <section className="discount-disclaimer-section">
-        <div className="discount-inner">
-          <div className="discount-disclaimer" data-nav-theme="light">
-            <span className="discount-disclaimer__icon"><ShieldAlert /></span>
-            <p><strong>Important:</strong> Some links may be affiliate or referral
-              links. Products listed here are not medical advice and are not a
-              substitute for professional care. Always follow your local laws.</p>
-          </div>
-        </div>
+        <div className="discount-inner"><div className="discount-disclaimer" data-nav-theme="light"><span className="discount-disclaimer__icon"><ShieldAlert /></span><p><strong>Important:</strong> {content.disclaimer}</p></div></div>
       </section>
     </main>
   );

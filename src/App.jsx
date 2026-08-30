@@ -2,7 +2,6 @@ import { Navigate, Routes, Route } from "react-router-dom";
 import Home from "./pages/marketing/Home";
 import Community from "./pages/marketing/Community";
 import DiscountLinks from "./pages/marketing/DiscountLinks";
-import DiscountLinks2 from "./pages/marketing/DiscountLinks2";
 import Guidelines from "./pages/marketing/Guidelines";
 import Stories from "./pages/marketing/Stories";
 import MyStory from "./pages/marketing/MyStory";
@@ -21,7 +20,6 @@ import AppLayout from "./layout/AppLayout";
 import About from "./pages/marketing/About";
 import Resources from "./pages/marketing/Resources";
 import FAQ from "./pages/marketing/FAQ";
-import FAQ2 from "./pages/marketing/FAQ2";
 import Privacy from "./pages/marketing/Privacy";
 import Forum from "./pages/forum/Forum";
 import ForumThread from "./pages/forumthread/ForumThread";
@@ -58,11 +56,11 @@ export default function App() {
         <Route path="guidelines" element={<Guidelines />} />
         <Route path="contact" element={<Contact />} />
         <Route path="discountlinks" element={<DiscountLinks />} />
-        <Route path="discountlinks2" element={<DiscountLinks2 />} />
+        <Route path="discountlinks2" element={<Navigate to="/discountlinks" replace />} />
         <Route path="about" element={<About />} />
         <Route path="resources" element={<Resources />} />
         <Route path="faq" element={<FAQ />} />
-        <Route path="faq2" element={<FAQ2 />} />
+        <Route path="faq2" element={<Navigate to="/faq" replace />} />
         <Route path="privacy" element={<Privacy />} />
       </Route>
 
