@@ -65,28 +65,29 @@ export default function Home() {
   const { onRegister } = useOutletContext();
 
   return (
-    <main className="about2-page">
-      <section className="about2-hero" data-nav-theme="light">
-        <div className="about2-hero__grain" aria-hidden="true" />
-        <div className="about2-shell about2-hero__inner">
-          <div className="about2-hero__copy">
+    <main className="home-mission-page">
+      <section className="home-mission-hero" data-nav-theme="light">
+        <div className="home-mission-hero__grain" aria-hidden="true" />
+        <div className="home-mission-shell home-mission-hero__inner">
+          <div className="home-mission-hero__copy">
             <h1>Recovery with<br /><em>The Exit-Drug</em></h1>
-            <p className="about2-hero__description">A recovery support community for people using cannabis to reduce or replace dangerous and addictive substances.</p>
-            <p className="about2-hero__support">Find peer support, educational resources, recovery stories, and connection without judgment.</p>
-            <p className="about2-hero__former">Formerly known as Maintaining My Recovery with Cannabis / MMRC</p>
-            <p className="about2-eyebrow"><span /> Established 2013</p>
-            <div className="about2-hero__actions">
+            <p className="home-mission-hero__former">Formerly known as Maintaining My Recovery with Cannabis / MMRC</p>
+            <p className="home-mission-hero__description">A recovery support community for people using cannabis to reduce or replace dangerous and addictive substances.</p>
+            <p className="home-mission-hero__support">Find peer support, educational resources, recovery stories, and connection without judgment.</p>
+
+            <p className="home-mission-eyebrow"><span /> Established 2013</p>
+            <div className="home-mission-hero__actions">
               <button type="button" onClick={onRegister}>Join our community <ArrowRight size={17} /></button>
               <a href="#home-purpose">Discover our purpose <ArrowDown size={17} /></a>
             </div>
           </div>
-          <div className="about2-hero__mark" aria-label="Recovery With The Exit Drug logo">
+          <div className="home-mission-hero__mark" aria-label="Recovery With The Exit Drug logo">
             <span aria-hidden="true" />
             <img src={logo} alt="Recovery With The Exit Drug" />
           </div>
         </div>
-        <nav className="about2-hero__statement" aria-label="About page sections">
-          <div className="about2-shell">
+        <nav className="home-mission-hero__statement" aria-label="Home page sections">
+          <div className="home-mission-shell">
             <a href="#home-purpose"><span>01</span> Purpose</a><i />
             <a href="#home-principles"><span>02</span> Principles</a><i />
             <a href="#home-provides"><span>03</span> What we provide</a>
@@ -94,23 +95,23 @@ export default function Home() {
         </nav>
       </section>
 
-      <section className="about2-purpose" id="home-purpose">
-        <div className="about2-shell about2-purpose__inner">
-          <p className="about2-kicker">Our founding purpose</p>
+      <section className="home-mission-purpose" id="home-purpose">
+        <div className="home-mission-shell home-mission-purpose__inner">
+          <p className="home-mission-kicker">Our founding purpose</p>
           <blockquote>The mission of Recovery with The Exit-Drug (formerly known as Maintaining My Recovery with Cannabis/MMRC) is to develop a recovery support community of people who use cannabis as a form of harm-reduction therapy from dangerous or addictive substances.</blockquote>
           <p>We provide support through personal experiences, educational resources, and peer support programs—while upholding a culture of inclusiveness and mutual respect.</p>
         </div>
       </section>
 
-      <section className="about2-principles" id="home-principles">
-        <div className="about2-shell">
-          <header className="about2-section-head">
-            <div className="about2-section-label"><span>02</span><p>What we are rooted in</p></div>
+      <section className="home-mission-principles" id="home-principles">
+        <div className="home-mission-shell">
+          <header className="home-mission-section-head">
+            <div className="home-mission-section-label"><span>02</span><p>What we are rooted in</p></div>
             <div><h2>Principles We Uphold</h2><p>The following principles are what guide and shape our mission.</p></div>
           </header>
-          <div className="about2-principles__grid">
+          <div className="home-mission-principles__grid">
             {PRINCIPLES.map(({ number, title, text, icon }) => (
-              <article className="about2-principle" key={number}>
+              <article className="home-mission-principle" key={number}>
                 <header>
                   <span>{number}</span>{icon}
                 </header>
@@ -122,15 +123,15 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="about2-provides" id="home-provides">
-        <div className="about2-shell">
-          <header className="about2-section-head about2-section-head--light">
-            <div className="about2-section-label"><span>03</span><p>What we provide</p></div>
-            <div><p className="about2-kicker">Support you can reach</p><h2>A place to connect,<br />learn and be heard.</h2></div>
+      <section className="home-mission-provides" id="home-provides">
+        <div className="home-mission-shell">
+          <header className="home-mission-section-head home-mission-section-head--light">
+            <div className="home-mission-section-label"><span>03</span><p>What we provide</p></div>
+            <div><p className="home-mission-kicker">Support you can reach</p><h2>A place to connect,<br />learn and be heard.</h2></div>
           </header>
-          <div className="about2-provides__grid">
+          <div className="home-mission-provides__grid">
             {PROVIDES.map(({ title, text, action, icon, to, register }) => (
-              <article className="about2-provide" key={title}>
+              <article className="home-mission-provide" key={title}>
                 {icon}
                 <div><h3>{title}</h3><p>{text}</p></div>
                 {register ? (
@@ -144,9 +145,9 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="about2-boundary">
-        <div className="about2-shell about2-boundary__inner">
-          <p className="about2-eyebrow"><span /> Disclaimer</p>
+      <section className="home-mission-boundary">
+        <div className="home-mission-shell home-mission-boundary__inner">
+          <p className="home-mission-eyebrow"><span /> Disclaimer</p>
           <p><strong>Recovery with The Exit Drug is a volunteer support group sharing practical information.</strong> This is not a professional or medical organization. The information provided is for informational and educational purposes only and is not a substitute for professional care.</p>
         </div>
       </section>
