@@ -34,6 +34,7 @@ const SUPPORT_LINKS = [
 
 const ABOUT_LINKS = [
   { to: "/about", label: "Our Mission", description: "Why this community exists", icon: HeartHandshake },
+  { to: "/about2", label: "Our Mission 2", description: "Preview the new mission-led direction", icon: HeartHandshake },
   { to: "/mystory", label: "My Story", description: "Lainie Ruth's personal journey", icon: BookHeart },
   { to: "/contact", label: "Contact Us", description: "Reach the organization", icon: Mail },
 ];
@@ -171,7 +172,7 @@ export default function MarketingNav({ onLogin, onRegister }) {
 
   useEffect(() => {
     function onScroll() {
-      setScrolled(window.scrollY > 60);
+      setScrolled(window.scrollY > 24);
     }
 
     onScroll();
@@ -252,6 +253,10 @@ export default function MarketingNav({ onLogin, onRegister }) {
       ? "site-header--scrolled"
       : "",
     menuOpen ? "site-header--menu-open" : "",
+    location.pathname === "/about2" ? "site-header--about2" : "",
+    location.pathname === "/about2" && !scrolled && !menuOpen
+      ? "site-header--about2-hidden"
+      : "",
   ]
     .filter(Boolean)
     .join(" ");
