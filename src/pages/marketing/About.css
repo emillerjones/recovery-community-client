@@ -123,7 +123,7 @@
 }
 
 .philosophy-page .philosophy-foundation blockquote::before {
-  content: "â€œ";
+  content: "“";
   position: absolute;
   left: -18px;
   top: -55px;

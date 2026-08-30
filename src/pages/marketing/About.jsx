@@ -28,33 +28,33 @@ function useActiveChapter(ids) {
 
 const BELIEFS = [
   {
-    title: "Harm reduction matters",
-    text: "We support people using cannabis as a way to reduce or replace the use of more dangerous and addictive substances.",
+    title: "Harm-Reduction Saves Lives",
+    text: "We promote harm-reduction that is an evidence-based approach to address substance use disorders through prevention, treatment, and recovery that 'meets people where they are at' with dignity, kindness and respect regardless of condition or circumstance.",
     paths: ["M115 10C112 44 101 62 73 78C50 91 35 110 28 141", "M75 77C55 67 37 68 16 82", "M55 92C62 110 60 127 49 149"],
   },
   {
-    title: "Recovery has many paths",
-    text: "MMRC does not require one specific program, label, or treatment model. People may combine cannabis substitution with AA, NA, SMART Recovery, HAMS, MAT, Refuge Recovery, personalized recovery, or other positive recovery methods.",
+    title: "Recovery has many pathways",
+    text: "We recognize that recovery is deeply personal and what works for one person may not work for another. Approaching all recovery methods with openness and without judgment is far more effective than shaming someone because their path to recovery looks different from the traditional approach.",
     paths: ["M114 8C111 44 103 64 82 82", "M83 81C60 91 37 89 12 73", "M83 82C72 107 73 126 82 150", "M83 82C106 101 125 111 151 112", "M69 89C48 109 35 125 31 148"],
   },
   {
-    title: "Peer support is powerful",
-    text: "We are not a medical organization. We are people sharing personal experience, practical support, educational resources, and encouragement with others on similar journeys.",
+    title: "Medication-Assisted-Treatment (MAT) & Plant-Medicine is Health Care",
+    text: "These modalities are healthcare because they treat substance use disorders and mental health as real medical conditions. They use science, clinical evidence, and history to heal the brain and the body.",
     paths: ["M53 8C50 44 60 68 85 84C106 98 113 119 112 150", "M167 8C170 43 159 66 135 84C114 98 108 119 112 150", "M83 83C98 74 121 74 137 83", "M67 70C84 58 99 57 111 62M153 70C136 57 123 57 111 62"],
   },
   {
-    title: "Shame does not heal",
-    text: "Our community is built on inclusiveness, mutual respect, acceptance, and reducing stigma around cannabis use in recovery.",
+    title: "Connection & Compassion Heal; Shame & Stigma Hurt",
+    text: "By placing compassion and connection at the center of recovery, we can help foster healing while also contributing to a broader cultural shift from shame and stigma toward understanding and support.",
     paths: ["M109 8C109 43 109 65 110 84C110 105 99 125 80 149", "M110 84C90 91 68 88 46 74", "M110 84C130 91 151 87 174 72", "M96 91C78 106 68 122 65 142", "M124 91C143 106 153 121 157 141"],
   },
 ];
 
 const PROVIDES = [
-  { title: "Peer support", text: "A moderated community shaped by lived experience.", x: 17, y: 68, align: "left" },
-  { title: "Education", text: "Resources about cannabis, recovery, and harm reduction.", x: 31, y: 29, align: "left" },
-  { title: "Personal experience", text: "Honest accounts from people maintaining recovery.", x: 51, y: 12, align: "top" },
-  { title: "Recovery stories", text: "Public voices showing what change can look like.", x: 71, y: 30, align: "right" },
-  { title: "Programs", text: "Future meetings, events, and community programs.", x: 84, y: 68, align: "right" },
+  { title: "Peer support group", text: "A first of its kind moderated community support forum of like-minded individuals sharing personal experience about cannabis and recovery.", x: 17, y: 68, align: "left" },
+  { title: "Education", text: "A list of informational articles, scientific research, and other resources to learn about cannabis, recovery and more.", x: 31, y: 29, align: "left" },
+  // { title: "Personal experience", text: "Honest accounts from people maintaining recovery.", x: 51, y: 12, align: "top" },
+  { title: "Recovery stories", text: "Real voices publicly sharing their journeys of recovery with cannabis to help inspire others.", x: 71, y: 30, align: "right" },
+  { title: "Future projects", text: "We are always growing to add additional features that will benefit our community.", x: 84, y: 68, align: "right" },
 ];
 
 function HeroRoots() {
@@ -130,8 +130,8 @@ export default function About() {
         <div className="philosophy-inner philosophy-hero__inner">
           <div className="philosophy-hero__copy">
             <p className="philosophy-eyebrow">Established 2013</p>
-            <h1>Recovery with cannabis. Without shame.</h1>
-            <p className="philosophy-lead">Maintaining My Recovery with Cannabis exists to support people who use cannabis as a form of harm-reduction therapy from dangerous or addictive substances.</p>
+            <h1>Recovery with The Exit-Drug</h1>
+            <p className="philosophy-lead">(Formerly known as Maintaining My Recovery with Cannabis/MMRC)</p>
           </div>
           <div className="philosophy-hero__roots"><HeroRoots /><p>Everything visible begins with what holds beneath.</p></div>
         </div>
@@ -143,7 +143,7 @@ export default function About() {
             ["about-purpose", "01", "Purpose"],
             ["about-beliefs", "02", "Beliefs"],
             ["about-support", "03", "Support"],
-            ["about-welcome", "04", "Welcome"],
+            // ["about-welcome", "04", "Welcome"],
           ].map(([id, number, label]) => (
             <a
               href={`#${id}`}
@@ -160,8 +160,8 @@ export default function About() {
       <section className="philosophy-foundation" id="about-purpose" data-nav-theme="light">
         <div className="philosophy-inner">
           <p className="philosophy-eyebrow">Our founding purpose</p>
-          <blockquote>The mission of Maintaining My Recovery with Cannabis is to develop a recovery support community of people who use cannabis as a form of harm-reduction therapy from dangerous or addictive substances.</blockquote>
-          <p>We provide support through personal experiences, educational resources, and peer support programs—while upholding a culture of inclusiveness and mutual respect.</p>
+          <blockquote>The mission of Recovery with The Exit-Drug (formerly known as Maintaining My Recovery with Cannabis/MMRC) is to develop a recovery support community of people who use cannabis as a form of harm-reduction therapy from dangerous or addictive substances.</blockquote>
+          <p>We provide support through personal experiences, educational resources, and peer support programs — while upholding a culture of inclusiveness and mutual respect.</p>
         </div>
       </section>
 
@@ -169,8 +169,8 @@ export default function About() {
         <div className="philosophy-inner">
           <div className="mission-beliefs__head">
             <p className="philosophy-eyebrow">What we are rooted in</p>
-            <h2>There is more than one way to recover.</h2>
-            <p>These beliefs are not decoration around the mission. They are the structure underneath it.</p>
+            <h2>Principles We Uphold</h2>
+            <p>The following principles are what guide and shape our mission:</p>
           </div>
           <div className="mission-beliefs__roots">{BELIEFS.map((belief, index) => <BeliefRoot belief={belief} index={index} key={belief.title} />)}</div>
         </div>
@@ -180,9 +180,9 @@ export default function About() {
         <div className="mission-growth__light" aria-hidden="true" />
         <div className="philosophy-inner">
           <div className="mission-growth__head">
-            <p className="philosophy-eyebrow">What grows from those beliefs</p>
-            <h2>Support made visible.</h2>
-            <p>What begins as a shared belief becomes something another person can reach for.</p>
+            {/* <p className="philosophy-eyebrow">What grows from those beliefs</p> */}
+            {/* <h2>Support made visible.</h2> */}
+            <p>WHAT WE PROVIDE</p>
           </div>
           <div className="mission-growth__map">
             <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
@@ -194,7 +194,7 @@ export default function About() {
         </div>
       </section>
 
-      <section className="philosophy-welcome" id="about-welcome">
+      {/* <section className="philosophy-welcome" id="about-welcome">
         <div className="philosophy-inner philosophy-welcome__inner">
           <div className="philosophy-welcome__mark" aria-hidden="true"><i /><i /><i /></div>
           <div><p className="philosophy-eyebrow">Welcome</p><h2>No single path is required here.</h2></div>
@@ -203,10 +203,11 @@ export default function About() {
             <p>MMRC is not an official program and does not follow a specific treatment plan. We simply are people who use cannabis as an aid in our recovery journeys.</p>
           </div>
         </div>
-      </section>
+      </section> */}
 
       <section className="philosophy-boundary" data-nav-theme="light">
-        <div className="philosophy-inner"><p className="philosophy-eyebrow">Our boundary</p><p><strong>Maintaining My Recovery with Cannabis is a volunteer support group sharing practical information.</strong> This is not a professional or medical organization. The information provided is for informational and educational purposes only and is not a substitute for professional care.</p></div>
+        <div className="philosophy-inner"><p className="philosophy-eyebrow">DISCLAIMER</p>
+        <p><strong>Recovery with The Exit Drug is a volunteer support group sharing practical information.</strong> This is not a professional or medical organization. The information provided is for informational and educational purposes only and is not a substitute for professional care.</p></div>
       </section>
     </main>
   );
