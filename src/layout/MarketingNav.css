@@ -494,13 +494,13 @@
 }
 
 @media (max-width: 1060px) {
-  .site-header--about2 {
+  .site-header--home {
     opacity: 1;
     animation: none;
     transition: transform 320ms ease, opacity 240ms ease, background 400ms ease;
   }
 
-  .site-header--about2-hidden {
+  .site-header--home-hidden {
     transform: translateY(-110%);
     opacity: 0;
     animation: none;

@@ -18,7 +18,6 @@ import RequireRole from "./components/RequireRole";
 import MarketingLayout from "./layout/MarketingLayout";
 import AppLayout from "./layout/AppLayout";
 import About from "./pages/marketing/About";
-import About2 from "./pages/marketing/About2";
 import Resources from "./pages/marketing/Resources";
 import FAQ from "./pages/marketing/FAQ";
 import Privacy from "./pages/marketing/Privacy";
@@ -59,7 +58,7 @@ export default function App() {
         <Route path="discountlinks" element={<DiscountLinks />} />
         <Route path="discountlinks2" element={<Navigate to="/discountlinks" replace />} />
         <Route path="about" element={<About />} />
-        <Route path="about2" element={<About2 />} />
+        <Route path="about2" element={<Navigate to="/" replace />} />
         <Route path="resources" element={<Resources />} />
         <Route path="faq" element={<FAQ />} />
         <Route path="faq2" element={<Navigate to="/faq" replace />} />

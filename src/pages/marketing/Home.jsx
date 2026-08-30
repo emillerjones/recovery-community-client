@@ -1,193 +1,153 @@
-import { lazy, Suspense, useEffect, useRef, useState } from "react";
+import { ArrowDown, ArrowRight, BookOpen, HeartHandshake, Leaf, MessagesSquare, Network, ShieldCheck, Sparkles, Stethoscope } from "lucide-react";
 import { Link, useOutletContext } from "react-router-dom";
-import heroPhoto from "../../assets/images/hero-lake.jpg";
-import { PUBLIC_STORIES } from "../../data/publicStories";
-import { usePrefersReducedMotion, supportsWebGL } from "../../utils/motionSupport";
+import logo from "../../assets/icons/logo.png";
 import "./Home.css";
 
-// Lazy-loaded: pulls in three.js/R3F/three.quarks. Deferred until the browser
-// is idle after first paint (see `fireflyReady` below) so it never competes
-// with the hero photo/fonts for bandwidth on first load.
-const HeroFireflies = lazy(() => import("./HeroFireflies"));
-
-const CONSTELLATION_NODES = [
-  { x: 80, y: 190, r: 5 },
-  { x: 220, y: 110, r: 7 },
-  { x: 150, y: 50, r: 3 },
-  { x: 380, y: 170, r: 4 },
-  { x: 470, y: 70, r: 8 },
-  { x: 610, y: 150, r: 5 },
-  { x: 700, y: 55, r: 6 },
-  { x: 830, y: 160, r: 4 },
-  { x: 940, y: 85, r: 7 },
-  { x: 1010, y: 35, r: 3 },
-  { x: 1090, y: 180, r: 5 },
+const PRINCIPLES = [
+  {
+    number: "01",
+    title: "Harm-Reduction Saves Lives",
+    text: "We promote harm-reduction that is an evidence-based approach to address substance use disorders through prevention, treatment, and recovery that ‘meets people where they are at’ with dignity, kindness and respect regardless of condition or circumstance.",
+    icon: <ShieldCheck size={25} strokeWidth={1.5} />,
+  },
+  {
+    number: "02",
+    title: "Recovery has Many Pathways",
+    text: "We recognize that recovery is deeply personal and what works for one person may not work for another. Approaching all recovery methods with openness and without judgment is far more effective than shaming someone because their path to recovery looks different from the traditional approach.",
+    icon: <Network size={25} strokeWidth={1.5} />,
+  },
+  {
+    number: "03",
+    title: "Medication-Assisted-Treatment (MAT) & Plant-Medicine is Health Care",
+    text: "These modalities are healthcare because they treat substance use disorders and mental health as real medical conditions. They use science, clinical evidence, and history to heal the brain and the body.",
+    icon: <Stethoscope size={25} strokeWidth={1.5} />,
+  },
+  {
+    number: "04",
+    title: "Connection & Compassion Heal; Shame & Stigma Hurt",
+    text: "By placing compassion and connection at the center of recovery, we can help foster healing while also contributing to a broader cultural shift from shame and stigma toward understanding and support.",
+    icon: <HeartHandshake size={25} strokeWidth={1.5} />,
+  },
 ];
 
-const CONSTELLATION_EDGES = [
-  [0, 1], [1, 2], [1, 3], [3, 4], [4, 5], [4, 6],
-  [5, 7], [6, 8], [8, 9], [7, 10], [8, 10],
+const PROVIDES = [
+  {
+    title: "Peer support group",
+    text: "A first of its kind moderated community support forum of like-minded individuals sharing personal experience about cannabis and recovery.",
+    action: "Join Our Support Community Here",
+    icon: <MessagesSquare size={28} strokeWidth={1.4} />,
+    register: true,
+  },
+  {
+    title: "Education",
+    text: "A list of informational articles, scientific research, and other resources to learn about cannabis, recovery and more.",
+    action: "Find Resources Here",
+    icon: <BookOpen size={28} strokeWidth={1.4} />,
+    to: "/resources",
+  },
+  {
+    title: "Recovery stories",
+    text: "Real voices publicly sharing their journeys of recovery with cannabis to help inspire others.",
+    action: "Read Recovery Stories",
+    icon: <Sparkles size={28} strokeWidth={1.4} />,
+    to: "/stories",
+  },
+  {
+    title: "Future projects",
+    text: "We are always growing to add additional features that will benefit our community.",
+    action: "Explore Our Community",
+    icon: <Leaf size={28} strokeWidth={1.4} />,
+    to: "/community",
+  },
 ];
-
-function SplitHeadline({ text, isIn }) {
-  return (
-    <h1 className={`home-split ${isIn ? "is-in" : ""}`}>
-      {text.split(" ").map((word, index) => (
-        <span className="home-split__word" key={`${word}-${index}`}>
-          <span className="home-split__inner" style={{ "--word-index": index }}>
-            {word}
-          </span>
-        </span>
-      ))}
-    </h1>
-  );
-}
 
 export default function Home() {
   const { onRegister } = useOutletContext();
-  const reelRef = useRef(null);
-  const reduced = usePrefersReducedMotion();
-  const [canRender3D] = useState(() => typeof window !== "undefined" && supportsWebGL());
-  const [fireflyReady, setFireflyReady] = useState(false);
-  const [splitIn, setSplitIn] = useState(false);
-
-  useEffect(() => {
-    if (reduced || !canRender3D) return;
-    const run = () => setFireflyReady(true);
-    if (window.requestIdleCallback) {
-      const id = window.requestIdleCallback(run, { timeout: 2000 });
-      return () => window.cancelIdleCallback(id);
-    }
-    const id = window.setTimeout(run, 400);
-    return () => window.clearTimeout(id);
-  }, [reduced, canRender3D]);
-
-  useEffect(() => {
-    const id = window.setTimeout(() => setSplitIn(true), 120);
-    return () => window.clearTimeout(id);
-  }, []);
-
-  function moveStories(direction) {
-    const reel = reelRef.current;
-    const card = reel?.querySelector(".home-story-card");
-    reel?.scrollBy({ left: direction * ((card?.offsetWidth || 360) + 16), behavior: "smooth" });
-  }
 
   return (
-    <main className="home">
-      <section className="home-hero" data-nav-theme="light">
-        <div className="home-hero__photo" style={{ backgroundImage: `url(${heroPhoto})` }} />
-        <div className="home-hero__veil" />
-
-        {/* Experimental — remove this Suspense block to take the ambient particle layer back out. */}
-        {fireflyReady && (
-          <Suspense fallback={null}>
-            <HeroFireflies reduced={reduced} />
-          </Suspense>
-        )}
-
-        <div className="home-hero__content">
-          <p className="home-hero__eyebrow">Peer-led · Established 2013</p>
-          <SplitHeadline text="You're not alone." isIn={splitIn} />
-          <p className="home-hero__intro">A community for people exploring cannabis as a path away from alcohol, opioids, and other harmful substances.</p>
-          <div className="home-hero__actions">
-            <button type="button" onClick={onRegister}>Join the community <span>→</span></button>
-            <Link to="/stories">Read real stories</Link>
+    <main className="about2-page">
+      <section className="about2-hero" data-nav-theme="light">
+        <div className="about2-hero__grain" aria-hidden="true" />
+        <div className="about2-shell about2-hero__inner">
+          <div className="about2-hero__copy">
+            <h1>Recovery with<br /><em>The Exit-Drug</em></h1>
+            <p className="about2-hero__description">A recovery support community for people using cannabis to reduce or replace dangerous and addictive substances.</p>
+            <p className="about2-hero__support">Find peer support, educational resources, recovery stories, and connection without judgment.</p>
+            <p className="about2-hero__former">Formerly known as Maintaining My Recovery with Cannabis / MMRC</p>
+            <p className="about2-eyebrow"><span /> Established 2013</p>
+            <div className="about2-hero__actions">
+              <button type="button" onClick={onRegister}>Join our community <ArrowRight size={17} /></button>
+              <a href="#home-purpose">Discover our purpose <ArrowDown size={17} /></a>
+            </div>
           </div>
-          <div className="home-hero-proof" aria-label="Community values">
-            <span><i>01</i>Private by design</span>
-            <span><i>02</i>Peer-led support</span>
-            <span><i>03</i>No judgment</span>
+          <div className="about2-hero__mark" aria-label="Recovery With The Exit Drug logo">
+            <span aria-hidden="true" />
+            <img src={logo} alt="Recovery With The Exit Drug" />
           </div>
         </div>
-        <a className="home-hero__scroll" href="#belief" aria-label="Continue to our philosophy"><span /></a>
-      </section>
-
-      <section className="home-belief" id="belief">
-        <span className="home-section-number" aria-hidden="true">01</span>
-        <svg className="home-belief__mark" viewBox="0 0 300 300" aria-hidden="true"><path d="M151 281c-7-70-3-135 0-211M150 163c-42-12-73-39-91-81M151 129c40-17 69-44 86-82M151 218c-47-3-85 12-116 44M152 204c44 3 81 20 112 51"/><path d="M59 82c26 0 46 12 60 35M237 47c-24 2-43 14-57 36M35 262c24-3 45 5 62 24M264 255c-24-4-45 3-63 21"/></svg>
-        <p className="home-eyebrow">Our philosophy</p>
-        <h2>Recovery looks different for everyone—and that&rsquo;s okay.</h2>
-        <p>There is no single right way forward. This community makes room for honest questions, lived experience, practical support, and the choices that help each person build a healthier life.</p>
-      </section>
-
-      <section className="home-stories" id="stories">
-        <span className="home-stories-number" aria-hidden="true">02</span>
-        <div className="home-stories__contours" aria-hidden="true"><i/><i/><i/></div>
-        <header className="home-stories__head">
-          <div>
-            <p className="home-eyebrow">Public success stories</p>
-            <h2>Real people.<br />Different paths.</h2>
-            <p>Shared publicly and with purpose, so someone else might recognize a way forward.</p>
+        <nav className="about2-hero__statement" aria-label="About page sections">
+          <div className="about2-shell">
+            <a href="#home-purpose"><span>01</span> Purpose</a><i />
+            <a href="#home-principles"><span>02</span> Principles</a><i />
+            <a href="#home-provides"><span>03</span> What we provide</a>
           </div>
-          <div className="home-reel-controls" aria-label="Story navigation">
-            <button type="button" onClick={() => moveStories(-1)} aria-label="Previous story">←</button>
-            <button type="button" onClick={() => moveStories(1)} aria-label="Next story">→</button>
-          </div>
-        </header>
-
-        <div className="home-story-reel" ref={reelRef}>
-          {PUBLIC_STORIES.map((story, index) => (
-            <Link className={`home-story-card ${index === 0 ? "home-story-card--featured" : ""}`} to={`/stories#${story.slug}`} key={story.slug}>
-              <div className="home-story-card__photo">
-                <img src={story.photo} alt={`Portrait of ${story.name}`} />
-                {index === 0 && <span>Public success story</span>}
-              </div>
-              <div className="home-story-card__body">
-                <blockquote>“{story.line}”</blockquote>
-                <p>{story.preview}</p>
-                <footer><strong>{story.name}</strong><span>Read story →</span></footer>
-              </div>
-            </Link>
-          ))}
-          <Link className="home-story-card home-story-card--all" to="/stories">
-            <span>Continue listening</span>
-            <h3>Every voice deserves room.</h3>
-            <p>Visit the full public story collection.</p>
-            <strong>All stories →</strong>
-          </Link>
-        </div>
-        <p className="home-swipe-hint">Swipe to meet the people <span>→</span></p>
+        </nav>
       </section>
 
-      <section className="home-community" data-nav-theme="light">
-        <svg className="home-community__orbit" viewBox="0 0 500 500" aria-hidden="true"><circle cx="250" cy="250" r="190"/><circle cx="250" cy="250" r="122"/><circle cx="250" cy="250" r="48"/><path d="M250 60v380M60 250h380"/></svg>
-        <div>
-          <p className="home-eyebrow home-eyebrow--light">Inside the community</p>
-          <h2>The public stories are only the doorway.</h2>
-        </div>
-        <div className="home-community__copy">
-          <p>Inside, people can ask questions, share a milestone, talk through a difficult day, or simply listen. Private stories stay private. You never have to perform your recovery here.</p>
-          <button type="button" onClick={onRegister}>Join the conversation <span>→</span></button>
+      <section className="about2-purpose" id="home-purpose">
+        <div className="about2-shell about2-purpose__inner">
+          <p className="about2-kicker">Our founding purpose</p>
+          <blockquote>The mission of Recovery with The Exit-Drug (formerly known as Maintaining My Recovery with Cannabis/MMRC) is to develop a recovery support community of people who use cannabis as a form of harm-reduction therapy from dangerous or addictive substances.</blockquote>
+          <p>We provide support through personal experiences, educational resources, and peer support programs—while upholding a culture of inclusiveness and mutual respect.</p>
         </div>
       </section>
 
-      <section className="home-final" data-nav-theme="light">
-        <div className="home-final__glow" aria-hidden="true" />
-        <div className="home-final__scene" aria-hidden="true">
-          <svg className="home-final__constellation" viewBox="0 0 1200 260" preserveAspectRatio="xMidYMid slice">
-            {CONSTELLATION_EDGES.map(([from, to], i) => {
-              const a = CONSTELLATION_NODES[from];
-              const b = CONSTELLATION_NODES[to];
-              const d = `M${a.x} ${a.y} L${b.x} ${b.y}`;
-              return (
-                <g key={`${from}-${to}`}>
-                  <path className="home-final__edge" d={d} />
-                  <path className="home-final__edge home-final__edge--signal" d={d} pathLength="1" style={{ "--delay": `${i * 0.55}s` }} />
-                </g>
-              );
-            })}
-            {CONSTELLATION_NODES.map((node, i) => (
-              <circle key={i} className="home-final__node" cx={node.x} cy={node.y} r={node.r} style={{ "--delay": `${i * 0.35}s` }} />
+      <section className="about2-principles" id="home-principles">
+        <div className="about2-shell">
+          <header className="about2-section-head">
+            <div className="about2-section-label"><span>02</span><p>What we are rooted in</p></div>
+            <div><h2>Principles We Uphold</h2><p>The following principles are what guide and shape our mission.</p></div>
+          </header>
+          <div className="about2-principles__grid">
+            {PRINCIPLES.map(({ number, title, text, icon }) => (
+              <article className="about2-principle" key={number}>
+                <header>
+                  <span>{number}</span>{icon}
+                </header>
+                <h3>{title}</h3>
+                <p>{text}</p>
+              </article>
             ))}
-          </svg>
+          </div>
         </div>
-        <div className="home-final__content">
-          <p className="home-final__caption">Every point of light began exactly where you are.</p>
-          <p className="home-eyebrow home-eyebrow--light">Whenever you&rsquo;re ready</p>
-          <h2>You do not need a perfect plan to begin.</h2>
-          <p>Come as you are. Read for a while, or join the conversation.</p>
-          <div><button type="button" onClick={onRegister}>Join the community</button><Link to="/stories">Start with a story</Link></div>
+      </section>
+
+      <section className="about2-provides" id="home-provides">
+        <div className="about2-shell">
+          <header className="about2-section-head about2-section-head--light">
+            <div className="about2-section-label"><span>03</span><p>What we provide</p></div>
+            <div><p className="about2-kicker">Support you can reach</p><h2>A place to connect,<br />learn and be heard.</h2></div>
+          </header>
+          <div className="about2-provides__grid">
+            {PROVIDES.map(({ title, text, action, icon, to, register }) => (
+              <article className="about2-provide" key={title}>
+                {icon}
+                <div><h3>{title}</h3><p>{text}</p></div>
+                {register ? (
+                  <button type="button" onClick={onRegister}>{action} <ArrowRight size={16} /></button>
+                ) : (
+                  <Link to={to}>{action} <ArrowRight size={16} /></Link>
+                )}
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="about2-boundary">
+        <div className="about2-shell about2-boundary__inner">
+          <p className="about2-eyebrow"><span /> Disclaimer</p>
+          <p><strong>Recovery with The Exit Drug is a volunteer support group sharing practical information.</strong> This is not a professional or medical organization. The information provided is for informational and educational purposes only and is not a substitute for professional care.</p>
         </div>
       </section>
     </main>
