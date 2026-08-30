@@ -103,7 +103,7 @@ export default function Home2() {
           </header>
           <div className="home2-stories__cards">
             {FEATURED_STORIES.map((story) => (
-              <Link to="/stories" className="home2-story" key={story.slug}>
+              <Link to={`/stories?story=${encodeURIComponent(story.slug)}`} className="home2-story" key={story.slug}>
                 <img src={story.photo} alt="" />
                 <div><span>{story.path}</span><h3>{story.name}</h3><p>{story.preview}</p></div>
               </Link>
