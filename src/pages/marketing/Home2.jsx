@@ -12,6 +12,11 @@ import {
 } from "lucide-react";
 import { Link, useOutletContext } from "react-router-dom";
 import logo from "../../assets/icons/logo.png";
+import cannabisLeaf from "../../assets/icons/cannabis-leaf-filled.png";
+import supportIcon from "../../assets/icons/support.png";
+import educationIcon from "../../assets/icons/education.png";
+import communityIcon from "../../assets/icons/community.png";
+import hopeIcon from "../../assets/icons/hope.png";
 import "./Home2.css";
 
 const PRINCIPLES = [
@@ -90,7 +95,7 @@ export default function Home2() {
 
           <h1><span>Recovery with</span><em>The Exit-Drug</em></h1>
           <p className="home2-hero__former">Formerly known as Maintaining My Recovery with Cannabis (MMRC)</p>
-          <div className="home2-hero__divider" aria-hidden="true"><span /><Leaf size={27} fill="currentColor" /><span /></div>
+          <div className="home2-hero__divider" aria-hidden="true"><span /><img src={cannabisLeaf} alt="" /><span /></div>
           <p className="home2-hero__description">A recovery support community for people using cannabis to reduce or replace dangerous and addictive substances. Find peer support, educational resources, recovery stories, and connection without judgment.</p>
 
           <div className="home2-hero__actions">
@@ -99,12 +104,12 @@ export default function Home2() {
           </div>
 
           <nav className="home2-hero__paths" aria-label="Explore recovery support">
-            <div className="home2-hero__path-rule" aria-hidden="true"><span /><Leaf size={25} fill="currentColor" /><span /></div>
+            <div className="home2-hero__path-rule" aria-hidden="true"><span /><img src={cannabisLeaf} alt="" /><span /></div>
             <div className="home2-hero__path-links">
-              <a href="#home2-provides">Support</a><i />
-              <Link to="/resources">Education</Link><i />
-              <button type="button" onClick={onRegister}>Community</button><i />
-              <Link to="/stories">Hope</Link>
+              <a href="#home2-provides"><img src={supportIcon} alt="" /><span>Support</span></a>
+              <Link to="/resources"><img src={educationIcon} alt="" /><span>Education</span></Link>
+              <button type="button" onClick={onRegister}><img src={communityIcon} alt="" /><span>Community</span></button>
+              <Link to="/stories"><img src={hopeIcon} alt="" /><span>Hope</span></Link>
             </div>
           </nav>
         </div>
