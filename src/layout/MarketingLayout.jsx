@@ -29,7 +29,12 @@ export default function MarketingLayout() {
     // Registration now includes application questions and agreements, so it
     // uses a dedicated mobile-friendly page instead of the small login drawer.
     setAuthMode(null);
-    navigate("/register");
+    const returnTo = location.pathname === "/login"
+      ? "/"
+      : `${location.pathname}${location.search}${location.hash}`;
+    navigate("/register", {
+      state: { returnTo, returnScrollY: window.scrollY },
+    });
   }
 
   function closePanel() {
@@ -55,8 +60,7 @@ export default function MarketingLayout() {
           onClose={closePanel}
           onSwitchMode={(m) => {
             if (m === "register") {
-              setAuthMode(null);
-              navigate("/register");
+              openRegister();
             } else {
               setAuthMode(m);
               window.history.replaceState(null, "", `/${m}`);

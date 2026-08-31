@@ -2,9 +2,16 @@ import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
 export default function ScrollToTop() {
-  const { pathname, hash } = useLocation();
+  const { pathname, hash, state } = useLocation();
 
   useEffect(() => {
+    if (Number.isFinite(state?.restoreScrollY)) {
+      const frame = requestAnimationFrame(() => {
+        window.scrollTo({ top: state.restoreScrollY, left: 0, behavior: "auto" });
+      });
+      return () => cancelAnimationFrame(frame);
+    }
+
     if (hash) {
       const id = hash.slice(1);
       const target = document.getElementById(id);
@@ -21,7 +28,7 @@ export default function ScrollToTop() {
 
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
     return undefined;
-  }, [pathname, hash]);
+  }, [pathname, hash, state]);
 
   return null;
 }

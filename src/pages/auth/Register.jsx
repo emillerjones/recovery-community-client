@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { useEffect, useLayoutEffect, useState } from "react";
+import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../../auth/AuthContext";
 import "./Register.css";
 
@@ -7,6 +7,7 @@ const API = import.meta.env.VITE_API;
 
 export default function Register() {
   const { register } = useAuth();
+  const location = useLocation();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const inviteToken = searchParams.get("invite") || "";
@@ -14,6 +15,14 @@ export default function Register() {
   const [error, setError] = useState("");
   const [result, setResult] = useState(null);
   const [submitting, setSubmitting] = useState(false);
+  const returnTo = location.state?.returnTo || "/";
+  const returnScrollY = Number.isFinite(location.state?.returnScrollY)
+    ? location.state.returnScrollY
+    : 0;
+
+  useLayoutEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  }, []);
 
   useEffect(() => {
     if (!inviteToken) return;
@@ -76,7 +85,7 @@ export default function Register() {
       <section className="registration-card">
         {/* This heading is the on-screen start of every admission path. The
             fields below all submit through submitApplication above. */}
-        <Link className="registration-back" to="/">← Back to the website</Link>
+        <Link className="registration-back" to={returnTo} replace state={{ restoreScrollY: returnScrollY }}>← Back to the website</Link>
         <span className="registration-eyebrow">Private support community</span>
         <h1>{inviteToken ? "Accept your invitation" : "Request membership"}</h1>
         <p className="registration-intro">
