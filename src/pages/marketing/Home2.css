@@ -94,7 +94,7 @@
 
 @media (max-width: 850px) {
   .home2-shell { width: min(100% - 30px, 680px); }
-  .home2-hero { padding-top: 58px; }
+  .home2-hero { min-height: auto; padding-top: 58px; }
   .home2-hero__logo { width: min(240px, 42vw); }
   .home2-hero h1 { font-size: clamp(4rem, 15vw, 6.5rem); }
   .home2-section-head, .home2-disclaimer__inner { grid-template-columns: 1fr; gap: 42px; }
