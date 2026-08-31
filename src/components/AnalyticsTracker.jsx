@@ -22,7 +22,6 @@ function pageKeyFor(pathname) {
     "/guidelines": "guidelines",
     "/contact": "contact",
     "/discountlinks": "discount_links",
-    "/about": "about",
     "/resources": "resources",
     "/faq": "faq",
     "/privacy": "privacy",

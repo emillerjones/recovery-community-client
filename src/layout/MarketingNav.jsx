@@ -34,15 +34,8 @@ const SUPPORT_LINKS = [
 
 const ABOUT_LINKS = [
   { to: "/home3", label: "Home 3 Preview", description: "Preview the logo-led homepage", icon: HeartHandshake },
-  { to: "/about", label: "Our Mission", description: "Why this community exists", icon: HeartHandshake },
   { to: "/mystory", label: "My Story", description: "Lainie Ruth's personal journey", icon: BookHeart },
   { to: "/contact", label: "Contact Us", description: "Reach the organization", icon: Mail },
-];
-
-
-const OTHER_LINKS = [
-  { to: "/about", label: "Our Philosophy" },
-  { to: "/mystory", label: "My Story" },
 ];
 
 
@@ -161,7 +154,6 @@ export default function MarketingNav({ onLogin, onRegister }) {
     Add more routes here later as you build pages.
   */
   const solidNavPages = [
-    // "/about",
     // "/faq",
     "/donate",
     "/merch",
@@ -288,11 +280,6 @@ export default function MarketingNav({ onLogin, onRegister }) {
             <NavDropdown label="About" links={ABOUT_LINKS} closeMenu={closeMenu} />
           </>
         )}
-        {/* {OTHER_LINKS.map((link) => (
-          <NavLink key={link.to} to={link.to} className="main-nav__link">
-            {link.label}
-          </NavLink>
-        ))} */}
       </nav>
 
       <div className="site-header__actions">
