@@ -80,14 +80,17 @@ export default function Home2() {
       <section className="home2-hero" data-nav-theme="light">
         <div className="home2-hero__glow" aria-hidden="true" />
         <div className="home2-shell home2-hero__inner">
-          <p className="home2-hero__established"><span /> Established 2013 <span /></p>
-
-          <div className="home2-hero__logo">
-            <img src={logo} alt="Recovery With The Exit Drug" />
+          <div className="home2-hero__crest">
+            <div className="home2-hero__date" aria-label="Established"><span /><strong>EST.</strong><span /></div>
+            <div className="home2-hero__logo">
+              <img src={logo} alt="Recovery With The Exit Drug" />
+            </div>
+            <div className="home2-hero__date" aria-label="2013"><span /><strong>2013</strong><span /></div>
           </div>
 
           <h1><span>Recovery with</span><em>The Exit-Drug</em></h1>
           <p className="home2-hero__former">Formerly known as Maintaining My Recovery with Cannabis (MMRC)</p>
+          <div className="home2-hero__divider" aria-hidden="true"><span /><Leaf size={27} fill="currentColor" /><span /></div>
           <p className="home2-hero__description">A recovery support community for people using cannabis to reduce or replace dangerous and addictive substances. Find peer support, educational resources, recovery stories, and connection without judgment.</p>
 
           <div className="home2-hero__actions">
@@ -156,7 +159,7 @@ export default function Home2() {
 
       <section className="home2-disclaimer">
         <div className="home2-shell home2-disclaimer__inner">
-          <p className="home2-hero__established"><span /> Disclaimer <span /></p>
+          <p className="home2-disclaimer__label"><span /> Disclaimer <span /></p>
           <p><strong>Recovery with The Exit Drug is a volunteer support group sharing practical information. This is not a professional or medical organization. The information provided is for informational and educational purposes only and is not a substitute for professional care.</strong></p>
         </div>
       </section>
