@@ -22,7 +22,8 @@
 .home-mission-hero__grain { position: absolute; z-index: -1; inset: 0; background: radial-gradient(circle at 20% 90%, rgba(211,166,83,.14), transparent 33%), linear-gradient(125deg, transparent 58%, rgba(255,255,255,.025)); pointer-events: none; }
 .home-mission-hero__inner { display: grid; grid-template-columns: 1.15fr .7fr; align-items: center; gap: clamp(50px, 8vw, 130px); min-height: calc(100svh - 160px); padding-block: 38px 80px; }
 .home-mission-eyebrow { display: flex; align-items: center; gap: 10px; margin: 0; color: var(--home-mission-gold); font-size: .68rem; font-weight: 850; letter-spacing: .18em; text-transform: uppercase; }
-.home-mission-eyebrow span { width: 34px; height: 1px; background: currentColor; }
+.home-mission-eyebrow span { width: 34px; height: 1px; background: linear-gradient(90deg, transparent, currentColor); }
+.home-mission-eyebrow span:last-child { background: linear-gradient(90deg, currentColor, transparent); }
 .home-mission-hero h1 { margin: 24px 0 0; font-size: clamp(4rem, 7.4vw, 7.8rem); font-weight: 440; letter-spacing: -.058em; line-height: .86; }
 .home-mission-hero h1 em { color: var(--home-mission-gold); font-style: normal; }
 .home-mission-hero__description { max-width: 650px; margin: 30px 0 0; color: var(--home-mission-cream); font: 470 clamp(1.15rem, 1.8vw, 1.45rem)/1.5 "Fraunces", Georgia, serif; }
