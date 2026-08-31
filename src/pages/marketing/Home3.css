@@ -15,7 +15,7 @@
 .home3-page h1, .home3-page h2, .home3-page h3, .home3-page blockquote { font-family: "Fraunces", Georgia, serif; }
 .home3-page button, .home3-page a { -webkit-tap-highlight-color: transparent; }
 
-.home3-hero { position: relative; min-height: 100svh; padding: 120px 0 62px; color: var(--home3-cream); background: radial-gradient(circle at 50% 22%, #113b29 0, var(--home3-night) 58%); }
+.home3-hero { position: relative; min-height: 100svh; padding: 120px 0 50px; color: var(--home3-cream); background: radial-gradient(circle at 50% 22%, #113b29 0, var(--home3-night) 58%); }
 .home3-hero::before { content: ""; position: absolute; inset: 0; opacity: .08; background-image: linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px); background-size: 72px 72px; mask-image: radial-gradient(circle at center, #000, transparent 76%); pointer-events: none; }
 .home3-hero__inner { position: relative; display: flex; flex-direction: column; align-items: center; max-width: 1080px; text-align: center; }
 .home3-hero__established { display: flex; align-items: center; justify-content: center; gap: 18px; margin: 0; color: var(--home3-gold); font-size: clamp(.68rem, 1.2vw, .9rem); font-weight: 850; letter-spacing: .2em; text-transform: uppercase; }
@@ -31,17 +31,17 @@
 .home3-leaf-rule span:last-child { background: linear-gradient(90deg, rgba(217,166,47,.78), transparent); }
 .home3-leaf-rule img { width: clamp(28px, 3vw, 42px); height: auto; }
 .home3-hero__description { max-width: 790px; margin: clamp(28px, 3.5vw, 42px) 0 0; color: var(--home3-cream); font: 470 clamp(1.2rem, 2.1vw, 1.72rem)/1.48 "Fraunces", Georgia, serif; }
-.home3-hero__actions { display: grid; width: min(540px, 100%); gap: 13px; margin-top: clamp(38px, 5vw, 58px); }
-.home3-hero__actions button, .home3-hero__actions > a { display: inline-flex; align-items: center; justify-content: center; gap: 18px; min-height: 64px; padding: 0 26px; border: 1px solid var(--home3-gold); border-radius: 999px; color: #142117; background: linear-gradient(90deg, #d8a02b, #e6b94b); font: 850 .88rem Inter, sans-serif; text-decoration: none; cursor: pointer; }
+.home3-hero__actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); width: min(760px, 100%); gap: 14px; margin-top: clamp(38px, 5vw, 58px); }
+.home3-hero__actions button, .home3-hero__actions > a { display: inline-flex; min-width: 0; align-items: center; justify-content: center; gap: 12px; min-height: 64px; padding: 0 18px; border: 1px solid var(--home3-gold); border-radius: 999px; color: #142117; background: linear-gradient(90deg, #d8a02b, #e6b94b); font: 850 .82rem Inter, sans-serif; text-decoration: none; white-space: nowrap; cursor: pointer; }
 .home3-hero__actions > a { border-color: rgba(191,218,196,.32); color: var(--home3-cream); background: transparent; }
 .home3-hero__actions svg { transition: transform 180ms ease; }
 .home3-hero__actions button:hover svg { transform: translateX(4px); }
 .home3-hero__actions > a:hover svg { transform: translateY(4px); }
-.home3-hero__explore { width: min(760px, 100%); margin-top: clamp(55px, 8vw, 88px); }
+.home3-hero__explore { width: min(760px, 100%); margin-top: clamp(44px, 6.4vw, 70px); }
 .home3-hero__explore .home3-leaf-rule { width: 100%; margin: 0; }
-.home3-hero__explore nav { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 22px; }
+.home3-hero__explore nav { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 16px; }
 .home3-hero__explore nav a, .home3-hero__explore nav button { display: grid; justify-items: center; gap: 9px; padding: 8px 3px; border: 0; color: var(--home3-gold); background: transparent; font: 850 clamp(.58rem, 1vw, .74rem) Inter, sans-serif; letter-spacing: .1em; text-decoration: none; text-transform: uppercase; cursor: pointer; }
-.home3-hero__explore nav img { width: clamp(32px, 4vw, 50px); height: clamp(32px, 4vw, 50px); object-fit: contain; }
+.home3-hero__explore nav img { width: clamp(30px, 3.5vw, 44px); height: clamp(30px, 3.5vw, 44px); object-fit: contain; }
 .home3-hero__explore nav a:hover, .home3-hero__explore nav button:hover { color: var(--home3-cream); }
 .home3-purpose, .home3-principles, .home3-provides { scroll-margin-top: 78px; }
 
@@ -97,7 +97,7 @@
 }
 
 @media (max-width: 520px) {
-  .home3-hero { padding: 44px 0 42px; }
+  .home3-hero { padding: 44px 0 34px; }
   .home3-hero__established { gap: 11px; font-size: .64rem; }
   .home3-hero__established span { width: 35px; height: 1px; }
   .home3-hero__logo { width: min(250px, 62vw); margin-top: 32px; }
@@ -106,12 +106,14 @@
   .home3-leaf-rule { gap: 14px; width: 88%; }
   .home3-leaf-rule img { width: 31px; }
   .home3-hero__description { max-width: 390px; font-size: clamp(1.08rem, 5.2vw, 1.35rem); line-height: 1.52; }
-  .home3-hero__actions { margin-top: 38px; }
-  .home3-hero__actions button, .home3-hero__actions > a { min-height: 58px; font-size: .8rem; }
-  .home3-hero__explore { margin-top: 58px; }
+  .home3-hero__actions { gap: 8px; margin-top: 38px; }
+  .home3-hero__actions button, .home3-hero__actions > a { gap: 6px; min-height: 54px; padding-inline: 6px; font-size: .62rem; }
+  .home3-hero__actions svg { width: 16px; height: 16px; }
+  .home3-hero__explore { margin-top: 46px; }
   .home3-hero__explore nav { gap: 5px; }
   .home3-hero__explore nav a, .home3-hero__explore nav button { gap: 6px; font-size: .52rem; letter-spacing: .06em; }
-  .home3-hero__explore nav img { width: 36px; height: 36px; }
+  .home3-hero__explore nav { margin-top: 13px; }
+  .home3-hero__explore nav img { width: 32px; height: 32px; }
   .home3-purpose blockquote { font-size: 1.65rem; }
   .home3-section-head h2 { font-size: clamp(3rem, 14vw, 4.4rem); }
   .home3-principles__grid { margin-top: 55px; }
