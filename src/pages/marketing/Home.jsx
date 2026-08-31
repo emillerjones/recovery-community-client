@@ -1,6 +1,22 @@
-import { ArrowDown, ArrowRight, BookOpen, HeartHandshake, Leaf, MessagesSquare, Network, ShieldCheck, Sparkles, Stethoscope } from "lucide-react";
+import {
+  ArrowDown,
+  ArrowRight,
+  BookOpen,
+  HeartHandshake,
+  Leaf,
+  MessagesSquare,
+  Network,
+  ShieldCheck,
+  Sparkles,
+  Stethoscope,
+} from "lucide-react";
 import { Link, useOutletContext } from "react-router-dom";
 import logo from "../../assets/icons/logo.png";
+import cannabisLeaf from "../../assets/icons/cannabis-leaf-filled.png";
+import supportIcon from "../../assets/icons/support.png";
+import educationIcon from "../../assets/icons/education.png";
+import communityIcon from "../../assets/icons/community.png";
+import hopeIcon from "../../assets/icons/hope.png";
 import "./Home.css";
 
 const PRINCIPLES = [
@@ -65,57 +81,57 @@ export default function Home() {
   const { onRegister } = useOutletContext();
 
   return (
-    <main className="home-mission-page">
-      <section className="home-mission-hero" data-nav-theme="light">
-        <div className="home-mission-hero__grain" aria-hidden="true" />
-        <div className="home-mission-shell home-mission-hero__inner">
-          <div className="home-mission-hero__copy">
-            <p className="home-mission-eyebrow"><span /> Established 2013 <span /> </p>
-            <h1>Recovery with<br /><em>The Exit-Drug</em></h1>
-            <p className="home-mission-hero__former">Formerly known as Maintaining My Recovery with Cannabis (MMRC)</p>
-            <p className="home-mission-hero__description">A recovery support community for people using cannabis to reduce or replace dangerous and addictive substances.  Find peer support, educational resources, recovery stories, and connection without judgment.</p>
-            {/* <p className="home-mission-hero__support"></p> */}
-
-
-            <div className="home-mission-hero__actions">
-              <button type="button" onClick={onRegister}>Join our community <ArrowRight size={17} /></button>
-              <a href="#home-purpose">Discover our purpose <ArrowDown size={17} /></a>
+    <main className="home-page">
+      <section className="home-hero" data-nav-theme="light">
+        <div className="home-hero__glow" aria-hidden="true" />
+        <div className="home-shell home-hero__inner">
+          <div className="home-hero__crest">
+            <div className="home-hero__date" aria-label="Established"><span /><strong>EST.</strong><span /></div>
+            <div className="home-hero__logo">
+              <img src={logo} alt="Recovery With The Exit Drug" />
             </div>
+            <div className="home-hero__date" aria-label="2013"><span /><strong>2013</strong><span /></div>
           </div>
-          <div className="home-mission-hero__mark" aria-label="Recovery With The Exit Drug logo">
-            <span aria-hidden="true" />
-            <img src={logo} alt="Recovery With The Exit Drug" />
+
+          <h1><span>Recovery with</span><em>The Exit-Drug</em></h1>
+          <p className="home-hero__former">Formerly known as Maintaining My Recovery with Cannabis (MMRC)</p>
+          <div className="home-hero__divider" aria-hidden="true"><span /><img src={cannabisLeaf} alt="" /><span /></div>
+          <p className="home-hero__description">A recovery support community for people using cannabis to reduce or replace dangerous and addictive substances. Find peer support, educational resources, recovery stories, and connection without judgment.</p>
+
+          <div className="home-hero__actions">
+            <button type="button" onClick={onRegister}>Join our community <ArrowRight size={20} /></button>
+            <a href="#home-purpose">Discover our purpose <ArrowDown size={20} /></a>
           </div>
+
+          <nav className="home-hero__paths" aria-label="Explore recovery support">
+            <div className="home-hero__path-rule" aria-hidden="true"><span /><img src={cannabisLeaf} alt="" /><span /></div>
+            <div className="home-hero__path-links">
+              <a href="#home-provides"><img src={supportIcon} alt="" /><span>Support</span></a>
+              <Link to="/resources"><img src={educationIcon} alt="" /><span>Education</span></Link>
+              <Link to="/community"><img src={communityIcon} alt="" /><span>Community</span></Link>
+              <Link to="/stories"><img src={hopeIcon} alt="" /><span>Hope</span></Link>
+            </div>
+          </nav>
         </div>
-        <nav className="home-mission-hero__statement" aria-label="Home page sections">
-          <div className="home-mission-shell">
-            <a href="#home-purpose"><span>01</span> Purpose</a><i />
-            <a href="#home-principles"><span>02</span> Principles</a><i />
-            <a href="#home-provides"><span>03</span> What we provide</a>
-          </div>
-        </nav>
       </section>
 
-      <section className="home-mission-purpose" id="home-purpose">
-        <div className="home-mission-shell home-mission-purpose__inner">
-          <p className="home-mission-kicker">Our founding purpose</p>
+      <section className="home-purpose" id="home-purpose">
+        <div className="home-shell home-purpose__inner">
+          <p className="home-kicker">Our founding purpose</p>
           <blockquote>The mission of Recovery with The Exit-Drug (formerly known as Maintaining My Recovery with Cannabis/MMRC) is to develop a recovery support community of people who use cannabis as a form of harm-reduction therapy from dangerous or addictive substances. We provide support through personal experiences, educational resources, and peer support programs—while upholding a culture of inclusiveness and mutual respect.</blockquote>
-          {/* <p>We provide support through personal experiences, educational resources, and peer support programs—while upholding a culture of inclusiveness and mutual respect.</p> */}
         </div>
       </section>
 
-      <section className="home-mission-principles" id="home-principles">
-        <div className="home-mission-shell">
-          <header className="home-mission-section-head">
-            <div className="home-mission-section-label"><p>What we are rooted in</p></div>
+      <section className="home-principles" id="home-principles">
+        <div className="home-shell">
+          <header className="home-section-head">
+            <p>What we are rooted in</p>
             <div><h2>Principles We Uphold</h2><p>The following principles are what guide and shape our mission.</p></div>
           </header>
-          <div className="home-mission-principles__grid">
+          <div className="home-principles__grid">
             {PRINCIPLES.map(({ number, title, text, icon }) => (
-              <article className="home-mission-principle" key={number}>
-                <header>
-                  <span>{number}</span>{icon}
-                </header>
+              <article key={number}>
+                <header><span>{number}</span>{icon}</header>
                 <h3>{title}</h3>
                 <p>{text}</p>
               </article>
@@ -124,15 +140,15 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="home-mission-provides" id="home-provides">
-        <div className="home-mission-shell">
-          <header className="home-mission-section-head home-mission-section-head--light">
-            <div className="home-mission-section-label"><p>What we provide</p></div>
-            <div><p className="home-mission-kicker">Support you can reach</p><h2>A place to connect,<br />learn and be heard.</h2></div>
+      <section className="home-provides" id="home-provides">
+        <div className="home-shell">
+          <header className="home-section-head home-section-head--light">
+            <p>What we provide</p>
+            <div><p className="home-kicker">Support you can reach</p><h2>A place to connect,<br />learn and be heard.</h2></div>
           </header>
-          <div className="home-mission-provides__grid">
+          <div className="home-provides__grid">
             {PROVIDES.map(({ title, text, action, icon, to, register }) => (
-              <article className="home-mission-provide" key={title}>
+              <article className="home-provide" key={title}>
                 {icon}
                 <div><h3>{title}</h3><p>{text}</p></div>
                 {register ? (
@@ -146,9 +162,9 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="home-mission-boundary">
-        <div className="home-mission-shell home-mission-boundary__inner">
-          <p className="home-mission-eyebrow"><span /> Disclaimer <span /></p>
+      <section className="home-disclaimer">
+        <div className="home-shell home-disclaimer__inner">
+          <p className="home-disclaimer__label"><span /> Disclaimer <span /></p>
           <p><strong>Recovery with The Exit Drug is a volunteer support group sharing practical information. This is not a professional or medical organization. The information provided is for informational and educational purposes only and is not a substitute for professional care.</strong></p>
         </div>
       </section>
