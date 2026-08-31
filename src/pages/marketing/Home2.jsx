@@ -108,7 +108,7 @@ export default function Home2() {
             <div className="home2-hero__path-links">
               <a href="#home2-provides"><img src={supportIcon} alt="" /><span>Support</span></a>
               <Link to="/resources"><img src={educationIcon} alt="" /><span>Education</span></Link>
-              <button type="button" onClick={onRegister}><img src={communityIcon} alt="" /><span>Community</span></button>
+              <Link to="/community"><img src={communityIcon} alt="" /><span>Community</span></Link>
               <Link to="/stories"><img src={hopeIcon} alt="" /><span>Hope</span></Link>
             </div>
           </nav>
