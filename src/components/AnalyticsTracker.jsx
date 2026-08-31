@@ -12,6 +12,7 @@ function pageKeyFor(pathname) {
   return {
     "/": "home",
     "/home2": "home",
+    "/home3": "home",
     "/login": "login",
     "/register": "register",
     "/verify-email": "verify_email",

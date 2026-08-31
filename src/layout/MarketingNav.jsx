@@ -34,6 +34,7 @@ const SUPPORT_LINKS = [
 
 const ABOUT_LINKS = [
   { to: "/home2", label: "Home 2 Preview", description: "Explore a more visitor-focused homepage", icon: HeartHandshake },
+  { to: "/home3", label: "Home 3 Preview", description: "Preview the logo-led homepage", icon: HeartHandshake },
   { to: "/about", label: "Our Mission", description: "Why this community exists", icon: HeartHandshake },
   { to: "/mystory", label: "My Story", description: "Lainie Ruth's personal journey", icon: BookHeart },
   { to: "/contact", label: "Contact Us", description: "Reach the organization", icon: Mail },
@@ -237,7 +238,7 @@ export default function MarketingNav({ onLogin, onRegister }) {
     window.location.href = "/";
   }
 
-  const hidesAtTopOnMobile = location.pathname === "/" || location.pathname === "/home2";
+  const hidesAtTopOnMobile = ["/", "/home2", "/home3"].includes(location.pathname);
 
   const headerClass = [
     "site-header",
