@@ -29,12 +29,12 @@
 .home2-hero h1 { margin: clamp(30px, 4vw, 48px) 0 0; font-size: clamp(4.7rem, 9.7vw, 9.6rem); font-weight: 440; letter-spacing: -.065em; line-height: .79; }
 .home2-hero h1 span, .home2-hero h1 em { display: block; }
 .home2-hero h1 em { margin-top: .16em; color: var(--home2-gold); font-style: normal; }
-.home2-hero__former { margin: clamp(26px, 3vw, 38px) 0 0; color: rgba(193,211,181,.67); font-size: clamp(.5rem, 1.4vw, .94rem); font-style: italic; white-space: nowrap; }
+.home2-hero__former { margin: clamp(26px, 3vw, 38px) 0 0; color: rgba(193,211,181,.67); font-size: clamp(.55rem, 1.45vw, 1rem); font-style: italic; white-space: nowrap; }
 .home2-hero__divider { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 22px; width: min(620px, 82%); margin-top: clamp(32px, 4vw, 45px); color: var(--home2-gold); }
 .home2-hero__divider span { height: 1px; background: linear-gradient(90deg, transparent, rgba(217,166,47,.74)); }
 .home2-hero__divider span:last-child { background: linear-gradient(90deg, rgba(217,166,47,.74), transparent); }
 .home2-hero__divider img { width: clamp(28px, 3vw, 42px); height: auto; }
-.home2-hero__description { max-width: 850px; margin: clamp(26px, 3vw, 38px) 0 0; color: var(--home2-cream); font: 470 clamp(1.12rem, 1.9vw, 1.58rem)/1.45 "Fraunces", Georgia, serif; }
+.home2-hero__description { max-width: 850px; margin: clamp(26px, 3vw, 38px) 0 0; color: var(--home2-cream); font: 470 clamp(1.05rem, 1.75vw, 1.48rem)/1.43 "Fraunces", Georgia, serif; }
 .home2-hero__actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); width: min(760px, 100%); gap: 14px; margin-top: clamp(38px, 5vw, 58px); }
 .home2-hero__actions button, .home2-hero__actions > a { display: inline-flex; min-width: 0; align-items: center; justify-content: center; gap: 12px; min-height: 64px; padding: 0 18px; border: 1px solid var(--home2-gold); border-radius: 999px; color: #142117; background: linear-gradient(90deg, #d8a02b, #e6b94b); font: 850 .82rem Inter, sans-serif; text-decoration: none; white-space: nowrap; cursor: pointer; }
 .home2-hero__actions > a { border-color: rgba(191,218,196,.32); color: var(--home2-cream); background: rgba(5,25,16,.12); }
@@ -111,8 +111,8 @@
   .home2-hero__date span { height: 1px; }
   .home2-hero__logo { width: min(185px, 35vw); }
   .home2-hero h1 { margin-top: 34px; font-size: clamp(3.35rem, 16.5vw, 5rem); line-height: .82; }
-  .home2-hero__former { font-size: clamp(.5rem, 2vw, .68rem); }
-  .home2-hero__description { max-width: 420px; font-size: clamp(1rem, 4.65vw, 1.22rem); line-height: 1.45; }
+  .home2-hero__former { font-size: clamp(.55rem, 2.1vw, .72rem); }
+  .home2-hero__description { max-width: 420px; font-size: clamp(.96rem, 4.2vw, 1.15rem); line-height: 1.43; }
   .home2-hero__actions { gap: 8px; margin-top: 38px; }
   .home2-hero__actions button, .home2-hero__actions > a { gap: 6px; min-height: 54px; padding-inline: 6px; font-size: .62rem; }
   .home2-hero__actions svg { width: 16px; height: 16px; }
