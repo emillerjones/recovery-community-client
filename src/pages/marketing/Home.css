@@ -27,7 +27,7 @@
 .home-mission-hero h1 em { color: var(--home-mission-gold); font-style: normal; }
 .home-mission-hero__description { max-width: 650px; margin: 30px 0 0; color: var(--home-mission-cream); font: 470 clamp(1.15rem, 1.8vw, 1.45rem)/1.5 "Fraunces", Georgia, serif; }
 .home-mission-hero__support { max-width: 620px; margin: 14px 0 0; color: rgba(241,234,220,.66); font-size: clamp(.86rem, 1.2vw, 1rem); line-height: 1.65; }
-.home-mission-hero__former { max-width: 570px; margin: 20px 0 14px; color: rgba(241,234,220,.46); font-size: .76rem; line-height: 1.6; }
+.home-mission-hero__former { max-width: 570px; margin: 20px 0 14px; color: rgba(241,234,220,.46); font-size: .76rem; font-style: italic; line-height: 1.6; }
 .home-mission-hero__actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 35px; }
 .home-mission-hero__actions button, .home-mission-hero__actions a { display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 48px; padding: 0 20px; border: 1px solid var(--home-mission-gold); border-radius: 999px; color: #132219; background: var(--home-mission-gold); font: inherit; font-size: .75rem; font-weight: 800; text-decoration: none; cursor: pointer; }
 .home-mission-hero__actions a { color: var(--home-mission-cream); background: transparent; border-color: rgba(241,234,220,.25); }

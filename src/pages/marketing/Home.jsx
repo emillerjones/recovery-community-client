@@ -70,12 +70,13 @@ export default function Home() {
         <div className="home-mission-hero__grain" aria-hidden="true" />
         <div className="home-mission-shell home-mission-hero__inner">
           <div className="home-mission-hero__copy">
+            <p className="home-mission-eyebrow"><span /> Established 2013 <span /> </p>
             <h1>Recovery with<br /><em>The Exit-Drug</em></h1>
-            <p className="home-mission-hero__former">Formerly known as Maintaining My Recovery with Cannabis / MMRC</p>
-            <p className="home-mission-hero__description">A recovery support community for people using cannabis to reduce or replace dangerous and addictive substances.</p>
-            <p className="home-mission-hero__support">Find peer support, educational resources, recovery stories, and connection without judgment.</p>
+            <p className="home-mission-hero__former">Formerly known as Maintaining My Recovery with Cannabis (MMRC)</p>
+            <p className="home-mission-hero__description">A recovery support community for people using cannabis to reduce or replace dangerous and addictive substances.  Find peer support, educational resources, recovery stories, and connection without judgment.</p>
+            {/* <p className="home-mission-hero__support"></p> */}
 
-            <p className="home-mission-eyebrow"><span /> Established 2013</p>
+
             <div className="home-mission-hero__actions">
               <button type="button" onClick={onRegister}>Join our community <ArrowRight size={17} /></button>
               <a href="#home-purpose">Discover our purpose <ArrowDown size={17} /></a>
@@ -98,15 +99,15 @@ export default function Home() {
       <section className="home-mission-purpose" id="home-purpose">
         <div className="home-mission-shell home-mission-purpose__inner">
           <p className="home-mission-kicker">Our founding purpose</p>
-          <blockquote>The mission of Recovery with The Exit-Drug (formerly known as Maintaining My Recovery with Cannabis/MMRC) is to develop a recovery support community of people who use cannabis as a form of harm-reduction therapy from dangerous or addictive substances.</blockquote>
-          <p>We provide support through personal experiences, educational resources, and peer support programs—while upholding a culture of inclusiveness and mutual respect.</p>
+          <blockquote>The mission of Recovery with The Exit-Drug (formerly known as Maintaining My Recovery with Cannabis/MMRC) is to develop a recovery support community of people who use cannabis as a form of harm-reduction therapy from dangerous or addictive substances. We provide support through personal experiences, educational resources, and peer support programs—while upholding a culture of inclusiveness and mutual respect.</blockquote>
+          {/* <p>We provide support through personal experiences, educational resources, and peer support programs—while upholding a culture of inclusiveness and mutual respect.</p> */}
         </div>
       </section>
 
       <section className="home-mission-principles" id="home-principles">
         <div className="home-mission-shell">
           <header className="home-mission-section-head">
-            <div className="home-mission-section-label"><span>02</span><p>What we are rooted in</p></div>
+            <div className="home-mission-section-label"><p>What we are rooted in</p></div>
             <div><h2>Principles We Uphold</h2><p>The following principles are what guide and shape our mission.</p></div>
           </header>
           <div className="home-mission-principles__grid">
@@ -126,7 +127,7 @@ export default function Home() {
       <section className="home-mission-provides" id="home-provides">
         <div className="home-mission-shell">
           <header className="home-mission-section-head home-mission-section-head--light">
-            <div className="home-mission-section-label"><span>03</span><p>What we provide</p></div>
+            <div className="home-mission-section-label"><p>What we provide</p></div>
             <div><p className="home-mission-kicker">Support you can reach</p><h2>A place to connect,<br />learn and be heard.</h2></div>
           </header>
           <div className="home-mission-provides__grid">
