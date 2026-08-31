@@ -237,6 +237,8 @@ export default function MarketingNav({ onLogin, onRegister }) {
     window.location.href = "/";
   }
 
+  const hidesAtTopOnMobile = location.pathname === "/" || location.pathname === "/home2";
+
   const headerClass = [
     "site-header",
     "site-header--fade-in",
@@ -253,8 +255,8 @@ export default function MarketingNav({ onLogin, onRegister }) {
       ? "site-header--scrolled"
       : "",
     menuOpen ? "site-header--menu-open" : "",
-    location.pathname === "/" ? "site-header--home" : "",
-    location.pathname === "/" && !scrolled && !menuOpen
+    hidesAtTopOnMobile ? "site-header--home" : "",
+    hidesAtTopOnMobile && !scrolled && !menuOpen
       ? "site-header--home-hidden"
       : "",
   ]
