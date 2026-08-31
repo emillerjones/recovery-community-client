@@ -148,8 +148,8 @@ export default function Home() {
 
       <section className="home-mission-boundary">
         <div className="home-mission-shell home-mission-boundary__inner">
-          <p className="home-mission-eyebrow"><span /> Disclaimer</p>
-          <p><strong>Recovery with The Exit Drug is a volunteer support group sharing practical information.</strong> This is not a professional or medical organization. The information provided is for informational and educational purposes only and is not a substitute for professional care.</p>
+          <p className="home-mission-eyebrow"><span /> Disclaimer <span /></p>
+          <p><strong>Recovery with The Exit Drug is a volunteer support group sharing practical information. This is not a professional or medical organization. The information provided is for informational and educational purposes only and is not a substitute for professional care.</strong></p>
         </div>
       </section>
     </main>
