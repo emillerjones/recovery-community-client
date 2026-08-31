@@ -139,7 +139,10 @@ export default function Home2() {
       </section>
 
       <section className="home2-disclaimer">
-        <div className="home2-shell"><ShieldCheck size={20} /><p><strong>Recovery with The Exit Drug is a volunteer support group sharing practical information.</strong> This is not a professional or medical organization. The information provided is for informational and educational purposes only and is not a substitute for professional care.</p></div>
+        <div className="home2-shell">
+          <p className="home2-eyebrow">Disclaimer</p>
+          <div className="home2-disclaimer__copy"><ShieldCheck size={20} /><p><strong>Recovery with The Exit Drug is a volunteer support group sharing practical information. This is not a professional or medical organization. The information provided is for informational and educational purposes only and is not a substitute for professional care.</strong></p></div>
+        </div>
       </section>
     </main>
   );

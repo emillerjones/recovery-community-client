@@ -94,7 +94,8 @@
 .home2-next h2 { max-width: 760px; margin: 12px 0 0; font-size: clamp(3rem,5vw,5.5rem); font-weight: 430; letter-spacing: -.05em; line-height: .94; }
 .home2-next button { flex: 0 0 auto; display: inline-flex; align-items: center; gap: 10px; min-height: 52px; padding: 0 22px; border: 1px solid var(--h2-gold); border-radius: 999px; color: #132219; background: var(--h2-gold); font: inherit; font-size: .72rem; font-weight: 850; cursor: pointer; }
 .home2-disclaimer { padding: 55px 0; color: rgba(242,235,220,.5); background: var(--h2-night); }
-.home2-disclaimer .home2-shell { display: grid; grid-template-columns: auto 1fr; gap: 18px; align-items: start; }
+.home2-disclaimer .home2-eyebrow { margin-bottom: 18px; }
+.home2-disclaimer__copy { display: grid; grid-template-columns: auto 1fr; gap: 18px; align-items: start; }
 .home2-disclaimer svg { color: var(--h2-gold); }
 .home2-disclaimer p { max-width: 900px; margin: 0; font-size: .75rem; line-height: 1.7; }
 .home2-disclaimer strong { color: rgba(242,235,220,.78); }
