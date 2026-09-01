@@ -23,6 +23,7 @@ function pageKeyFor(pathname) {
     "/contact": "contact",
     "/discountlinks": "discount_links",
     "/resources": "resources",
+    "/resources2": "resources",
     "/faq": "faq",
     "/privacy": "privacy",
     "/forum": "forum",
