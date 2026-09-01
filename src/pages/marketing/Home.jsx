@@ -143,8 +143,11 @@ export default function Home() {
       <section className="home-provides" id="home-provides">
         <div className="home-shell">
           <header className="home-section-head home-section-head--light">
-            <p>What we provide</p>
-            <div><p className="home-kicker">Support you can reach</p><h2>A place to connect,<br />learn and be heard.</h2></div>
+            <p>Creating an impact</p>
+            <div>
+              <h2>What We Provide</h2>
+              <p>The following resources offer compassionate support, meaningful connections, and helpful information.</p>
+            </div>
           </header>
           <div className="home-provides__grid">
             {PROVIDES.map(({ title, text, action, icon, to, register }) => (
