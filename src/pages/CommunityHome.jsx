@@ -42,6 +42,14 @@ function greeting() {
   return "Good evening";
 }
 
+function messagePreview(conversation) {
+  if (conversation.last_message_body?.trim()) return conversation.last_message_body;
+  const imageCount = Number(conversation.last_message_image_count || 0);
+  if (imageCount === 1) return "Photo";
+  if (imageCount > 1) return `${imageCount} photos`;
+  return "Say hello.";
+}
+
 function notificationCopy(notification) {
   const actor = notification.actor_username || "Someone";
   const title = notification.post_title ? ` “${notification.post_title}”` : "";
@@ -252,7 +260,7 @@ export default function CommunityHome() {
 
             <section className="community-home__card community-home__messages">
               <header><div><p>Private</p><h2>Recent messages</h2></div></header>
-              {conversations.map((conversation) => <Link to={`/messages/${conversation.conversation_id}`} key={conversation.conversation_id}><MemberAvatar username={conversation.other_username} avatarUrl={conversation.other_avatar_url} size={38} /><span><strong>{conversation.other_username}</strong><small>{conversation.last_message_body || "Say hello."}</small></span>{conversation.unread_count > 0 && <b>{conversation.unread_count}</b>}</Link>)}
+              {conversations.map((conversation) => <Link to={`/messages/${conversation.conversation_id}`} key={conversation.conversation_id}><MemberAvatar username={conversation.other_username} avatarUrl={conversation.other_avatar_url} size={38} /><span><strong>{conversation.other_username}</strong><small>{messagePreview(conversation)}</small></span>{conversation.unread_count > 0 && <b>{conversation.unread_count}</b>}</Link>)}
               {!loading && !conversations.length && <p className="community-home__empty">No private conversations yet.</p>}
               <Link className="community-home__text-link" to="/messages">Open messages <ArrowRight size={14} /></Link>
             </section>

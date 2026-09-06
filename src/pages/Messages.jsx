@@ -1,9 +1,16 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, MessageSquarePlus, Search, Send, X } from "lucide-react";
 import { useAuth } from "../auth/AuthContext";
 import { useMessages } from "../contexts/MessagesContext";
 import MemberAvatar from "../components/MemberAvatar";
+import MessagePhotoGallery from "../components/messagePhotos/MessagePhotoGallery";
+import PhotoUploader from "../components/forumPhotos/PhotoUploader";
+import {
+  discardPendingPhotos,
+  photosReady,
+  readyMediaIds,
+} from "../components/forumPhotos/photoUploadUtils";
 import "./Messages.css";
 
 const API = import.meta.env.VITE_API;
@@ -17,6 +24,14 @@ function timeAgo(value) {
   return new Date(value).toLocaleDateString(undefined, { month: "short", day: "numeric" });
 }
 
+function conversationPreview(conversation) {
+  if (conversation.last_message_body?.trim()) return conversation.last_message_body;
+  const imageCount = Number(conversation.last_message_image_count || 0);
+  if (imageCount === 1) return "Photo";
+  if (imageCount > 1) return `${imageCount} photos`;
+  return "Say hello.";
+}
+
 export default function Messages() {
   const { conversationId } = useParams();
   const { token, user } = useAuth();
@@ -28,6 +43,8 @@ export default function Messages() {
   const [messages, setMessages] = useState([]);
   const [loadingThread, setLoadingThread] = useState(false);
   const [draft, setDraft] = useState("");
+  const [photoDraft, setPhotoDraft] = useState({ conversationId: null, photos: [] });
+  const latestPhotoDraft = useRef(photoDraft);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
 
@@ -41,6 +58,32 @@ export default function Messages() {
   const activeConversation = conversations.find(
     (c) => c.conversation_id === Number(conversationId)
   );
+  const messagePhotos = String(photoDraft.conversationId) === String(conversationId)
+    ? photoDraft.photos
+    : [];
+
+  function setMessagePhotos(update) {
+    setPhotoDraft((current) => {
+      const currentPhotos = String(current.conversationId) === String(conversationId)
+        ? current.photos
+        : [];
+      const photos = typeof update === "function" ? update(currentPhotos) : update;
+      const next = { conversationId, photos };
+      latestPhotoDraft.current = next;
+      return next;
+    });
+  }
+
+  useEffect(() => {
+    latestPhotoDraft.current = photoDraft;
+  }, [photoDraft]);
+
+  useEffect(() => () => {
+    const pendingDraft = latestPhotoDraft.current;
+    if (String(pendingDraft.conversationId) === String(conversationId)) {
+      discardPendingPhotos(pendingDraft.photos, token);
+    }
+  }, [conversationId, token]);
 
   const loadConversations = useCallback(async () => {
     const response = await fetch(`${API}/api/messages/conversations`, { headers });
@@ -49,7 +92,7 @@ export default function Messages() {
   }, [headers]);
 
   useEffect(() => {
-    loadConversations();
+    Promise.resolve().then(loadConversations);
   }, [loadConversations]);
 
   useEffect(() => {
@@ -69,11 +112,11 @@ export default function Messages() {
 
   useEffect(() => {
     if (!conversationId) {
-      setMessages([]);
+      Promise.resolve().then(() => setMessages([]));
       return;
     }
     let cancelled = false;
-    setLoadingThread(true);
+    Promise.resolve().then(() => setLoadingThread(true));
     fetch(`${API}/api/messages/conversations/${conversationId}/messages`, { headers })
       .then((response) => response.json())
       .then((data) => {
@@ -121,14 +164,19 @@ export default function Messages() {
   async function sendMessage(event) {
     event.preventDefault();
     const body = draft.trim();
-    if (!body) return;
+    const mediaIds = readyMediaIds(messagePhotos);
+    if (!photosReady(messagePhotos)) {
+      setError("Wait for every photo to finish uploading.");
+      return;
+    }
+    if (!body && mediaIds.length === 0) return;
     setSending(true);
     setError("");
 
     const response = await fetch(`${API}/api/messages/conversations/${conversationId}/messages`, {
       method: "POST",
       headers: { ...headers, "Content-Type": "application/json" },
-      body: JSON.stringify({ body }),
+      body: JSON.stringify({ body, media_ids: mediaIds }),
     });
     const result = await response.json();
     setSending(false);
@@ -141,6 +189,9 @@ export default function Messages() {
       current.some((existing) => existing.message_id === result.message_id) ? current : [...current, result]
     );
     setDraft("");
+    const clearedPhotos = { conversationId, photos: [] };
+    latestPhotoDraft.current = clearedPhotos;
+    setPhotoDraft(clearedPhotos);
     loadConversations();
   }
 
@@ -218,7 +269,7 @@ export default function Messages() {
                     <strong>{conversation.other_username}</strong>
                     {conversation.last_message_at && <time>{timeAgo(conversation.last_message_at)}</time>}
                   </div>
-                  <p>{conversation.last_message_body || "Say hello."}</p>
+                  <p>{conversationPreview(conversation)}</p>
                 </div>
                 {conversation.unread_count > 0 && (
                   <span className="dm-unread-badge">{conversation.unread_count}</span>
@@ -249,9 +300,14 @@ export default function Messages() {
                   messages.map((message) => (
                     <div
                       key={message.message_id}
-                      className={`dm-bubble ${message.sender_id === user?.id ? "is-mine" : ""}`}
+                      className={`dm-bubble ${message.sender_id === user?.id ? "is-mine" : ""} ${message.images?.length ? "has-photos" : ""}`}
                     >
-                      <p>{message.body}</p>
+                      <MessagePhotoGallery
+                        images={message.images}
+                        token={token}
+                        senderName={message.sender_username}
+                      />
+                      {message.body && <p>{message.body}</p>}
                       <time>{timeAgo(message.created_at)}</time>
                     </div>
                   ))}
@@ -260,13 +316,25 @@ export default function Messages() {
               {error && <p className="dm-error" role="alert">{error}</p>}
 
               <form className="dm-composer" onSubmit={sendMessage}>
+                <PhotoUploader
+                  photos={messagePhotos}
+                  onChange={setMessagePhotos}
+                  token={token}
+                  compact
+                />
                 <input
                   value={draft}
                   onChange={(e) => setDraft(e.target.value)}
                   placeholder="Write a message…"
                   aria-label="Message"
                 />
-                <button disabled={sending || !draft.trim()} aria-label="Send">
+                <button
+                  className="dm-composer__send"
+                  disabled={sending
+                    || !photosReady(messagePhotos)
+                    || (!draft.trim() && messagePhotos.length === 0)}
+                  aria-label="Send"
+                >
                   <Send size={17} />
                 </button>
               </form>
