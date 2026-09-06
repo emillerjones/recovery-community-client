@@ -252,8 +252,15 @@
 .dm-picker-empty { padding: 16px 6px; color: #9aa19c; font-size: 13px; }
 
 @media (max-width: 760px) {
-  .dm-shell { padding: 84px 3vw 20px; }
-  .dm-layout { grid-template-columns: 1fr; height: calc(100vh - 104px); }
+  .dm-shell {
+    height: 100vh;
+    height: 100dvh;
+    min-height: 0;
+    overflow: hidden;
+    padding: 84px 3vw max(20px, env(safe-area-inset-bottom, 0px));
+  }
+  .dm-layout { grid-template-columns: 1fr; height: 100%; min-height: 0; }
+  .dm-conversation-list { flex: 1; min-height: 0; }
   .dm-conversations--hide-mobile { display: none; }
   .dm-thread--hide-mobile { display: none; }
   .dm-back { display: inline-flex; }
