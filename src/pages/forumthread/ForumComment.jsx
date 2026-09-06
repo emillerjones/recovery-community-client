@@ -8,6 +8,13 @@ import ForumPhotoGallery from "../../components/forumPhotos/ForumPhotoGallery";
 import PhotoUploader from "../../components/forumPhotos/PhotoUploader";
 import { photosReady } from "../../components/forumPhotos/photoUploadUtils";
 
+function countDeletableReplies(comment) {
+  return (comment.children || []).reduce((count, child) => {
+    if (child.deleted_at) return count;
+    return count + 1 + countDeletableReplies(child);
+  }, 0);
+}
+
 export default function ForumComment({
   comment, depth, currentUserId, canEditOwn, canEditOthers, canDeleteOthers,
   token, replyingTo, toggleReplyTo, replyBody, setReplyBody, replyMentions,
@@ -25,6 +32,7 @@ export default function ForumComment({
   const isOwn = comment.author_id === currentUserId;
   const canEdit = !isRemoved && ((isOwn && canEditOwn) || canEditOthers);
   const canDelete = !isRemoved && (isOwn || canDeleteOthers);
+  const childReplyCount = countDeletableReplies(comment);
 
   async function saveEdit(event) {
     event.preventDefault();
@@ -126,9 +134,11 @@ export default function ForumComment({
               {canDelete && (
                 confirmingDelete ? (
                   <span className="forum-inline-confirm">
-                    Delete this reply and all replies beneath it?
+                    {childReplyCount > 0
+                      ? `Delete this reply and ${childReplyCount} ${childReplyCount === 1 ? "reply" : "replies"} beneath it?`
+                      : "Delete this reply?"}
                     <button onClick={() => deleteComment(comment.comment_id)}>
-                      Yes, delete all
+                      {childReplyCount > 0 ? "Yes, delete all" : "Yes, delete"}
                     </button>
                     <button onClick={() => setConfirmingDelete(false)}>Cancel</button>
                   </span>
