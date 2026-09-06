@@ -10,6 +10,7 @@ import MemberAvatar from "../../components/MemberAvatar";
 import ForumCategoryGlyph from "../../components/ForumCategoryGlyph";
 import ForumComment from "./ForumComment";
 import ForumPhotoGallery from "../../components/forumPhotos/ForumPhotoGallery";
+import ForumPoll from "../../components/forumPolls/ForumPoll";
 import PhotoUploader from "../../components/forumPhotos/PhotoUploader";
 import {
   discardPendingPhotos,
@@ -486,6 +487,15 @@ export default function ForumThread() {
             </div>
             <MentionText className="forum-thread-body" body={post.body} mentions={post.mentions} />
             <ForumPhotoGallery images={post.images} token={token} label={`Photo from ${post.author_username}`} />
+            {post.poll && (
+              <ForumPoll
+                initialPoll={post.poll}
+                postId={post.post_id}
+                token={token}
+                canManage={isAuthor || canModerate}
+                socket={socket}
+              />
+            )}
             {/* REACTION TRACE STEP 2A: This controls the reaction buttons shown
                 directly under the main forum post. `onReact` points to the
                 togglePostReaction() function above. This is where the prop gets

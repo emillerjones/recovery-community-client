@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import MemberAvatar from "../../components/MemberAvatar";
 import ForumPhotoGallery from "../../components/forumPhotos/ForumPhotoGallery";
+import ForumPoll from "../../components/forumPolls/ForumPoll";
 
 function timeAgo(value) {
   const seconds = Math.floor((Date.now() - new Date(value).getTime()) / 1000);
@@ -61,6 +62,14 @@ export default function ForumPostCard({ post, token }) {
         <h2>{post.title}</h2>
         <p>{post.body}</p>
         <ForumPhotoGallery images={post.images} token={token} compact label={`Photo from ${post.author_username}`} />
+        {post.poll && (
+          <ForumPoll
+            key={`${post.poll.poll_id}-${post.poll.updated_at}`}
+            initialPoll={post.poll}
+            postId={post.post_id}
+            token={token}
+          />
+        )}
       </div>
       <footer>
         <span>

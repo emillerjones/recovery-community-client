@@ -1,9 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { X } from "lucide-react";
+import { BarChart3, X } from "lucide-react";
 import MentionTextarea from "../../components/MentionTextarea";
 import MemberAvatar from "../../components/MemberAvatar";
 import PhotoUploader from "../../components/forumPhotos/PhotoUploader";
+import PollComposer from "../../components/forumPolls/PollComposer";
+import {
+  createPollDraft,
+  pollDraftToRequest,
+} from "../../components/forumPolls/pollDraft";
 import {
   discardPendingPhotos,
   photosReady,
@@ -23,7 +28,7 @@ export default function ForumComposerModal({
   onClose,
 }) {
   const navigate = useNavigate();
-  const [draft, setDraft] = useState({ title: "", body: "", tag_ids: [] });
+  const [draft, setDraft] = useState({ title: "", body: "", tag_ids: [], poll: null });
   const [draftMentions, setDraftMentions] = useState([]);
   const [photos, setPhotos] = useState([]);
   const [storedDraft, setStoredDraft] = useState(null);
@@ -36,14 +41,14 @@ export default function ForumComposerModal({
     return `forum-post-draft:${userId}:${postType}`;
   }, [composingAnnouncement, user?.id, user?.user_id]);
   const hasDraftContent = Boolean(
-    draft.title.trim() || draft.body.trim() || draft.tag_ids.length || photos.length
+    draft.title.trim() || draft.body.trim() || draft.tag_ids.length || draft.poll || photos.length
   );
 
   useEffect(() => {
     if (!open || !draftStorageKey || hasDraftContent) return;
     try {
       const stored = JSON.parse(localStorage.getItem(draftStorageKey));
-      if (!stored?.title?.trim() && !stored?.body?.trim() && !stored?.tag_ids?.length && !stored?.photos?.length) return;
+      if (!stored?.title?.trim() && !stored?.body?.trim() && !stored?.tag_ids?.length && !stored?.poll && !stored?.photos?.length) return;
       Promise.resolve().then(() => setStoredDraft(stored));
     } catch {
       localStorage.removeItem(draftStorageKey);
@@ -77,7 +82,7 @@ export default function ForumComposerModal({
   function discardDraft() {
     discardPendingPhotos(photos, token);
     if (draftStorageKey) localStorage.removeItem(draftStorageKey);
-    setDraft({ title: "", body: "", tag_ids: [] });
+    setDraft({ title: "", body: "", tag_ids: [], poll: null });
     setDraftMentions([]);
     setPhotos([]);
     setStoredDraft(null);
@@ -89,6 +94,7 @@ export default function ForumComposerModal({
       title: storedDraft.title || "",
       body: storedDraft.body || "",
       tag_ids: Array.isArray(storedDraft.tag_ids) ? storedDraft.tag_ids : [],
+      poll: storedDraft.poll && typeof storedDraft.poll === "object" ? storedDraft.poll : null,
     });
     setDraftMentions(Array.isArray(storedDraft.mentions) ? storedDraft.mentions : []);
     setPhotos(Array.isArray(storedDraft.photos) ? storedDraft.photos : []);
@@ -120,6 +126,13 @@ export default function ForumComposerModal({
     if (!categoryId) return setError("The forum needs a Main Forum category before posting.");
     if (!photosReady(photos)) return setError("Wait for every photo to finish uploading.");
 
+    let poll = null;
+    try {
+      poll = pollDraftToRequest(draft.poll);
+    } catch (pollError) {
+      return setError(pollError.message);
+    }
+
     setSubmitting(true);
     setError("");
     const response = await fetch(`${API}/api/forum/posts`, {
@@ -135,6 +148,7 @@ export default function ForumComposerModal({
         tag_ids: draft.tag_ids,
         mentioned_user_ids: draftMentions.map((member) => member.user_id),
         media_ids: readyMediaIds(photos),
+        poll,
       }),
     });
     const result = await response.json();
@@ -144,7 +158,7 @@ export default function ForumComposerModal({
     // CREATE POST TRACE STEP 6: The API returned PostgreSQL's new post_id, so
     // take the member directly to the thread they just created.
     if (draftStorageKey) localStorage.removeItem(draftStorageKey);
-    setDraft({ title: "", body: "", tag_ids: [] });
+    setDraft({ title: "", body: "", tag_ids: [], poll: null });
     setDraftMentions([]);
     setPhotos([]);
     navigate(`/forum/${result.post_id}`);
@@ -215,6 +229,21 @@ export default function ForumComposerModal({
               placeholder="You do not have to have the perfect words."
             />
           </label>
+          {draft.poll ? (
+            <PollComposer
+              value={draft.poll}
+              onChange={(poll) => setDraft((current) => ({ ...current, poll }))}
+              onRemove={() => setDraft((current) => ({ ...current, poll: null }))}
+            />
+          ) : (
+            <button
+              type="button"
+              className="forum-poll-add-button"
+              onClick={() => setDraft((current) => ({ ...current, poll: createPollDraft() }))}
+            >
+              <BarChart3 size={17} /> Add a poll
+            </button>
+          )}
           <PhotoUploader photos={photos} onChange={setPhotos} token={token} />
           <fieldset>
             <legend>Tags <small>Choose up to 3</small></legend>
