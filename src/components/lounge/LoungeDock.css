@@ -65,3 +65,7 @@
 @media (prefers-reduced-motion: reduce) {
   .lounge-panel { transition: none; }
 }
+
+@media (max-width: 1060px) {
+  .lounge-dock.lounge-dock--hide-mobile { display: none; }
+}

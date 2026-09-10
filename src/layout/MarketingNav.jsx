@@ -145,6 +145,7 @@ export default function MarketingNav({ onLogin, onRegister }) {
   const [navTextTheme, setNavTextTheme] = useState("light");
   const headerRef = useRef(null);
   const location = useLocation();
+  const isForumThread = /^\/forum\/[^/]+\/?$/.test(location.pathname);
   const visibleAdminLinks = ADMIN_LINKS.filter((link) => !link.ownerOnly || user?.role_id === 1);
   const loungeAvailable = ["/today", "/forum", "/messages", "/profile", "/admin"].some(
     (path) => location.pathname === path || location.pathname.startsWith(`${path}/`),
@@ -301,8 +302,8 @@ export default function MarketingNav({ onLogin, onRegister }) {
         {token ? (
           <>
             {loungeAvailable && (
-              <button type="button" className={`nav-online lounge-activity--${loungeActivity.level}`} onClick={openLounge}>
-                <Flame size={14} /> {loungeActivity.shortLabel}
+              <button type="button" className={`nav-online ${isForumThread ? "nav-online--thread" : ""} lounge-activity--${loungeActivity.level}`} onClick={openLounge} aria-label={`Open Community Lounge: ${loungeActivity.shortLabel}`}>
+                <Flame size={14} /><span>{loungeActivity.shortLabel}</span>
               </button>
             )}
             {user?.role_id <= 10 && (

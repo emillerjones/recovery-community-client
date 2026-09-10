@@ -13,7 +13,7 @@ function messageTime(value) {
   });
 }
 
-export default function LoungeDock() {
+export default function LoungeDock({ hideMobileLauncher = false }) {
   const { user } = useAuth();
   const {
     isOpen,
@@ -138,7 +138,7 @@ export default function LoungeDock() {
         </form>
       </aside>
 
-      {!isOpen && <button type="button" className={`lounge-dock lounge-activity--${activity.level}`} onClick={openLounge}>
+      {!isOpen && <button type="button" className={`lounge-dock lounge-activity--${activity.level} ${hideMobileLauncher ? "lounge-dock--hide-mobile" : ""}`} onClick={openLounge}>
         <span className="lounge-dock__icon"><Flame size={20} /></span>
         <span className="lounge-dock__copy">
           <strong>Community Lounge</strong>

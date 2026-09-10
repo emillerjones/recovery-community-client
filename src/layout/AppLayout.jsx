@@ -6,12 +6,13 @@ import LoungeDock from "../components/lounge/LoungeDock";
 export default function AppLayout() {
   const { pathname } = useLocation();
   const hideLoungeDock = pathname === "/messages" || pathname.startsWith("/messages/");
+  const isForumThread = /^\/forum\/[^/]+\/?$/.test(pathname);
 
   return (
     <>
       <MarketingNav />
       <Outlet />
-      {!hideLoungeDock && <LoungeDock />}
+      {!hideLoungeDock && <LoungeDock hideMobileLauncher={isForumThread} />}
     </>
   );
 }
