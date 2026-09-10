@@ -1,6 +1,5 @@
 import { Navigate, Routes, Route } from "react-router-dom";
 import Home from "./pages/marketing/Home";
-import Home3 from "./pages/marketing/Home3";
 import Community from "./pages/marketing/Community";
 import DiscountLinks from "./pages/marketing/DiscountLinks";
 import Guidelines from "./pages/marketing/Guidelines";
@@ -19,7 +18,6 @@ import RequireRole from "./components/RequireRole";
 import MarketingLayout from "./layout/MarketingLayout";
 import AppLayout from "./layout/AppLayout";
 import Resources from "./pages/marketing/Resources";
-import Resources2 from "./pages/marketing/Resources2";
 import FAQ from "./pages/marketing/FAQ";
 import Privacy from "./pages/marketing/Privacy";
 import Forum from "./pages/forum/Forum";
@@ -49,7 +47,7 @@ export default function App() {
       {/* Marketing/logged-out routes — transparent hero nav */}
       <Route path="/" element={<MarketingLayout />}>
         <Route index element={<Home />} />
-        <Route path="home3" element={<Home3 />} />
+        <Route path="home3" element={<Navigate to="/" replace />} />
         {/* Direct /login visits show the homepage behind the login drawer. */}
         <Route path="login" element={<Home />} />
         <Route path="stories" element={<Stories />} />
@@ -62,7 +60,7 @@ export default function App() {
         <Route path="about" element={<Navigate to="/" replace />} />
         <Route path="about2" element={<Navigate to="/" replace />} />
         <Route path="resources" element={<Resources />} />
-        <Route path="resources2" element={<Resources2 />} />
+        <Route path="resources2" element={<Navigate to="/resources" replace />} />
         <Route path="faq" element={<FAQ />} />
         <Route path="faq2" element={<Navigate to="/faq" replace />} />
         <Route path="privacy" element={<Privacy />} />

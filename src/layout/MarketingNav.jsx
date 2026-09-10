@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { BadgePercent, BarChart3, BookHeart, BookOpen, ChevronRight, CircleHelp, FilePenLine, Flag, Flame, Heart, HeartHandshake, LayoutGrid, LogOut, Mail, MessageCircle, ScrollText, ShieldCheck, ShoppingBag, UserCheck, UsersRound } from "lucide-react";
+import { BadgePercent, BarChart3, BookHeart, BookOpen, ChevronRight, CircleHelp, FilePenLine, Flag, Flame, Heart, LayoutGrid, LogOut, Mail, MessageCircle, ScrollText, ShieldCheck, ShoppingBag, UserCheck, UsersRound } from "lucide-react";
 import { useAuth } from "../auth/AuthContext";
 import NotificationBell from "../components/NotificationBell";
 import MessagesBell from "../components/MessagesBell";
@@ -26,7 +26,6 @@ const COMMUNITY_LINKS = [
 
 const LEARN_LINKS = [
   { to: "/resources", label: "Resources", description: "Practical recovery information", icon: BookOpen },
-  { to: "/resources2", label: "Resources 2 Preview", description: "Preview the curated recovery library", icon: BookOpen },
   { to: "/faq", label: "FAQ", description: "Answers to common questions", icon: CircleHelp },
   { to: "/privacy", label: "Privacy", description: "How we handle and protect your information", icon: ShieldCheck },
 ];
@@ -38,7 +37,6 @@ const SUPPORT_LINKS = [
 ];
 
 const ABOUT_LINKS = [
-  { to: "/home3", label: "Home 3 Preview", description: "Preview the logo-led homepage", icon: HeartHandshake },
   { to: "/mystory", label: "My Story", description: "Lainie Ruth's personal journey", icon: BookHeart },
   { to: "/contact", label: "Contact Us", description: "Reach the organization", icon: Mail },
 ];
@@ -245,7 +243,7 @@ export default function MarketingNav({ onLogin, onRegister }) {
     window.location.href = "/";
   }
 
-  const hidesAtTopOnMobile = ["/", "/home3"].includes(location.pathname);
+  const hidesAtTopOnMobile = location.pathname === "/";
 
   const headerClass = [
     "site-header",

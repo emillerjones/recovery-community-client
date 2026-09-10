@@ -11,7 +11,6 @@ function pageKeyFor(pathname) {
 
   return {
     "/": "home",
-    "/home3": "home",
     "/login": "login",
     "/register": "register",
     "/verify-email": "verify_email",
@@ -23,7 +22,6 @@ function pageKeyFor(pathname) {
     "/contact": "contact",
     "/discountlinks": "discount_links",
     "/resources": "resources",
-    "/resources2": "resources",
     "/faq": "faq",
     "/privacy": "privacy",
     "/forum": "forum",
