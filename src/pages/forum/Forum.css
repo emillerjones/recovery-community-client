@@ -1,4 +1,9 @@
 :root { --forum-feed-ink:#1e2a22; --forum-feed-green:#294634; --forum-feed-sage:#e8eee5; --forum-feed-cream:#f5f2e9; --forum-feed-gold:#ae7e32; --forum-feed-line:rgba(30,42,34,.11); --forum-feed-muted:#6e786f; }
+/* Keep long links and member text from widening the post grid. */
+.forum-feed-feed { grid-template-columns:minmax(0,1fr); }
+.forum-feed-card { min-width:0; overflow-wrap:anywhere; }
+.forum-feed-card__author > div { min-width:0; }
+.forum-feed-card footer { flex-wrap:wrap; }
 .forum-feed-page { min-height:100vh; padding:112px 4vw 80px; background:linear-gradient(180deg,#f1f3ed 0,#faf9f5 360px); color:var(--forum-feed-ink); font-family:Inter,sans-serif; }
 .forum-feed-eyebrow { margin:0 0 8px; color:#708072; font-size:10px; font-weight:800; letter-spacing:.16em; text-transform:uppercase; }
 .forum-feed-login-welcome { position:fixed; z-index:500; top:86px; left:50%; display:flex; gap:8px; align-items:center; padding:10px 16px; border-radius:999px; background:var(--forum-feed-green); color:white; transform:translateX(-50%); box-shadow:0 12px 30px rgba(30,50,37,.2); }
