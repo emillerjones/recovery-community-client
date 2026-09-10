@@ -9,6 +9,7 @@ import MentionTextarea from "../../components/MentionTextarea";
 import MemberAvatar from "../../components/MemberAvatar";
 import ForumCategoryGlyph from "../../components/ForumCategoryGlyph";
 import ForumComment from "./ForumComment";
+import PostEditHistory from "./PostEditHistory";
 import ForumPhotoGallery from "../../components/forumPhotos/ForumPhotoGallery";
 import ForumPoll from "../../components/forumPolls/ForumPoll";
 import PhotoUploader from "../../components/forumPhotos/PhotoUploader";
@@ -80,7 +81,7 @@ export default function ForumThread() {
   const canEditOthers = user?.role_id === 1;
   const canDeleteOthers = user?.role_id <= 10;
   const isAuthor = post?.author_id === user?.id;
-  const canEditPost = (isAuthor && canEditOwn) || canEditOthers;
+  const canEditPost = isAuthor || canEditOthers;
 
   // Run when the thread page first loads, then reload if the post ID
   // or logged-in user's authentication changes.
@@ -470,6 +471,7 @@ export default function ForumThread() {
 
         {editingPost ? (
           <form className="forum-edit-post-form" onSubmit={saveEditedPost}>
+            <p>Previous titles and text remain visible to members in edit history.</p>
             <input required maxLength={180} value={postDraft.title} onChange={(e) => setPostDraft({ ...postDraft, title: e.target.value })} />
             <textarea required rows={8} value={postDraft.body} onChange={(e) => setPostDraft({ ...postDraft, body: e.target.value })} />
             {error && <p className="forum-error" role="alert">{error}</p>}
@@ -485,6 +487,7 @@ export default function ForumThread() {
               <MemberAvatar className="forum-avatar" username={post.author_username} avatarUrl={post.author_avatar_url} size={42} />
               <div><strong>{post.author_username}</strong><span>{formatDate(post.created_at)}{editedLabel(post) && <b className="forum-edited-label" title={`Last edited ${formatDate(post.content_edited_at)}`}>{editedLabel(post)}</b>}</span></div>
             </div>
+            {post.content_edited_at && <PostEditHistory key={`${post.post_id}:${post.content_edited_at}`} postId={post.post_id} token={token} />}
             <MentionText className="forum-thread-body" body={post.body} mentions={post.mentions} />
             <ForumPhotoGallery images={post.images} token={token} label={`Photo from ${post.author_username}`} />
             {post.poll && (
