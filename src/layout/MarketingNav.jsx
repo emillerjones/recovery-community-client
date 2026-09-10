@@ -14,9 +14,13 @@ const HOME_LINKS = [
   { to: "/", label: "Home" },
 ];
 
+const FORUM_LINKS = [
+  { to: "/forum", label: "Forum", description: "Connect with the support group", icon: MessageCircle },
+  { to: "/guidelines", label: "Guidelines", description: "Shared values and community guidelines", icon: ScrollText },
+];
+
 const COMMUNITY_LINKS = [
   { to: "/community", label: "Inside the Community", description: "Meet the mission and member space", icon: UsersRound },
-  { to: "/guidelines", label: "Guidelines", description: "Shared values and community guidelines", icon: ScrollText },
   { to: "/stories", label: "Stories", description: "Member experiences and recovery stories", icon: BookHeart },
 ];
 
@@ -41,7 +45,7 @@ const ABOUT_LINKS = [
 
 
 
-const ALL_LINKS = [...HOME_LINKS, ...COMMUNITY_LINKS, ...LEARN_LINKS, ...SUPPORT_LINKS, ...ABOUT_LINKS];
+const ALL_LINKS = [...HOME_LINKS, ...FORUM_LINKS, ...COMMUNITY_LINKS, ...LEARN_LINKS, ...SUPPORT_LINKS, ...ABOUT_LINKS];
 
 const ROLE_LABELS = {
   1: "Owner",
@@ -60,6 +64,7 @@ const ADMIN_LINKS = [
 ];
 
 const MOBILE_EXPLORE_GROUPS = [
+  { label: "Support Group Forum", links: FORUM_LINKS },
   { label: "Community", links: COMMUNITY_LINKS },
   { label: "Learn", links: LEARN_LINKS },
   { label: "Support", links: SUPPORT_LINKS },
@@ -67,6 +72,7 @@ const MOBILE_EXPLORE_GROUPS = [
 ];
 
 const MEMBER_MORE_GROUPS = [
+  { label: "Support Group Forum", links: FORUM_LINKS },
   { label: "Community", links: COMMUNITY_LINKS },
   { label: "Help and information", links: [...LEARN_LINKS.filter((link) => link.to !== "/resources"), ABOUT_LINKS.find((link) => link.to === "/contact")] },
   { label: "Support the mission", links: SUPPORT_LINKS },
@@ -219,6 +225,15 @@ export default function MarketingNav({ onLogin, onRegister }) {
     onLogin?.();
   }
 
+  function handleExploreNavigation(event) {
+    if (!token && event.currentTarget.getAttribute("href") === "/forum") {
+      event.preventDefault();
+      handleLogin();
+      return;
+    }
+    closeMenu();
+  }
+
   function handleRegister() {
     closeMenu();
     onRegister?.();
@@ -275,6 +290,7 @@ export default function MarketingNav({ onLogin, onRegister }) {
           </>
         ) : (
           <>
+            <NavDropdown label="Support Group Forum" links={FORUM_LINKS} closeMenu={handleExploreNavigation} />
             <NavDropdown label="Community" links={COMMUNITY_LINKS} closeMenu={closeMenu} />
             <NavDropdown label="Learn" links={LEARN_LINKS} closeMenu={closeMenu} />
             <NavDropdown label="Support" links={SUPPORT_LINKS} closeMenu={closeMenu} />
@@ -373,12 +389,12 @@ export default function MarketingNav({ onLogin, onRegister }) {
 
           <section className="mobile-nav__explore" aria-label="Explore the website">
             <span className="mobile-nav__eyebrow">Explore the website</span>
-            <NavLink to="/" className="mobile-nav__explore-home" onClick={closeMenu}>Home<ChevronRight size={18} /></NavLink>
+            <NavLink to="/" className="mobile-nav__explore-home" onClick={closeMenu}>Home</NavLink>
             {MOBILE_EXPLORE_GROUPS.map((group) => {
               const isOpen = mobileExpanded === group.label;
               return <div className={`mobile-nav__explore-group ${isOpen ? "is-open" : ""}`} key={group.label}>
                 <button type="button" onClick={() => setMobileExpanded((current) => current === group.label ? null : group.label)} aria-expanded={isOpen}>{group.label}<ChevronRight size={18} /></button>
-                {isOpen && <div>{group.links.map((link) => <NavigationLink key={link.to} link={link} onClick={closeMenu}>{link.label}</NavigationLink>)}</div>}
+                {isOpen && <div>{group.links.map((link) => <NavigationLink key={link.to} link={link} onClick={handleExploreNavigation}>{link.label}</NavigationLink>)}</div>}
               </div>;
             })}
           </section>
