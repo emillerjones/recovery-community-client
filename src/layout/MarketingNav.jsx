@@ -65,7 +65,7 @@ const MOBILE_EXPLORE_GROUPS = [
   { label: "Support Group Forum", links: FORUM_LINKS },
   { label: "Community", links: COMMUNITY_LINKS },
   { label: "Learn", links: LEARN_LINKS },
-  { label: "Support", links: SUPPORT_LINKS },
+  { label: "Support Us", links: SUPPORT_LINKS },
   { label: "About", links: ABOUT_LINKS },
 ];
 
@@ -292,7 +292,7 @@ export default function MarketingNav({ onLogin, onRegister }) {
             <NavDropdown label="Support Group Forum" links={FORUM_LINKS} closeMenu={handleExploreNavigation} />
             <NavDropdown label="Community" links={COMMUNITY_LINKS} closeMenu={closeMenu} />
             <NavDropdown label="Learn" links={LEARN_LINKS} closeMenu={closeMenu} />
-            <NavDropdown label="Support" links={SUPPORT_LINKS} closeMenu={closeMenu} />
+            <NavDropdown label="Support Us" links={SUPPORT_LINKS} closeMenu={closeMenu} />
             <NavDropdown label="About" links={ABOUT_LINKS} closeMenu={closeMenu} />
           </>
         )}
