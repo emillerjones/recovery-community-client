@@ -73,7 +73,7 @@ const MEMBER_MORE_GROUPS = [
   { label: "Support Group Forum", links: FORUM_LINKS },
   { label: "Community", links: COMMUNITY_LINKS },
   { label: "Help and information", links: [...LEARN_LINKS.filter((link) => link.to !== "/resources"), ABOUT_LINKS.find((link) => link.to === "/contact")] },
-  { label: "Support the mission", links: SUPPORT_LINKS },
+  { label: "Support Us", links: SUPPORT_LINKS },
   { label: "About", links: ABOUT_LINKS.filter((link) => link.to !== "/contact") },
 ];
 
