@@ -1,6 +1,7 @@
 import MarketingNav from "./MarketingNav";
 import { Outlet, useLocation } from "react-router-dom";
 import LoungeDock from "../components/lounge/LoungeDock";
+import StaffChatLauncher from "../components/staffChat/StaffChatLauncher";
 
 /** Layout for logged-in pages using the shared site navigation. */
 export default function AppLayout() {
@@ -13,6 +14,7 @@ export default function AppLayout() {
       <MarketingNav />
       <Outlet />
       {!hideLoungeDock && <LoungeDock hideMobileLauncher={isForumThread} />}
+      {!hideLoungeDock && <StaffChatLauncher hideMobileLauncher={isForumThread} />}
     </>
   );
 }

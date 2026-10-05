@@ -6,6 +6,7 @@ import NotificationBell from "../components/NotificationBell";
 import MessagesBell from "../components/MessagesBell";
 import MemberAvatar from "../components/MemberAvatar";
 import { useLounge } from "../contexts/LoungeContext";
+import { useStaffChat } from "../contexts/StaffChatContext";
 import { getLoungeActivity } from "../utils/loungeActivity";
 import logo from "../assets/icons/logo.png";
 import "./MarketingNav.css";
@@ -137,6 +138,7 @@ function MemberMoreDropdown({ closeMenu }) {
 
 export default function MarketingNav({ onLogin, onRegister }) {
   const { token, logout, user } = useAuth();
+  const { canAccess: canUseStaffChat, openStaffChat } = useStaffChat();
   const { status: loungeStatus, openLounge } = useLounge();
   const loungeActivity = getLoungeActivity(loungeStatus);
   const [scrolled, setScrolled] = useState(false);
@@ -320,6 +322,7 @@ export default function MarketingNav({ onLogin, onRegister }) {
               <div className="nav-account__panel main-nav__dropdown-panel">
                 <div className="nav-account__summary"><strong>{user?.username}</strong><small>{ROLE_LABELS[user?.role_id] || "Member"}</small></div>
                 <NavLink to="/profile" onClick={closeMenu}>My profile</NavLink>
+                {canUseStaffChat && <button type="button" onClick={() => { closeMenu(); openStaffChat(); }}><ShieldCheck size={15} /> Staff Chat</button>}
                 <button type="button" onClick={handleLogout}><LogOut size={15} /> Log out</button>
               </div>
             </div>
@@ -370,6 +373,12 @@ export default function MarketingNav({ onLogin, onRegister }) {
                   <ChevronRight size={18} />
                 </button>
               )}
+
+              {canUseStaffChat && <button type="button" className="mobile-nav__lounge" onClick={() => { closeMenu(); openStaffChat(); }}>
+                <span><ShieldCheck size={13} /> Staff only</span>
+                <strong>Open Staff Chat</strong>
+                <ChevronRight size={18} />
+              </button>}
 
               {user?.role_id <= 10 && (
                 <section className={`mobile-nav__admin ${mobileExpanded === "Admin" ? "is-open" : ""}`}>
