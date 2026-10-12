@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, Bell, Flag, Lock, Pencil, Pin, Send, ShieldCheck, Trash2 } from "lucide-react";
 import { useAuth } from "../../auth/AuthContext";
 import { useNotifications } from "../../contexts/NotificationsContext";
+import { useStaffChat } from "../../contexts/StaffChatContext";
 import ReactionBar from "../../components/ReactionBar";
 import MentionText from "../../components/MentionText";
 import MentionTextarea from "../../components/MentionTextarea";
@@ -58,6 +59,7 @@ export default function ForumThread() {
   const { postId } = useParams();
   const { token, user } = useAuth();
   const { socket } = useNotifications();
+  const { refreshAnnouncementsUnread } = useStaffChat() || {};
   const navigate = useNavigate();
   const location = useLocation();
   const [post, setPost] = useState(null);
@@ -94,14 +96,18 @@ export default function ForumThread() {
     return result;
   }, [headers, postId]);
 
-  const markThreadRead = useCallback(() => {
+  const markThreadRead = useCallback((readPost) => {
     // READ TRACE STEP 1: Once the member can see this thread, tell the server
     // to save their latest read point. Continue at PATCH /posts/:id/read.
     fetch(`${API}/api/forum/posts/${postId}/read`, {
       method: "PATCH",
       headers,
-    }).catch(() => {});
-  }, [headers, postId]);
+    })
+      .then(() => {
+        if (readPost?.category_slug === "staff-announcements") refreshAnnouncementsUnread?.();
+      })
+      .catch(() => {});
+  }, [headers, postId, refreshAnnouncementsUnread]);
 
   useEffect(() => {
     let cancelled = false;
@@ -111,7 +117,7 @@ export default function ForumThread() {
         setPost(result.post);
         setComments(result.comments);
         setLoading(false);
-        markThreadRead();
+        markThreadRead(result.post);
       })
       .catch((err) => {
         if (cancelled) return;

@@ -4,6 +4,7 @@ import { BadgePercent, BarChart3, BookHeart, BookOpen, ChevronRight, CircleHelp,
 import { useAuth } from "../auth/AuthContext";
 import NotificationBell from "../components/NotificationBell";
 import MessagesBell from "../components/MessagesBell";
+import StaffBell from "../components/StaffBell";
 import MemberAvatar from "../components/MemberAvatar";
 import { useLounge } from "../contexts/LoungeContext";
 import { useStaffChat } from "../contexts/StaffChatContext";
@@ -138,7 +139,7 @@ function MemberMoreDropdown({ closeMenu }) {
 
 export default function MarketingNav({ onLogin, onRegister }) {
   const { token, logout, user } = useAuth();
-  const { canAccess: canUseStaffChat, openStaffChat } = useStaffChat();
+  const { canAccess: canUseStaffChat, openStaffChat, chatUnread, announcementsUnread } = useStaffChat();
   const { status: loungeStatus, openLounge } = useLounge();
   const loungeActivity = getLoungeActivity(loungeStatus);
   const [scrolled, setScrolled] = useState(false);
@@ -313,6 +314,7 @@ export default function MarketingNav({ onLogin, onRegister }) {
             )}
             <MessagesBell />
             <NotificationBell />
+            {canUseStaffChat && <StaffBell />}
             <div className="nav-account main-nav__dropdown main-nav__dropdown--right">
               <button type="button" className="nav-account__trigger" aria-haspopup="true" aria-label={`Account menu for ${user?.username}`}>
                 <MemberAvatar className="nav-identity__avatar" username={user?.username} avatarUrl={user?.avatar_url} size={34} />
@@ -376,9 +378,15 @@ export default function MarketingNav({ onLogin, onRegister }) {
 
               {canUseStaffChat && <button type="button" className="mobile-nav__lounge" onClick={() => { closeMenu(); openStaffChat(); }}>
                 <span><ShieldCheck size={13} /> Staff only</span>
-                <strong>Open Staff Chat</strong>
+                <strong>Open Staff Chat{chatUnread > 0 ? ` · ${chatUnread} new` : ""}</strong>
                 <ChevronRight size={18} />
               </button>}
+
+              {canUseStaffChat && <NavLink to="/forum?view=staff" className="mobile-nav__lounge" onClick={closeMenu}>
+                <span><ShieldCheck size={13} /> Staff only</span>
+                <strong>Staff Announcements{announcementsUnread > 0 ? ` · ${announcementsUnread} new` : ""}</strong>
+                <ChevronRight size={18} />
+              </NavLink>}
 
               {user?.role_id <= 10 && (
                 <section className={`mobile-nav__admin ${mobileExpanded === "Admin" ? "is-open" : ""}`}>
