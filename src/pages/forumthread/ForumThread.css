@@ -616,6 +616,7 @@
 .forum-persistent-reply .forum-error { margin: 7px 4px 0; }
 
 body:has(.forum-persistent-reply) .lounge-dock { bottom: calc(84px + env(safe-area-inset-bottom)); }
+body:has(.forum-persistent-reply) .staff-chat-launcher { bottom: calc(170px + env(safe-area-inset-bottom)); }
 
 @media (max-width: 1100px) {
   .forum-layout { grid-template-columns: minmax(0, 1fr); }
