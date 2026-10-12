@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, MessageSquarePlus, Search, Send, X } from "lucide-react";
 import { useAuth } from "../auth/AuthContext";
@@ -45,6 +45,7 @@ export default function Messages() {
   const [draft, setDraft] = useState("");
   const [photoDraft, setPhotoDraft] = useState({ conversationId: null, photos: [] });
   const latestPhotoDraft = useRef(photoDraft);
+  const messagesListRef = useRef(null);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
 
@@ -160,6 +161,12 @@ export default function Messages() {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [socket, conversationId]);
+
+  useLayoutEffect(() => {
+    const list = messagesListRef.current;
+    if (!list) return;
+    list.scrollTop = list.scrollHeight;
+  }, [messages, conversationId]);
 
   async function sendMessage(event) {
     event.preventDefault();
@@ -294,7 +301,7 @@ export default function Messages() {
                 <strong>{activeConversation?.other_username || "Conversation"}</strong>
               </div>
 
-              <div className="dm-messages">
+              <div className="dm-messages" ref={messagesListRef}>
                 {loadingThread && <div className="dm-empty">Loading…</div>}
                 {!loadingThread &&
                   messages.map((message) => (
