@@ -1,9 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import { Link, useOutletContext } from "react-router-dom";
 import { LEARN_GROUPS } from "./resourceData";
 import "./Resources.css";
-
-const CONTACT_EMAIL = "recoverywiththeexitdrug@gmail.com";
 
 /**
  * Resources page.
@@ -59,6 +57,14 @@ function CompassIcon() {
         strokeWidth="1.4"
         strokeLinejoin="round"
       />
+    </svg>
+  );
+}
+function PlusIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none">
+      <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.6" />
+      <path d="M12 8v8M8 12h8" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
     </svg>
   );
 }
@@ -307,17 +313,28 @@ export default function Resources() {
           </div>
           <p className="resources-intro">
             We're rebuilding this directory of independent organizations —
-            not part of Recovery With The Exit Drug — and want to make sure
-            it stays current. Know a group worth including?
+            not part of Recovery With The Exit Drug — to make sure it
+            stays current and accurate.
           </p>
 
           <div className="resources-support-empty">
-            <a
-              href={`mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent("Submit an Organization as a Resource")}`}
-              className="resources-support-empty__button"
-            >
-              Submit Organization as a Resource
-            </a>
+            <span className="resources-support-empty__icon" aria-hidden="true"><PlusIcon /></span>
+            <h3 className="resources-support-empty__title">Know an organization worth including?</h3>
+            <p className="resources-support-empty__note">
+              Tell us about it and we'll take a look.
+            </p>
+            <Link to="/contact?reason=suggest-a-resource" className="resources-support-empty__button">
+              Submit a Resource
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path
+                  d="M3 8h10M9 4l4 4-4 4"
+                  stroke="currentColor"
+                  strokeWidth="1.4"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </Link>
           </div>
         </div>
       </section>

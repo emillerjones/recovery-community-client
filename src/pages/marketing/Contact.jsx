@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { flushSync } from "react-dom";
-import { Link, useOutletContext } from "react-router-dom";
+import { Link, useOutletContext, useSearchParams } from "react-router-dom";
 import { FaFacebookF, FaInstagram } from "react-icons/fa";
 import { FiCompass, FiSend, FiUsers } from "react-icons/fi";
 import "./Contact.css";
@@ -12,10 +12,17 @@ const REASONS = [
   "General questions",
   "Recovery support, not crisis support",
   "Share a success story",
+  "Suggest a resource",
   "Partnership opportunities",
   "Media or speaking inquiries",
   "Website or account help",
 ];
+
+// Lets other pages deep-link into a preselected reason, e.g. the
+// Resources page's "Submit a Resource" button uses ?reason=suggest-a-resource.
+const REASON_SLUGS = {
+  "suggest-a-resource": "Suggest a resource",
+};
 
 function withViewTransition(update) {
   if (typeof document !== "undefined" && document.startViewTransition) {
@@ -27,10 +34,11 @@ function withViewTransition(update) {
 
 export default function Contact() {
   const { onRegister } = useOutletContext();
+  const [searchParams] = useSearchParams();
   const [form, setForm] = useState({
     name: "",
     email: "",
-    reason: "",
+    reason: REASON_SLUGS[searchParams.get("reason")] || "",
     message: "",
     website: "",
   });
