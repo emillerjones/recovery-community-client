@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { useOutletContext } from "react-router-dom";
-import { LEARN_GROUPS, ORGANIZATIONS } from "./resourceData";
+import { LEARN_GROUPS } from "./resourceData";
 import "./Resources.css";
+
+const CONTACT_EMAIL = "recoverywiththeexitdrug@gmail.com";
 
 /**
  * Resources page.
@@ -304,29 +306,18 @@ export default function Resources() {
             Find Support
           </div>
           <p className="resources-intro">
-            These are independent organizations, not part of Recovery
-            With The Exit Drug. We're sharing them because members have
-            found them useful — not as a guarantee or medical
-            endorsement. Always do your own research.
+            We're rebuilding this directory of independent organizations —
+            not part of Recovery With The Exit Drug — and want to make sure
+            it stays current. Know a group worth including?
           </p>
 
-          <div className="org-list">
-            {ORGANIZATIONS.map((org, index) => (
-              <div className="org-card" key={org.name}>
-                <span className="resources-org-number">0{index + 1}</span>
-                <div className="org-card__header">
-                  <h3 className="org-card__name">{org.name}</h3>
-                  <span className="org-card__type">{org.type}</span>
-                </div>
-                <details className="org-card__details">
-                  <summary>Read their description</summary>
-                  <blockquote className="org-card__quote">“{org.quote}”</blockquote>
-                </details>
-                <a href={org.url} className="org-card__link" target="_blank" rel="noreferrer">
-                  Visit site →
-                </a>
-              </div>
-            ))}
+          <div className="resources-support-empty">
+            <a
+              href={`mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent("Submit an Organization as a Resource")}`}
+              className="resources-support-empty__button"
+            >
+              Submit Organization as a Resource
+            </a>
           </div>
         </div>
       </section>
