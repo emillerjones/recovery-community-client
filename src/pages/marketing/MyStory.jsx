@@ -1,245 +1,40 @@
-import { useEffect, useRef, useState } from "react";
 import "./MyStory.css";
-import heroPhoto from "../../assets/images/mystory.jpg";
-
-// PLACEHOLDER COPY — replace with Lainie's real story. Tone is intentionally
-// silly/joking per request until real content is provided.
-
-const AUTO_SCROLL_DELAY_MS = 1800;
-const AUTO_SCROLL_SPEED = 12;
-const SCROLL_KEYS = new Set(["ArrowDown", "ArrowUp", "PageDown", "PageUp", "Home", "End", " "]);
 
 export default function MyStory() {
-  const pageRef = useRef(null);
-  const autoStartTimerRef = useRef(null);
-  const [autoReading, setAutoReading] = useState(false);
-
-  useEffect(() => {
-    const page = pageRef.current;
-    if (!page) return undefined;
-
-    const marks = page.querySelectorAll(".mystory-chapter-mark");
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    if (reducedMotion || !("IntersectionObserver" in window)) {
-      marks.forEach((mark) => mark.classList.add("is-in"));
-      return undefined;
-    }
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
-          entry.target.classList.add("is-in");
-          observer.unobserve(entry.target);
-        });
-      },
-      { threshold: 0.4 }
-    );
-
-    marks.forEach((mark) => observer.observe(mark));
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    function cancelPendingStart() {
-      window.clearTimeout(autoStartTimerRef.current);
-      autoStartTimerRef.current = null;
-    }
-
-    function pauseForUserInput(event) {
-      if (event.target?.closest?.(".mystory-auto-read")) return;
-      if (event.type === "keydown" && !SCROLL_KEYS.has(event.key)) return;
-      cancelPendingStart();
-      setAutoReading(false);
-    }
-
-    if (!reducedMotion) {
-      autoStartTimerRef.current = window.setTimeout(() => {
-        setAutoReading(true);
-        autoStartTimerRef.current = null;
-      }, AUTO_SCROLL_DELAY_MS);
-    }
-
-    window.addEventListener("wheel", pauseForUserInput, { passive: true });
-    window.addEventListener("touchstart", pauseForUserInput, { passive: true });
-    window.addEventListener("pointerdown", pauseForUserInput);
-    window.addEventListener("keydown", pauseForUserInput);
-
-    return () => {
-      cancelPendingStart();
-      window.removeEventListener("wheel", pauseForUserInput);
-      window.removeEventListener("touchstart", pauseForUserInput);
-      window.removeEventListener("pointerdown", pauseForUserInput);
-      window.removeEventListener("keydown", pauseForUserInput);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!autoReading) return undefined;
-
-    let frameId;
-    let previousTime;
-
-    function advance(timestamp) {
-      if (previousTime !== undefined) {
-        const elapsedSeconds = Math.min((timestamp - previousTime) / 1000, 0.05);
-        const scrollLimit = document.documentElement.scrollHeight - window.innerHeight;
-
-        if (window.scrollY >= scrollLimit - 2) {
-          setAutoReading(false);
-          return;
-        }
-
-        window.scrollBy(0, AUTO_SCROLL_SPEED * elapsedSeconds);
-      }
-
-      previousTime = timestamp;
-      frameId = window.requestAnimationFrame(advance);
-    }
-
-    frameId = window.requestAnimationFrame(advance);
-    return () => window.cancelAnimationFrame(frameId);
-  }, [autoReading]);
-
-  function toggleAutoReading() {
-    window.clearTimeout(autoStartTimerRef.current);
-    autoStartTimerRef.current = null;
-    setAutoReading((reading) => !reading);
-  }
-
   return (
-    <>
-      <div className="mystory mystory-study" data-nav-theme="light" ref={pageRef}>
-        <div
-          className="mystory-hero__photo"
-          style={{ backgroundImage: `url(${heroPhoto})` }}
-        />
+    <main className="mystory">
+      <section className="mystory__hero" data-nav-theme="light">
+        <p className="mystory__kicker">From our founder</p>
+        <h1>Our Story</h1>
+      </section>
 
-        <span className="mystory__eyebrow">The 100% real actual story, no ai</span>
+      <article className="mystory__content">
+        <section className="mystory__section">
+          <h2>Pioneering Cannabis-Inclusive Recovery Since 2013</h2>
+          <p>Almost 15 years ago, our founder, Lainie Ruth, also known online as @thesoberstoner420, recognized a significant gap in addiction recovery: the lack of accessible, alternative support communities for people living with substance use disorder. Long before movements like cali-sober, sober-curious, alcohol-free and harm-reduction approaches entered the mainstream conversation, many people were left with no other choice but to navigate a treatment landscape dominated by traditional 12-step programs and abstinence-based models.</p>
+          <p>Lainie’s journey through recovery began at just 15 years old. Following an almost fatal drunk driving accident, she underwent a two-week psychiatric hospitalization, 45 days of inpatient treatment and a six-week intensive outpatient program. Throughout the remainder of her adolescence, she would attend countless other treatment programs and individual therapies which continually reinforced the belief that recovery could only be achieved by embracing the Big Book culture, working the 12-steps and maintaining abstinence from all mind-altering substances.</p>
+          <p>Lainie then immersed herself in Alcoholics Anonymous (AA), Cocaine Anonymous (CA), and Narcotics Anonymous (NA). Her commitment extended far beyond attending meetings. Before the age of 18, she acted as a sponsor for many young women, served as a Group Service Representative for a large Cocaine Anonymous meeting and volunteered for numerous sober community events. She was wholeheartedly committed to her healing and fully trusted the traditional recovery practices she had been taught.</p>
+          <p>Despite her dedication, after a few years of sobriety, Lainie went through a devastating relapse that resulted in an accidental overdose. This experience became a pivotal turning point in her understanding of recovery. Like many people navigating substance use disorder, Lainie was also living with co-occurring mental and physical health conditions. She struggled with severe major depression, PTSD, panic disorder and chronic pain resulting from significant childhood trauma and a career-ending soccer injury to her spine. Besides addressing her substance use disorder, she realized that focusing on her other health conditions was essential to her overall well-being. For these conditions, she became mindful of the importance of individualized care and medication-assisted-treatment.</p>
+          <p>However, alternative and medicinal therapies are often met with stigma or resistance in traditional recovery communities. For Lainie, this raised an important question: how can recovery be sustainable when people are discouraged from exploring treatments that address the underlying causes of their substance use or pursuing nontraditional approaches that work better for them?</p>
+          <p>She believed people deserved the freedom to seek appropriate care for their mental and physical health without having their recovery questioned or invalidated. This conviction became the foundation for something new.</p>
+        </section>
 
-        <h1 className="mystory__title">
-          Listen
-          <br />
-          <span>to my story.</span>
-        </h1>
+        <section className="mystory__section">
+          <h2>The Beginning of Recovery with The Exit Drug</h2>
+          <p>In 2013, Lainie launched a Facebook group called “Marijuana Maintenance Recovery” which later was named “Maintaining My Recovery with Cannabis.” She created this group because of her personal journey with responsible cannabis use while still being in recovery from the substances that caused her significant harm. What began as a small community of just a handful of members gradually grew through word of mouth, mutual connections, and people searching online for information about “marijuana maintenance”. Many years before “cali-sober” became a widely recognized term, “marijuana maintenance” was an earlier term used by members in traditional recovery communities to describe individuals who secretly used cannabis to manage health conditions to sustain their long-term recovery.</p>
+          <p>The name now, Recovery with The Exit Drug, is inspired by the newer term “exit-drug”, which emerged as a counterpoint to the “gateway-drug” theory, which suggests that cannabis use leads to the use of harder drugs. Yet, scientific studies along with personal experiences report that using cannabis actually helps reduce reliance on harder substances that carry greater risks of dependence, withdrawal, and lethal overdose.</p>
+          <p>Even though many people utilize cannabis as a healing tool for dangerous substance use, it is important to recognize that these benefits differ between individuals, and this approach may not be effective or suitable for everyone.</p>
+        </section>
 
-        <div className="mystory-chapter-mark" aria-hidden="true"><span>I</span><i /></div>
+        <section className="mystory__section">
+          <h2>More Than a Decade of Community and Support</h2>
+          <p>Since 2013, we have continued to provide free peer support, evidence-based information, and easily accessible resources to thousands of people exploring other paths to recovery. We know how meaningful it is to be a place where you feel safe, understood and less alone.</p>
+          <p>Our mission is to continue building a community that promotes harm-reduction principles, cannabis medicine as a vital medication-assisted-treatment and that recovery journeys flourish when met with compassion.</p>
+          <p>If you’re interested in the roots of cannabis-inclusive recovery and the trailblazers who courageously spoke their truths in opposition to conventional recovery models, you’ve found one of the earliest established communities dedicated to raising awareness and advancing understanding of this movement in Recovery with The Exit Drug.</p>
+        </section>
 
-        <p className="mystory__opening">
-          This...
-          <br />
-          may be our last chance.
-        </p>
-
-        <p>
-          If this story has a beginning... I suppose it starts around a bonfire.
-        </p>
-
-        <p>
-          Not <em>this</em> bonfire. Another one. Or maybe they're the same.
-          Memory has a funny way of changing places over time.
-        </p>
-
-        <p>
-          Back then, I didn't know where the road would lead. I only knew there
-          were people hurting, people searching for another way, and a world that
-          kept insisting there was only one path forward.
-        </p>
-
-        <p className="mystory__quote">
-          They called it impossible.
-          <br />
-          They called it dangerous.
-          <br />
-          They called it a gateway drug.
-        </p>
-
-        <p>
-          Funny how names can become monsters if you hear them often enough.
-        </p>
-
-        <div className="mystory-chapter-mark" aria-hidden="true"><span>II</span><i /></div>
-
-        <p>
-          So I summoned up the courage, and protected by my loyal guardian, the pilgrimage began.
-        </p>
-
-        <p>
-          Just a stubborn dream that maybe cannabis could help some people leave far
-          more destructive substances behind... and maybe those people deserved a
-          place where they weren't judged for it.
-        </p>
-
-        <p>
-          Along the way I met incredible people.
-        </p>
-
-        <p>
-          Some had already defeated their own version of Sin.
-        </p>
-
-        <p>
-          Some were still standing at the beginning of their journey.
-        </p>
-
-        <p>
-          Some had completely lost hope.
-        </p>
-
-        <p>
-          Every one of them became part of my story.
-        </p>
-
-        <p>
-          Together we crossed mountains, wandered through forests, survived random
-          encounters, ignored unsolicited lectures from Maesters, defeated at least
-          one suspiciously well-dressed villain, and somehow built Recovery With The
-          Exit Drug along the way.
-        </p>
-
-        <p>
-          Looking back...
-        </p>
-
-        <p>
-          I don't remember every step, I remember the people and the shared community.
-        </p>
-
-        <p>
-          Some may call it hope.
-
-          Some call it community.
-
-          I like to think we're just here, huddled around our bonfire
-          quietly rekindling one another's spirits,
-          one story at a time ...
-        </p>
-
-        <div className="mystory-chapter-mark" aria-hidden="true"><span>III</span><i /></div>
-
-        <p className="mystory__ending">
-          Until then...
-          <br />
-          thank you for listening to my story.
-        </p>
-
-        <p className="mystory__signoff">
-          — Summoner Lainie (Protector of Spira)
-        </p>
-      </div>
-
-      <button
-        type="button"
-        className={`mystory-auto-read ${autoReading ? "is-reading" : ""}`}
-        aria-pressed={autoReading}
-        onClick={toggleAutoReading}
-      >
-        <span aria-hidden="true" />
-        {autoReading ? "Pause slow reading" : "Start slow reading"}
-      </button>
-    </>
+        <p className="mystory__byline">— Lainie Ruth, Founder</p>
+      </article>
+    </main>
   );
 }
