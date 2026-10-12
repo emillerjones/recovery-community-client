@@ -1,0 +1,175 @@
+.monetary-gifts {
+  --ink: #1b221c;
+  --cream: #f6f2ea;
+  --cream-dim: #ede7db;
+  --forest: #2c3a2d;
+  --forest-deep: #1e2a1f;
+  --amber: #e8b873;
+
+  font-family: "Inter", sans-serif;
+  color: var(--ink);
+  background: var(--cream);
+  -webkit-font-smoothing: antialiased;
+}
+
+.monetary-gifts h1,
+.monetary-gifts h2 {
+  font-family: "Fraunces", serif;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+/* ---------- Hero ---------- */
+
+.monetary-gifts__hero {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 130px 6vw 56px;
+  text-align: center;
+}
+
+.monetary-gifts__kicker {
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--forest);
+  font-weight: 600;
+  margin: 0 0 16px;
+}
+
+.monetary-gifts__hero h1 {
+  font-size: clamp(2.2rem, 5vw, 3.2rem);
+  color: var(--forest-deep);
+  margin: 0 0 18px;
+}
+
+.monetary-gifts__intro {
+  font-size: 17px;
+  line-height: 1.7;
+  color: rgba(27, 34, 28, 0.7);
+  margin: 0;
+}
+
+/* ---------- Option cards ---------- */
+
+.monetary-gifts__options {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 0 6vw 90px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 28px;
+  align-items: stretch;
+}
+
+.gift-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 44px 32px;
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 1px 0 rgba(27, 34, 28, 0.04), 0 14px 36px rgba(27, 34, 28, 0.06);
+}
+
+.gift-card__icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 18px;
+  font-size: 26px;
+}
+.gift-card--paypal .gift-card__icon {
+  background: rgba(0, 48, 135, 0.1);
+  color: #003087;
+}
+.gift-card--cashapp .gift-card__icon {
+  background: rgba(0, 214, 110, 0.14);
+  color: #00a455;
+}
+
+.gift-card h2 {
+  font-size: 1.3rem;
+  color: var(--forest-deep);
+  margin: 0 0 10px;
+}
+
+.gift-card p {
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: rgba(27, 34, 28, 0.68);
+  max-width: 280px;
+  margin: 0 0 20px;
+}
+
+.gift-card__qr {
+  width: 180px;
+  height: 180px;
+  border-radius: 16px;
+  margin-bottom: 14px;
+  box-shadow: 0 6px 20px rgba(27, 34, 28, 0.12);
+}
+
+.gift-card__cashtag {
+  font-family: "Fraunces", serif;
+  font-weight: 500;
+  font-size: 1.1rem;
+  color: var(--forest-deep);
+  margin: 0 0 24px !important;
+}
+
+.gift-card__button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--forest);
+  color: #fff;
+  padding: 13px 26px;
+  border-radius: 40px;
+  font-size: 14.5px;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 8px 26px rgba(27, 34, 28, 0.16);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.gift-card__button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(27, 34, 28, 0.22);
+}
+
+/* ---------- Closing note ---------- */
+
+.monetary-gifts__note {
+  background: var(--cream-dim);
+  text-align: center;
+  padding: 48px 6vw;
+}
+.monetary-gifts__note p {
+  font-family: "Fraunces", serif;
+  font-style: italic;
+  font-size: 1.1rem;
+  color: var(--forest-deep);
+  margin: 0;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 760px) {
+  .monetary-gifts__options {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 520px) {
+  .monetary-gifts__hero {
+    padding: 110px 7vw 44px;
+  }
+  .gift-card {
+    padding: 36px 24px;
+  }
+}

@@ -33,7 +33,7 @@ const LEARN_LINKS = [
 ];
 
 const SUPPORT_LINKS = [
-  { to: "/donate", label: "Monetary Gifts", description: "Future community giving", icon: Heart },
+  { to: "/donate", label: "Monetary Gifts", description: "Support the community with PayPal or Cash App", icon: Heart },
   { to: "https://www.etsy.com/shop/TheExitDrugRecovery", label: "Merch", description: "Shop Recovery With The Exit Drug merchandise", icon: ShoppingBag, external: true },
   { to: "/discountlinks", label: "Discount Links", description: "Community partner savings", icon: BadgePercent },
 ];
