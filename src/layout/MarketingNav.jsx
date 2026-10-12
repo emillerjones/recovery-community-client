@@ -39,7 +39,7 @@ const SUPPORT_LINKS = [
 ];
 
 const ABOUT_LINKS = [
-  { to: "/mystory", label: "My Story", description: "Lainie Ruth's personal journey", icon: BookHeart },
+  { to: "/mystory", label: "Our Story", description: "A message from our founder", icon: BookHeart },
   { to: "/contact", label: "Contact Us", description: "Reach the organization", icon: Mail },
 ];
 
