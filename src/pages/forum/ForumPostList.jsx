@@ -27,14 +27,14 @@ export default function ForumPostList({
         <div className="forum-feed-empty">
           <HeartHandshake size={30} />
           <h2>
-            {view === "announcements" ? "No announcements yet" : "No conversations found"}
+            {view === "staff" ? "No staff announcements found" : view === "announcements" ? "No announcements yet" : "No conversations found"}
           </h2>
           <p>
             {activeTags.length
               ? "Try removing a tag or view all tags."
-              : "A thoughtful question or honest update is enough to begin."}
+              : view === "staff" ? "Create a private guideline or update, or clear your filters to see more." : "A thoughtful question or honest update is enough to begin."}
           </p>
-          {view === "community" && <button onClick={onStartPost}>Start a post</button>}
+          {["community", "staff"].includes(view) && <button onClick={onStartPost}>{view === "staff" ? "Create staff announcement" : "Start a post"}</button>}
         </div>
       )}
 
@@ -65,7 +65,7 @@ export default function ForumPostList({
             <span>
               {activeTags.length
                 ? "Matching selected tags"
-                : view === "announcements"
+                : view === "staff" ? "Private team guidelines & updates" : view === "announcements"
                   ? "Staff updates"
                   : "From across the community"}
             </span>

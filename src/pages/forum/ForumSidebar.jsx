@@ -7,13 +7,13 @@ import {
   ShieldCheck,
 } from "lucide-react";
 
-export default function ForumSidebar({ tags, isStaff, onSelectTag, onManageTags }) {
+export default function ForumSidebar({ tags, isStaff, onSelectTag, onManageTags, staffOnly = false }) {
   return (
     <aside className="forum-feed-side">
       <section className="forum-feed-side__welcome">
         <HeartHandshake size={22} />
-        <h2>You belong here.</h2>
-        <p>You don&rsquo;t need perfect words. Share only what feels comfortable.</p>
+        <h2>{staffOnly ? "Your team's reference space." : "You belong here."}</h2>
+        <p>{staffOnly ? "Keep guidelines and important updates here. Use Staff Chat for quick conversations." : "You don’t need perfect words. Share only what feels comfortable."}</p>
       </section>
       <section>
         <h2><Hash size={15} /> Browse tags</h2>
@@ -21,7 +21,7 @@ export default function ForumSidebar({ tags, isStaff, onSelectTag, onManageTags 
           {tags.filter((tag) => tag.active).slice(0, 8).map((tag) => (
             <button key={tag.tag_id} onClick={() => onSelectTag(tag.slug)}>
               <span>#{tag.slug}</span>
-              <small>{tag.post_count || 0}</small>
+              {!staffOnly && <small>{tag.post_count || 0}</small>}
             </button>
           ))}
         </div>
@@ -34,8 +34,7 @@ export default function ForumSidebar({ tags, isStaff, onSelectTag, onManageTags 
       <section>
         <h2><Bell size={15} /> Stay connected</h2>
         <p>
-          New conversations appear in your notification list so early posts don&rsquo;t go
-          unanswered.
+          {staffOnly ? "No alerts are sent for staff announcements. Check this section for updates and use Got it to acknowledge a post." : "New conversations appear in your notification list so early posts don’t go unanswered."}
         </p>
       </section>
       <section>

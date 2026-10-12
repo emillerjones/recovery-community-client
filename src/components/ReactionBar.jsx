@@ -26,9 +26,10 @@ const REACTIONS = [
 // ForumThread.jsx passes a real function into that prop when it renders this
 // component. For the main post, `onReact` will point to togglePostReaction().
 // For a reply, it will point to a wrapper that calls toggleCommentReaction().
-export default function ReactionBar({ reactions = {}, myReaction, onReact, disabled = false }) {
+export default function ReactionBar({ reactions = {}, myReaction, onReact, disabled = false, staffAcknowledgment = false }) {
+  const choices = staffAcknowledgment ? REACTIONS.map(reaction => reaction.type === "agree" ? { ...reaction, label: "Got it" } : reaction) : REACTIONS;
   const [pickerOpen, setPickerOpen] = useState(false);
-  const activeReactions = REACTIONS.filter((reaction) => Number(reactions[reaction.type] || 0) > 0);
+  const activeReactions = choices.filter((reaction) => Number(reactions[reaction.type] || 0) > 0);
 
   useEffect(() => {
     if (!pickerOpen) return;
@@ -51,7 +52,7 @@ export default function ReactionBar({ reactions = {}, myReaction, onReact, disab
   return (
     <div className="reaction-bar" aria-label="Reactions">
       <div className="reaction-desktop">
-      {REACTIONS.map((reaction) => {
+      {choices.map((reaction) => {
         const Icon = reaction.Icon;
         const count = Number(reactions[reaction.type] || 0);
         const selected = myReaction === reaction.type;
@@ -104,9 +105,9 @@ export default function ReactionBar({ reactions = {}, myReaction, onReact, disab
       {pickerOpen && (
         <div className="reaction-sheet-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setPickerOpen(false); }}>
           <section className="reaction-sheet" role="dialog" aria-modal="true" aria-label="Choose a reaction">
-            <header><div><span>Community reaction</span><h3>How would you like to respond?</h3></div><button type="button" onClick={() => setPickerOpen(false)} aria-label="Close reaction choices"><X size={21} /></button></header>
+            <header><div><span>{staffAcknowledgment ? "Staff response" : "Community reaction"}</span><h3>How would you like to respond?</h3></div><button type="button" onClick={() => setPickerOpen(false)} aria-label="Close reaction choices"><X size={21} /></button></header>
             <div className="reaction-sheet__grid">
-              {REACTIONS.map((reaction) => {
+              {choices.map((reaction) => {
                 const Icon = reaction.Icon;
                 const selected = myReaction === reaction.type;
                 const count = Number(reactions[reaction.type] || 0);

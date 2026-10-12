@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import {
   HeartHandshake,
   Lock,
+  ShieldCheck,
   Megaphone,
   MessageCircle,
 } from "lucide-react";
@@ -29,7 +30,7 @@ export default function ForumPostCard({ post, token }) {
   return (
     <article
       className={`forum-feed-card ${
-        post.category_slug === "announcements" ? "forum-feed-card--announcement" : ""
+        post.category_slug === "staff-announcements" ? "forum-feed-card--staff" : post.category_slug === "announcements" ? "forum-feed-card--announcement" : ""
       }`}
     >
       <Link
@@ -53,6 +54,7 @@ export default function ForumPostCard({ post, token }) {
           </b>
         )}
         {post.locked && <Lock className="forum-feed-card__lock" size={15} />}
+        {post.category_slug === "staff-announcements" && <b className="forum-staff-label"><ShieldCheck size={14} /> Staff only</b>}
       </header>
       <div className="forum-feed-card__content">
         <div className="forum-feed-card__tags">

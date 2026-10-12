@@ -9,6 +9,7 @@ import ForumPostList from "./ForumPostList";
 import ForumSidebar from "./ForumSidebar";
 import ForumTagManagerModal from "./ForumTagManagerModal";
 import "./Forum.css";
+import "./StaffAnnouncements.css";
 
 const API = import.meta.env.VITE_API;
 const SEARCH_DEBOUNCE_MS = 350;
@@ -18,12 +19,15 @@ export default function Forum() {
   const navigate = useNavigate();
   const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
-  const view = searchParams.get("view") === "announcements" ? "announcements" : "community";
+  const requestedView = searchParams.get("view");
+  const view = ["announcements", "staff"].includes(requestedView) ? requestedView : "community";
   const activeTagKey = searchParams.get("tags") || "";
   const showWelcomeOverlay = searchParams.get("welcome") === "1";
   const activeTags = activeTagKey.split(",").filter(Boolean);
-  const isStaff = user?.role_id <= 50;
+  const isStaff = [1,10,50].includes(user?.role_id);
+  const staffView = view === "staff";
   const [categories, setCategories] = useState([]);
+  const [staffReady, setStaffReady] = useState(false);
   const [tags, setTags] = useState([]);
   // This is the list behind the cards. The API returns `data.posts`,
   // setPosts() saves that array here, and the JSX below maps each object to a
@@ -71,7 +75,9 @@ export default function Forum() {
       fetch(`${API}/api/forum/tags${isStaff ? "?all=true" : ""}`, { headers }),
     ]).then(async ([categoryResponse, tagResponse]) => {
       if (!categoryResponse.ok || !tagResponse.ok) throw new Error("Could not load the community forum.");
-      setCategories(await categoryResponse.json());
+      const loadedCategories = await categoryResponse.json();
+      setCategories(loadedCategories);
+      setStaffReady(categoryResponse.headers.get("X-Staff-Forum-Version") === "1" && loadedCategories.some(category => category.slug === "staff-announcements"));
       setTags(await tagResponse.json());
     }).catch((requestError) => setError(requestError.message));
   }, [headers, isStaff]);
@@ -80,6 +86,7 @@ export default function Forum() {
     // FORUM LIST TRACE STEP 3: A section, tag, search, scope, order, or page change
     // reaches this effect. Put those choices in the URL and ask the server for
     // only the matching page. Continue at TRACE STEP 4 in server/api/forum.js.
+    if (staffView && !staffReady) return;
     const controller = new AbortController();
     const params = new URLSearchParams();
     params.set("section", view);
@@ -102,10 +109,10 @@ export default function Forum() {
         ]);
         setHasMore(data.has_more);
       })
-      .catch((requestError) => { if (requestError.name !== "AbortError") setError(requestError.message); })
+      .catch((requestError) => { if (requestError.name !== "AbortError") { setPosts([]); setError(requestError.message); } })
       .finally(() => { if (!controller.signal.aborted) { setLoading(false); setLoadingMore(false); } });
     return () => controller.abort();
-  }, [view, activeTagKey, search, scope, order, page, headers]);
+  }, [view, staffView, staffReady, activeTagKey, search, scope, order, page, headers]);
 
   useEffect(() => {
     // Infinite scrolling does not load the entire posts table. When this
@@ -123,8 +130,9 @@ export default function Forum() {
   }, [hasMore, loading, loadingMore]);
 
   const announcementCategory = categories.find((category) => category.slug === "announcements");
+  const staffCategory = categories.find((category) => category.slug === "staff-announcements");
   const mainCategory = categories.find((category) => category.slug === "general-recovery")
-    || categories.find((category) => !["announcements", "success-stories"].includes(category.slug));
+    || categories.find((category) => !["announcements", "success-stories", "staff-announcements"].includes(category.slug));
   const composingAnnouncement = view === "announcements" && isStaff;
   // No extra database call happens here. We only divide the post objects that
   // are already in state into two visual groups on the screen.
@@ -139,7 +147,7 @@ export default function Forum() {
     setPage(0);
     setLoading(true);
     const next = {};
-    if (nextView === "announcements") next.view = "announcements";
+    if (nextView !== "community") next.view = nextView;
     if (activeTagKey) next.tags = activeTagKey;
     setSearchParams(next);
   }
@@ -153,7 +161,7 @@ export default function Forum() {
     setPage(0);
     setLoading(true);
     const next = {};
-    if (view === "announcements") next.view = "announcements";
+    if (view !== "community") next.view = view;
     if (slug) {
       const selected = new Set(activeTags);
       if (selected.has(slug)) selected.delete(slug);
@@ -183,7 +191,7 @@ export default function Forum() {
     setScope(nextFilters.scope);
     setOrder(nextFilters.order);
     const next = {};
-    if (view === "announcements") next.view = "announcements";
+    if (view !== "community") next.view = view;
     if (nextFilters.tags.length) next.tags = nextFilters.tags.join(",");
     setSearchParams(next);
   }
@@ -194,7 +202,8 @@ export default function Forum() {
     try {
       const response = await fetch(`${API}/api/forum/posts/read-all`, {
         method: "PATCH",
-        headers,
+        headers: { ...headers, "Content-Type": "application/json" },
+        body: JSON.stringify({ section: view }),
       });
       const result = await response.json();
       if (!response.ok) throw new Error(result.message || "Could not mark conversations read.");
@@ -207,8 +216,10 @@ export default function Forum() {
     }
   }
 
+  if (staffView && (!isStaff || !staffReady)) return <main className="forum-feed-page"><p role="status">This section is unavailable or still loading. Only current staff can access it.</p><button type="button" className="forum-feed-create" onClick={() => setView("community")}>Return to main forum</button></main>;
+
   return (
-    <main className="forum-feed-page">
+    <main className={`forum-feed-page ${staffView ? "forum-staff-section" : ""}`}>
       {showLoginWelcome && (
         <div className="forum-feed-login-welcome">
           <Check size={16} /> Welcome back, {user?.username}.
@@ -232,7 +243,7 @@ export default function Forum() {
         {(view === "community" || isStaff) && (
           <button className="forum-feed-create" onClick={() => setComposerOpen(true)}>
             <Plus size={18} />
-            {view === "announcements" ? "Post an announcement" : "Start a post"}
+            {staffView ? "Create staff announcement" : view === "announcements" ? "Post an announcement" : "Start a post"}
           </button>
         )}
       </section>
@@ -241,6 +252,7 @@ export default function Forum() {
         <div className="forum-feed-main">
           <ForumControls
             view={view}
+            isStaff={isStaff && staffReady}
             tags={tags}
             activeTags={activeTags}
             searchInput={searchInput}
@@ -251,6 +263,7 @@ export default function Forum() {
             onApplyFilters={applyFilters}
             onMarkAllRead={markAllRead}
           />
+          {staffView && isStaff && <div className="forum-staff-banner"><strong>Staff Announcements · Staff only</strong><p>Private guidelines and updates for moderators, admins, and the owner. Regular members cannot see these posts.</p></div>}
           <ForumPostList
             token={token}
             view={view}
@@ -270,6 +283,7 @@ export default function Forum() {
         {/* SCREEN SECTION: Supporting cards in the desktop right rail. They use
             already-loaded data and do not render the main post-card list. */}
         <ForumSidebar
+          staffOnly={staffView}
           tags={tags}
           isStaff={isStaff}
           onSelectTag={selectTag}
@@ -281,13 +295,15 @@ export default function Forum() {
           survives closing and reopening. The modal owns its form state and
           createPost() request; `open` controls whether it is visible. */}
       <ForumComposerModal
+        key={`${user?.id}:${view}`}
         open={composerOpen}
         user={user}
         token={token}
-        categoryId={composingAnnouncement
+        categoryId={staffView ? staffCategory?.category_id : composingAnnouncement
           ? announcementCategory?.category_id
           : mainCategory?.category_id}
-        canPublish={view !== "announcements" || isStaff}
+        canPublish={view === "community" || isStaff}
+        staffOnly={staffView}
         composingAnnouncement={composingAnnouncement}
         tags={tags}
         onClose={() => setComposerOpen(false)}

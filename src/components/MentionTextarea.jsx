@@ -14,6 +14,7 @@ export default function MentionTextarea({
   rows,
   placeholder,
   autoFocus = false,
+  quiet = false,
 }) {
   const textareaRef = useRef(null);
   const [query, setQuery] = useState(null);
@@ -127,7 +128,7 @@ export default function MentionTextarea({
         }}
         placeholder={placeholder}
       />
-      <small className="mention-input__hint">Type @ to mention a member · up to 5</small>
+      <small className="mention-input__hint">{quiet ? "Names mentioned here do not send notifications." : "Type @ to mention a member · up to 5"}</small>
       {query !== null && suggestions.length > 0 && (
         <div className="mention-picker" role="listbox" aria-label="Mention a member">
           {suggestions.map((member, index) => (

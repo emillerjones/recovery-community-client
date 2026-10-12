@@ -21,6 +21,7 @@ export default function ForumComment({
   setReplyMentions, replyPhotos, setReplyPhotos, submitReply, submitting, editComment, deleteComment,
   toggleCommentFlag, toggleCommentReaction, reactingTo, formatDate,
   editedLabel,
+  staffOnly = false,
 }) {
   // This displays ONE comment. At the bottom it renders another
   // <ForumComment /> for every child, which is how nested replies continue.
@@ -171,6 +172,7 @@ export default function ForumComment({
               >
                 {/* This controls the small reply box beneath one comment. */}
                 <MentionTextarea
+                  quiet={staffOnly}
                   token={token} autoFocus rows={3} value={replyBody}
                   onChange={setReplyBody} mentions={replyMentions}
                   onMentionsChange={setReplyMentions}
@@ -195,6 +197,7 @@ export default function ForumComment({
       {!isRemoved && comment.children.map((child) => (
         <ForumComment
           key={child.comment_id}
+          staffOnly={staffOnly}
           comment={child}
           depth={depth + 1}
           currentUserId={currentUserId}

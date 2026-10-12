@@ -1,6 +1,7 @@
 import { useState } from "react";
 import {
   Check,
+  ShieldCheck,
   Megaphone,
   MessageCircle,
   Search,
@@ -22,6 +23,7 @@ const ORDERS = [
 
 export default function ForumControls({
   view,
+  isStaff = false,
   tags,
   activeTags,
   searchInput,
@@ -66,7 +68,7 @@ export default function ForumControls({
     <>
       {/* FORUM LIST TRACE STEP 1A: These section buttons call the callback
           supplied by Forum.jsx. Continue there in setView(). */}
-      <nav className="forum-feed-views" aria-label="Forum sections">
+      <nav className={`forum-feed-views ${isStaff ? "forum-feed-views--staff" : ""}`} aria-label="Forum sections">
         <button
           type="button"
           className={view === "community" ? "is-active" : ""}
@@ -91,6 +93,9 @@ export default function ForumControls({
             <small>Updates from the team</small>
           </span>
         </button>
+        {isStaff && <button type="button" className={`forum-staff-tab ${view === "staff" ? "is-active" : ""}`} onClick={() => onViewChange("staff")} aria-current={view === "staff" ? "page" : undefined}>
+          <ShieldCheck size={18} aria-hidden="true" /><span><strong>Staff Announcements</strong><small>Private team guidelines & updates</small></span>
+        </button>}
       </nav>
 
       {/* FORUM LIST TRACE STEP 1B: Search remains immediate. The Filters

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
-import { ArrowLeft, Bell, Flag, Lock, Pencil, Pin, Send, Trash2 } from "lucide-react";
+import { ArrowLeft, Bell, Flag, Lock, Pencil, Pin, Send, ShieldCheck, Trash2 } from "lucide-react";
 import { useAuth } from "../../auth/AuthContext";
 import { useNotifications } from "../../contexts/NotificationsContext";
 import ReactionBar from "../../components/ReactionBar";
@@ -19,6 +19,7 @@ import {
   readyMediaIds,
 } from "../../components/forumPhotos/photoUploadUtils";
 import "./ForumThread.css";
+import "../forum/StaffAnnouncements.css";
 
 const API = import.meta.env.VITE_API;
 
@@ -76,7 +77,8 @@ export default function ForumThread() {
   const [confirmingPostDelete, setConfirmingPostDelete] = useState(false);
   const [reactingTo, setReactingTo] = useState(null);
   const headers = useMemo(() => ({ Authorization: `Bearer ${token}` }), [token]);
-  const canModerate = user?.role_id <= 50;
+  const staffOnly = post?.category_slug === "staff-announcements";
+  const canModerate = staffOnly ? [1,10].includes(user?.role_id) : user?.role_id <= 50;
   const canEditOwn = user?.role_id <= 50;
   const canEditOthers = user?.role_id === 1;
   const canDeleteOthers = user?.role_id <= 10;
@@ -88,7 +90,7 @@ export default function ForumThread() {
   const fetchThread = useCallback(async () => {
     const response = await fetch(`${API}/api/forum/posts/${postId}`, { headers });
     const result = await response.json();
-    if (!response.ok) throw new Error(result.message || "Could not load this conversation.");
+    if (!response.ok) { const failure = new Error(result.message || "Could not load this conversation."); failure.status = response.status; throw failure; }
     return result;
   }, [headers, postId]);
 
@@ -113,11 +115,30 @@ export default function ForumThread() {
       })
       .catch((err) => {
         if (cancelled) return;
+        setPost(null);
+        setComments([]);
         setError(err.message);
         setLoading(false);
       });
     return () => { cancelled = true; };
   }, [fetchThread, markThreadRead]);
+
+  useEffect(() => {
+    if (!staffOnly) return;
+    let cancelled = false;
+    const refresh = async () => {
+      if (document.hidden) return;
+      try {
+        const result = await fetchThread();
+        if (!cancelled) { setPost(result.post); setComments(result.comments); }
+      } catch (failure) {
+        if (!cancelled && [401,403,404].includes(failure.status)) { setPost(null); setComments([]); setEditingPost(false); setError("This staff announcement is no longer available to your account."); }
+      }
+    };
+    const timer = setInterval(refresh, 20000);
+    document.addEventListener("visibilitychange", refresh);
+    return () => { cancelled = true; clearInterval(timer); document.removeEventListener("visibilitychange", refresh); };
+  }, [staffOnly, fetchThread]);
 
 
 
@@ -144,10 +165,16 @@ export default function ForumThread() {
       if (document.visibilityState === "visible") markThreadRead();
     }
     socket.on("new_comment", onNewComment);
+    const onRevoked = data => {
+      if (data.post_id !== postIdNumber) return;
+      setPost(null); setComments([]); setEditingPost(false); setError("This conversation is no longer available to your account.");
+    };
+    socket.on("forum_access_revoked", onRevoked);
 
     return () => {
       socket.emit("leave_thread", postIdNumber);
       socket.off("new_comment", onNewComment);
+      socket.off("forum_access_revoked", onRevoked);
     };
   }, [socket, postId, markThreadRead]);
 
@@ -365,6 +392,10 @@ export default function ForumThread() {
       return;
     }
     // REACTION TRACE STEP 7A: The server confirmed the same change we already
+    if (staffOnly) {
+      try { const refreshed = await fetchThread(); setPost(refreshed.post); }
+      catch { setError("Reaction saved. Refresh to see the latest acknowledgments."); }
+    }
     // applied optimistically above, so there is nothing left to do here.
   }
 
@@ -456,8 +487,9 @@ export default function ForumThread() {
   const commentTree = buildCommentTree(comments);
 
   return (
-    <main className="forum-shell forum-thread-shell">
-      <Link to={post.category_slug === "announcements" ? "/forum?view=announcements" : "/forum"} className="forum-back"><ArrowLeft size={17} /> Back to {post.category_slug === "announcements" ? "announcements" : "main forum"}</Link>
+    <main className={`forum-shell forum-thread-shell ${staffOnly ? "forum-staff-section" : ""}`}>
+      <Link to={staffOnly ? "/forum?view=staff" : post.category_slug === "announcements" ? "/forum?view=announcements" : "/forum"} className="forum-back"><ArrowLeft size={17} /> Back to {staffOnly ? "staff announcements" : post.category_slug === "announcements" ? "announcements" : "main forum"}</Link>
+      {staffOnly && <div className="forum-staff-banner"><ShieldCheck size={21} aria-hidden="true" /><strong>Staff only</strong><p>This announcement, its replies, and its edit history are private to moderators, admins, and the owner.</p></div>}
 
       <article className="forum-thread-post">
         <div className="forum-thread-topline">
@@ -471,7 +503,7 @@ export default function ForumThread() {
 
         {editingPost ? (
           <form className="forum-edit-post-form" onSubmit={saveEditedPost}>
-            <p>Previous titles and text remain visible to members in edit history.</p>
+            <p>{staffOnly ? "Editing a staff-only announcement. Previous versions remain visible only to staff." : "Previous titles and text remain visible to members in edit history."}</p>
             <input required maxLength={180} value={postDraft.title} onChange={(e) => setPostDraft({ ...postDraft, title: e.target.value })} />
             <textarea required rows={8} value={postDraft.body} onChange={(e) => setPostDraft({ ...postDraft, body: e.target.value })} />
             {error && <p className="forum-error" role="alert">{error}</p>}
@@ -495,7 +527,7 @@ export default function ForumThread() {
                 initialPoll={post.poll}
                 postId={post.post_id}
                 token={token}
-                canManage={isAuthor || canModerate}
+                canManage={isAuthor || (staffOnly ? canEditOthers : canModerate)}
                 socket={socket}
               />
             )}
@@ -505,11 +537,17 @@ export default function ForumThread() {
                 its value: onReact={togglePostReaction}. ReactionBar does not
                 import that function; this parent component hands it down. */}
             <ReactionBar
+              staffAcknowledgment={staffOnly}
               reactions={post.reactions}
               myReaction={post.my_reaction}
               onReact={togglePostReaction}
               disabled={reactingTo === "post"}
             />
+            {staffOnly && <div className="forum-staff-acknowledgments">
+              <strong>Got it</strong>
+              <p>{post.acknowledgments?.length ? post.acknowledgments.map(person => person.username).join(", ") : "No staff acknowledgments yet. Choose the Got it reaction to add yours."}</p>
+              <small>Acknowledgments use reactions; they do not reset when this post is edited.</small>
+            </div>}
           </>
         )}
 
@@ -541,7 +579,7 @@ export default function ForumThread() {
               </button>
             )}
             <button className={`forum-action-button ${post.followed_by_me ? "is-following" : ""}`} onClick={togglePostFollow}>
-              <Bell size={15} fill={post.followed_by_me ? "currentColor" : "none"} /> {post.followed_by_me ? "Following" : "Follow"}
+              <Bell size={15} fill={post.followed_by_me ? "currentColor" : "none"} /> {staffOnly ? (post.followed_by_me ? "Saved to Following" : "Save to Following") : post.followed_by_me ? "Following" : "Follow"}
             </button>
             {isAuthor && Number(post.follower_count) > 0 && (
               <span className="forum-follower-count">
@@ -571,6 +609,7 @@ export default function ForumThread() {
               its own children recursively near the top of this file. */}
           {commentTree.map((comment) => (
             <ForumComment
+              staffOnly={staffOnly}
               key={comment.comment_id}
               comment={comment}
               depth={0}
@@ -611,6 +650,7 @@ export default function ForumThread() {
           <div className="forum-persistent-reply__inner">
             <div className="forum-persistent-reply__row">
               <MentionTextarea
+                quiet={staffOnly}
                 token={token}
                 rows={1}
                 value={mainReply}

@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { BarChart3, X } from "lucide-react";
+import { BarChart3, ShieldCheck, X } from "lucide-react";
 import MentionTextarea from "../../components/MentionTextarea";
 import MemberAvatar from "../../components/MemberAvatar";
 import PhotoUploader from "../../components/forumPhotos/PhotoUploader";
@@ -24,6 +24,7 @@ export default function ForumComposerModal({
   categoryId,
   canPublish,
   composingAnnouncement,
+  staffOnly = false,
   tags,
   onClose,
 }) {
@@ -34,15 +35,34 @@ export default function ForumComposerModal({
   const [storedDraft, setStoredDraft] = useState(null);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const panelRef = useRef(null);
   const draftStorageKey = useMemo(() => {
     const userId = user?.id || user?.user_id;
     if (!userId) return null;
-    const postType = composingAnnouncement ? "announcement" : "community";
+    const postType = staffOnly ? "staff" : composingAnnouncement ? "announcement" : "community";
     return `forum-post-draft:${userId}:${postType}`;
-  }, [composingAnnouncement, user?.id, user?.user_id]);
+  }, [staffOnly, composingAnnouncement, user?.id, user?.user_id]);
   const hasDraftContent = Boolean(
     draft.title.trim() || draft.body.trim() || draft.tag_ids.length || draft.poll || photos.length
   );
+
+  useEffect(() => {
+    if (!open) return;
+    const previousFocus = document.activeElement;
+    const oldOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    panelRef.current?.querySelector("button")?.focus();
+    function onKey(event) {
+      if (event.key === "Escape" && !submitting) onClose();
+      if (event.key !== "Tab") return;
+      const items = [...panelRef.current.querySelectorAll('button:not(:disabled), input, textarea, select, [tabindex="0"]')].filter(item => item.getClientRects().length);
+      const first = items[0], last = items.at(-1);
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
+      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
+    }
+    document.addEventListener("keydown", onKey);
+    return () => { document.body.style.overflow = oldOverflow; document.removeEventListener("keydown", onKey); if (previousFocus?.isConnected) previousFocus.focus(); };
+  }, [open, onClose, submitting]);
 
   useEffect(() => {
     if (!open || !draftStorageKey || hasDraftContent) return;
@@ -57,9 +77,7 @@ export default function ForumComposerModal({
 
   useEffect(() => {
     if (!open || !draftStorageKey || storedDraft) return;
-    const timeoutId = window.setTimeout(() => {
       if (!hasDraftContent) {
-        localStorage.removeItem(draftStorageKey);
         return;
       }
       localStorage.setItem(draftStorageKey, JSON.stringify({
@@ -75,11 +93,10 @@ export default function ForumComposerModal({
         })),
         savedAt: new Date().toISOString(),
       }));
-    }, 400);
-    return () => window.clearTimeout(timeoutId);
   }, [draft, draftMentions, draftStorageKey, hasDraftContent, open, photos, storedDraft]);
 
   function discardDraft() {
+    if ((hasDraftContent || storedDraft) && !window.confirm("Discard this unfinished post? This cannot be undone.")) return;
     discardPendingPhotos(photos, token);
     if (draftStorageKey) localStorage.removeItem(draftStorageKey);
     setDraft({ title: "", body: "", tag_ids: [], poll: null });
@@ -123,7 +140,7 @@ export default function ForumComposerModal({
       onClose();
       return setError("Only moderators, administrators, and owners can publish announcements.");
     }
-    if (!categoryId) return setError("The forum needs a Main Forum category before posting.");
+    if (!categoryId) return setError("This posting destination is unavailable. Refresh the page and try again.");
     if (!photosReady(photos)) return setError("Wait for every photo to finish uploading.");
 
     let poll = null;
@@ -135,6 +152,7 @@ export default function ForumComposerModal({
 
     setSubmitting(true);
     setError("");
+    try {
     const response = await fetch(`${API}/api/forum/posts`, {
       method: "POST",
       headers: {
@@ -143,6 +161,7 @@ export default function ForumComposerModal({
       },
       body: JSON.stringify({
         category_id: categoryId,
+        audience: staffOnly ? "staff" : "members",
         title: draft.title,
         body: draft.body,
         tag_ids: draft.tag_ids,
@@ -162,26 +181,35 @@ export default function ForumComposerModal({
     setDraftMentions([]);
     setPhotos([]);
     navigate(`/forum/${result.post_id}`);
+    } catch {
+      setError("Could not connect. Your draft is still here; please try again.");
+    } finally { setSubmitting(false); }
   }
 
   if (!open) return null;
 
   return (
-    <div className="forum-feed-modal" onMouseDown={onClose}>
+    <div className={`forum-feed-modal ${staffOnly ? "forum-staff-composer" : ""}`} onMouseDown={submitting ? undefined : onClose}>
       <section
+        ref={panelRef}
         role="dialog"
         aria-modal="true"
+        aria-labelledby="forum-compose-title"
         onMouseDown={(event) => event.stopPropagation()}
       >
-        <button className="forum-feed-close" onClick={onClose} aria-label="Close">
+        <button className="forum-feed-close" disabled={submitting} onClick={onClose} aria-label="Close">
           <X />
         </button>
         <p className="forum-feed-eyebrow">
-          {composingAnnouncement ? "Staff announcement" : "New conversation"}
+          {staffOnly ? "Private staff announcement" : composingAnnouncement ? "Community announcement" : "New conversation"}
         </p>
-        <h2>
-          {composingAnnouncement ? "Share an official update" : "What would you like to share?"}
+        <h2 id="forum-compose-title">
+          {staffOnly ? "Share with your staff team" : composingAnnouncement ? "Share an official update" : "What would you like to share?"}
         </h2>
+        <div className={staffOnly ? "forum-staff-banner" : "forum-audience-label"}>
+          {staffOnly && <ShieldCheck size={20} aria-hidden="true" />}
+          <strong>{staffOnly ? "Staff only — regular members cannot see this post." : "Visible to all community members"}</strong>
+        </div>
         <div className="forum-feed-identity">
           <MemberAvatar
             username={user?.username}
@@ -220,6 +248,7 @@ export default function ForumComposerModal({
           <label>
             Message
             <MentionTextarea
+              quiet={staffOnly}
               token={token}
               rows={7}
               value={draft.body}
@@ -267,14 +296,15 @@ export default function ForumComposerModal({
               <button type="button" onClick={discardDraft}>Discard draft</button>
             </div>
           )}
+          <p className="forum-audience-label">{staffOnly ? "Audience: moderators, admins, and owner only" : "Audience: all community members"}</p>
           <footer>
-            <button type="button" onClick={onClose}>Cancel</button>
+            <button type="button" disabled={submitting} onClick={onClose}>Close & keep draft</button>
             <button className="forum-feed-publish" disabled={submitting || !photosReady(photos)}>
               {submitting
                 ? "Publishing…"
                 : !photosReady(photos)
                   ? "Uploading photos…"
-                : composingAnnouncement
+                : staffOnly ? "Publish to staff" : composingAnnouncement
                   ? "Publish announcement"
                   : "Publish post"}
             </button>
