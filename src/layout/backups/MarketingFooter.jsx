@@ -57,7 +57,7 @@ export default function MarketingFooter() {
 
         <div className="marketing-footer__social">
           <a
-            href="https://www.facebook.com"
+            href="https://www.facebook.com/recoverywiththeexitdug"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Facebook"

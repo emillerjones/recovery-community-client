@@ -218,7 +218,7 @@ export default function Contact() {
         <div className="contact__social-grid">
           <a
             className="contact__social-card contact__social-card--facebook"
-            href="https://www.facebook.com"
+            href="https://www.facebook.com/recoverywiththeexitdug"
             target="_blank"
             rel="noopener noreferrer"
           >

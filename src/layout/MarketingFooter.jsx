@@ -56,7 +56,7 @@ export default function MarketingFooter() {
       <div className="marketing-footer__bottom">
         <p>© 2026 Recovery With The Exit Drug</p>
         <div className="marketing-footer__social">
-          <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+          <a href="https://www.facebook.com/recoverywiththeexitdug" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
             <FaFacebookF /><span>Facebook</span>
           </a>
           <a href="https://www.instagram.com/recoverywiththeexitdrug" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
