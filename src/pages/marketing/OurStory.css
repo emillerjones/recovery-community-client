@@ -1,4 +1,4 @@
-.mystory {
+.ourstory {
   --ink: #1b221c;
   --cream: #f6f2ea;
   --cream-dim: #ede7db;
@@ -12,15 +12,15 @@
   -webkit-font-smoothing: antialiased;
 }
 
-.mystory h1,
-.mystory h2 {
+.ourstory h1,
+.ourstory h2 {
   font-family: "Fraunces", serif;
   letter-spacing: -0.01em;
 }
 
 /* ---------- Hero ---------- */
 
-.mystory__hero {
+.ourstory__hero {
   position: relative;
   isolation: isolate;
   overflow: hidden;
@@ -31,7 +31,7 @@
     linear-gradient(145deg, #2d3b30 0%, #1d2921 52%, #152019 100%);
 }
 
-.mystory__hero::before {
+.ourstory__hero::before {
   content: "";
   position: absolute;
   z-index: -1;
@@ -43,7 +43,7 @@
   mask-image: radial-gradient(circle at 50% 30%, #000, transparent 75%);
 }
 
-.mystory__kicker {
+.ourstory__kicker {
   font-size: 13px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -52,7 +52,7 @@
   margin: 0 0 16px;
 }
 
-.mystory__hero h1 {
+.ourstory__hero h1 {
   font-size: clamp(2.4rem, 5vw, 3.4rem);
   font-weight: 500;
   color: #fdfaf3;
@@ -61,47 +61,47 @@
 
 /* ---------- Content sections ---------- */
 
-.mystory__section {
+.ourstory__section {
   padding: 64px 6vw;
 }
-.mystory__section--a {
+.ourstory__section--a {
   background: var(--cream);
 }
-.mystory__section--b {
+.ourstory__section--b {
   background: var(--cream-dim);
 }
 
-.mystory__section-inner {
+.ourstory__section-inner {
   max-width: 680px;
   margin: 0 auto;
 }
 
-.mystory__section h2 {
+.ourstory__section h2 {
   font-size: clamp(1.4rem, 2.8vw, 1.8rem);
   font-weight: 600;
   color: var(--forest-deep);
   margin: 0 0 22px;
 }
 
-.mystory__section p {
+.ourstory__section p {
   font-size: 17px;
   line-height: 1.8;
   color: rgba(27, 34, 28, 0.78);
   margin: 0 0 20px;
 }
-.mystory__section p:last-child {
+.ourstory__section p:last-child {
   margin-bottom: 0;
 }
 
 /* ---------- Closing ---------- */
 
-.mystory__closing {
+.ourstory__closing {
   padding: 56px 6vw 90px;
   text-align: center;
   background: var(--cream);
 }
 
-.mystory__byline {
+.ourstory__byline {
   margin: 0;
   font-family: "Fraunces", serif;
   font-style: italic;
@@ -112,17 +112,17 @@
 /* ---------- Responsive ---------- */
 
 @media (max-width: 700px) {
-  .mystory__hero {
+  .ourstory__hero {
     padding: 118px 7vw 50px;
   }
-  .mystory__section {
+  .ourstory__section {
     padding: 48px 7vw;
   }
-  .mystory__section p {
+  .ourstory__section p {
     font-size: 16px;
     line-height: 1.75;
   }
-  .mystory__closing {
+  .ourstory__closing {
     padding: 44px 7vw 64px;
   }
 }

@@ -1,15 +1,15 @@
-import "./MyStory.css";
+import "./OurStory.css";
 
-export default function MyStory() {
+export default function OurStory() {
   return (
-    <main className="mystory">
-      <section className="mystory__hero" data-nav-theme="light">
-        <p className="mystory__kicker">From our founder</p>
+    <main className="ourstory">
+      <section className="ourstory__hero" data-nav-theme="light">
+        <p className="ourstory__kicker">From our founder</p>
         <h1>Our Story</h1>
       </section>
 
-      <section className="mystory__section mystory__section--a">
-        <div className="mystory__section-inner">
+      <section className="ourstory__section ourstory__section--a">
+        <div className="ourstory__section-inner">
           <h2>Pioneering Cannabis-Inclusive Recovery Since 2013</h2>
           <p>Almost 15 years ago, our founder, Lainie Ruth, also known online as @thesoberstoner420, recognized a significant gap in addiction recovery: the lack of accessible, alternative support communities for people living with substance use disorder. Long before movements like cali-sober, sober-curious, alcohol-free and harm-reduction approaches entered the mainstream conversation, many people were left with no other choice but to navigate a treatment landscape dominated by traditional 12-step programs and abstinence-based models.</p>
           <p>Lainie’s journey through recovery began at just 15 years old. Following an almost fatal drunk driving accident, she underwent a two-week psychiatric hospitalization, 45 days of inpatient treatment and a six-week intensive outpatient program. Throughout the remainder of her adolescence, she would attend countless other treatment programs and individual therapies which continually reinforced the belief that recovery could only be achieved by embracing the Big Book culture, working the 12-steps and maintaining abstinence from all mind-altering substances.</p>
@@ -20,8 +20,8 @@ export default function MyStory() {
         </div>
       </section>
 
-      <section className="mystory__section mystory__section--b">
-        <div className="mystory__section-inner">
+      <section className="ourstory__section ourstory__section--b">
+        <div className="ourstory__section-inner">
           <h2>The Beginning of Recovery with The Exit Drug</h2>
           <p>In 2013, Lainie launched a Facebook group called “Marijuana Maintenance Recovery” which later was named “Maintaining My Recovery with Cannabis.” She created this group because of her personal journey with responsible cannabis use while still being in recovery from the substances that caused her significant harm. What began as a small community of just a handful of members gradually grew through word of mouth, mutual connections, and people searching online for information about “marijuana maintenance”. Many years before “cali-sober” became a widely recognized term, “marijuana maintenance” was an earlier term used by members in traditional recovery communities to describe individuals who secretly used cannabis to manage health conditions to sustain their long-term recovery.</p>
           <p>The name now, Recovery with The Exit Drug, is inspired by the newer term “exit-drug”, which emerged as a counterpoint to the “gateway-drug” theory, which suggests that cannabis use leads to the use of harder drugs. Yet, scientific studies along with personal experiences report that using cannabis actually helps reduce reliance on harder substances that carry greater risks of dependence, withdrawal, and lethal overdose.</p>
@@ -29,8 +29,8 @@ export default function MyStory() {
         </div>
       </section>
 
-      <section className="mystory__section mystory__section--a">
-        <div className="mystory__section-inner">
+      <section className="ourstory__section ourstory__section--a">
+        <div className="ourstory__section-inner">
           <h2>More Than a Decade of Community and Support</h2>
           <p>Since 2013, we have continued to provide free peer support, evidence-based information, and easily accessible resources to thousands of people exploring other paths to recovery. We know how meaningful it is to be a place where you feel safe, understood and less alone.</p>
           <p>Our mission is to continue building a community that promotes harm-reduction principles, cannabis medicine as a vital medication-assisted-treatment and that recovery journeys flourish when met with compassion.</p>
@@ -38,8 +38,8 @@ export default function MyStory() {
         </div>
       </section>
 
-      <section className="mystory__closing">
-        <p className="mystory__byline">— Lainie Ruth, Founder</p>
+      <section className="ourstory__closing">
+        <p className="ourstory__byline">— Lainie Ruth, Founder</p>
       </section>
     </main>
   );

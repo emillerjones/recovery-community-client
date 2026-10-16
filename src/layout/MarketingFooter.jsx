@@ -47,7 +47,7 @@ export default function MarketingFooter() {
           </div>
           <div>
             <h3>About</h3>
-            <NavLink to="/mystory">Our Story</NavLink>
+            <NavLink to="/ourstory">Our Story</NavLink>
             <NavLink to="/contact">Contact</NavLink>
           </div>
         </nav>

@@ -17,6 +17,7 @@ function pageKeyFor(pathname) {
     "/today": "community_home",
     "/stories": "stories",
     "/mystory": "stories",
+    "/ourstory": "stories",
     "/community": "community",
     "/guidelines": "guidelines",
     "/contact": "contact",

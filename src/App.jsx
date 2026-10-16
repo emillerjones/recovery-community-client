@@ -4,7 +4,7 @@ import Community from "./pages/marketing/Community";
 import DiscountLinks from "./pages/marketing/DiscountLinks";
 import Guidelines from "./pages/marketing/Guidelines";
 import Stories from "./pages/marketing/Stories";
-import MyStory from "./pages/marketing/MyStory";
+import OurStory from "./pages/marketing/OurStory";
 import Contact from "./pages/marketing/Contact";
 import CommunityHome from "./pages/CommunityHome";
 
@@ -52,7 +52,8 @@ export default function App() {
         {/* Direct /login visits show the homepage behind the login drawer. */}
         <Route path="login" element={<Home />} />
         <Route path="stories" element={<Stories />} />
-        <Route path="mystory" element={<MyStory />} />
+        <Route path="ourstory" element={<OurStory />} />
+        <Route path="mystory" element={<Navigate to="/ourstory" replace />} />
         <Route path="community" element={<Community />} />
         <Route path="guidelines" element={<Guidelines />} />
         <Route path="contact" element={<Contact />} />
