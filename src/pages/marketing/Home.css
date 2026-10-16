@@ -94,10 +94,10 @@
 .home-social__card { display: flex; align-items: flex-start; gap: 20px; padding: clamp(24px, 3vw, 36px); border: 1px solid rgba(23,34,25,.15); border-radius: 4px; background: rgba(255,252,244,.6); color: var(--home-ink); text-decoration: none; transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease; }
 .home-social__card:hover { transform: translateY(-3px); border-color: #a98130; box-shadow: 0 12px 30px rgba(32,53,38,.07); }
 .home-social__card:focus-visible { outline: 3px solid #8b6a25; outline-offset: 5px; }
-.home-social__icon { display: grid; place-items: center; width: 44px; height: 44px; flex: 0 0 44px; border-radius: 4px; background: rgba(217,166,47,.1); }
-.home-social__icon svg { width: 24px; height: 24px; }
-.home-social__icon--facebook { color: #1877f2; }
-.home-social__icon--instagram { color: #a62c76; }
+.home-social__icon { display: grid; place-items: center; width: 54px; height: 54px; flex: 0 0 54px; border-radius: 16px; color: white; }
+.home-social__icon svg { width: 25px; height: 25px; }
+.home-social__icon--facebook { background: #1877f2; }
+.home-social__icon--instagram { background: linear-gradient(135deg, #f58529, #dd2a7b, #8134af, #515bd4); }
 .home-social__card h3 { margin: 0; font-size: 1.7rem; font-weight: 470; letter-spacing: -.025em; }
 .home-social__card p { margin: 10px 0 20px; color: #526150; font-size: .88rem; line-height: 1.65; }
 .home-social__action { display: inline-flex; align-items: center; gap: 12px; color: #36513e; font-size: .78rem; font-weight: 850; }
