@@ -117,7 +117,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="home-purpose" id="home-purpose">
+      <section className="home-purpose" id="home-purpose" data-nav-theme="light">
         <div className="home-shell home-purpose__inner">
           <p className="home-kicker">Our founding purpose</p>
           <blockquote>The mission of Recovery with The Exit-Drug (formerly known as Maintaining My Recovery with Cannabis/MMRC) is to develop a recovery support community of people who use cannabis as a form of harm-reduction therapy from dangerous or addictive substances. We provide support through personal experiences, educational resources, and peer support programs—while upholding a culture of inclusiveness and mutual respect.</blockquote>
@@ -132,7 +132,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="home-principles" id="home-principles">
+      <section className="home-principles" id="home-principles" data-nav-theme="light">
         <div className="home-shell">
           <header className="home-section-head">
             <p>What we are rooted in</p>
