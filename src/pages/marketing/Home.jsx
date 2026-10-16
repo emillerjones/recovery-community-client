@@ -120,6 +120,10 @@ export default function Home() {
         <div className="home-shell home-purpose__inner">
           <p className="home-kicker">Our founding purpose</p>
           <blockquote>The mission of Recovery with The Exit-Drug (formerly known as Maintaining My Recovery with Cannabis/MMRC) is to develop a recovery support community of people who use cannabis as a form of harm-reduction therapy from dangerous or addictive substances. We provide support through personal experiences, educational resources, and peer support programs—while upholding a culture of inclusiveness and mutual respect.</blockquote>
+          <section className="home-support" aria-label="Support our mission">
+            <p>Help support our nonprofit organization through monetary gifts, our Etsy store &amp; our affiliate discount codes.</p>
+            <Link className="home-support__link" to="/donate">Support Us <ArrowRight size={17} aria-hidden="true" /></Link>
+          </section>
         </div>
       </section>
 
