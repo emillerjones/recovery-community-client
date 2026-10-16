@@ -1,6 +1,7 @@
 import {
   ArrowDown,
   ArrowRight,
+  ArrowUpRight,
   BookOpen,
   HeartHandshake,
   Leaf,
@@ -122,7 +123,11 @@ export default function Home() {
           <blockquote>The mission of Recovery with The Exit-Drug (formerly known as Maintaining My Recovery with Cannabis/MMRC) is to develop a recovery support community of people who use cannabis as a form of harm-reduction therapy from dangerous or addictive substances. We provide support through personal experiences, educational resources, and peer support programs—while upholding a culture of inclusiveness and mutual respect.</blockquote>
           <section className="home-support" aria-label="Support our mission">
             <p>Help support our nonprofit organization through monetary gifts, our Etsy store &amp; our affiliate discount codes.</p>
-            <Link className="home-support__link" to="/donate">Support Us <ArrowRight size={17} aria-hidden="true" /></Link>
+            <nav className="home-support__links" aria-label="Ways to support our mission">
+              <Link className="home-support__link" to="/donate">Monetary Gifts <ArrowRight size={17} aria-hidden="true" /></Link>
+              <a className="home-support__link" href="https://www.etsy.com/shop/TheExitDrugRecovery" target="_blank" rel="noopener noreferrer">Shop Our Etsy Store <ArrowUpRight size={17} aria-hidden="true" /></a>
+              <Link className="home-support__link" to="/discountlinks">Affiliate Discount Codes <ArrowRight size={17} aria-hidden="true" /></Link>
+            </nav>
           </section>
         </div>
       </section>
