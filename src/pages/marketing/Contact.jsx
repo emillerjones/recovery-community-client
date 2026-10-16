@@ -198,7 +198,7 @@ export default function Contact() {
 
           <div className="contact__quick-links">
             <h3><span className="contact__heading-icon"><FiCompass /></span>Start here</h3>
-            <Link to="/stories">Read Success Stories</Link>
+            <Link to="/stories">Read Recovery Stories</Link>
             <Link to="/resources">Explore Resources</Link>
             <Link to="/guidelines">View Community Guidelines</Link>
           </div>

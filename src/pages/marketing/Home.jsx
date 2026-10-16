@@ -64,7 +64,7 @@ const PROVIDES = [
     to: "/resources",
   },
   {
-    title: "Recovery stories",
+    title: "Recovery Stories",
     text: "Real voices publicly sharing their journeys of recovery with cannabis to help inspire others.",
     action: "Read Recovery Stories",
     icon: <Sparkles size={28} strokeWidth={1.4} />,

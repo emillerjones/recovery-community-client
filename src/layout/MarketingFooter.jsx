@@ -31,7 +31,7 @@ export default function MarketingFooter() {
           <div>
             <h3>Community</h3>
             <NavLink to="/community">Features</NavLink>
-            <NavLink to="/stories">Stories</NavLink>
+            <NavLink to="/stories">Recovery Stories</NavLink>
             <NavLink to="/guidelines">Guidelines</NavLink>
           </div>
           <div>

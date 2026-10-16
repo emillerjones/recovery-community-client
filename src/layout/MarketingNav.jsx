@@ -23,7 +23,7 @@ const FORUM_LINKS = [
 
 const COMMUNITY_LINKS = [
   { to: "/community", label: "Inside the Community", description: "Meet the mission and member space", icon: UsersRound },
-  { to: "/stories", label: "Stories", description: "Member experiences and recovery stories", icon: BookHeart },
+  { to: "/stories", label: "Recovery Stories", description: "Member experiences and recovery stories", icon: BookHeart },
 ];
 
 const LEARN_LINKS = [

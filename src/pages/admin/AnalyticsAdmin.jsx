@@ -6,7 +6,7 @@ import "./AnalyticsAdmin.css";
 const API = import.meta.env.VITE_API;
 const PAGE_LABELS = {
   home: "Home", login: "Login", register: "Registration", verify_email: "Email verification",
-  stories: "Stories", community: "Community", guidelines: "Guidelines", contact: "Contact",
+  stories: "Recovery Stories", community: "Community", guidelines: "Guidelines", contact: "Contact",
   discount_links: "Discount links", about: "About", resources: "Resources", faq: "FAQ",
   forum: "Forum", forum_thread: "Forum conversation", messages: "Messages", profile: "Profile",
   admin_membership: "Admissions", admin_users: "User management",
