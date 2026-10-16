@@ -85,6 +85,25 @@
 .home-provide a svg, .home-provide button svg { transition: transform 160ms ease; }
 .home-provide a:hover svg, .home-provide button:hover svg { transform: translateX(4px); }
 
+.home-social { padding: clamp(64px, 7vw, 96px) 0; background: var(--home-paper); }
+.home-social__head { max-width: 650px; }
+.home-social__kicker { margin: 0 0 18px; color: #6c5732; font-size: .67rem; font-weight: 850; letter-spacing: .17em; text-transform: uppercase; }
+.home-social__head h2 { margin: 0; font-size: clamp(2.4rem, 4.5vw, 4.2rem); font-weight: 430; letter-spacing: -.045em; line-height: 1.05; }
+.home-social__head > p:last-child { margin: 20px 0 0; color: #526150; font-size: .95rem; line-height: 1.7; }
+.home-social__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 36px; }
+.home-social__card { display: flex; align-items: flex-start; gap: 20px; padding: clamp(24px, 3vw, 36px); border: 1px solid rgba(23,34,25,.15); border-radius: 4px; background: rgba(255,252,244,.6); color: var(--home-ink); text-decoration: none; transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease; }
+.home-social__card:hover { transform: translateY(-3px); border-color: #a98130; box-shadow: 0 12px 30px rgba(32,53,38,.07); }
+.home-social__card:focus-visible { outline: 3px solid #8b6a25; outline-offset: 5px; }
+.home-social__icon { display: grid; place-items: center; width: 44px; height: 44px; flex: 0 0 44px; border-radius: 4px; background: rgba(217,166,47,.1); }
+.home-social__icon svg { width: 24px; height: 24px; }
+.home-social__icon--facebook { color: #1877f2; }
+.home-social__icon--instagram { color: #a62c76; }
+.home-social__card h3 { margin: 0; font-size: 1.7rem; font-weight: 470; letter-spacing: -.025em; }
+.home-social__card p { margin: 10px 0 20px; color: #526150; font-size: .88rem; line-height: 1.65; }
+.home-social__action { display: inline-flex; align-items: center; gap: 12px; color: #36513e; font-size: .78rem; font-weight: 850; }
+@media (max-width: 850px) { .home-social__grid { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) { .home-social__card { transition: none; } .home-social__card:hover { transform: none; } }
+
 .home-disclaimer { padding: 74px 0; color: rgba(244,236,220,.62); background: var(--home-night); }
 .home-disclaimer__inner { display: grid; grid-template-columns: 250px 1fr; gap: 60px; align-items: start; }
 .home-disclaimer__label { display: flex; align-items: center; justify-content: flex-start; gap: 10px; margin: 0; color: var(--home-gold); font-size: .64rem; font-weight: 850; letter-spacing: .17em; text-transform: uppercase; }

@@ -11,6 +11,7 @@ import {
   Stethoscope,
 } from "lucide-react";
 import { Link, useOutletContext } from "react-router-dom";
+import { FaFacebookF, FaInstagram } from "react-icons/fa";
 import logo from "../../assets/icons/logo.png";
 import cannabisLeaf from "../../assets/icons/cannabis-leaf-filled.png";
 import supportIcon from "../../assets/icons/support.png";
@@ -161,6 +162,34 @@ export default function Home() {
                 )}
               </article>
             ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="home-social" aria-labelledby="home-social-title">
+        <div className="home-shell">
+          <header className="home-social__head">
+            <p className="home-social__kicker">Stay connected</p>
+            <h2 id="home-social-title">Help our community grow.</h2>
+            <p>Follow us for recovery encouragement, community updates, and stories worth sharing. Sharing our posts can help others find support here.</p>
+          </header>
+          <div className="home-social__grid">
+            <a className="home-social__card" href="https://www.facebook.com/recoverywiththeexitdug" target="_blank" rel="noopener noreferrer">
+              <span className="home-social__icon home-social__icon--facebook" aria-hidden="true"><FaFacebookF /></span>
+              <div>
+                <h3>Facebook</h3>
+                <p>Community updates and recovery encouragement.</p>
+                <span className="home-social__action">Follow on Facebook <ArrowRight size={16} aria-hidden="true" /></span>
+              </div>
+            </a>
+            <a className="home-social__card" href="https://www.instagram.com/recoverywiththeexitdrug" target="_blank" rel="noopener noreferrer">
+              <span className="home-social__icon home-social__icon--instagram" aria-hidden="true"><FaInstagram /></span>
+              <div>
+                <h3>Instagram</h3>
+                <p>Stories, inspiration, and educational posts.</p>
+                <span className="home-social__action">Follow on Instagram <ArrowRight size={16} aria-hidden="true" /></span>
+              </div>
+            </a>
           </div>
         </div>
       </section>
