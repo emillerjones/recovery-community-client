@@ -183,7 +183,7 @@ export default function Home() {
             <p>Follow us for recovery encouragement, community updates, and stories worth sharing. Sharing our posts can help others find support here.</p>
           </header>
           <div className="home-social__grid">
-            <a className="home-social__card" href="https://www.facebook.com/recoverywiththeexitdug" target="_blank" rel="noopener noreferrer">
+            <a className="home-social__card" href="https://www.facebook.com/share/19ko3Rafju" target="_blank" rel="noopener noreferrer">
               <span className="home-social__icon home-social__icon--facebook" aria-hidden="true"><FaFacebookF /></span>
               <div>
                 <h3>Facebook</h3>
