@@ -90,7 +90,7 @@ export default function ForumThread() {
   // Run when the thread page first loads, then reload if the post ID
   // or logged-in user's authentication changes.
   const fetchThread = useCallback(async () => {
-    const response = await fetch(`${API}/api/forum/posts/${postId}`, { headers });
+    const response = await fetch(`${API}/api/forum/posts/${postId}?reaction_format=like`, { headers });
     const result = await response.json();
     if (!response.ok) { const failure = new Error(result.message || "Could not load this conversation."); failure.status = response.status; throw failure; }
     return result;

@@ -14,7 +14,7 @@ import "./ReactionBar.css";
 
 const REACTIONS = [
   { type: "support", Icon: Heart, label: "Support", color: "#b85d6c" },
-  { type: "agree", Icon: ThumbsUp, label: "Agree", color: "#537ca6" },
+  { type: "like", Icon: ThumbsUp, label: "Like", color: "#537ca6" },
   { type: "relate", Icon: Handshake, label: "I Relate", color: "#9b753e" },
   { type: "helpful", Icon: Lightbulb, label: "Helpful", color: "#a7792c" },
   { type: "celebrate", Icon: Confetti, label: "Celebrate", color: "#8462a3" },
@@ -27,7 +27,7 @@ const REACTIONS = [
 // component. For the main post, `onReact` will point to togglePostReaction().
 // For a reply, it will point to a wrapper that calls toggleCommentReaction().
 export default function ReactionBar({ reactions = {}, myReaction, onReact, disabled = false, staffAcknowledgment = false }) {
-  const choices = staffAcknowledgment ? REACTIONS.map(reaction => reaction.type === "agree" ? { ...reaction, label: "Got it" } : reaction) : REACTIONS;
+  const choices = staffAcknowledgment ? REACTIONS.map(reaction => reaction.type === "like" ? { ...reaction, label: "Got it" } : reaction) : REACTIONS;
   const [pickerOpen, setPickerOpen] = useState(false);
   const activeReactions = choices.filter((reaction) => Number(reactions[reaction.type] || 0) > 0);
 
