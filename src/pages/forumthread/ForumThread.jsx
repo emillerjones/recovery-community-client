@@ -523,7 +523,7 @@ export default function ForumThread() {
             <h1>{post.title}</h1>
             <div className="forum-comment-head forum-thread-author">
               <MemberAvatar className="forum-avatar" username={post.author_username} avatarUrl={post.author_avatar_url} size={42} />
-              <div><strong>{post.author_username}</strong><span>{formatDate(post.created_at)}{editedLabel(post) && <b className="forum-edited-label" title={`Last edited ${formatDate(post.content_edited_at)}`}>{editedLabel(post)}</b>}</span></div>
+              <div><strong>{post.author_username}</strong>{post.is_imported && <span className="forum-imported-label">Imported post</span>}<span>{formatDate(post.created_at)}{editedLabel(post) && <b className="forum-edited-label" title={`Last edited ${formatDate(post.content_edited_at)}`}>{editedLabel(post)}</b>}</span></div>
             </div>
             {post.content_edited_at && <PostEditHistory key={`${post.post_id}:${post.content_edited_at}`} postId={post.post_id} token={token} />}
             <MentionText className="forum-thread-body" body={post.body} mentions={post.mentions} />

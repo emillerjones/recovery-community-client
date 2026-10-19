@@ -16,6 +16,7 @@ import {
 } from "../../components/forumPhotos/photoUploadUtils";
 
 const API = import.meta.env.VITE_API;
+const emptyDraft = () => ({ title: "", body: "", tag_ids: [], poll: null, is_imported: false, imported_author_label: "" });
 
 export default function ForumComposerModal({
   open,
@@ -29,7 +30,10 @@ export default function ForumComposerModal({
   onClose,
 }) {
   const navigate = useNavigate();
-  const [draft, setDraft] = useState({ title: "", body: "", tag_ids: [], poll: null });
+  const [draft, setDraft] = useState(emptyDraft);
+  const canImport = user?.role_id === 1;
+  const importing = canImport && draft.is_imported;
+  const authorName = importing ? draft.imported_author_label.trim() || "Imported name" : user?.username;
   const [draftMentions, setDraftMentions] = useState([]);
   const [photos, setPhotos] = useState([]);
   const [storedDraft, setStoredDraft] = useState(null);
@@ -43,7 +47,7 @@ export default function ForumComposerModal({
     return `forum-post-draft:${userId}:${postType}`;
   }, [staffOnly, composingAnnouncement, user?.id, user?.user_id]);
   const hasDraftContent = Boolean(
-    draft.title.trim() || draft.body.trim() || draft.tag_ids.length || draft.poll || photos.length
+    draft.title.trim() || draft.body.trim() || draft.tag_ids.length || draft.poll || photos.length || (importing && draft.imported_author_label.trim())
   );
 
   useEffect(() => {
@@ -68,7 +72,7 @@ export default function ForumComposerModal({
     if (!open || !draftStorageKey || hasDraftContent) return;
     try {
       const stored = JSON.parse(localStorage.getItem(draftStorageKey));
-      if (!stored?.title?.trim() && !stored?.body?.trim() && !stored?.tag_ids?.length && !stored?.poll && !stored?.photos?.length) return;
+      if (!stored?.title?.trim() && !stored?.body?.trim() && !stored?.tag_ids?.length && !stored?.poll && !stored?.photos?.length && !stored?.imported_author_label?.trim()) return;
       Promise.resolve().then(() => setStoredDraft(stored));
     } catch {
       localStorage.removeItem(draftStorageKey);
@@ -99,7 +103,7 @@ export default function ForumComposerModal({
     if ((hasDraftContent || storedDraft) && !window.confirm("Discard this unfinished post? This cannot be undone.")) return;
     discardPendingPhotos(photos, token);
     if (draftStorageKey) localStorage.removeItem(draftStorageKey);
-    setDraft({ title: "", body: "", tag_ids: [], poll: null });
+    setDraft(emptyDraft());
     setDraftMentions([]);
     setPhotos([]);
     setStoredDraft(null);
@@ -112,6 +116,8 @@ export default function ForumComposerModal({
       body: storedDraft.body || "",
       tag_ids: Array.isArray(storedDraft.tag_ids) ? storedDraft.tag_ids : [],
       poll: storedDraft.poll && typeof storedDraft.poll === "object" ? storedDraft.poll : null,
+      is_imported: canImport && storedDraft.is_imported === true,
+      imported_author_label: canImport && typeof storedDraft.imported_author_label === "string" ? storedDraft.imported_author_label : "",
     });
     setDraftMentions(Array.isArray(storedDraft.mentions) ? storedDraft.mentions : []);
     setPhotos(Array.isArray(storedDraft.photos) ? storedDraft.photos : []);
@@ -142,6 +148,7 @@ export default function ForumComposerModal({
     }
     if (!categoryId) return setError("This posting destination is unavailable. Refresh the page and try again.");
     if (!photosReady(photos)) return setError("Wait for every photo to finish uploading.");
+    if (importing && !draft.imported_author_label.trim()) return setError("Enter the imported author's display name.");
 
     let poll = null;
     try {
@@ -168,6 +175,7 @@ export default function ForumComposerModal({
         mentioned_user_ids: draftMentions.map((member) => member.user_id),
         media_ids: readyMediaIds(photos),
         poll,
+        ...(importing ? { is_imported: true, imported_author_label: draft.imported_author_label.trim() } : {}),
       }),
     });
     const result = await response.json();
@@ -177,7 +185,7 @@ export default function ForumComposerModal({
     // CREATE POST TRACE STEP 6: The API returned PostgreSQL's new post_id, so
     // take the member directly to the thread they just created.
     if (draftStorageKey) localStorage.removeItem(draftStorageKey);
-    setDraft({ title: "", body: "", tag_ids: [], poll: null });
+    setDraft(emptyDraft());
     setDraftMentions([]);
     setPhotos([]);
     navigate(`/forum/${result.post_id}`);
@@ -212,11 +220,19 @@ export default function ForumComposerModal({
         </div>
         <div className="forum-feed-identity">
           <MemberAvatar
-            username={user?.username}
-            avatarUrl={user?.avatar_url}
+            username={authorName}
+            avatarUrl={importing ? null : user?.avatar_url}
             size={38}
           />
-          <span>Posting as <strong>{user?.username}</strong></span>
+          {canImport && !storedDraft ? (
+            <div className="forum-posting-as">
+              <span id="forum-posting-as-label">Posting as</span>
+              <div className="forum-posting-as__choices" role="group" aria-labelledby="forum-posting-as-label">
+                <button type="button" aria-pressed={!importing} disabled={submitting} onClick={() => setDraft(current => ({ ...current, is_imported: false }))}>Myself</button>
+                <button type="button" aria-pressed={importing} disabled={submitting} onClick={() => setDraft(current => ({ ...current, is_imported: true }))}>Imported name</button>
+              </div>
+            </div>
+          ) : <span>Posting as <strong>{user?.username}</strong></span>}
         </div>
 
         {storedDraft && (
@@ -235,6 +251,17 @@ export default function ForumComposerModal({
         {/* CREATE POST TRACE STEP 1: The Publish button submits this form and
             directly calls createPost(), defined above in this same file. */}
         {!storedDraft && <form onSubmit={createPost}>
+          {importing && (
+            <label>
+              Display name
+              <input required maxLength={80} disabled={submitting} value={draft.imported_author_label}
+                onChange={event => setDraft(current => ({ ...current, imported_author_label: event.target.value }))}
+                placeholder="Anonymous, Participant A, or another name" aria-describedby="forum-imported-name-help" />
+              <small id="forum-imported-name-help" className="forum-imported-name-help">
+                Shown as {authorName} · Imported post. Your Owner account records who published it.
+              </small>
+            </label>
+          )}
           <label>
             Title
             <input

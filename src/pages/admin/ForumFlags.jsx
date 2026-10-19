@@ -93,7 +93,7 @@ export default function ForumFlags() {
                   <strong>{post.title}</strong>
                   <p>{snippet(post.body)}</p>
                   <span className="forum-flags__meta">
-                    by {post.author_username} · last flagged {new Date(post.last_flagged_at).toLocaleDateString()}
+                    by {post.author_username}{post.is_imported ? " · Imported post" : ""} · last flagged {new Date(post.last_flagged_at).toLocaleDateString()}
                   </span>
                 </div>
                 <div className="forum-flags__actions">
