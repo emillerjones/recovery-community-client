@@ -541,6 +541,25 @@
 .forum-inline-confirm { display: inline-flex; align-items: center; flex-wrap: wrap; min-width: 0; max-width: 100%; gap: 8px; color: #843e36; font-size: 12px; font-weight: 700; }
 .forum-inline-confirm button { border: 0; background: transparent; color: inherit; font: inherit; font-weight: 700; text-decoration: underline; cursor: pointer; }
 .forum-inline-reply { margin: 16px 0 3px; padding: 14px; border-radius: 13px; background: #f5f3ec; }
+.forum-inline-reply textarea {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 128px;
+  margin: 0;
+  padding: 14px 16px;
+  border: 1px solid rgba(51, 86, 64, .18);
+  border-radius: 14px;
+  background: #fffefa;
+  color: var(--forum-ink);
+  font: 400 16px/1.6 Inter, sans-serif;
+  resize: vertical;
+  outline: none;
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+.forum-inline-reply textarea::placeholder { color: #7b867e; opacity: 1; }
+.forum-inline-reply textarea:focus { display: block; margin: 0; border-color: #6e8b72; box-shadow: 0 0 0 3px rgba(79, 111, 84, .12); }
+.forum-inline-reply .mention-input__hint { margin: 7px 2px 0; font: 400 11px/1.5 Inter, sans-serif; }
 .forum-inline-reply__actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 7px; }
 .forum-inline-reply__actions button { border: 0; border-radius: 999px; padding: 8px 13px; color: var(--forum-muted); background: #e9ece6; font: inherit; font-size: 11px; font-weight: 700; cursor: pointer; }
 .forum-inline-reply__actions button:last-child { color: white; background: var(--forum-green); }
