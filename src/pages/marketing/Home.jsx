@@ -1,7 +1,6 @@
 import {
   ArrowDown,
   ArrowRight,
-  ArrowUpRight,
   BookOpen,
   HeartHandshake,
   Leaf,
@@ -125,7 +124,7 @@ export default function Home() {
             <p>Help support our nonprofit organization through monetary gifts, our Etsy store &amp; our affiliate discount codes.</p>
             <nav className="home-support__links" aria-label="Ways to support our mission">
               <Link className="home-support__link" to="/donate">Monetary Gifts <ArrowRight size={17} aria-hidden="true" /></Link>
-              <a className="home-support__link" href="https://www.etsy.com/shop/TheExitDrugRecovery" target="_blank" rel="noopener noreferrer">Shop Our Etsy Store <ArrowUpRight size={17} aria-hidden="true" /></a>
+              <a className="home-support__link" href="https://www.etsy.com/shop/TheExitDrugRecovery" target="_blank" rel="noopener noreferrer">Shop Our Etsy Store <ArrowRight size={17} aria-hidden="true" /></a>
               <Link className="home-support__link" to="/discountlinks">Affiliate Discount Codes <ArrowRight size={17} aria-hidden="true" /></Link>
             </nav>
           </section>
