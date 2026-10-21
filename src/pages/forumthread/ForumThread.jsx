@@ -706,7 +706,7 @@ export default function ForumThread() {
                 placeholder={`Comment as ${mainDisplayName || (mainIdentity.importing ? "another name" : "a member")}`}
               />
               <div className="forum-persistent-reply__actions">
-                <PhotoUploader photos={mainReplyPhotos} onChange={setMainReplyPhotos} token={token} compact />
+                <PhotoUploader photos={mainReplyPhotos} onChange={setMainReplyPhotos} token={token} compact pasteSelector="textarea" />
                 <button
                   className="forum-persistent-reply__send"
                   aria-label={submitting ? "Posting reply" : `Reply as ${mainDisplayName || "another name"}`}

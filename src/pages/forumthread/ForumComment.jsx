@@ -181,7 +181,7 @@ export default function ForumComment({
                   onMentionsChange={setReplyMentions}
                   placeholder={identityUser && replyIdentity.importing ? `Reply as ${replyIdentity.name.trim() || "another name"} to ${comment.author_username}` : `Reply to ${comment.author_username}`}
                 />
-                <PhotoUploader photos={replyPhotos} onChange={setReplyPhotos} token={token} compact />
+                <PhotoUploader photos={replyPhotos} onChange={setReplyPhotos} token={token} compact pasteSelector="textarea" />
                 <div className="forum-inline-reply__actions">
                   <button type="button" onClick={() => toggleReplyTo(comment.comment_id)}>
                     Cancel

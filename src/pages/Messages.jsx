@@ -324,10 +324,12 @@ export default function Messages() {
 
               <form className="dm-composer" onSubmit={sendMessage}>
                 <PhotoUploader
+                  key={conversationId}
                   photos={messagePhotos}
                   onChange={setMessagePhotos}
                   token={token}
                   compact
+                  pasteSelector='input[aria-label="Message"]'
                 />
                 <input
                   value={draft}

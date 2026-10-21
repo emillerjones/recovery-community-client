@@ -35,8 +35,10 @@ function uploadImage(file, token, onProgress) {
   });
 }
 
-export default function PhotoUploader({ photos, onChange, token, compact = false }) {
+export default function PhotoUploader({ photos, onChange, token, compact = false, pasteSelector = null }) {
   const inputId = useId();
+  const uploaderRef = useRef(null);
+  const mounted = useRef(true);
   const latestPhotos = useRef(photos);
   const previousPhotos = useRef(photos);
   const [selectionError, setSelectionError] = useState("");
@@ -53,13 +55,18 @@ export default function PhotoUploader({ photos, onChange, token, compact = false
     previousPhotos.current = photos;
   }, [photos]);
 
-  useEffect(() => () => {
-    latestPhotos.current.forEach((photo) => {
-      if (photo.previewUrl) URL.revokeObjectURL(photo.previewUrl);
-    });
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+      latestPhotos.current.forEach((photo) => {
+        if (photo.previewUrl) URL.revokeObjectURL(photo.previewUrl);
+      });
+    };
   }, []);
 
   function updatePhoto(id, changes) {
+    if (!mounted.current) return;
     onChange((current) => current.map((photo) => (
       photo.client_id === id ? { ...photo, ...changes } : photo
     )));
@@ -71,6 +78,13 @@ export default function PhotoUploader({ photos, onChange, token, compact = false
       const result = await uploadImage(photo.file, token, (progress) => (
         updatePhoto(photo.client_id, { progress })
       ));
+      if (!mounted.current || !latestPhotos.current.some(item => item.client_id === photo.client_id)) {
+        // A closed reply or switched conversation must not receive a late upload.
+        await fetch(`${API}/api/media/images/${result.media_id}`, {
+          method: "DELETE", headers: { Authorization: `Bearer ${token}` },
+        });
+        return;
+      }
       updatePhoto(photo.client_id, { ...result, status: "ready", progress: 100 });
     } catch (error) {
       updatePhoto(photo.client_id, { status: "error", error: error.message });
@@ -80,7 +94,7 @@ export default function PhotoUploader({ photos, onChange, token, compact = false
   function addFiles(fileList) {
     const selected = [...fileList];
     setSelectionError("");
-    const available = MAX_PHOTOS - photos.length;
+    const available = Math.max(0, MAX_PHOTOS - latestPhotos.current.length);
     if (selected.length > available) {
       setSelectionError(`Choose up to ${MAX_PHOTOS} photos total.`);
     }
@@ -100,10 +114,36 @@ export default function PhotoUploader({ photos, onChange, token, compact = false
         status: "uploading",
         progress: 0,
       };
+      // Reserve the slot synchronously, including back-to-back paste events.
+      latestPhotos.current = [...latestPhotos.current, photo];
       onChange((current) => [...current, photo]);
       startUpload(photo);
     });
   }
+
+  // Register on this composer's form only, never on the page or clipboard.
+  // Refresh the listener after each render so it uses the current draft/token.
+  useEffect(() => {
+    if (!pasteSelector) return;
+    const form = uploaderRef.current?.closest("form");
+    if (!form) return;
+    function handlePaste(event) {
+      if (!event.target.matches(pasteSelector)) return;
+      const clipboard = event.clipboardData;
+      if (!clipboard) return;
+      const items = [...clipboard.items].filter(item => item.kind === "file" && item.type.startsWith("image/"));
+      // Read file data once; do not also parse HTML or fetch pasted image URLs.
+      const images = items.length
+        ? items.map(item => item.getAsFile()).filter(Boolean)
+        : [...clipboard.files].filter(file => file.type.startsWith("image/"));
+      if (!images.length) return;
+      // Mixed text/image pastes retain the browser's ordinary text insertion.
+      if (!clipboard.getData("text/plain")) event.preventDefault();
+      addFiles(images);
+    }
+    form.addEventListener("paste", handlePaste);
+    return () => form.removeEventListener("paste", handlePaste);
+  });
 
   function chooseFiles(event) {
     addFiles(event.target.files);
@@ -142,11 +182,14 @@ export default function PhotoUploader({ photos, onChange, token, compact = false
       }
     }
     if (photo.previewUrl) URL.revokeObjectURL(photo.previewUrl);
+    if (!mounted.current) return;
+    latestPhotos.current = latestPhotos.current.filter(item => item.client_id !== photo.client_id);
     onChange((current) => current.filter((item) => item.client_id !== photo.client_id));
   }
 
   return (
     <div
+      ref={uploaderRef}
       className={`photo-uploader ${compact ? "is-compact" : ""} ${dragActive ? "is-dragging" : ""}`}
       onDragEnter={handleDrag}
       onDragOver={handleDrag}
