@@ -6,7 +6,6 @@
 .forum-posting-as__choices button:focus-visible { outline:2px solid #55765d; outline-offset:2px; }
 .forum-posting-as__choices button:disabled { opacity:.6; cursor:wait; }
 .forum-imported-name-help { color:var(--forum-feed-muted); font-size:11px; font-weight:400; line-height:1.5; overflow-wrap:anywhere; }
-.forum-feed-card__author .forum-imported-label,.forum-thread-author .forum-imported-label { display:table; width:fit-content; margin:4px 0; padding:3px 7px; border:1px solid #d5dfd0; border-radius:6px; background:#eef2e9; color:#52664e; font:650 10px/1.3 Inter,sans-serif; }
 .forum-thread-author { max-width:100%; box-sizing:border-box; }
 .forum-thread-author>div { min-width:0; }
 .forum-thread-author strong { overflow-wrap:anywhere; }

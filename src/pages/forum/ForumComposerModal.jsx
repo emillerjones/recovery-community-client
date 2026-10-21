@@ -258,7 +258,7 @@ export default function ForumComposerModal({
                 onChange={event => setDraft(current => ({ ...current, imported_author_label: event.target.value }))}
                 placeholder="Anonymous, Participant A, or another name" aria-describedby="forum-imported-name-help" />
               <small id="forum-imported-name-help" className="forum-imported-name-help">
-                Shown as {authorName} · Imported post. Your Owner account records who published it.
+                Shown as {authorName}. Your Owner account records who published it.
               </small>
             </label>
           )}

@@ -46,7 +46,6 @@ export default function ForumPostCard({ post, token }) {
         />
         <div>
           <strong>{post.author_username}</strong>
-          {post.is_imported && <span className="forum-imported-label">Imported post</span>}
           <span>{timeAgo(post.latest_activity_at)}</span>
         </div>
         {post.category_slug === "announcements" && (
