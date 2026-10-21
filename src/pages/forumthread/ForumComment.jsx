@@ -1,4 +1,5 @@
 import { useState } from "react";
+import ReplyIdentity from "./ReplyIdentity";
 import { CornerDownRight, Flag, Pencil, Trash2 } from "lucide-react";
 import MemberAvatar from "../../components/MemberAvatar";
 import MentionText from "../../components/MentionText";
@@ -21,6 +22,7 @@ export default function ForumComment({
   setReplyMentions, replyPhotos, setReplyPhotos, submitReply, submitting, editComment, deleteComment,
   toggleCommentFlag, toggleCommentReaction, reactingTo, formatDate,
   editedLabel,
+  identityUser, replyIdentity, setReplyIdentity,
   staffOnly = false,
 }) {
   // This displays ONE comment. At the bottom it renders another
@@ -170,21 +172,22 @@ export default function ForumComment({
                 className="forum-inline-reply"
                 onSubmit={(event) => submitReply(event, comment.comment_id)}
               >
+                {identityUser && <ReplyIdentity user={identityUser} identity={replyIdentity} onChange={setReplyIdentity} disabled={submitting} />}
                 {/* This controls the small reply box beneath one comment. */}
                 <MentionTextarea
                   quiet={staffOnly}
                   token={token} autoFocus rows={3} value={replyBody}
                   onChange={setReplyBody} mentions={replyMentions}
                   onMentionsChange={setReplyMentions}
-                  placeholder={`Reply to ${comment.author_username}`}
+                  placeholder={identityUser && replyIdentity.importing ? `Reply as ${replyIdentity.name.trim() || "another name"} to ${comment.author_username}` : `Reply to ${comment.author_username}`}
                 />
                 <PhotoUploader photos={replyPhotos} onChange={setReplyPhotos} token={token} compact />
                 <div className="forum-inline-reply__actions">
                   <button type="button" onClick={() => toggleReplyTo(comment.comment_id)}>
                     Cancel
                   </button>
-                  <button disabled={submitting || !photosReady(replyPhotos)}>
-                    {submitting ? "Replying…" : !photosReady(replyPhotos) ? "Uploading…" : "Reply"}
+                  <button disabled={submitting || !replyBody.trim() || !photosReady(replyPhotos) || (identityUser && replyIdentity.importing && !replyIdentity.name.trim())}>
+                    {submitting ? "Replying…" : !photosReady(replyPhotos) ? "Uploading…" : identityUser && replyIdentity.importing ? `Reply as ${replyIdentity.name.trim() || "another name"}` : "Reply"}
                   </button>
                 </div>
               </form>
@@ -198,6 +201,9 @@ export default function ForumComment({
         <ForumComment
           key={child.comment_id}
           staffOnly={staffOnly}
+          identityUser={identityUser}
+          replyIdentity={replyIdentity}
+          setReplyIdentity={setReplyIdentity}
           comment={child}
           depth={depth + 1}
           currentUserId={currentUserId}

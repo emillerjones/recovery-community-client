@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, Bell, Flag, Lock, Pencil, Pin, Send, ShieldCheck, Trash2 } from "lucide-react";
 import { useAuth } from "../../auth/AuthContext";
@@ -10,6 +10,7 @@ import MentionTextarea from "../../components/MentionTextarea";
 import MemberAvatar from "../../components/MemberAvatar";
 import ForumCategoryGlyph from "../../components/ForumCategoryGlyph";
 import ForumComment from "./ForumComment";
+import ReplyIdentity from "./ReplyIdentity";
 import PostEditHistory from "./PostEditHistory";
 import ForumPhotoGallery from "../../components/forumPhotos/ForumPhotoGallery";
 import ForumPoll from "../../components/forumPolls/ForumPoll";
@@ -73,6 +74,9 @@ export default function ForumThread() {
   const [mainReply, setMainReply] = useState("");
   const [mainReplyMentions, setMainReplyMentions] = useState([]);
   const [mainReplyPhotos, setMainReplyPhotos] = useState([]);
+  const [mainIdentity, setMainIdentity] = useState({ importing: false, name: "" });
+  const [replyIdentity, setReplyIdentity] = useState({ importing: false, name: "" });
+  const composerRef = useRef(null);
   const [submitting, setSubmitting] = useState(false);
   const [editingPost, setEditingPost] = useState(false);
   const [postDraft, setPostDraft] = useState({ title: "", body: "" });
@@ -80,6 +84,16 @@ export default function ForumThread() {
   const [reactingTo, setReactingTo] = useState(null);
   const headers = useMemo(() => ({ Authorization: `Bearer ${token}` }), [token]);
   const staffOnly = post?.category_slug === "staff-announcements";
+  const canChooseIdentity = user?.role_id === 1;
+  const mainDisplayName = canChooseIdentity && mainIdentity.importing ? mainIdentity.name.trim() : user?.username;
+  useEffect(() => {
+    if (!canChooseIdentity || loading || post?.locked || !composerRef.current) return;
+    const observer = new ResizeObserver(([entry]) => {
+      document.body.style.setProperty("--forum-owner-composer-height", entry.target.getBoundingClientRect().height + "px");
+    });
+    observer.observe(composerRef.current);
+    return () => { observer.disconnect(); document.body.style.removeProperty("--forum-owner-composer-height"); };
+  }, [canChooseIdentity, loading, post?.locked]);
   const canModerate = staffOnly ? [1,10].includes(user?.role_id) : user?.role_id <= 50;
   const canEditOwn = user?.role_id <= 50;
   const canEditOthers = user?.role_id === 1;
@@ -211,6 +225,11 @@ export default function ForumThread() {
     const body = parentCommentId ? replyBody : mainReply;
     const selectedMentions = parentCommentId ? replyMentions : mainReplyMentions;
     const selectedPhotos = parentCommentId ? replyPhotos : mainReplyPhotos;
+    const identity = parentCommentId ? replyIdentity : mainIdentity;
+    if (canChooseIdentity && identity.importing && (!identity.name.trim() || identity.name.trim().length > 80 || /[\p{Cc}\p{Cf}]/u.test(identity.name))) {
+      setError("Enter a display name of 1 to 80 characters without control characters.");
+      return;
+    }
     if (!photosReady(selectedPhotos)) {
       setError("Wait for every photo to finish uploading.");
       return;
@@ -220,47 +239,64 @@ export default function ForumThread() {
 
     // TRACE STEP 3: Send the reply to the server. To continue tracing this
     // request, find this POST route in recovery-community-server/api/forum.js.
-    const response = await fetch(`${API}/api/forum/posts/${postId}/comments`, {
-      method: "POST",
-      headers: { ...headers, "Content-Type": "application/json" },
-      // MENTION TRACE STEP 6B: Send the visible reply plus the real IDs chosen
-      // from MentionTextarea. Continue at server/api/forum.js.
-      body: JSON.stringify({
-        body,
-        parent_comment_id: parentCommentId,
-        mentioned_user_ids: selectedMentions.map((member) => member.user_id),
-        media_ids: readyMediaIds(selectedPhotos),
-      }),
-    });
+    let response;
+    let result;
+    try {
+      response = await fetch(`${API}/api/forum/posts/${postId}/comments`, {
+        method: "POST",
+        headers: { ...headers, "Content-Type": "application/json" },
+        // MENTION TRACE STEP 6B: Send the visible reply plus the real IDs chosen
+        // from MentionTextarea. Continue at server/api/forum.js.
+        body: JSON.stringify({
+          body,
+          parent_comment_id: parentCommentId,
+          mentioned_user_ids: selectedMentions.map((member) => member.user_id),
+          media_ids: readyMediaIds(selectedPhotos),
+          ...(canChooseIdentity && identity.importing ? { is_imported: true, imported_author_label: identity.name.trim() } : {}),
+        }),
+      });
 
-    // The server sends JSON back. If it rejected the reply, show its message
-    // and stop here without clearing the member's text.
-    const result = await response.json();
+      // The server sends JSON back. If it rejected the reply, show its message
+      // and stop here without clearing the member's text.
+      result = await response.json();
+    } catch {
+      setError("Could not confirm your reply. Your draft is saved here; check the thread before trying again.");
+      setSubmitting(false);
+      return;
+    }
     if (!response.ok) {
       setError(result.message || "Could not add that reply.");
       setSubmitting(false);
       return;
     }
 
-    // TRACE STEP 4: The server saved the reply successfully. Clean up both
-    // possible reply forms and return the button to its normal state.
-    setMainReply("");
-    setReplyBody("");
-    setReplyMentions([]);
-    setReplyPhotos([]);
-    setReplyingTo(null);
-    setMainReplyMentions([]);
-    setMainReplyPhotos([]);
+    // Clear only the submitted composer, preserving the other draft.
+    if (parentCommentId) {
+      setReplyIdentity({ importing: false, name: "" });
+      setReplyBody("");
+      setReplyMentions([]);
+      setReplyPhotos([]);
+      setReplyingTo(null);
+    } else {
+      setMainIdentity({ importing: false, name: "" });
+      setMainReply("");
+      setMainReplyMentions([]);
+      setMainReplyPhotos([]);
+    }
     setSubmitting(false);
 
-    // TRACE STEP 5: Ask the server for the entire updated thread. Store the
-    // returned post/comments in state so React rerenders the new reply.
-    const refreshed = await fetchThread();
-    setPost(refreshed.post);
-    setComments(refreshed.comments);
+    try {
+      const refreshed = await fetchThread();
+      setPost(refreshed.post);
+      setComments(refreshed.comments);
+    } catch {
+      // The POST succeeded; never suggest resending an already-published reply.
+      setError("Your reply was posted. Refresh the page to see the latest conversation.");
+    }
   }
 
   function toggleInlineReply(commentId) {
+    setReplyIdentity({ importing: false, name: "" });
     if (replyingTo !== commentId && replyPhotos.length) {
       discardPendingPhotos(replyPhotos, token);
     }
@@ -620,6 +656,9 @@ export default function ForumThread() {
               comment={comment}
               depth={0}
               currentUserId={user?.id}
+              identityUser={canChooseIdentity ? user : null}
+              replyIdentity={replyIdentity}
+              setReplyIdentity={setReplyIdentity}
               canEditOwn={canEditOwn}
               canEditOthers={canEditOthers}
               canDeleteOthers={canDeleteOthers}
@@ -652,8 +691,9 @@ export default function ForumThread() {
 
       {!post.locked && (
         /* This fixed form posts a top-level reply while the member keeps their place. */
-        <form className="forum-persistent-reply" onSubmit={(event) => submitReply(event)}>
+        <form ref={composerRef} className={`forum-persistent-reply ${canChooseIdentity ? "forum-persistent-reply--owner" : ""}`} onSubmit={(event) => submitReply(event)}>
           <div className="forum-persistent-reply__inner">
+            {canChooseIdentity && <ReplyIdentity user={user} identity={mainIdentity} onChange={setMainIdentity} disabled={submitting} />}
             <div className="forum-persistent-reply__row">
               <MentionTextarea
                 quiet={staffOnly}
@@ -663,16 +703,17 @@ export default function ForumThread() {
                 onChange={setMainReply}
                 mentions={mainReplyMentions}
                 onMentionsChange={setMainReplyMentions}
-                placeholder={`Comment as ${user?.username || "a member"}`}
+                placeholder={`Comment as ${mainDisplayName || (mainIdentity.importing ? "another name" : "a member")}`}
               />
               <div className="forum-persistent-reply__actions">
                 <PhotoUploader photos={mainReplyPhotos} onChange={setMainReplyPhotos} token={token} compact />
                 <button
                   className="forum-persistent-reply__send"
-                  aria-label={submitting ? "Posting reply" : "Post reply"}
-                  disabled={submitting || !mainReply.trim() || !photosReady(mainReplyPhotos)}
+                  aria-label={submitting ? "Posting reply" : `Reply as ${mainDisplayName || "another name"}`}
+                  disabled={submitting || !mainReply.trim() || !photosReady(mainReplyPhotos) || (canChooseIdentity && mainIdentity.importing && !mainIdentity.name.trim())}
                 >
                   <Send size={18} />
+                  {canChooseIdentity && mainIdentity.importing && <span>Reply as {mainDisplayName || "another name"}</span>}
                 </button>
               </div>
             </div>
