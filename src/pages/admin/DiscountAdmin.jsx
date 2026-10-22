@@ -191,7 +191,7 @@ export default function DiscountAdmin() {
   return (
     <main className="faq-admin discount-admin">
       <header className="faq-admin__header">
-        <div><span>Owner tool</span><h1>Edit Discount Links</h1><p>Add, update, hide, reorder, or remove discount brands on the public <strong>/discountlinks</strong> page.</p></div>
+        <div><span>Owner tool</span><h1>Edit Discount Links</h1><p>Add, update, hide, reorder, or remove discount brands on the public <strong>/discountlinks</strong> page.</p><small className="faq-admin__revision">Saved revision {revision}.</small></div>
         <a href="/discountlinks" target="_blank" rel="noreferrer">Open Discount Links <ExternalLink size={16} /></a>
       </header>
 
@@ -249,11 +249,11 @@ export default function DiscountAdmin() {
 
         <button className="discount-admin__add discount-admin__add-category" type="button" onClick={addCategory} disabled={draft.categories.length >= 12}><Plus size={18} /> Add category</button>
 
-        <div className="faq-admin__actions" data-mobile-action-bar>
-          <span>{dirty ? "You have unsaved changes." : `Saved revision ${revision}.`}</span>
-          <button type="button" onClick={discard} disabled={!dirty || saving}><RotateCcw size={17} /> Discard changes</button>
-          <button className="faq-admin__save" disabled={!dirty || saving}><Save size={17} /> {saving ? "Saving…" : "Save and publish"}</button>
-        </div>
+        {dirty && <div className="faq-admin__actions" data-mobile-action-bar>
+          <span role="status">You have unsaved changes.</span>
+          <button type="button" onClick={discard} disabled={saving} aria-label="Discard changes"><RotateCcw size={17} /> Discard</button>
+          <button className="faq-admin__save" disabled={saving}><Save size={17} /> {saving ? "Saving…" : "Save and publish"}</button>
+        </div>}
       </form>
     </main>
   );

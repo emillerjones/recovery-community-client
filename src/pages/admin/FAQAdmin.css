@@ -3,6 +3,7 @@
 .faq-admin__header span,.faq-admin__section-heading>span { color:#71816f; font-size:11px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; }
 .faq-admin__header h1 { margin:8px 0; font:500 clamp(2.5rem,5vw,4.5rem)/1 Fraunces,serif; }
 .faq-admin__header p { max-width:650px; margin:0; color:#627066; line-height:1.6; }
+.faq-admin__revision { display:block; margin-top:8px; color:#71816f; font-size:11px; line-height:1.5; }
 .faq-admin__header a { display:inline-flex; align-items:center; gap:7px; flex:0 0 auto; padding:11px 15px; border:1px solid #bdc9bc; border-radius:999px; color:var(--green); font-weight:750; text-decoration:none; }
 .faq-admin form,.faq-admin__notice { max-width:1120px; margin-right:auto; margin-left:auto; }
 .faq-admin__notice { display:flex; justify-content:space-between; gap:20px; margin-bottom:20px; padding:14px 17px; border:1px solid #ddc49d; border-radius:12px; background:#fff6e7; color:#6b4d25; }
@@ -30,4 +31,6 @@
 .faq-admin__actions button { display:inline-flex; align-items:center; gap:7px; min-height:42px; padding:0 15px; border:1px solid #cbd5c9; border-radius:999px; background:#fff; color:#35513e; font-weight:750; cursor:pointer; }
 .faq-admin__actions button:disabled { opacity:.45; cursor:default; }
 .faq-admin__actions .faq-admin__save { border-color:var(--green); background:var(--green); color:#fff; }
-@media(max-width:700px){.faq-admin{padding:110px 15px 100px}.faq-admin__header{align-items:flex-start;flex-direction:column}.faq-admin__section{padding:22px 16px}.faq-admin__group-fields{grid-template-columns:1fr}.faq-admin__questions article{padding:16px 12px}.faq-admin__actions{align-items:stretch;flex-direction:column}.faq-admin__actions>span{margin:0}.faq-admin__actions button{justify-content:center;width:100%}}
+@media(max-width:700px){.faq-admin{padding:110px 15px 100px}.faq-admin__header{align-items:flex-start;flex-direction:column}.faq-admin__section{padding:22px 16px}.faq-admin__group-fields{grid-template-columns:1fr}.faq-admin__questions article{padding:16px 12px}.faq-admin__actions{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px;padding:10px}.faq-admin__actions>span{grid-column:1/-1;margin:0;font-size:11px}.faq-admin__actions button{justify-content:center;min-width:0;width:100%;gap:5px;padding:0 8px;font-size:12px;white-space:nowrap}.faq-admin__actions button svg{flex-shrink:0}}
+
+@media(max-width:360px){.faq-admin__actions button{font-size:11px}}

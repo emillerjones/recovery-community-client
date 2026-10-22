@@ -135,7 +135,7 @@ export default function FAQAdmin() {
   return (
     <main className="faq-admin">
       <header className="faq-admin__header">
-        <div><span>Owner tool</span><h1>Edit FAQ</h1><p>Changes saved here appear on the public <strong>/faq</strong> page.</p></div>
+        <div><span>Owner tool</span><h1>Edit FAQ</h1><p>Changes saved here appear on the public <strong>/faq</strong> page.</p><small className="faq-admin__revision">Saved revision {revision}.</small></div>
         <a href="/faq" target="_blank" rel="noreferrer">Open FAQ <ExternalLink size={16} /></a>
       </header>
 
@@ -174,11 +174,11 @@ export default function FAQAdmin() {
           </section>
         ))}
 
-        <div className="faq-admin__actions" data-mobile-action-bar>
-          <span>{dirty ? "You have unsaved changes." : `Saved revision ${revision}.`}</span>
-          <button type="button" onClick={discard} disabled={!dirty || saving}><RotateCcw size={17} /> Discard changes</button>
-          <button className="faq-admin__save" disabled={!dirty || saving}><Save size={17} /> {saving ? "Saving…" : "Save and publish"}</button>
-        </div>
+        {dirty && <div className="faq-admin__actions" data-mobile-action-bar>
+          <span role="status">You have unsaved changes.</span>
+          <button type="button" onClick={discard} disabled={saving} aria-label="Discard changes"><RotateCcw size={17} /> Discard</button>
+          <button className="faq-admin__save" disabled={saving}><Save size={17} /> {saving ? "Saving…" : "Save and publish"}</button>
+        </div>}
       </form>
     </main>
   );
