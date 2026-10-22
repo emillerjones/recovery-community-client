@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowDown, ArrowUp, ExternalLink, Plus, RotateCcw, Save, Trash2 } from "lucide-react";
 import { useAuth } from "../../auth/AuthContext";
+import DiscountLogoInput from "./DiscountLogoInput";
 import "./FAQAdmin.css";
 import "./DiscountAdmin.css";
 
@@ -36,8 +37,10 @@ export default function DiscountAdmin() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [notice, setNotice] = useState("");
+  const [logoFiles, setLogoFiles] = useState({});
+  const latestLogoFiles = useRef({});
   const [openBrandIds, setOpenBrandIds] = useState(() => new Set());
-  const dirty = useMemo(() => Boolean(draft && savedContent && JSON.stringify(draft) !== JSON.stringify(savedContent)), [draft, savedContent]);
+  const dirty = useMemo(() => Boolean(draft && savedContent && (JSON.stringify(draft) !== JSON.stringify(savedContent) || Object.keys(logoFiles).length > 0)), [draft, savedContent, logoFiles]);
 
   useEffect(() => {
     let cancelled = false;
@@ -64,6 +67,24 @@ export default function DiscountAdmin() {
     return () => window.removeEventListener("beforeunload", warn);
   }, [dirty]);
 
+  useEffect(() => {
+    Object.entries(latestLogoFiles.current).forEach(([id, selection]) => {
+      if (logoFiles[id]?.previewUrl !== selection.previewUrl) URL.revokeObjectURL(selection.previewUrl);
+    });
+    latestLogoFiles.current = logoFiles;
+  }, [logoFiles]);
+
+  useEffect(() => () => Object.values(latestLogoFiles.current).forEach(selection => URL.revokeObjectURL(selection.previewUrl)), []);
+
+  function clearLogoFile(brandId) {
+    setLogoFiles(current => { const next = { ...current }; delete next[brandId]; return next; });
+  }
+
+  function selectLogo(brandId, file) {
+    const previewUrl = URL.createObjectURL(file);
+    setLogoFiles(current => ({ ...current, [brandId]: { file, previewUrl } }));
+  }
+
   function updateCategory(categoryIndex, field, value) {
     setDraft((current) => ({ ...current, categories: current.categories.map((category, index) => index === categoryIndex ? { ...category, [field]: value } : category) }));
   }
@@ -86,6 +107,7 @@ export default function DiscountAdmin() {
     const category = draft.categories[categoryIndex];
     if (draft.categories.length === 1) return;
     if (!window.confirm(`Remove “${category.title || "this new category"}” and all of its brands? This becomes permanent only after publishing.`)) return;
+    category.brands.forEach(brand => clearLogoFile(brand.id));
     setDraft((current) => ({ ...current, categories: current.categories.filter((_, index) => index !== categoryIndex) }));
     setNotice("Category removed from this draft. Save and publish to make it permanent.");
   }
@@ -144,6 +166,7 @@ export default function DiscountAdmin() {
         brands: category.brands.filter((_, innerIndex) => innerIndex !== brandIndex),
       }),
     }));
+    clearLogoFile(brand.id);
     setNotice("Brand removed from this draft. Save and publish to make it permanent.");
   }
 
@@ -162,13 +185,33 @@ export default function DiscountAdmin() {
     setSaving(true);
     setNotice("");
     try {
+      const content = clone(draft);
+      for (const category of content.categories) {
+        for (const brand of category.brands) {
+          const selection = logoFiles[brand.id];
+          if (!selection) continue;
+          let url = selection.uploadedUrl;
+          if (!url) {
+            const form = new FormData(); form.append("image", selection.file);
+            const result = await fetch(`${API}/api/discount2/logos`, {
+              method: "POST", headers: { Authorization: `Bearer ${token}` }, body: form,
+            }).then(readResponse);
+            url = result.url;
+            if (typeof url !== "string" || !url.startsWith("https://")) throw new Error("The logo upload did not return a valid image address. Please try again.");
+            // A failed publish can retry without uploading the same file again.
+            setLogoFiles(current => ({ ...current, [brand.id]: { ...selection, uploadedUrl: url } }));
+          }
+          brand.logo = url;
+        }
+      }
       const data = await fetch(`${API}/api/discount2`, {
         method: "PATCH",
         headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-        body: JSON.stringify({ content: draft, revision }),
+        body: JSON.stringify({ content, revision }),
       }).then(readResponse);
       setSavedContent(data.content);
       setDraft(clone(data.content));
+      setLogoFiles({});
       setRevision(data.revision);
       setNotice("Discount Links changes are live.");
     } catch (error) {
@@ -181,6 +224,7 @@ export default function DiscountAdmin() {
   function discard() {
     if (!dirty || window.confirm("Discard your unsaved Discount Links changes?")) {
       setDraft(clone(savedContent));
+      setLogoFiles({});
       setNotice("Unsaved changes discarded.");
     }
   }
@@ -198,6 +242,7 @@ export default function DiscountAdmin() {
       {notice && <div className={`faq-admin__notice ${notice.includes("live") ? "is-success" : ""}`} role="status">{notice}<button type="button" onClick={() => setNotice("")}>×</button></div>}
 
       <form onSubmit={save}>
+        <fieldset className="discount-admin__fieldset" disabled={saving}>
         {draft.categories.map((category, categoryIndex) => (
           <section className="faq-admin__section discount-admin__category" key={category.id}>
             <div className="discount-admin__category-heading">
@@ -218,14 +263,17 @@ export default function DiscountAdmin() {
               {category.brands.map((brand, brandIndex) => (
                 <details className={`discount-admin__brand ${brand.active ? "" : "is-hidden"}`} key={brand.id} open={openBrandIds.has(brand.id)} onToggle={(event) => setBrandOpen(brand.id, event.currentTarget.open)}>
                   <summary>
-                    {brand.logo ? <img src={brand.logo} alt="" onError={(event) => { event.currentTarget.style.visibility = "hidden"; }} /> : <span className="discount-admin__logo-placeholder">Logo</span>}
+                    {(logoFiles[brand.id]?.previewUrl || brand.logo) ? <img key={logoFiles[brand.id]?.previewUrl || brand.logo} src={logoFiles[brand.id]?.previewUrl || brand.logo} alt="" onError={(event) => { event.currentTarget.style.visibility = "hidden"; }} /> : <span className="discount-admin__logo-placeholder">Logo</span>}
                     <span className="discount-admin__brand-summary"><strong>{brand.name || "New brand"}</strong><small>{brand.code === null ? "No code needed" : brand.code || "Code not entered"}</small></span>
                     {!brand.active && <em>Hidden</em>}
                   </summary>
                   <div className="discount-admin__brand-fields">
                     <label>Brand name<input value={brand.name} maxLength={160} onChange={(event) => updateBrand(categoryIndex, brandIndex, "name", event.target.value)} required /></label>
                     <label>Website/referral link<input type="url" value={brand.url} maxLength={2000} placeholder="https://…" onChange={(event) => updateBrand(categoryIndex, brandIndex, "url", event.target.value)} required /></label>
-                    <label>Logo image URL<input type="url" value={brand.logo || ""} maxLength={2000} placeholder="https://…" onChange={(event) => updateBrand(categoryIndex, brandIndex, "logo", event.target.value || null)} /></label>
+                    <DiscountLogoInput value={brand.logo} selection={logoFiles[brand.id]}
+                      onFile={file => selectLogo(brand.id, file)}
+                      onLink={url => { clearLogoFile(brand.id); updateBrand(categoryIndex, brandIndex, "logo", url); }}
+                      onRemove={() => { clearLogoFile(brand.id); updateBrand(categoryIndex, brandIndex, "logo", null); }} />
                     <label>Optional note<textarea rows="2" value={brand.note || ""} maxLength={500} onChange={(event) => updateBrand(categoryIndex, brandIndex, "note", event.target.value || null)} /></label>
                     <div className="discount-admin__code-fields">
                       <label>Discount code<input value={brand.code || ""} maxLength={100} disabled={brand.code === null} required={brand.code !== null} onChange={(event) => updateBrand(categoryIndex, brandIndex, "code", event.target.value.toUpperCase())} /></label>
@@ -254,6 +302,7 @@ export default function DiscountAdmin() {
           <button type="button" onClick={discard} disabled={saving} aria-label="Discard changes"><RotateCcw size={17} /> Discard</button>
           <button className="faq-admin__save" disabled={saving}><Save size={17} /> {saving ? "Saving…" : "Save and publish"}</button>
         </div>}
+        </fieldset>
       </form>
     </main>
   );
