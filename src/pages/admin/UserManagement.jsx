@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { MoreHorizontal, X } from "lucide-react";
 import { useAuth } from "../../auth/AuthContext";
+import UserRoleMenu from "./UserRoleMenu";
 import RoleBadge from "../../components/RoleBadge";
 import ConfirmModal from "../../components/ConfirmModal";
 import { Toast, useToast } from "../../components/Toast";
@@ -256,24 +257,12 @@ export default function UserManagement() {
                         // just show a static badge, no dropdown at all.
                         <RoleBadge roleId={u.role_id} />
                       ) : (
-                        <select
-                          className="role-select"
-                          aria-label={`Role for ${u.username}`}
+                        <UserRoleMenu
+                          username={u.username}
                           value={u.role_id}
-                          onChange={(e) =>
-                            askToChangeRole(u, Number(e.target.value))
-                          }
-                        >
-                          {ASSIGNABLE_ROLES
-                            // Only show roles that this admin is actually
-                            // allowed to assign (must be below their own rank)
-                            .filter((r) => r.role_id > currentUser.role_id)
-                            .map((r) => (
-                              <option key={r.role_id} value={r.role_id}>
-                                {r.label}
-                              </option>
-                            ))}
-                        </select>
+                          options={ASSIGNABLE_ROLES.filter(role => role.role_id > currentUser.role_id)}
+                          onChange={roleId => askToChangeRole(u, roleId)}
+                        />
                       )}
                     </td>
 
