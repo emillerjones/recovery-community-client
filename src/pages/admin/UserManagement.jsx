@@ -191,34 +191,6 @@ export default function UserManagement() {
     setPendingAction(null);
   }
 
-  // ---------- Permanent test-account deletion ----------
-
-  async function hardDeleteTestAccount(targetUser) {
-    const confirmation = window.prompt(
-      `Testing only: permanently delete ${targetUser.username} and its signup records?\n\nType the username exactly to continue.`
-    );
-    if (confirmation !== targetUser.username) {
-      if (confirmation !== null) showToast("Username did not match. Nothing was deleted.");
-      return;
-    }
-
-    const response = await fetch(`${API}/api/users/${targetUser.user_id}/hard`, {
-      method: "DELETE",
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    const text = await response.text();
-    let result = {};
-    try { result = text ? JSON.parse(text) : {}; } catch { result = { message: text }; }
-
-    if (!response.ok) {
-      showToast(result.message || "That test account could not be permanently deleted.");
-      return;
-    }
-
-    setUsers((previous) => previous.filter((u) => u.user_id !== targetUser.user_id));
-    showToast(`${targetUser.username} and its signup records were permanently deleted.`);
-  }
-
   // Decides which confirm function to run based on pendingAction.type
   function handleConfirm() {
     if (!pendingAction) return;
@@ -359,15 +331,6 @@ export default function UserManagement() {
                           >
                             Delete
                           </button>
-                          {currentUser.role_id === OWNER_ROLE_ID && u.role_id === 100 && (
-                            <button
-                              className="user-actions__button user-actions__button--hard-delete"
-                              onClick={() => hardDeleteTestAccount(u)}
-                              title="Testing only: permanently remove an unused signup"
-                            >
-                              Hard delete test
-                            </button>
-                          )}
                         </div>
                         </>
                       )}
@@ -380,8 +343,7 @@ export default function UserManagement() {
           </table>
         )}
 
-        {/* MOBILE USER ACTIONS: destructive controls stay out of each card.
-            Hard delete is intentionally absent from this mobile sheet. */}
+        {/* MOBILE USER ACTIONS: destructive controls stay out of each card. */}
         {mobileActionUser && (
           <div className="user-mobile-actions-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setMobileActionUser(null); }}>
             <section className="user-mobile-actions" role="dialog" aria-modal="true" aria-labelledby="mobile-user-actions-title">

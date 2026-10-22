@@ -273,17 +273,6 @@
   color: #a83a3a;
 }
 
-.user-actions__button--hard-delete {
-  border-color: rgba(128, 38, 38, 0.22);
-  color: #7f2424;
-}
-
-.user-actions__button--hard-delete:hover {
-  background: #7f2424;
-  border-color: #7f2424;
-  color: #fff;
-}
-
 .user-actions__mobile-trigger,
 .user-mobile-actions-backdrop,
 .user-mobile-filters { display: none; }
@@ -334,7 +323,6 @@
   .user-cell__date { align-content: end; color: rgba(27,34,28,.65); font-size: 12px; text-align: right; }
   .user-card__actions { display: none !important; }
   .user-actions--desktop { display: none; }
-  .user-actions__button--hard-delete { display: none !important; }
   .user-actions__mobile-trigger { width: 34px; height: 34px; display: grid; place-items: center; padding: 0; border: 1px solid rgba(44,58,45,.12); border-radius: 50%; background: #f3f6f0; color: #345039; }
   .user-actions__mobile-trigger span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 
