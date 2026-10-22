@@ -69,7 +69,7 @@ export default function UserManagement() {
     return targetUser.role_id > currentUser.role_id;
   }
 
-  // Filters the user list by the search box, matching username or email
+  // Filter first, then put owners first while preserving everyone else's order.
   const visibleUsers = users.filter((u) => {
     const term = searchTerm.toLowerCase();
     const matchesSearch = (
@@ -82,7 +82,7 @@ export default function UserManagement() {
       || (memberFilter === "staff" && u.role_id <= 50)
       || (memberFilter === "members" && u.role_id === 100);
     return matchesSearch && matchesFilter;
-  });
+  }).sort((a, b) => Number(b.role_id === OWNER_ROLE_ID) - Number(a.role_id === OWNER_ROLE_ID));
 
   // Builds the little "3 Owners · 1 Administrator · ..." summary.
   // We count from the FULL user list (not the filtered/searched
