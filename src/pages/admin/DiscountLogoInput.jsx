@@ -36,7 +36,7 @@ export default function DiscountLogoInput({ value, selection, onFile, onLink, on
           {preview && <button type="button" className="discount-logo__remove" onClick={() => { setError(""); onRemove(); }}><Trash2 size={14} /> Remove logo</button>}
         </div>
       </div>
-      <small>{selection ? `${selection.file.name} · Ready to upload when you save and publish.` : "Up to 5 MB. PNG works well for logos with transparent backgrounds."}</small>
+      <small>{selection ? `${selection.file.name} · Ready to upload when you save this brand.` : "Up to 5 MB. PNG works well for logos with transparent backgrounds."}</small>
       <button type="button" className="discount-logo__link-toggle" aria-expanded={showLink} aria-controls={`${id}-link`} onClick={() => setShowLink(current => !current)}><Link size={14} /> {showLink ? "Hide image link" : "Use an image link instead"}</button>
       {showLink && <label id={`${id}-link`}>Logo image URL<input type="url" value={selection ? "" : value || ""} maxLength={2000} placeholder="https://…" onChange={event => { setError(""); onLink(event.target.value || null); }} /></label>}
       {error && <p className="discount-logo__error" role="alert">{error}</p>}
