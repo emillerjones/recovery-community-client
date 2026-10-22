@@ -6,11 +6,21 @@
 .discount-admin__save-actions button svg { flex-shrink:0; }
 .discount-admin__save-actions .is-danger { margin-right:auto; }
 .discount-admin__save-actions .discount-admin__save-item { background:#294b35; border-color:#294b35; color:#fff; }
+.discount-admin__action-short { display:none; }
 .discount-admin__status { margin:10px 0 0; color:#355a3d; font:500 12px/1.5 Inter,sans-serif; overflow-wrap:anywhere; }
 .discount-admin__status.is-error { color:#8b3d32; }
 .discount-admin__hint { margin:0; color:#73806f; font-size:12px; line-height:1.5; }
 @media(max-width:1060px){.discount-admin{padding-bottom:calc(200px + env(safe-area-inset-bottom))}}
 @media(max-width:480px){.discount-admin__save-actions{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.discount-admin__save-actions button{min-width:0;padding:8px;font-size:11px}.discount-admin__save-actions .is-danger{margin-right:0}.discount-admin__save-actions .discount-admin__save-item{grid-column:2;grid-row:1}}
+@media(max-width:760px){
+  .discount-admin__brand-save-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:8px;padding-top:14px;border-top:1px solid #e0e6db}
+  .discount-admin__brand-save-actions button{min-width:0;min-height:42px;gap:4px;padding:8px 5px;font-size:11px;white-space:nowrap}
+  .discount-admin__brand-save-actions button svg{width:14px;height:14px}
+  .discount-admin__brand-save-actions .is-danger{grid-column:1;grid-row:1;margin:0;background:#fbf0ec;border-color:#ead3cd}
+  .discount-admin__brand-save-actions .discount-admin__save-item{grid-column:3;grid-row:1}
+  .discount-admin__brand-save-actions .discount-admin__action-full{display:none}
+  .discount-admin__brand-save-actions .discount-admin__action-short{display:inline}
+}
 .discount-logo { display:grid; min-width:0; gap:10px; padding:15px; border:1px solid #d6dfd1; border-radius:12px; background:#f1f4ec; }
 .discount-logo__label { color:#526257; font-size:12px; font-weight:750; }
 .discount-logo__row { display:flex; align-items:center; gap:14px; min-width:0; }

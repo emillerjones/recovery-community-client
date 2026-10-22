@@ -293,10 +293,10 @@ export default function DiscountAdmin() {
                           {brand.url.startsWith("http") && <a href={brand.url} target="_blank" rel="noreferrer">Test link <ExternalLink size={14} /></a>}
                         </div>
                         {status("brand:" + brand.id)}
-                        <div className="discount-admin__save-actions">
-                          <button type="button" className="is-danger" onClick={() => deleteBrand(category.id, brand)}><Trash2 size={15} /> Delete brand</button>
-                          {brandChanged && <button type="button" onClick={() => discardBrand(category.id, brand)}><RotateCcw size={15} /> Discard edits</button>}
-                          <button className="discount-admin__save-item" disabled={!brandChanged}><Save size={16} /> {saving ? "Saving…" : "Save brand"}</button>
+                        <div className="discount-admin__save-actions discount-admin__brand-save-actions">
+                          <button type="button" className="is-danger" aria-label="Delete brand" onClick={() => deleteBrand(category.id, brand)}><Trash2 size={15} /><span className="discount-admin__action-full">Delete brand</span><span className="discount-admin__action-short">Delete</span></button>
+                          {brandChanged && <button type="button" aria-label="Discard edits" onClick={() => discardBrand(category.id, brand)}><RotateCcw size={15} /><span className="discount-admin__action-full">Discard edits</span><span className="discount-admin__action-short">Discard</span></button>}
+                          <button className="discount-admin__save-item" aria-label={saving ? "Saving brand" : "Save brand"} disabled={!brandChanged}><Save size={16} /><span className="discount-admin__action-full">{saving ? "Saving…" : "Save brand"}</span><span className="discount-admin__action-short">{saving ? "Saving…" : "Save"}</span></button>
                         </div>
                       </form>
                     </details>
