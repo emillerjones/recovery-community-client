@@ -336,3 +336,12 @@
   .user-mobile-actions > button.is-danger { color: #9b3e35; }
   .user-mobile-actions > button.is-cancel { margin-top: 8px; border: 0; border-radius: 12px; background: #e8ece4; text-align: center; }
 }
+
+.user-cell__activity { color: rgba(27,34,28,.65); font-size: 13px; }
+.user-cell__activity time { display: grid; gap: 3px; white-space: nowrap; }
+.user-cell__activity time span, .user-cell__activity-empty { color: rgba(27,34,28,.48); font-size: 12px; }
+@media (max-width: 760px) {
+  .user-cell__activity { grid-column: 1 / -1; display: flex !important; align-items: center; justify-content: space-between; gap: 12px; padding-top: 10px !important; border-top: 1px solid rgba(27,34,28,.08) !important; }
+  .user-cell__activity::before { content: attr(data-label); color: rgba(27,34,28,.42); font-size: 9px; font-weight: 750; letter-spacing: .08em; text-transform: uppercase; }
+  .user-cell__activity time { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 4px 8px; }
+}

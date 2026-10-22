@@ -115,7 +115,7 @@ export default function UserManagement() {
     if (response.ok) {
       const updated = await response.json();
       setUsers((prev) =>
-        prev.map((u) => (u.user_id === updated.user_id ? updated : u))
+        prev.map((u) => (u.user_id === updated.user_id ? { ...u, ...updated } : u))
       );
       const newRoleLabel = ASSIGNABLE_ROLES.find((r) => r.role_id === newRoleId)?.label;
       showToast(`${targetUser.username} is now ${newRoleLabel}`);
@@ -151,7 +151,7 @@ export default function UserManagement() {
     if (response.ok) {
       const updated = await response.json();
       setUsers((prev) =>
-        prev.map((u) => (u.user_id === updated.user_id ? updated : u))
+        prev.map((u) => (u.user_id === updated.user_id ? { ...u, ...updated } : u))
       );
       showToast(
         newActiveValue
@@ -255,6 +255,7 @@ export default function UserManagement() {
                 <th>Role</th>
                 <th>Status</th>
                 <th>Joined</th>
+                <th title="Most recent recorded login, page visit, or logout">Last activity</th>
                 <th></th>
               </tr>
             </thead>
@@ -315,6 +316,15 @@ export default function UserManagement() {
                       {new Date(u.created_at).toLocaleDateString()}
                     </td>
 
+                    <td className="user-cell__activity" data-label="Last activity">
+                      {u.last_activity_at && !Number.isNaN(new Date(u.last_activity_at).getTime()) ? (
+                        <time dateTime={u.last_activity_at} title={new Date(u.last_activity_at).toLocaleString()}>
+                          {new Date(u.last_activity_at).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })}
+                          <span>{new Date(u.last_activity_at).toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" })}</span>
+                        </time>
+                      ) : <span className="user-cell__activity-empty">Not recorded</span>}
+                    </td>
+
                     <td className="user-card__actions">
                       {manageable && !isOwner && (
                         <>
@@ -338,7 +348,7 @@ export default function UserManagement() {
                   </tr>
                 );
               })}
-              {visibleUsers.length === 0 && <tr className="user-table__empty"><td colSpan="5">No members match this search and filter.</td></tr>}
+              {visibleUsers.length === 0 && <tr className="user-table__empty"><td colSpan="6">No members match this search and filter.</td></tr>}
             </tbody>
           </table>
         )}
