@@ -24,6 +24,16 @@ function timeAgo(value) {
   return new Date(value).toLocaleDateString(undefined, { month: "short", day: "numeric" });
 }
 
+// Accepts both the paged response and the older plain-array response, so the
+// client keeps working whichever side deploys first.
+function parseMessagePage(data) {
+  if (Array.isArray(data)) return { messages: data, hasMore: false };
+  return {
+    messages: Array.isArray(data?.messages) ? data.messages : [],
+    hasMore: Boolean(data?.has_more),
+  };
+}
+
 function conversationPreview(conversation) {
   if (conversation.last_message_body?.trim()) return conversation.last_message_body;
   const imageCount = Number(conversation.last_message_image_count || 0);
@@ -42,6 +52,13 @@ export default function Messages() {
   const [loadingList, setLoadingList] = useState(true);
   const [messages, setMessages] = useState([]);
   const [loadingThread, setLoadingThread] = useState(false);
+  const [threadError, setThreadError] = useState("");
+  const [hasOlder, setHasOlder] = useState(false);
+  const [loadingOlder, setLoadingOlder] = useState(false);
+  const [olderError, setOlderError] = useState("");
+  // Distance from the bottom to keep after older messages are added above.
+  const pendingScrollRestore = useRef(null);
+  const currentConversationId = useRef(conversationId);
   const [draft, setDraft] = useState("");
   const [photoDraft, setPhotoDraft] = useState({ conversationId: null, photos: [] });
   const latestPhotoDraft = useRef(photoDraft);
@@ -112,6 +129,13 @@ export default function Messages() {
   }, [socket, loadConversations]);
 
   useEffect(() => {
+    currentConversationId.current = conversationId;
+    Promise.resolve().then(() => {
+      setThreadError("");
+      setOlderError("");
+      setHasOlder(false);
+      setLoadingOlder(false);
+    });
     if (!conversationId) {
       Promise.resolve().then(() => setMessages([]));
       return;
@@ -119,16 +143,28 @@ export default function Messages() {
     let cancelled = false;
     Promise.resolve().then(() => setLoadingThread(true));
     fetch(`${API}/api/messages/conversations/${conversationId}/messages`, { headers })
-      .then((response) => response.json())
-      .then((data) => {
+      .then(async (response) => {
+        const data = await response.json().catch(() => null);
         if (cancelled) return;
-        setMessages(data);
+        if (!response.ok) {
+          setMessages([]);
+          setThreadError(response.status === 404
+            ? "This conversation could not be found."
+            : data?.message || "Could not load this conversation.");
+          setLoadingThread(false);
+          return;
+        }
+        const page = parseMessagePage(data);
+        setMessages(page.messages);
+        setHasOlder(page.hasMore);
         setLoadingThread(false);
         refreshUnreadCount();
         loadConversations();
       })
       .catch(() => {
-        if (!cancelled) setLoadingThread(false);
+        if (cancelled) return;
+        setThreadError("Could not load this conversation. Check your connection and try again.");
+        setLoadingThread(false);
       });
     return () => {
       cancelled = true;
@@ -165,8 +201,45 @@ export default function Messages() {
   useLayoutEffect(() => {
     const list = messagesListRef.current;
     if (!list) return;
+    if (pendingScrollRestore.current !== null) {
+      // Older messages were added above; keep the reader on the same message.
+      list.scrollTop = list.scrollHeight - pendingScrollRestore.current;
+      pendingScrollRestore.current = null;
+      return;
+    }
     list.scrollTop = list.scrollHeight;
   }, [messages, conversationId]);
+
+  async function loadOlderMessages() {
+    const oldest = messages[0];
+    if (!oldest || loadingOlder) return;
+    const requestedFor = conversationId;
+    setLoadingOlder(true);
+    setOlderError("");
+    try {
+      const response = await fetch(
+        `${API}/api/messages/conversations/${conversationId}/messages?before=${oldest.message_id}`,
+        { headers }
+      );
+      const data = await response.json().catch(() => null);
+      if (currentConversationId.current !== requestedFor) return;
+      if (!response.ok) throw new Error(data?.message);
+      const page = parseMessagePage(data);
+      const list = messagesListRef.current;
+      if (list) pendingScrollRestore.current = list.scrollHeight - list.scrollTop;
+      setMessages((current) => {
+        const known = new Set(current.map((message) => message.message_id));
+        return [...page.messages.filter((message) => !known.has(message.message_id)), ...current];
+      });
+      setHasOlder(page.hasMore);
+    } catch (loadError) {
+      if (currentConversationId.current === requestedFor) {
+        setOlderError(loadError.message || "Could not load older messages.");
+      }
+    } finally {
+      if (currentConversationId.current === requestedFor) setLoadingOlder(false);
+    }
+  }
 
   async function sendMessage(event) {
     event.preventDefault();
@@ -180,16 +253,25 @@ export default function Messages() {
     setSending(true);
     setError("");
 
-    const response = await fetch(`${API}/api/messages/conversations/${conversationId}/messages`, {
-      method: "POST",
-      headers: { ...headers, "Content-Type": "application/json" },
-      body: JSON.stringify({ body, media_ids: mediaIds }),
-    });
-    const result = await response.json();
-    setSending(false);
+    let response;
+    let result;
+    try {
+      response = await fetch(`${API}/api/messages/conversations/${conversationId}/messages`, {
+        method: "POST",
+        headers: { ...headers, "Content-Type": "application/json" },
+        body: JSON.stringify({ body, media_ids: mediaIds }),
+      });
+      // A proxy or host error page is HTML, not JSON.
+      result = await response.json().catch(() => null);
+    } catch {
+      setError("Could not send that message. Check your connection and try again.");
+      return;
+    } finally {
+      setSending(false);
+    }
 
-    if (!response.ok) {
-      setError(result.message || "Could not send that message.");
+    if (!response.ok || !result) {
+      setError(result?.message || "Could not send that message. Please try again.");
       return;
     }
     setMessages((current) =>
@@ -303,7 +385,23 @@ export default function Messages() {
 
               <div className="dm-messages" ref={messagesListRef}>
                 {loadingThread && <div className="dm-empty">Loading…</div>}
-                {!loadingThread &&
+                {!loadingThread && threadError && (
+                  <div className="dm-empty dm-empty--center" role="alert">
+                    <div>
+                      <p>{threadError}</p>
+                      <Link to="/messages">Back to messages</Link>
+                    </div>
+                  </div>
+                )}
+                {!loadingThread && !threadError && hasOlder && (
+                  <div className="dm-load-older">
+                    <button type="button" onClick={loadOlderMessages} disabled={loadingOlder}>
+                      {loadingOlder ? "Loading…" : "Load older messages"}
+                    </button>
+                    {olderError && <p className="dm-error" role="alert">{olderError}</p>}
+                  </div>
+                )}
+                {!loadingThread && !threadError &&
                   messages.map((message) => (
                     <div
                       key={message.message_id}
@@ -322,7 +420,7 @@ export default function Messages() {
 
               {error && <p className="dm-error" role="alert">{error}</p>}
 
-              <form className="dm-composer" onSubmit={sendMessage}>
+              {!threadError && <form className="dm-composer" onSubmit={sendMessage}>
                 <PhotoUploader
                   key={conversationId}
                   photos={messagePhotos}
@@ -346,7 +444,7 @@ export default function Messages() {
                 >
                   <Send size={17} />
                 </button>
-              </form>
+              </form>}
             </>
           )}
         </section>

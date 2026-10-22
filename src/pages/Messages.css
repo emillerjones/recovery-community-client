@@ -216,6 +216,23 @@
 }
 
 .dm-error { margin: 0 18px; padding: 9px 12px; border-radius: 10px; color: #843e36; background: #f5dfdb; font-size: 12.5px; }
+.dm-empty a { display: inline-block; margin-top: 10px; color: #335640; font-weight: 600; }
+
+.dm-load-older { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 4px 0 10px; }
+.dm-load-older button {
+  border: 1px solid #d9ddd3;
+  border-radius: 999px;
+  padding: 7px 16px;
+  color: #335640;
+  background: #f3f1ea;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.dm-load-older button:hover:not(:disabled) { background: #e8ebe2; }
+.dm-load-older button:disabled { opacity: 0.6; cursor: default; }
+.dm-load-older .dm-error { margin: 0; }
 
 .dm-modal-backdrop { position: fixed; inset: 0; z-index: 200; display: grid; place-items: center; padding: 20px; background: rgba(20, 28, 23, 0.68); backdrop-filter: blur(5px); }
 .dm-picker { position: relative; width: min(420px, 100%); max-height: min(560px, 90vh); display: flex; flex-direction: column; padding: 28px; border-radius: 20px; background: #faf8f2; box-shadow: 0 30px 100px rgba(0, 0, 0, 0.28); }
