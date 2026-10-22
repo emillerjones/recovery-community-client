@@ -249,7 +249,7 @@ export default function DiscountAdmin() {
 
         <button className="discount-admin__add discount-admin__add-category" type="button" onClick={addCategory} disabled={draft.categories.length >= 12}><Plus size={18} /> Add category</button>
 
-        <div className="faq-admin__actions">
+        <div className="faq-admin__actions" data-mobile-action-bar>
           <span>{dirty ? "You have unsaved changes." : `Saved revision ${revision}.`}</span>
           <button type="button" onClick={discard} disabled={!dirty || saving}><RotateCcw size={17} /> Discard changes</button>
           <button className="faq-admin__save" disabled={!dirty || saving}><Save size={17} /> {saving ? "Saving…" : "Save and publish"}</button>

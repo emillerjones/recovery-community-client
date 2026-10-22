@@ -174,7 +174,7 @@ export default function FAQAdmin() {
           </section>
         ))}
 
-        <div className="faq-admin__actions">
+        <div className="faq-admin__actions" data-mobile-action-bar>
           <span>{dirty ? "You have unsaved changes." : `Saved revision ${revision}.`}</span>
           <button type="button" onClick={discard} disabled={!dirty || saving}><RotateCcw size={17} /> Discard changes</button>
           <button className="faq-admin__save" disabled={!dirty || saving}><Save size={17} /> {saving ? "Saving…" : "Save and publish"}</button>

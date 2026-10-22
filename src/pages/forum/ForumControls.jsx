@@ -217,7 +217,7 @@ export default function ForumControls({
               </div>
             </fieldset>
 
-            <footer>
+            <footer data-mobile-action-bar>
               <button type="button" onClick={() => {
                 setDraftScope("all");
                 setDraftOrder("recent");

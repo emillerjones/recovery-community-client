@@ -149,7 +149,7 @@ export default function Profile() {
           </section>
 
           {(message || error) && <div className={error ? "profile-status profile-status--error" : "profile-status"} role="status">{error || message}</div>}
-          <div className="profile-actions"><button className="profile-save" disabled={saving}>{saving ? "Saving…" : "Save changes"}</button></div>
+          <div className="profile-actions" data-mobile-action-bar><button className="profile-save" disabled={saving}>{saving ? "Saving…" : "Save changes"}</button></div>
         </form>
       </section>
       {/* PROFILE SCREEN: this dialog sits over the page after the avatar circle

@@ -2,19 +2,20 @@ import MarketingNav from "./MarketingNav";
 import { Outlet, useLocation } from "react-router-dom";
 import LoungeDock from "../components/lounge/LoungeDock";
 import StaffChatLauncher from "../components/staffChat/StaffChatLauncher";
+import useVisibleActionBar from "../hooks/useVisibleActionBar";
 
 /** Layout for logged-in pages using the shared site navigation. */
 export default function AppLayout() {
   const { pathname } = useLocation();
   const hideLoungeDock = pathname === "/messages" || pathname.startsWith("/messages/");
-  const isForumThread = /^\/forum\/[^/]+\/?$/.test(pathname);
+  const hideMobileLaunchers = useVisibleActionBar();
 
   return (
     <>
       <MarketingNav />
       <Outlet />
-      {!hideLoungeDock && <LoungeDock hideMobileLauncher={isForumThread} />}
-      {!hideLoungeDock && <StaffChatLauncher hideMobileLauncher={isForumThread} />}
+      {!hideLoungeDock && <LoungeDock hideMobileLauncher={hideMobileLaunchers} />}
+      {!hideLoungeDock && <StaffChatLauncher hideMobileLauncher={hideMobileLaunchers} />}
     </>
   );
 }

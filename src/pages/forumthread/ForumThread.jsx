@@ -691,7 +691,7 @@ export default function ForumThread() {
 
       {!post.locked && (
         /* This fixed form posts a top-level reply while the member keeps their place. */
-        <form ref={composerRef} className={`forum-persistent-reply ${canChooseIdentity ? "forum-persistent-reply--owner" : ""}`} onSubmit={(event) => submitReply(event)}>
+        <form data-mobile-action-bar ref={composerRef} className={`forum-persistent-reply ${canChooseIdentity ? "forum-persistent-reply--owner" : ""}`} onSubmit={(event) => submitReply(event)}>
           <div className="forum-persistent-reply__inner">
             {canChooseIdentity && <ReplyIdentity user={user} identity={mainIdentity} onChange={setMainIdentity} disabled={submitting} />}
             <div className="forum-persistent-reply__row">
