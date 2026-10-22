@@ -318,12 +318,12 @@
 /* ---------- Discount directions ---------- */
 
 .discount-guide-section {
-  padding: 0 0 72px;
+  padding: 32px 0 0;
   background: #eee8dc;
 }
 
 .discount-guide {
-  padding: 52px;
+  padding: 32px;
   border: 1px solid rgba(73, 83, 68, 0.13);
   background: rgba(251, 248, 241, 0.82);
   box-shadow: 0 22px 60px rgba(43, 49, 41, 0.07);
@@ -337,9 +337,9 @@
 .discount-guide__highlights svg { flex: 0 0 auto; width: 19px; margin-top: 2px; color: #789167; }
 .discount-guide__intro .discount-guide__updated { margin-top: 19px; color: #846638; font-size: 0.86rem; font-style: italic; }
 
-.discount-guide__columns { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-top: 42px; }
-.discount-guide__card { padding: 30px; border: 1px solid rgba(73, 83, 68, 0.13); background: #f8f5ee; }
-.discount-guide__card-heading { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; color: #9a7238; }
+.discount-guide__columns { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-top: 24px; }
+.discount-guide__card { padding: 24px; border: 1px solid rgba(73, 83, 68, 0.13); background: #f8f5ee; }
+.discount-guide__card-heading { display: flex; align-items: center; gap: 12px; color: #9a7238; cursor: pointer; list-style: none; }
 .discount-guide__card-heading svg { width: 23px; }
 .discount-guide__card h3 { margin: 0; color: #26382b; font: 500 1.65rem "Fraunces", serif; }
 .discount-guide__card ol,
@@ -407,10 +407,10 @@
   .discount-card:nth-last-child(-n + 2) { border-bottom: 1px solid rgba(73, 83, 68, 0.13); }
   .discount-card:last-child { border-bottom: 0; }
   .discount-disclaimer { grid-template-columns: 1fr; padding: 28px 24px; }
-  .discount-guide-section { padding-bottom: 48px; }
-  .discount-guide { padding: 30px 20px; }
-  .discount-guide__columns { grid-template-columns: 1fr; margin-top: 32px; }
-  .discount-guide__card { padding: 24px 20px; }
+  .discount-guide-section { padding: 20px 0 0; }
+  .discount-guide { padding: 24px 18px; }
+  .discount-guide__columns { grid-template-columns: 1fr; gap: 12px; margin-top: 24px; }
+  .discount-guide__card { padding: 16px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -604,3 +604,25 @@
 .discount-state p { max-width:560px; color:#647066; }
 .discount-state a { color:#6f5734; font-weight:750; }
 .discount-empty { grid-column:1/-1; margin:0; padding:24px; border:1px dashed rgba(57,84,62,.25); border-radius:14px; color:#68756b; text-align:center; }
+
+/* Compact guide above the directory; native disclosures support touch and keyboard. */
+#discount-brands { scroll-margin-top: 90px; }
+.discount-browse { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; margin-top: 20px; padding: 10px 18px; border-radius: 6px; background: #2b4935; color: #fffaf0; font: 700 .9rem "Inter", sans-serif; text-decoration: none; }
+.discount-browse:hover { background: #1d3024; }
+.discount-guide__card-heading::-webkit-details-marker { display: none; }
+.discount-guide__card-heading h3 { flex: 1; }
+.discount-guide__card-heading .discount-guide__chevron { flex: 0 0 18px; width: 18px; transition: transform .15s ease; }
+.discount-guide__card[open] .discount-guide__chevron { transform: rotate(180deg); }
+.discount-guide__card-content { padding-top: 20px; }
+.discount-guide__mobile-title { display: none; }
+.discount-guide__card summary:focus-visible { outline: 2px solid #9a7238; outline-offset: 5px; }
+@media (max-width: 650px) {
+  .discount-guide__desktop-title { display: none; }
+  .discount-guide__mobile-title { display: inline; }
+  .discount-guide__card h3 { font: 700 .94rem/1.4 "Inter", sans-serif; }
+  .discount-guide__card-heading { min-height: 44px; }
+  .discount-guide__highlights { margin-top: 16px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .discount-guide__card-heading .discount-guide__chevron { transition: none; }
+}

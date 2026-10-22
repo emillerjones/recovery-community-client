@@ -1,9 +1,10 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   Candy,
   Cable,
   CircleCheck,
+  ChevronDown,
   ClipboardList,
   ExternalLink,
   Info,
@@ -32,6 +33,27 @@ function useActiveCategory(ids) {
     return () => observer.disconnect();
   }, [ids]);
   return active;
+}
+
+function GuideCard({ icon, title, mobileTitle, children }) {
+  const detailsRef = useRef(null);
+  useEffect(() => {
+    const desktop = window.matchMedia("(min-width: 651px)");
+    const sync = () => { if (detailsRef.current) detailsRef.current.open = desktop.matches; };
+    sync();
+    desktop.addEventListener("change", sync);
+    return () => desktop.removeEventListener("change", sync);
+  }, []);
+  return (
+    <details className="discount-guide__card" ref={detailsRef} open>
+      <summary className="discount-guide__card-heading">
+        {icon}
+        <h3><span className="discount-guide__desktop-title">{title}</span><span className="discount-guide__mobile-title">{mobileTitle}</span></h3>
+        <ChevronDown className="discount-guide__chevron" aria-hidden="true" />
+      </summary>
+      <div className="discount-guide__card-content">{children}</div>
+    </details>
+  );
 }
 
 function CopyCodeButton({ code }) {
@@ -97,7 +119,29 @@ export default function DiscountLinks() {
         </div>
       </section>
 
-      <section className="discount-section">
+      <section className="discount-guide-section">
+        <div className="discount-inner discount-guide">
+          <header className="discount-guide__intro">
+            <p className="discount-eyebrow">{content.guide.eyebrow}</p>
+            <h2>{content.guide.title}</h2>
+            <p>{content.guide.intro}</p>
+            <div className="discount-guide__highlights">{content.guide.highlights.map((highlight) => <p key={highlight}><CircleCheck /> {highlight}</p>)}</div>
+            <p className="discount-guide__updated">{content.guide.updated}</p>
+            <a className="discount-browse" href="#discount-brands">Browse discounts <ChevronDown size={18} aria-hidden="true" /></a>
+          </header>
+          <div className="discount-guide__columns">
+            <GuideCard icon={<ClipboardList aria-hidden="true" />} title="Directions" mobileTitle="How to use your discount">
+              <ol>{content.guide.directions.map((direction) => <li key={direction}>{direction}</li>)}</ol>
+            </GuideCard>
+            <GuideCard icon={<Info aria-hidden="true" />} title="Notes" mobileTitle="Discount notes">
+              <ul>{content.guide.notes.map((note) => <li key={note}>{note}</li>)}</ul>
+              <a className="discount-guide__contact" href={`mailto:${content.guide.contactEmail}`}><Mail /><span>{content.guide.contactText} <strong>{content.guide.contactEmail}</strong>.</span></a>
+            </GuideCard>
+          </div>
+        </div>
+      </section>
+
+      <section className="discount-section" id="discount-brands" aria-label="Browse brand discounts" tabIndex={-1}>
         <div className="discount-inner discount-category-list">
           {content.categories.map((category, categoryIndex) => {
             const CategoryIcon = ICONS[category.icon] || Leaf;
@@ -129,29 +173,6 @@ export default function DiscountLinks() {
               </section>
             );
           })}
-        </div>
-      </section>
-
-      <section className="discount-guide-section">
-        <div className="discount-inner discount-guide">
-          <header className="discount-guide__intro">
-            <p className="discount-eyebrow">{content.guide.eyebrow}</p>
-            <h2>{content.guide.title}</h2>
-            <p>{content.guide.intro}</p>
-            <div className="discount-guide__highlights">{content.guide.highlights.map((highlight) => <p key={highlight}><CircleCheck /> {highlight}</p>)}</div>
-            <p className="discount-guide__updated">{content.guide.updated}</p>
-          </header>
-          <div className="discount-guide__columns">
-            <article className="discount-guide__card">
-              <div className="discount-guide__card-heading"><ClipboardList /><h3>Directions</h3></div>
-              <ol>{content.guide.directions.map((direction) => <li key={direction}>{direction}</li>)}</ol>
-            </article>
-            <article className="discount-guide__card">
-              <div className="discount-guide__card-heading"><Info /><h3>Notes</h3></div>
-              <ul>{content.guide.notes.map((note) => <li key={note}>{note}</li>)}</ul>
-              <a className="discount-guide__contact" href={`mailto:${content.guide.contactEmail}`}><Mail /><span>{content.guide.contactText} <strong>{content.guide.contactEmail}</strong>.</span></a>
-            </article>
-          </div>
         </div>
       </section>
 
