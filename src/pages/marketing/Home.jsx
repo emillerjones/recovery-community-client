@@ -1,5 +1,4 @@
 import {
-  ArrowDown,
   ArrowRight,
   BookOpen,
   HeartHandshake,
@@ -12,6 +11,7 @@ import {
 } from "lucide-react";
 import { Link, useOutletContext } from "react-router-dom";
 import { FaFacebookF, FaInstagram } from "react-icons/fa";
+import { useAuth } from "../../auth/AuthContext";
 import logo from "../../assets/icons/logo.png";
 import cannabisLeaf from "../../assets/icons/cannabis-leaf-filled.png";
 import supportIcon from "../../assets/icons/support.png";
@@ -79,7 +79,8 @@ const PROVIDES = [
 ];
 
 export default function Home() {
-  const { onRegister } = useOutletContext();
+  const { onRegister, onLogin } = useOutletContext();
+  const { token } = useAuth();
 
   return (
     <main className="home-page">
@@ -101,7 +102,11 @@ export default function Home() {
 
           <div className="home-hero__actions">
             <button type="button" onClick={onRegister}>Join our community <ArrowRight size={20} /></button>
-            <a href="#home-purpose">Discover our purpose <ArrowDown size={20} /></a>
+            {token ? (
+              <Link to="/forum">Go to community <ArrowRight size={20} aria-hidden="true" /></Link>
+            ) : (
+              <a href="/login" onClick={event => { event.preventDefault(); onLogin(); }}>Log in <ArrowRight size={20} aria-hidden="true" /></a>
+            )}
           </div>
 
           <nav className="home-hero__paths" aria-label="Explore recovery support">
