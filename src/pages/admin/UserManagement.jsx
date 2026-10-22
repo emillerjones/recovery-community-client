@@ -37,13 +37,13 @@ export default function UserManagement() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [memberFilter, setMemberFilter] = useState("all");
+  const [memberFilter, setMemberFilter] = useState("active");
 
   // Tracks which confirm modal (if any) is currently open, and which
   // user + action it's for. When this is null, no modal is showing.
   const [pendingAction, setPendingAction] = useState(null);
   const [mobileActionUser, setMobileActionUser] = useState(null);
-  // Shape: { type: "role" | "deactivate" | "reactivate" | "delete", user, newRoleId? }
+  // Shape: { type: "role" | "deactivate" | "reactivate", user, newRoleId? }
 
   useEffect(() => {
     let cancelled = false;
@@ -165,37 +165,10 @@ export default function UserManagement() {
     setPendingAction(null);
   }
 
-  // ---------- Soft delete ----------
-
-  function askToDelete(targetUser) {
-    setPendingAction({ type: "delete", user: targetUser });
-  }
-
-  async function confirmDelete() {
-    const { user: targetUser } = pendingAction;
-
-    const response = await fetch(`${API}/api/users/${targetUser.user_id}`, {
-      method: "DELETE",
-      headers: { Authorization: `Bearer ${token}` },
-    });
-
-    if (response.ok) {
-      // Remove the deleted user from the visible list entirely,
-      // rather than trying to show a "deleted" state for them.
-      setUsers((prev) => prev.filter((u) => u.user_id !== targetUser.user_id));
-      showToast(`${targetUser.username} has been deleted`);
-    } else {
-      showToast("Something went wrong deleting that user.");
-    }
-
-    setPendingAction(null);
-  }
-
   // Decides which confirm function to run based on pendingAction.type
   function handleConfirm() {
     if (!pendingAction) return;
     if (pendingAction.type === "role") return confirmRoleChange();
-    if (pendingAction.type === "delete") return confirmDelete();
     return confirmActiveToggle(); // covers "deactivate" and "reactivate"
   }
 
@@ -241,8 +214,8 @@ export default function UserManagement() {
           </div>
         )}
 
-        {!loading && <div className="user-mobile-filters" aria-label="Filter members">
-          {[{ key: "all", label: "All" }, { key: "active", label: "Active" }, { key: "inactive", label: "Inactive" }, { key: "staff", label: "Staff" }, { key: "members", label: "Members" }].map((filter) => <button type="button" key={filter.key} className={memberFilter === filter.key ? "is-selected" : ""} onClick={() => setMemberFilter(filter.key)}>{filter.label}</button>)}
+        {!loading && <div className="user-filters" aria-label="Filter members">
+          {[{ key: "all", label: "All" }, { key: "active", label: "Active" }, { key: "inactive", label: "Inactive" }, { key: "staff", label: "Staff" }, { key: "members", label: "Members" }].map((filter) => <button type="button" key={filter.key} aria-pressed={memberFilter === filter.key} className={memberFilter === filter.key ? "is-selected" : ""} onClick={() => setMemberFilter(filter.key)}>{filter.label}</button>)}
         </div>}
 
         {loading ? (
@@ -335,12 +308,6 @@ export default function UserManagement() {
                           >
                             {u.active ? "Deactivate" : "Reactivate"}
                           </button>
-                          <button
-                            className="user-actions__button user-actions__button--danger"
-                            onClick={() => askToDelete(u)}
-                          >
-                            Delete
-                          </button>
                         </div>
                         </>
                       )}
@@ -359,7 +326,6 @@ export default function UserManagement() {
             <section className="user-mobile-actions" role="dialog" aria-modal="true" aria-labelledby="mobile-user-actions-title">
               <header><div><small>Manage member</small><h2 id="mobile-user-actions-title">{mobileActionUser.username}</h2></div><button type="button" onClick={() => setMobileActionUser(null)} aria-label="Close member actions"><X size={21} /></button></header>
               <button type="button" onClick={() => { const target = mobileActionUser; setMobileActionUser(null); askToToggleActive(target); }}>{mobileActionUser.active ? "Deactivate account" : "Reactivate account"}</button>
-              <button type="button" className="is-danger" onClick={() => { const target = mobileActionUser; setMobileActionUser(null); askToDelete(target); }}>Delete account</button>
               <button type="button" className="is-cancel" onClick={() => setMobileActionUser(null)}>Cancel</button>
             </section>
           </div>
@@ -375,29 +341,23 @@ export default function UserManagement() {
               ? "Change this user's role?"
               : pendingAction?.type === "deactivate"
                 ? "Deactivate this user?"
-                : pendingAction?.type === "reactivate"
-                  ? "Reactivate this user?"
-                  : "Delete this user?"
+                : "Reactivate this user?"
           }
           message={
             pendingAction?.type === "role"
               ? `${pendingAction.user.username} will become ${ASSIGNABLE_ROLES.find((r) => r.role_id === pendingAction.newRoleId)?.label}.`
               : pendingAction?.type === "deactivate"
                 ? `${pendingAction.user.username} will no longer be able to log in until reactivated.`
-                : pendingAction?.type === "reactivate"
-                  ? `${pendingAction.user.username} will be able to log in again.`
-                  : `${pendingAction?.user.username} will be removed from the community. This can be reversed by a developer if needed, but not from this screen.`
+                : pendingAction ? `${pendingAction.user.username} will be able to log in again.` : ""
           }
           confirmLabel={
             pendingAction?.type === "role"
               ? "Change Role"
               : pendingAction?.type === "deactivate"
                 ? "Deactivate"
-                : pendingAction?.type === "reactivate"
-                  ? "Reactivate"
-                  : "Delete"
+                : "Reactivate"
           }
-          danger={pendingAction?.type === "delete" || pendingAction?.type === "deactivate"}
+          danger={pendingAction?.type === "deactivate"}
           onConfirm={handleConfirm}
           onCancel={() => setPendingAction(null)}
         />

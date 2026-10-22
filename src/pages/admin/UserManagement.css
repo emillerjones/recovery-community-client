@@ -236,9 +236,7 @@
 /* ---------- Row actions ---------- */
 /* Ghost-style by default — no visible border at rest — so a row
    full of action buttons doesn't read as alarming just sitting
-   there. Color/weight only appears on hover or for the danger
-   (delete) action, which stays a little more visible at rest since
-   it's a meaningfully different kind of action. */
+   there. Color/weight appears on hover. */
 
 .user-actions {
   display: flex;
@@ -264,18 +262,9 @@
   color: rgba(27, 34, 28, 0.85);
 }
 
-.user-actions__button--danger {
-  color: rgba(168, 58, 58, 0.7);
-}
-.user-actions__button--danger:hover {
-  background: rgba(168, 58, 58, 0.08);
-  border-color: rgba(168, 58, 58, 0.2);
-  color: #a83a3a;
-}
 
 .user-actions__mobile-trigger,
-.user-mobile-actions-backdrop,
-.user-mobile-filters { display: none; }
+.user-mobile-actions-backdrop { display: none; }
 
 /* ---------- Responsive ---------- */
 
@@ -294,10 +283,6 @@
   .user-stats__label { font-size: 10px; }
   .user-stats__breakdown { grid-column: 1/-1; margin: 0; padding-top: 10px; border-top: 1px solid rgba(27,34,28,.07); gap: 5px 12px; }
   .user-stats__breakdown-item { padding: 0; background: transparent; font-size: 9px; }
-  .user-mobile-filters { display: flex; gap: 7px; overflow-x: auto; margin: 0 -14px 14px; padding: 0 14px 4px; scrollbar-width: none; }
-  .user-mobile-filters::-webkit-scrollbar { display: none; }
-  .user-mobile-filters button { min-height: 38px; flex: 0 0 auto; padding: 0 14px; border: 1px solid rgba(44,58,45,.12); border-radius: 999px; background: rgba(246,242,234,.82); color: rgba(27,34,28,.62); font: 650 11px Inter,sans-serif; }
-  .user-mobile-filters button.is-selected { border-color: #2c3a2d; background: #2c3a2d; color: #fff; }
 
   /* The desktop table becomes a stack of touch-friendly member cards. */
   .user-table { display: block; overflow: visible; background: transparent; box-shadow: none; }
@@ -333,7 +318,6 @@
   .user-mobile-actions h2 { margin: 4px 0 0; font: 500 1.45rem Fraunces,serif; }
   .user-mobile-actions header button { width: 38px; height: 38px; display: grid; place-items: center; border: 1px solid rgba(27,34,28,.1); border-radius: 50%; background: rgba(255,255,255,.58); }
   .user-mobile-actions > button { width: 100%; min-height: 50px; border: 0; border-top: 1px solid rgba(27,34,28,.08); background: transparent; color: #2c3a2d; font: 700 14px Inter,sans-serif; text-align: left; }
-  .user-mobile-actions > button.is-danger { color: #9b3e35; }
   .user-mobile-actions > button.is-cancel { margin-top: 8px; border: 0; border-radius: 12px; background: #e8ece4; text-align: center; }
 }
 
@@ -345,3 +329,8 @@
   .user-cell__activity::before { content: attr(data-label); color: rgba(27,34,28,.42); font-size: 9px; font-weight: 750; letter-spacing: .08em; text-transform: uppercase; }
   .user-cell__activity time { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 4px 8px; }
 }
+
+  .user-filters { display: flex; gap: 7px; overflow-x: auto; margin: 0 0 14px; padding: 0 0 4px; scrollbar-width: none; }
+  .user-filters::-webkit-scrollbar { display: none; }
+  .user-filters button { min-height: 38px; flex: 0 0 auto; padding: 0 14px; border: 1px solid rgba(44,58,45,.12); border-radius: 999px; background: rgba(246,242,234,.82); color: rgba(27,34,28,.62); font: 650 11px Inter,sans-serif; }
+  .user-filters button.is-selected { border-color: #2c3a2d; background: #2c3a2d; color: #fff; }
