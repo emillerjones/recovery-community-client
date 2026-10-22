@@ -258,6 +258,7 @@ export default function UserManagement() {
                       ) : (
                         <select
                           className="role-select"
+                          aria-label={`Role for ${u.username}`}
                           value={u.role_id}
                           onChange={(e) =>
                             askToChangeRole(u, Number(e.target.value))
