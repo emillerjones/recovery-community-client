@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
-// Any bottom action bar can opt in with data-mobile-action-bar. Both chat
-// launchers use this one policy; individual pages never reposition them.
+// Any bottom action bar can opt in with data-mobile-action-bar. The Lounge
+// launcher uses this shared policy; individual pages never reposition it.
 export default function useVisibleActionBar() {
   const [visible, setVisible] = useState(false);
 

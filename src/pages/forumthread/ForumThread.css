@@ -666,7 +666,6 @@
 .forum-inline-reply__actions button { max-width:100%; overflow-wrap:anywhere; }
 body:has(.forum-persistent-reply.forum-persistent-reply--owner) .forum-thread-shell { padding-bottom:calc(var(--forum-owner-composer-height, 130px) + 50px); }
 body:has(.forum-persistent-reply.forum-persistent-reply--owner) .lounge-dock { bottom:calc(var(--forum-owner-composer-height, 130px) + 16px); }
-body:has(.forum-persistent-reply.forum-persistent-reply--owner) .staff-chat-launcher { bottom:calc(var(--forum-owner-composer-height, 130px) + 102px); }
 @media (max-width:600px) {
   .forum-reply-identity .forum-reply-identity__name { flex:1 1 100%; display:grid; grid-template-columns:1fr; gap:4px; }
   .forum-reply-identity__name input { width:100%; }
@@ -674,7 +673,6 @@ body:has(.forum-persistent-reply.forum-persistent-reply--owner) .staff-chat-laun
 }
 
 body:has(.forum-persistent-reply) .lounge-dock { bottom: calc(84px + env(safe-area-inset-bottom)); }
-body:has(.forum-persistent-reply) .staff-chat-launcher { bottom: calc(170px + env(safe-area-inset-bottom)); }
 
 @media (max-width: 1100px) {
   .forum-layout { grid-template-columns: minmax(0, 1fr); }

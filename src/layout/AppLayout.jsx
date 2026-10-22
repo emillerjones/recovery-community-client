@@ -1,7 +1,6 @@
 import MarketingNav from "./MarketingNav";
 import { Outlet, useLocation } from "react-router-dom";
 import LoungeDock from "../components/lounge/LoungeDock";
-import StaffChatLauncher from "../components/staffChat/StaffChatLauncher";
 import useVisibleActionBar from "../hooks/useVisibleActionBar";
 
 /** Layout for logged-in pages using the shared site navigation. */
@@ -15,7 +14,6 @@ export default function AppLayout() {
       <MarketingNav />
       <Outlet />
       {!hideLoungeDock && <LoungeDock hideMobileLauncher={hideMobileLaunchers} />}
-      {!hideLoungeDock && <StaffChatLauncher hideMobileLauncher={hideMobileLaunchers} />}
     </>
   );
 }
