@@ -15,3 +15,6 @@
 .resources-admin__fieldset:disabled { opacity:.7; }
 
 .resources-admin__category-fields { margin-bottom:24px; }
+
+.resources-admin__resource-form { display:grid; gap:12px; }
+.resources-admin .discount-admin__save-actions button:disabled { opacity:.45; cursor:default; }
