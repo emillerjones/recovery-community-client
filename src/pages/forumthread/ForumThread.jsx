@@ -16,7 +16,6 @@ import ForumPhotoGallery from "../../components/forumPhotos/ForumPhotoGallery";
 import ForumPoll from "../../components/forumPolls/ForumPoll";
 import PhotoUploader from "../../components/forumPhotos/PhotoUploader";
 import {
-  discardPendingPhotos,
   photosReady,
   readyMediaIds,
 } from "../../components/forumPhotos/photoUploadUtils";
@@ -58,6 +57,12 @@ function editedLabel(content) {
 
 export default function ForumThread() {
   const { postId } = useParams();
+  // A different thread gets fresh drafts and a fresh reply destination.
+  return <ForumThreadContent key={postId} />;
+}
+
+function ForumThreadContent() {
+  const { postId } = useParams();
   const { token, user } = useAuth();
   const { socket } = useNotifications();
   const { refreshAnnouncementsUnread } = useStaffChat() || {};
@@ -77,6 +82,7 @@ export default function ForumThread() {
   const [mainIdentity, setMainIdentity] = useState({ importing: false, name: "" });
   const [replyIdentity, setReplyIdentity] = useState({ importing: false, name: "" });
   const composerRef = useRef(null);
+  const replyDrafts = useRef(new Map());
   const [submitting, setSubmitting] = useState(false);
   const [editingPost, setEditingPost] = useState(false);
   const [postDraft, setPostDraft] = useState({ title: "", body: "" });
@@ -85,14 +91,19 @@ export default function ForumThread() {
   const headers = useMemo(() => ({ Authorization: `Bearer ${token}` }), [token]);
   const staffOnly = post?.category_slug === "staff-announcements";
   const canChooseIdentity = user?.role_id === 1;
-  const mainDisplayName = canChooseIdentity && mainIdentity.importing ? mainIdentity.name.trim() : user?.username;
+  const replyTarget = comments.find((comment) => comment.comment_id === replyingTo);
+  const activeIdentity = replyingTo ? replyIdentity : mainIdentity;
+  const activeBody = replyingTo ? replyBody : mainReply;
+  const activePhotos = replyingTo ? replyPhotos : mainReplyPhotos;
+  const uploadBusy = activePhotos.some(photo => photo.status === "uploading");
+  const mainDisplayName = canChooseIdentity && activeIdentity.importing ? activeIdentity.name.trim() : user?.username;
   useEffect(() => {
-    if (!canChooseIdentity || loading || post?.locked || !composerRef.current) return;
+    if (loading || post?.locked || !composerRef.current) return;
     const observer = new ResizeObserver(([entry]) => {
-      document.body.style.setProperty("--forum-owner-composer-height", entry.target.getBoundingClientRect().height + "px");
+      document.body.style.setProperty("--forum-composer-height", entry.target.getBoundingClientRect().height + "px");
     });
     observer.observe(composerRef.current);
-    return () => { observer.disconnect(); document.body.style.removeProperty("--forum-owner-composer-height"); };
+    return () => { observer.disconnect(); document.body.style.removeProperty("--forum-composer-height"); };
   }, [canChooseIdentity, loading, post?.locked]);
   const canModerate = staffOnly ? [1,10].includes(user?.role_id) : user?.role_id <= 50;
   const canEditOwn = user?.role_id <= 50;
@@ -214,14 +225,10 @@ export default function ForumThread() {
 
 
 
-  async function submitReply(event, parentCommentId = null) {
-    // TRACE STEP 2: The reply form's onSubmit calls this function.
-    // parentCommentId is null for the large "Leave a reply" form. It contains
-    // a comment ID when the member is replying directly to another comment.
+  async function submitReply(event, parentCommentId = replyingTo) {
+    // The selected parent ID is independent of any @mention in the text.
     event.preventDefault();
-
-    // Both reply forms share this function, so choose the text from whichever
-    // form the member used.
+    if (submitting || post.locked) return;
     const body = parentCommentId ? replyBody : mainReply;
     const selectedMentions = parentCommentId ? replyMentions : mainReplyMentions;
     const selectedPhotos = parentCommentId ? replyPhotos : mainReplyPhotos;
@@ -272,6 +279,7 @@ export default function ForumThread() {
 
     // Clear only the submitted composer, preserving the other draft.
     if (parentCommentId) {
+      replyDrafts.current.delete(parentCommentId);
       setReplyIdentity({ importing: false, name: "" });
       setReplyBody("");
       setReplyMentions([]);
@@ -295,20 +303,26 @@ export default function ForumThread() {
     }
   }
 
-  function toggleInlineReply(commentId) {
-    setReplyIdentity({ importing: false, name: "" });
-    if (replyingTo !== commentId && replyPhotos.length) {
-      discardPendingPhotos(replyPhotos, token);
-    }
-    if (replyingTo === commentId) {
-      discardPendingPhotos(replyPhotos, token);
-      setReplyingTo(null);
-    } else {
+  function selectReplyTarget(commentId) {
+    if (submitting || post.locked || uploadBusy) return;
+    // Keep drafts separate so switching destinations never moves someone's text.
+    if (replyingTo) replyDrafts.current.set(replyingTo, {
+      body: replyBody, mentions: replyMentions, photos: replyPhotos, identity: replyIdentity,
+    });
+    const target = comments.find((comment) => comment.comment_id === commentId);
+    if (target && !target.deleted_at) {
+      // An imported name represents someone else, not the account that imported it.
+      const member = !target.is_imported && target.author_id !== user?.id
+        ? { user_id: target.author_id, username: target.author_username } : null;
+      const draft = replyDrafts.current.get(commentId);
       setReplyingTo(commentId);
-    }
-    setReplyBody("");
-    setReplyMentions([]);
-    setReplyPhotos([]);
+      setReplyBody(draft?.body ?? (member ? `@${member.username} ` : ""));
+      setReplyMentions(draft?.mentions ?? (member ? [member] : []));
+      setReplyPhotos(draft?.photos ?? []);
+      setReplyIdentity(draft?.identity ?? { importing: false, name: "" });
+    } else setReplyingTo(null);
+    // Synchronous focus allows a tap to open the keyboard on mobile.
+    composerRef.current?.querySelector("textarea")?.focus({ preventScroll: true });
   }
 
   async function deleteComment(commentId) {
@@ -656,23 +670,13 @@ export default function ForumThread() {
               comment={comment}
               depth={0}
               currentUserId={user?.id}
-              identityUser={canChooseIdentity ? user : null}
-              replyIdentity={replyIdentity}
-              setReplyIdentity={setReplyIdentity}
               canEditOwn={canEditOwn}
               canEditOthers={canEditOthers}
               canDeleteOthers={canDeleteOthers}
               token={token}
               replyingTo={replyingTo}
-              toggleReplyTo={toggleInlineReply}
-              replyBody={replyBody}
-              setReplyBody={setReplyBody}
-              replyMentions={replyMentions}
-              setReplyMentions={setReplyMentions}
-              replyPhotos={replyPhotos}
-              setReplyPhotos={setReplyPhotos}
-              submitReply={submitReply}
-              submitting={submitting}
+              toggleReplyTo={selectReplyTarget}
+              replyDisabled={submitting || post.locked || uploadBusy}
               editComment={editComment}
               deleteComment={deleteComment}
               toggleCommentFlag={toggleCommentFlag}
@@ -690,33 +694,40 @@ export default function ForumThread() {
       )}
 
       {!post.locked && (
-        /* This fixed form posts a top-level reply while the member keeps their place. */
+        /* One composer; the parent comment ID determines the destination. */
         <form data-mobile-action-bar ref={composerRef} className={`forum-persistent-reply ${canChooseIdentity ? "forum-persistent-reply--owner" : ""}`} onSubmit={(event) => submitReply(event)}>
           <div className="forum-persistent-reply__inner">
-            {canChooseIdentity && <ReplyIdentity user={user} identity={mainIdentity} onChange={setMainIdentity} disabled={submitting} />}
+            {replyingTo && <div className="forum-persistent-reply__target">
+              <span role="status">Replying to <strong>{replyTarget?.author_username || "this comment"}</strong></span>
+              <button type="button" disabled={submitting || uploadBusy} onClick={() => selectReplyTarget(null)}>Cancel</button>
+            </div>}
+            {canChooseIdentity && <ReplyIdentity user={user} identity={activeIdentity} onChange={replyingTo ? setReplyIdentity : setMainIdentity} disabled={submitting} />}
             <div className="forum-persistent-reply__row">
               <MentionTextarea
                 quiet={staffOnly}
                 token={token}
                 rows={1}
-                value={mainReply}
-                onChange={setMainReply}
-                mentions={mainReplyMentions}
-                onMentionsChange={setMainReplyMentions}
-                placeholder={`Comment as ${mainDisplayName || (mainIdentity.importing ? "another name" : "a member")}`}
+                highlightMentions
+                ariaLabel={replyingTo ? `Reply to ${replyTarget?.author_username || "comment"}` : "Comment on original post"}
+                value={activeBody}
+                onChange={replyingTo ? setReplyBody : setMainReply}
+                mentions={replyingTo ? replyMentions : mainReplyMentions}
+                onMentionsChange={replyingTo ? setReplyMentions : setMainReplyMentions}
+                placeholder={replyingTo ? `Reply to ${replyTarget?.author_username || "comment"}` : `Comment on this post as ${mainDisplayName || "another name"}`}
               />
               <div className="forum-persistent-reply__actions">
-                <PhotoUploader photos={mainReplyPhotos} onChange={setMainReplyPhotos} token={token} compact pasteSelector="textarea" />
+                <PhotoUploader preserveDraftPreviews photos={activePhotos} onChange={replyingTo ? setReplyPhotos : setMainReplyPhotos} token={token} compact pasteSelector="textarea" />
                 <button
                   className="forum-persistent-reply__send"
-                  aria-label={submitting ? "Posting reply" : `Reply as ${mainDisplayName || "another name"}`}
-                  disabled={submitting || !mainReply.trim() || !photosReady(mainReplyPhotos) || (canChooseIdentity && mainIdentity.importing && !mainIdentity.name.trim())}
+                  aria-label={submitting ? "Posting" : replyingTo ? `Send reply to ${replyTarget?.author_username || "comment"}` : "Send comment on original post"}
+                  disabled={submitting || !activeBody.trim() || !photosReady(activePhotos) || (canChooseIdentity && activeIdentity.importing && !activeIdentity.name.trim())}
                 >
                   <Send size={18} />
-                  {canChooseIdentity && mainIdentity.importing && <span>Reply as {mainDisplayName || "another name"}</span>}
+                  {canChooseIdentity && activeIdentity.importing && <span>Reply as {mainDisplayName || "another name"}</span>}
                 </button>
               </div>
             </div>
+            {uploadBusy && <small className="forum-persistent-reply__uploading" role="status">Uploading photo ? wait to switch between comments and replies.</small>}
             {error && <p className="forum-error" role="alert">{error}</p>}
           </div>
         </form>

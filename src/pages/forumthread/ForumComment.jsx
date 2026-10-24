@@ -1,13 +1,9 @@
 import { useState } from "react";
-import ReplyIdentity from "./ReplyIdentity";
 import { CornerDownRight, Flag, Pencil, Trash2 } from "lucide-react";
 import MemberAvatar from "../../components/MemberAvatar";
 import MentionText from "../../components/MentionText";
-import MentionTextarea from "../../components/MentionTextarea";
 import ReactionBar from "../../components/ReactionBar";
 import ForumPhotoGallery from "../../components/forumPhotos/ForumPhotoGallery";
-import PhotoUploader from "../../components/forumPhotos/PhotoUploader";
-import { photosReady } from "../../components/forumPhotos/photoUploadUtils";
 
 function countDeletableReplies(comment) {
   return (comment.children || []).reduce((count, child) => {
@@ -18,11 +14,9 @@ function countDeletableReplies(comment) {
 
 export default function ForumComment({
   comment, depth, currentUserId, canEditOwn, canEditOthers, canDeleteOthers,
-  token, replyingTo, toggleReplyTo, replyBody, setReplyBody, replyMentions,
-  setReplyMentions, replyPhotos, setReplyPhotos, submitReply, submitting, editComment, deleteComment,
+  token, replyingTo, toggleReplyTo, replyDisabled, editComment, deleteComment,
   toggleCommentFlag, toggleCommentReaction, reactingTo, formatDate,
   editedLabel,
-  identityUser, replyIdentity, setReplyIdentity,
   staffOnly = false,
 }) {
   // This displays ONE comment. At the bottom it renders another
@@ -119,6 +113,8 @@ export default function ForumComment({
             <div className="forum-comment-actions">
               <button
                 className="forum-reply-button"
+                disabled={replyDisabled}
+                aria-pressed={replyingTo === comment.comment_id}
                 onClick={() => toggleReplyTo(comment.comment_id)}
               >
                 <CornerDownRight size={15} /> Reply
@@ -167,31 +163,7 @@ export default function ForumComment({
               )}
             </div>
 
-            {replyingTo === comment.comment_id && (
-              <form
-                className="forum-inline-reply"
-                onSubmit={(event) => submitReply(event, comment.comment_id)}
-              >
-                {identityUser && <ReplyIdentity user={identityUser} identity={replyIdentity} onChange={setReplyIdentity} disabled={submitting} />}
-                {/* This controls the small reply box beneath one comment. */}
-                <MentionTextarea
-                  quiet={staffOnly}
-                  token={token} autoFocus rows={3} value={replyBody}
-                  onChange={setReplyBody} mentions={replyMentions}
-                  onMentionsChange={setReplyMentions}
-                  placeholder={identityUser && replyIdentity.importing ? `Reply as ${replyIdentity.name.trim() || "another name"} to ${comment.author_username}` : `Reply to ${comment.author_username}`}
-                />
-                <PhotoUploader photos={replyPhotos} onChange={setReplyPhotos} token={token} compact pasteSelector="textarea" />
-                <div className="forum-inline-reply__actions">
-                  <button type="button" onClick={() => toggleReplyTo(comment.comment_id)}>
-                    Cancel
-                  </button>
-                  <button disabled={submitting || !replyBody.trim() || !photosReady(replyPhotos) || (identityUser && replyIdentity.importing && !replyIdentity.name.trim())}>
-                    {submitting ? "Replying…" : !photosReady(replyPhotos) ? "Uploading…" : identityUser && replyIdentity.importing ? `Reply as ${replyIdentity.name.trim() || "another name"}` : "Reply"}
-                  </button>
-                </div>
-              </form>
-            )}
+
           </>
         )}
       </article>
@@ -201,9 +173,6 @@ export default function ForumComment({
         <ForumComment
           key={child.comment_id}
           staffOnly={staffOnly}
-          identityUser={identityUser}
-          replyIdentity={replyIdentity}
-          setReplyIdentity={setReplyIdentity}
           comment={child}
           depth={depth + 1}
           currentUserId={currentUserId}
@@ -213,14 +182,7 @@ export default function ForumComment({
           token={token}
           replyingTo={replyingTo}
           toggleReplyTo={toggleReplyTo}
-          replyBody={replyBody}
-          setReplyBody={setReplyBody}
-          replyMentions={replyMentions}
-          setReplyMentions={setReplyMentions}
-          replyPhotos={replyPhotos}
-          setReplyPhotos={setReplyPhotos}
-          submitReply={submitReply}
-          submitting={submitting}
+          replyDisabled={replyDisabled}
           editComment={editComment}
           deleteComment={deleteComment}
           toggleCommentFlag={toggleCommentFlag}

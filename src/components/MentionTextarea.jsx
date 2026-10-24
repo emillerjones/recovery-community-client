@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import MemberAvatar from "./MemberAvatar";
+import MentionText from "./MentionText";
 import "./Mentions.css";
 
 const API = import.meta.env.VITE_API;
@@ -15,8 +16,11 @@ export default function MentionTextarea({
   placeholder,
   autoFocus = false,
   quiet = false,
+  highlightMentions = false,
+  ariaLabel,
 }) {
   const textareaRef = useRef(null);
+  const highlightRef = useRef(null);
   const [query, setQuery] = useState(null);
   const [suggestions, setSuggestions] = useState([]);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -112,9 +116,19 @@ export default function MentionTextarea({
   }
 
   return (
-    <div className="mention-input">
+    <div className={`mention-input ${highlightMentions ? "mention-input--highlighted" : ""}`}>
+      {highlightMentions && <div className="mention-input__highlight" ref={highlightRef} aria-hidden="true">
+        <MentionText body={`${value}\n`} mentions={mentions} />
+      </div>}
       <textarea
         ref={textareaRef}
+        aria-label={ariaLabel}
+        onScroll={(event) => {
+          if (highlightRef.current) {
+            highlightRef.current.scrollTop = event.currentTarget.scrollTop;
+            highlightRef.current.scrollLeft = event.currentTarget.scrollLeft;
+          }
+        }}
         autoFocus={autoFocus}
         required
         rows={rows}

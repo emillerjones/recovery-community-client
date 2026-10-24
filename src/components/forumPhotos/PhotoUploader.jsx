@@ -35,33 +35,39 @@ function uploadImage(file, token, onProgress) {
   });
 }
 
-export default function PhotoUploader({ photos, onChange, token, compact = false, pasteSelector = null }) {
+export default function PhotoUploader({ photos, onChange, token, compact = false, pasteSelector = null, preserveDraftPreviews = false }) {
   const inputId = useId();
   const uploaderRef = useRef(null);
   const mounted = useRef(true);
   const latestPhotos = useRef(photos);
   const previousPhotos = useRef(photos);
+  const draftPreviewUrls = useRef(new Set());
   const [selectionError, setSelectionError] = useState("");
   const [dragActive, setDragActive] = useState(false);
 
   useEffect(() => {
     latestPhotos.current = photos;
+    if (preserveDraftPreviews) photos.forEach(photo => {
+      if (photo.previewUrl) draftPreviewUrls.current.add(photo.previewUrl);
+    });
     const currentIds = new Set(photos.map((photo) => photo.client_id || photo.media_id));
     previousPhotos.current.forEach((photo) => {
-      if (!currentIds.has(photo.client_id || photo.media_id) && photo.previewUrl) {
+      if (!preserveDraftPreviews && !currentIds.has(photo.client_id || photo.media_id) && photo.previewUrl) {
         URL.revokeObjectURL(photo.previewUrl);
       }
     });
     previousPhotos.current = photos;
-  }, [photos]);
+  }, [photos, preserveDraftPreviews]);
 
   useEffect(() => {
     mounted.current = true;
+    const previewUrls = draftPreviewUrls.current;
     return () => {
       mounted.current = false;
       latestPhotos.current.forEach((photo) => {
         if (photo.previewUrl) URL.revokeObjectURL(photo.previewUrl);
       });
+      previewUrls.forEach(url => URL.revokeObjectURL(url));
     };
   }, []);
 
