@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useOutletContext } from "react-router-dom";
 import "./Resources.css";
 
@@ -215,8 +215,7 @@ function ResourcesContent({ content }) {
   const [learnRef, learnVisible] = useReveal();
   const [supportRef, supportVisible] = useReveal();
   const [activeGroup, setActiveGroup] = useState(0);
-  const groups = useMemo(() => content.categories.filter(group => group.section === "learn"), [content]);
-  const supportGroups = content.categories.filter(group => group.section === "support");
+  const groups = content.categories;
 
   useEffect(() => {
     const elements = groups.map((group) =>
@@ -319,12 +318,6 @@ function ResourcesContent({ content }) {
           </div>
           <p className="resources-intro">{content.supportIntro}</p>
 
-          {supportGroups.length > 0 && <div className="learn-groups resources-support-groups">
-            {supportGroups.map(group => <article className="learn-group resources-chapter" id={`resource-${group.id}`} key={group.id}>
-              <div className="resources-group-heading"><h3 className="learn-group__title">{group.title}</h3><small>{group.links.length} selected resources</small></div>
-              <ul className="learn-group__list">{group.links.map(link => <li className="learn-link" key={link.id}><a href={link.url} target="_blank" rel="noreferrer">{link.text}</a>{link.tag && <span className="learn-link__tag">{link.tag}</span>}</li>)}</ul>
-            </article>)}
-          </div>}
           <div className="resources-support-empty">
             <span className="resources-support-empty__icon" aria-hidden="true"><PlusIcon /></span>
             <h3 className="resources-support-empty__title">Know an organization worth including?</h3>

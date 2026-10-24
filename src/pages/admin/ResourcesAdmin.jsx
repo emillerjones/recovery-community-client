@@ -72,7 +72,7 @@ export default function ResourcesAdmin() {
       const data = await fetch(`${API}/api/resources`, {
         method: "PATCH",
         headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-        body: JSON.stringify({ content: draft, revision }),
+        body: JSON.stringify({ content: { ...draft, categories: draft.categories.map(group => ({ ...group, section: "learn" })) }, revision }),
       }).then(readResponse);
       setSaved(data.content); setDraft(clone(data.content)); setRevision(data.revision);
       setNotice({ text: "Resources changes are live." });
@@ -116,9 +116,8 @@ export default function ResourcesAdmin() {
               <button type="button" className="resources-admin__delete" onClick={() => removeCategory(group)}><Trash2 size={15} /> Delete category</button>
             </div>
           </div>
-          <div className="faq-admin__group-fields">
+          <div className="faq-admin__fields resources-admin__category-fields">
             <label>Category title<input required maxLength={140} value={group.title} onChange={event => updateCategory(group.id, current => ({ ...current, title: event.target.value }))} /></label>
-            <label>Page section<select aria-label="Page section" value={group.section} onChange={event => updateCategory(group.id, current => ({ ...current, section: event.target.value }))}><option value="learn">Learn</option><option value="support">Find Support</option></select></label>
           </div>
           <div className="faq-admin__questions">
             {group.links.map((link, index) => <article key={link.id} aria-label={`Resource ${index + 1}`}>

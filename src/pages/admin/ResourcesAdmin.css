@@ -13,3 +13,5 @@
 .resources-admin__add-category { width:100%; margin:8px 0 24px; }
 .resources-admin .faq-admin__question-heading { flex-wrap:wrap; }
 .resources-admin__fieldset:disabled { opacity:.7; }
+
+.resources-admin__category-fields { margin-bottom:24px; }
