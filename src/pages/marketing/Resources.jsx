@@ -1,18 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useOutletContext } from "react-router-dom";
-import { LEARN_GROUPS } from "./resourceData";
 import "./Resources.css";
 
-/**
- * Resources page.
- *
- * Merges the old site's two separate pages — "Educational Resources"
- * and "Cannabis Friendly Organizations" — into one page with two
- * sections: Learn (articles/studies/videos, regrouped by topic
- * instead of format) and Find Support (the organization directory).
- *
- * Every link from the original pages is preserved. Nothing cut.
- */
+const API = import.meta.env.VITE_API;
+
+/** Public Resources content is published through the Owner editor. */
 
 function useReveal() {
   const ref = useRef(null);
@@ -81,14 +73,6 @@ function PlusIcon() {
 // not adopted as site copy or an implied endorsement.
 
 
-const GROUP_IDS = {
-  "Substitution & Harm Reduction": "resource-substitution",
-  "Alcohol-Specific": "resource-alcohol",
-  "Opioid-Specific": "resource-opioid",
-  "Personal Accounts": "resource-personal",
-  "Research & Safety": "resource-research",
-};
-
 function FieldGuideArt() {
   return (
     <div className="resources-field-art" aria-hidden="true">
@@ -140,17 +124,17 @@ function TopicMark({ index }) {
     "M12 68C24 25 44 16 59 36C72 54 62 73 44 80M59 36C77 22 91 36 86 55",
     "M12 80L31 57L47 66L68 28L96 41M20 19H85M20 27H65",
   ];
-  return <svg className="resource-topic-mark" viewBox="0 0 110 100" aria-hidden="true"><path d={paths[index]} /></svg>;
+  return <svg className="resource-topic-mark" viewBox="0 0 110 100" aria-hidden="true"><path d={paths[index % paths.length]} /></svg>;
 }
 
-function ResourceAtlas({ activeIndex }) {
-  const activeGroup = LEARN_GROUPS[activeIndex];
+function ResourceAtlas({ activeIndex, groups }) {
+  const activeGroup = groups[activeIndex] || groups[0];
 
   return (
     <aside className="resources-atlas" aria-label="Resource field guide chapters">
       <div className="resources-atlas__topline">
         <span>Field guide</span>
-        <span>{String(activeIndex + 1).padStart(2, "0")} / 05</span>
+        <span>{String(activeIndex + 1).padStart(2, "0")} / {String(groups.length).padStart(2, "0")}</span>
       </div>
 
       <div className="resources-atlas__visual" aria-hidden="true">
@@ -158,7 +142,7 @@ function ResourceAtlas({ activeIndex }) {
           <path className="resources-atlas__orbit" d="M48 154C48 78 103 32 181 32c80 0 132 47 132 123 0 77-53 123-133 123S48 231 48 154Z" />
           <path className="resources-atlas__route" pathLength="1" d="M91 196c24-64 47-91 89-92 45-1 69 39 89 93" />
           <path className="resources-atlas__stem" pathLength="1" d="M180 238c-3-42 4-77 1-113-2-31-13-57-28-79M181 164c-31-6-54-23-69-48M181 142c28-7 51-26 68-55M180 193c35 0 63-12 87-35" />
-          {[0, 1, 2, 3, 4].map((index) => {
+          {groups.map((_, index) => {
             const points = [
               [91, 196],
               [112, 116],
@@ -166,7 +150,7 @@ function ResourceAtlas({ activeIndex }) {
               [249, 87],
               [269, 197],
             ];
-            const [cx, cy] = points[index];
+            const [cx, cy] = groups.length <= 5 ? points[index] : [180 + 95 * Math.cos(index * Math.PI * 2 / groups.length), 155 + 95 * Math.sin(index * Math.PI * 2 / groups.length)];
             const state = index === activeIndex ? "is-active" : index < activeIndex ? "is-past" : "";
             return (
               <g className={`resources-atlas__node ${state}`} key={index}>
@@ -180,19 +164,19 @@ function ResourceAtlas({ activeIndex }) {
         </svg>
       </div>
 
-      <div className="resources-atlas__current" key={activeGroup.title}>
+      <div className="resources-atlas__current" key={activeGroup.id}>
         <span>Current chapter</span>
         <strong>{activeGroup.title}</strong>
         <small>{activeGroup.links.length} selected resources</small>
       </div>
 
       <nav className="resources-atlas__nav" aria-label="Jump to a resource chapter">
-        {LEARN_GROUPS.map((group, index) => (
+        {groups.map((group, index) => (
           <a
-            href={`#${GROUP_IDS[group.title]}`}
+            href={`#resource-${group.id}`}
             className={index === activeIndex ? "is-active" : undefined}
             aria-current={index === activeIndex ? "location" : undefined}
-            key={group.title}
+            key={group.id}
           >
             <span>{String(index + 1).padStart(2, "0")}</span>
             <span className="resources-atlas__nav-label">{group.title}</span>
@@ -204,17 +188,42 @@ function ResourceAtlas({ activeIndex }) {
 }
 
 export default function Resources() {
+  const [content, setContent] = useState(null);
+  const [error, setError] = useState("");
+  const [attempt, setAttempt] = useState(0);
+  useEffect(() => {
+    const controller = new AbortController();
+    fetch(`${API}/api/resources`, { signal: controller.signal })
+      .then(async response => {
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.message || "Resources could not be loaded.");
+        setContent(data.content);
+      })
+      .catch(error => { if (error.name !== "AbortError") setError(error.message); });
+    return () => controller.abort();
+  }, [attempt]);
+  if (!content) return <main className="resources resources-load-state" aria-live="polite">
+    <h1>Resources</h1>
+    <p>{error || "Loading resources..."}</p>
+    {error && <><button type="button" onClick={() => { setError(""); setAttempt(value => value + 1); }}>Try again</button><Link to="/resources-old">View Resources - Old</Link></>}
+  </main>;
+  return <ResourcesContent content={content} />;
+}
+
+function ResourcesContent({ content }) {
   const { onRegister } = useOutletContext();
   const [learnRef, learnVisible] = useReveal();
   const [supportRef, supportVisible] = useReveal();
   const [activeGroup, setActiveGroup] = useState(0);
+  const groups = useMemo(() => content.categories.filter(group => group.section === "learn"), [content]);
+  const supportGroups = content.categories.filter(group => group.section === "support");
 
   useEffect(() => {
-    const groups = LEARN_GROUPS.map((group) =>
-      document.getElementById(GROUP_IDS[group.title])
+    const elements = groups.map((group) =>
+      document.getElementById(`resource-${group.id}`)
     ).filter(Boolean);
 
-    if (!groups.length || !("IntersectionObserver" in window)) return undefined;
+    if (!elements.length || !("IntersectionObserver" in window)) return undefined;
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -232,9 +241,9 @@ export default function Resources() {
       }
     );
 
-    groups.forEach((group) => observer.observe(group));
+    elements.forEach((group) => observer.observe(group));
     return () => observer.disconnect();
-  }, []);
+  }, [groups]);
 
   return (
     <div className="resources">
@@ -242,9 +251,9 @@ export default function Resources() {
         <div className="resources-hero__light" aria-hidden="true" />
         <div className="resources-hero__inner">
           <div className="resources-hero__content">
-            <p className="resources-kicker">The recovery field guide</p>
-            <h1>Information for finding your own way.</h1>
-            <p>Research, lived experience, and outside support—collected carefully so the next useful direction is easier to find.</p>
+            <p className="resources-kicker">{content.hero.kicker}</p>
+            <h1>{content.hero.title}</h1>
+            <p>{content.hero.intro}</p>
             <a href="#learn" className="resources-hero__start">Open the field guide <span>↓</span></a>
           </div>
           <FieldGuideArt />
@@ -261,21 +270,18 @@ export default function Resources() {
             <span className="eyebrow__icon eyebrow__icon--book"><BookIcon /></span>
             Learn
           </div>
-          <p className="resources-intro">
-            A starting point, not a substitute for medical advice. These
-            are articles, studies, and videos members have found useful
-            over the years.
-          </p>
+          <p className="resources-intro">{content.learnIntro}</p>
 
-          <div className="resources-reading-layout">
-            <ResourceAtlas activeIndex={activeGroup} />
+          <div className={`resources-reading-layout ${groups.length ? "" : "resources-reading-layout--empty"}`}>
+            {groups.length > 0 && <ResourceAtlas activeIndex={activeGroup} groups={groups} />}
 
             <div className="learn-groups resources-chapters">
-              {LEARN_GROUPS.map((group, index) => (
+              {groups.length === 0 && <p className="resources-intro">New resources will be added here soon.</p>}
+              {groups.map((group, index) => (
                 <article
                   className={`learn-group resources-chapter ${index === activeGroup ? "is-active" : ""}`}
                   data-resource-index={index}
-                  id={GROUP_IDS[group.title]}
+                  id={`resource-${group.id}`}
                   key={group.title}
                 >
                   <TopicMark index={index} />
@@ -286,7 +292,7 @@ export default function Resources() {
                   </div>
                   <ul className="learn-group__list">
                     {group.links.map((link) => (
-                      <li key={link.text} className="learn-link">
+                      <li key={link.id} className="learn-link">
                         <a href={link.url} target="_blank" rel="noreferrer">
                           {link.text}
                         </a>
@@ -311,12 +317,14 @@ export default function Resources() {
             <span className="eyebrow__icon eyebrow__icon--compass"><CompassIcon /></span>
             Find Support
           </div>
-          <p className="resources-intro">
-            We're rebuilding this directory of independent organizations —
-            not part of Recovery With The Exit Drug — to make sure it
-            stays current and accurate.
-          </p>
+          <p className="resources-intro">{content.supportIntro}</p>
 
+          {supportGroups.length > 0 && <div className="learn-groups resources-support-groups">
+            {supportGroups.map(group => <article className="learn-group resources-chapter" id={`resource-${group.id}`} key={group.id}>
+              <div className="resources-group-heading"><h3 className="learn-group__title">{group.title}</h3><small>{group.links.length} selected resources</small></div>
+              <ul className="learn-group__list">{group.links.map(link => <li className="learn-link" key={link.id}><a href={link.url} target="_blank" rel="noreferrer">{link.text}</a>{link.tag && <span className="learn-link__tag">{link.tag}</span>}</li>)}</ul>
+            </article>)}
+          </div>}
           <div className="resources-support-empty">
             <span className="resources-support-empty__icon" aria-hidden="true"><PlusIcon /></span>
             <h3 className="resources-support-empty__title">Know an organization worth including?</h3>

@@ -786,3 +786,8 @@
     stroke-dashoffset: 0;
   }
 }
+
+.resources-load-state { min-height:65vh; padding:140px max(20px,8vw) 80px; }
+.resources-load-state button,.resources-load-state a { display:inline-block; margin:12px 18px 0 0; color:#294b35; }
+.resources-reading-layout--empty { grid-template-columns:1fr; }
+.resources-support-groups { margin:32px 0; }

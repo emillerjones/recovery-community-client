@@ -18,6 +18,8 @@ import RequireRole from "./components/RequireRole";
 import MarketingLayout from "./layout/MarketingLayout";
 import AppLayout from "./layout/AppLayout";
 import Resources from "./pages/marketing/Resources";
+import ResourcesOld from "./pages/marketing/ResourcesOld";
+import ResourcesAdmin from "./pages/admin/ResourcesAdmin";
 import MonetaryGifts from "./pages/marketing/MonetaryGifts";
 import FAQ from "./pages/marketing/FAQ";
 import Privacy from "./pages/marketing/Privacy";
@@ -62,6 +64,7 @@ export default function App() {
         <Route path="about" element={<Navigate to="/" replace />} />
         <Route path="about2" element={<Navigate to="/" replace />} />
         <Route path="resources" element={<Resources />} />
+        <Route path="resources-old" element={<ResourcesOld />} />
         <Route path="resources2" element={<Navigate to="/resources" replace />} />
         <Route path="donate" element={<MonetaryGifts />} />
         <Route path="faq" element={<FAQ />} />
@@ -92,6 +95,7 @@ export default function App() {
             </RequireRole>
           }
         />
+        <Route path="/admin/resources-editor" element={<RequireRole maxRoleId={1}><ResourcesAdmin /></RequireRole>} />
         <Route
           path="/admin/faq-editor"
           element={

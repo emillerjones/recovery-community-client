@@ -1,0 +1,15 @@
+.resources-admin__fieldset { min-width:0; margin:0; padding:0; border:0; }
+.resources-admin__heading { display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:12px; margin-bottom:20px; }
+.resources-admin__heading .faq-admin__section-heading { min-width:0; margin-bottom:0; }
+.resources-admin h2 { overflow-wrap:anywhere; }
+.resources-admin__controls { display:flex; align-items:center; flex-wrap:wrap; gap:6px; }
+.resources-admin .resources-admin__controls button { display:inline-flex; align-items:center; justify-content:center; gap:5px; min-width:40px; min-height:40px; padding:8px; border:1px solid #cbd5c9; border-radius:9px; background:#edf2e9; color:#355a3d; cursor:pointer; }
+.resources-admin .resources-admin__controls .resources-admin__delete { background:#f8e9e5; border-color:#e2c9c3; color:#8b3d32; }
+.resources-admin .resources-admin__controls button:disabled { opacity:.4; cursor:default; }
+.resources-admin input,.resources-admin textarea,.resources-admin select { box-sizing:border-box; min-width:0; max-width:100%; font-size:16px; }
+.resources-admin select { width:100%; padding:12px 13px; border:1px solid #cbd5c9; border-radius:10px; background:#fff; color:#233128; font-family:inherit; }
+.resources-admin button:focus-visible,.resources-admin select:focus-visible { outline:2px solid #67836b; outline-offset:3px; }
+.resources-admin__empty { color:#627066; font-size:14px; }
+.resources-admin__add-category { width:100%; margin:8px 0 24px; }
+.resources-admin .faq-admin__question-heading { flex-wrap:wrap; }
+.resources-admin__fieldset:disabled { opacity:.7; }
