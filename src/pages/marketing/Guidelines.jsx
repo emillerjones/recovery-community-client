@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   Ban,
@@ -14,118 +14,8 @@ import {
 } from "lucide-react";
 import "./Guidelines.css";
 
-const GUIDELINES = [
-  {
-    number: "01",
-    icon: LockKeyhole,
-    title: "Respect Everyone’s Privacy — What’s Shared Stays in the Private Group Forum",
-    text: (
-      <>
-        Protecting the privacy and trust of every member is essential to
-        maintaining a safe environment. Please do not share, repeat, screenshot,
-        copy, or distribute another member’s posts, comments, personal
-        experiences, or identifying information outside of our group forum. What
-        members share here should stay here. Please note that sharing information
-        online may involve certain risks.
-      </>
-    ),
-  },
-  {
-    number: "02",
-    icon: Heart,
-    title: "Be Kind and Considerate",
-    text: (
-      <>
-        Treat everyone with kindness, consideration and compassion. Always be
-        mindful of another member’s feelings and communicate respectfully.
-        Differences in opinions and experiences are welcome, but personal attacks
-        are not. We’re here to support one another, not judge or criticize.
-      </>
-    ),
-  },
-  {
-    number: "03",
-    icon: UsersRound,
-    title: "We Are Non-Judgmental & All-Inclusive",
-    text: (
-      <>
-        We remain non-judgmental and all-inclusive towards all members at all
-        times. All member posts and comments should refrain from using profanity,
-        jokes, sarcasm, disrespect and negativity that could incite offense to
-        another member. We may not always see eye to eye, and that’s okay. Let’s
-        agree to disagree with care and understanding.
-      </>
-    ),
-  },
-  {
-    number: "04",
-    icon: MegaphoneOff,
-    title: "No Sales, Promotions, Spam or Unsolicited Advice",
-    text: (
-      <>
-        We do not post spam, advertisements, promotional content, sales,
-        irrelevant links or unsolicited advice. This includes, but is not limited
-        to, promoting or selling products, businesses, or services of any kind.
-      </>
-    ),
-  },
-  {
-    number: "05",
-    icon: Ban,
-    title: "No Illegal Activity",
-    text: (
-      <>
-        Do not use our service for any unlawful purposes. We do not endorse going
-        against your current local laws regarding substance use or possession. We
-        are not here to advise on how to circumvent the law. Posts asking about
-        how to pass a drug test or the likelihood of success in a criminal act
-        are prohibited. Do not post information on how to smuggle, ship, hide,
-        manufacture, or distribute illegal substances.
-      </>
-    ),
-  },
-  {
-    number: "06",
-    icon: MessageCircle,
-    title: "Stay on Topic",
-    text: (
-      <>
-        Our group forum is intended only to provide a supportive space for
-        members to share their personal experiences, challenges, questions, and
-        insights related to cannabis, substance use, addiction, and recovery. We
-        do not allow discussions centered on religion, politics, or other
-        unrelated subjects.
-      </>
-    ),
-  },
-  {
-    number: "07",
-    icon: Image,
-    title: "Image & Meme Sharing",
-    text: (
-      <>
-        Any sharing of an image or meme must be accompanied by original written
-        text from the member posting. All images and memes posted alone, that go
-        against guidelines or are off-topic will be declined.
-      </>
-    ),
-  },
-  {
-    number: "08",
-    icon: ShieldCheck,
-    title: "Admin & Moderators",
-    text: (
-      <>
-        The admin/moderators are here to closely facilitate activity and uphold
-        group forum guidelines. They reserve the right to remove membership,
-        posts, and comments due to noncompliance with the rules. Please note that
-        moderators are generous volunteers and are not paid professionals. For
-        any questions or concerns, all members may contact the Admin, Lainie Ruth,
-        through private message or on the “Contact Us” page.
-      </>
-    ),
-  },
-];
+const API = import.meta.env.VITE_API;
+const ICONS = { LockKeyhole, Heart, UsersRound, MegaphoneOff, Ban, MessageCircle, Image, ShieldCheck };
 
 function useActiveGuideline(ids) {
   const [active, setActive] = useState(ids[0]);
@@ -150,22 +40,36 @@ function useActiveGuideline(ids) {
   return active;
 }
 
-const GUIDELINE_IDS = GUIDELINES.map((item) => `guideline-${item.number}`);
 
 export default function Guidelines() {
-  const activeGuideline = useActiveGuideline(GUIDELINE_IDS);
+  const [content, setContent] = useState(null);
+  const [error, setError] = useState("");
+  const [attempt, setAttempt] = useState(0);
+  useEffect(() => {
+    const controller = new AbortController();
+    fetch(`${API}/api/guidelines`, { signal: controller.signal })
+      .then(async response => { const data = await response.json(); if (!response.ok) throw new Error(data.message || "Guidelines could not be loaded."); setContent(data.content); })
+      .catch(error => { if (error.name !== "AbortError") setError(error.message); });
+    return () => controller.abort();
+  }, [attempt]);
+  if (!content) return <main className="guidelines-load-state"><h1>Guidelines</h1><p role="status">{error || "Loading guidelines..."}</p>{error && <button type="button" onClick={() => { setError(""); setAttempt(value => value + 1); }}>Try again</button>}</main>;
+  return <GuidelinesContent content={content} />;
+}
+
+function GuidelinesContent({ content }) {
+  const page = content.page;
+  const guidelines = useMemo(() => content.items.map((item, index) => ({ ...item, number: String(index + 1).padStart(2, "0"), icon: ICONS[item.icon] || ShieldCheck })), [content.items]);
+  const ids = useMemo(() => guidelines.map(item => `guideline-${item.id}`), [guidelines]);
+  const activeGuideline = useActiveGuideline(ids);
 
   return (
     <main className="guidelines-page">
       <section className="guidelines-hero" data-nav-theme="light">
         <div className="guidelines-inner guidelines-hero__inner">
           <div className="guidelines-hero__copy">
-            <p className="guidelines-eyebrow">Our community culture</p>
-            <h1 className="guidelines-title">GUIDELINES</h1>
-            <p className="guidelines-intro">
-              All members must agree to follow these guidelines and acknowledge
-              the disclaimer below:
-            </p>
+            <p className="guidelines-eyebrow">{page.eyebrow}</p>
+            <h1 className="guidelines-title">{page.title}</h1>
+            <p className="guidelines-intro">{page.intro}</p>
           </div>
           <svg className="guidelines-hero__art" viewBox="0 0 460 360" aria-hidden="true">
             <path className="guidelines-hero__orbit" d="M38 180C38 85 117 28 232 28c118 0 190 58 190 153 0 97-76 151-193 151S38 276 38 180Z" />
@@ -182,25 +86,16 @@ export default function Guidelines() {
         <div className="guidelines-inner guidelines-layout">
           <aside className="guidelines-side-card">
             <div className="guidelines-side-card__icon"><ShieldCheck /></div>
-            <span className="guidelines-side-card__label">What holds us together</span>
-            <h2>
-              Trust.{" "}
-              <br />
-              Privacy.{" "}
-              <br />
-              Respect.
-            </h2>
-            <p>
-              These guidelines protect our community and help everyone feel
-              safe, supported, and able to be honest.
-            </p>
+            <span className="guidelines-side-card__label">{page.sideLabel}</span>
+            <h2>{page.sideTitle1}{" "}<br />{page.sideTitle2}{" "}<br />{page.sideTitle3}</h2>
+            <p>{page.sideText}</p>
             <nav className="guidelines-index" aria-label="Guideline index">
-              {GUIDELINES.map((item) => {
-                const id = `guideline-${item.number}`;
+              {guidelines.map((item) => {
+                const id = `guideline-${item.id}`;
                 return (
                   <a
                     href={`#${id}`}
-                    key={item.number}
+                    key={item.id}
                     className={activeGuideline === id ? "is-active" : undefined}
                     aria-current={activeGuideline === id ? "true" : undefined}
                   >
@@ -215,13 +110,13 @@ export default function Guidelines() {
           <div className="guidelines-charter">
             <div className="guidelines-charter__heading">
               <ScrollText />
-              <span>Community charter</span>
+              <span>{page.charterLabel}</span>
             </div>
             <div className="guidelines-list">
-              {GUIDELINES.map((item) => {
+              {guidelines.map((item) => {
                 const ItemIcon = item.icon;
                 return (
-                  <article className="guideline-card" id={`guideline-${item.number}`} key={item.number}>
+                  <article className="guideline-card" id={`guideline-${item.id}`} key={item.id}>
                     <div className="guideline-card__meta">
                       <span className="guideline-card__number">{item.number}</span>
                       <span className="guideline-card__icon"><ItemIcon /></span>
@@ -244,7 +139,7 @@ export default function Guidelines() {
 
             <Link className="guidelines-contact-card" to="/contact">
               <Mail />
-              <span>Please contact our Admin, <strong>Lainie Ruth</strong>, with any questions or concerns.</span>
+              <span>{page.contactLead}{" "}<strong>{page.contactName}</strong>{", "}{page.contactTail}</span>
             </Link>
           </div>
         </div>
@@ -254,13 +149,7 @@ export default function Guidelines() {
         <div className="guidelines-inner">
           <div className="guidelines-disclaimer" data-nav-theme="light">
             <div className="guidelines-disclaimer__icon"><ShieldCheck /></div>
-            <p>
-              <strong>Disclaimer:</strong> Recovery with The Exit Drug’s private
-              forum is a free peer-to-peer support group. This is not a
-              professional or medical organization. Anything provided in this
-              group forum is for supportive and informational purposes only. We
-              are not a substitute for professional or medical care.
-            </p>
+            <p><strong>{page.disclaimerLabel}</strong>{" "}{page.disclaimerText}</p>
           </div>
         </div>
       </section>

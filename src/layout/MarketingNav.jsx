@@ -58,6 +58,7 @@ const ROLE_LABELS = {
 
 const ADMIN_LINKS = [
   { to: "/admin/discount-editor", label: "Edit Discount Links", description: "Owner-managed discount brands", icon: BadgePercent, ownerOnly: true },
+  { to: "/admin/guidelines-editor", label: "Edit Guidelines", description: "Owner-managed community guidelines", icon: ScrollText, ownerOnly: true },
   { to: "/admin/home-test-editor", label: "Edit Home - Test", description: "Owner-managed Home test text", icon: FilePenLine, ownerOnly: true },
   { to: "/admin/resources-editor", label: "Edit Resources", description: "Owner-managed resource categories and links", icon: FilePenLine, ownerOnly: true },
   { to: "/admin/faq-editor", label: "Edit FAQ", description: "Owner-managed FAQ content", icon: FilePenLine, ownerOnly: true },

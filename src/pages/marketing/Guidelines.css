@@ -534,7 +534,7 @@
 
 .guidelines-index a {
   display: grid;
-  grid-template-columns: 27px 1fr;
+  grid-template-columns: 27px minmax(0, 1fr);
   gap: 9px;
   padding: 8px 0;
   color: rgba(31, 43, 33, 0.58);
@@ -834,3 +834,9 @@
     line-height: 1.65;
   }
 }
+
+.guidelines-load-state { min-height:65vh; padding:140px max(20px,8vw) 80px; background:#faf9f5; color:#294b35; }
+.guidelines-page :is(h1,h2,p) { overflow-wrap:anywhere; }
+.guideline-card__content p { white-space:pre-line; }
+
+.guidelines-index__label,.guidelines-contact-card > span { min-width:0; overflow-wrap:anywhere; }
