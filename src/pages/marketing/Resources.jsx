@@ -205,7 +205,7 @@ export default function Resources() {
   if (!content) return <main className="resources resources-load-state" aria-live="polite">
     <h1>Resources</h1>
     <p>{error || "Loading resources..."}</p>
-    {error && <><button type="button" onClick={() => { setError(""); setAttempt(value => value + 1); }}>Try again</button><Link to="/resources-old">View Resources - Old</Link></>}
+    {error && <button type="button" onClick={() => { setError(""); setAttempt(value => value + 1); }}>Try again</button>}
   </main>;
   return <ResourcesContent content={content} />;
 }

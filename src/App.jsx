@@ -21,7 +21,6 @@ import RequireRole from "./components/RequireRole";
 import MarketingLayout from "./layout/MarketingLayout";
 import AppLayout from "./layout/AppLayout";
 import Resources from "./pages/marketing/Resources";
-import ResourcesOld from "./pages/marketing/ResourcesOld";
 import ResourcesAdmin from "./pages/admin/ResourcesAdmin";
 import MonetaryGifts from "./pages/marketing/MonetaryGifts";
 import FAQ from "./pages/marketing/FAQ";
@@ -68,7 +67,7 @@ export default function App() {
         <Route path="about2" element={<Navigate to="/" replace />} />
         <Route path="home-test" element={<HomeTest />} />
         <Route path="resources" element={<Resources />} />
-        <Route path="resources-old" element={<ResourcesOld />} />
+        <Route path="resources-old" element={<Navigate to="/resources" replace />} />
         <Route path="resources2" element={<Navigate to="/resources" replace />} />
         <Route path="donate" element={<MonetaryGifts />} />
         <Route path="faq" element={<FAQ />} />
