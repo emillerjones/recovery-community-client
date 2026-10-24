@@ -215,7 +215,22 @@ export default function MarketingNav({ onLogin, onRegister }) {
     window.addEventListener("scroll", queueThemeUpdate, { passive: true });
     window.addEventListener("resize", queueThemeUpdate);
 
+    // API-backed pages mount their themed sections after the route first renders.
+    // Recheck only when theme markers change, rather than on every DOM update.
+    const containsThemeMarker = node => node instanceof Element
+      && (node.matches("[data-nav-theme]") || node.querySelector("[data-nav-theme]"));
+    const themeObserver = new MutationObserver(records => {
+      if (records.some(record => record.type === "attributes"
+        || [...record.addedNodes, ...record.removedNodes].some(containsThemeMarker))) {
+        queueThemeUpdate();
+      }
+    });
+    themeObserver.observe(document.body, {
+      childList: true, subtree: true, attributes: true, attributeFilter: ["data-nav-theme"],
+    });
+
     return () => {
+      themeObserver.disconnect();
       window.cancelAnimationFrame(frameId);
       window.removeEventListener("scroll", queueThemeUpdate);
       window.removeEventListener("resize", queueThemeUpdate);
