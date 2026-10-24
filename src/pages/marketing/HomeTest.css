@@ -1,0 +1,4 @@
+/* All additional rules are scoped to Home - Test; Home.css stays untouched. */
+.home-test-page :is(h1,h2,h3,p,blockquote) { overflow-wrap:anywhere; }
+.home-test-page :is(p,blockquote) { white-space:pre-line; }
+.home-test-load { min-height:65vh; padding:140px max(20px,8vw) 80px; background:#faf9f5; color:#294b35; }

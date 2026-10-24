@@ -1,5 +1,7 @@
 import { Navigate, Routes, Route } from "react-router-dom";
 import Home from "./pages/marketing/Home";
+import HomeTest from "./pages/marketing/HomeTest";
+import HomeTestAdmin from "./pages/admin/HomeTestAdmin";
 import Community from "./pages/marketing/Community";
 import DiscountLinks from "./pages/marketing/DiscountLinks";
 import Guidelines from "./pages/marketing/Guidelines";
@@ -63,6 +65,7 @@ export default function App() {
         <Route path="discountlinks2" element={<Navigate to="/discountlinks" replace />} />
         <Route path="about" element={<Navigate to="/" replace />} />
         <Route path="about2" element={<Navigate to="/" replace />} />
+        <Route path="home-test" element={<HomeTest />} />
         <Route path="resources" element={<Resources />} />
         <Route path="resources-old" element={<ResourcesOld />} />
         <Route path="resources2" element={<Navigate to="/resources" replace />} />
@@ -95,6 +98,7 @@ export default function App() {
             </RequireRole>
           }
         />
+        <Route path="/admin/home-test-editor" element={<RequireRole maxRoleId={1}><HomeTestAdmin /></RequireRole>} />
         <Route path="/admin/resources-editor" element={<RequireRole maxRoleId={1}><ResourcesAdmin /></RequireRole>} />
         <Route
           path="/admin/faq-editor"
