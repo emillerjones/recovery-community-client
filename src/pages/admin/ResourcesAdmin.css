@@ -1,4 +1,5 @@
-.resources-admin__fieldset { min-width:0; margin:0; padding:0; border:0; }
+.resources-admin__fieldset { box-sizing:border-box; width:100%; max-width:1120px; min-width:0; margin:0 auto; padding:0; border:0; }
+.resources-admin form { box-sizing:border-box; width:100%; min-width:0; max-width:none; margin-inline:0; }
 .resources-admin__heading { display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:12px; margin-bottom:20px; }
 .resources-admin__heading .faq-admin__section-heading { min-width:0; margin-bottom:0; }
 .resources-admin h2 { overflow-wrap:anywhere; }
@@ -18,3 +19,10 @@
 
 .resources-admin__resource-form { display:grid; gap:12px; }
 .resources-admin .discount-admin__save-actions button:disabled { opacity:.45; cursor:default; }
+.resources-admin .discount-admin__save-actions .resources-admin__saved-button:disabled { opacity:1; background:#e1efdf; border-color:#93b58e; color:#285232; }
+.resources-admin__feedback { display:flex; align-items:flex-start; gap:9px; margin:8px 0 0; padding:12px 14px; border:1px solid #a8c7a2; border-radius:10px; background:#eaf5e7; color:#285232; font:600 13px/1.5 Inter,sans-serif; overflow-wrap:anywhere; }
+.resources-admin__feedback > svg { flex-shrink:0; }
+.resources-admin__feedback.is-error { border-color:#dfb2a6; background:#fff0eb; color:#8b3d32; }
+.resources-admin__saving-icon { animation:resources-save-spin 1s linear infinite; }
+@keyframes resources-save-spin { to { transform:rotate(360deg); } }
+@media(prefers-reduced-motion:reduce) { .resources-admin__saving-icon { animation:none; } }

@@ -1,5 +1,5 @@
 ﻿import { useEffect, useMemo, useRef, useState } from "react";
-import { ArrowDown, ArrowUp, ExternalLink, Plus, RotateCcw, Save, Trash2 } from "lucide-react";
+import { ArrowDown, ArrowUp, CircleCheck, ExternalLink, LoaderCircle, Plus, RotateCcw, Save, Trash2 } from "lucide-react";
 import { useAuth } from "../../auth/AuthContext";
 import "./FAQAdmin.css";
 import "./DiscountAdmin.css";
@@ -40,6 +40,7 @@ export default function ResourcesAdmin() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const savingLock = useRef(false);
+  const [savingKey, setSavingKey] = useState(null);
   const [notice, setNotice] = useState(null);
   const [feedback, setFeedback] = useState({});
   const dirty = useMemo(() => Boolean(draft && saved && !same(draft, saved)), [draft, saved]);
@@ -77,7 +78,7 @@ export default function ResourcesAdmin() {
   // only that part of the browser draft, preserving all other unfinished edits.
   async function commit(edit, key, message, onSaved, rollback) {
     if (savingLock.current) return;
-    savingLock.current = true; setSaving(true); setNotice(null); clearFeedback(key);
+    savingLock.current = true; setSaving(true); setSavingKey(edit.action.startsWith("save-") ? key : null); setNotice(null); clearFeedback(key);
     try {
       const data = await fetch(`${API}/api/resources/items`, {
         method: "PATCH", headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
@@ -85,13 +86,13 @@ export default function ResourcesAdmin() {
       }).then(readResponse);
       setSaved(data.content); setRevision(data.revision);
       onSaved?.(data.content);
-      setFeedback(current => ({ ...current, [key]: { text: message } }));
+      setFeedback(current => ({ ...current, [key]: { text: message, saved: edit.action.startsWith("save-") } }));
       setNotice({ text: message });
     } catch (error) {
       rollback?.();
       setFeedback(current => ({ ...current, [key]: { error: true, text: error.message } }));
       setNotice({ error: true, text: error.message });
-    } finally { savingLock.current = false; setSaving(false); }
+    } finally { savingLock.current = false; setSaving(false); setSavingKey(null); }
   }
   function savePage(event) {
     event.preventDefault();
@@ -155,12 +156,19 @@ export default function ResourcesAdmin() {
   }
   function status(key) {
     const item = feedback[key];
-    return item && <p className={`discount-admin__status ${item.error ? "is-error" : ""}`} role={item.error ? "alert" : "status"}>{item.text}</p>;
+    return item && <p className={`resources-admin__feedback ${item.error ? "is-error" : "is-success"}`} role={item.error ? "alert" : "status"}>
+      {!item.error && <CircleCheck size={20} aria-hidden="true" />}<span>{item.error ? item.text : item.saved ? "Saved successfully. This change is now live on Resources." : item.text}</span>
+    </p>;
   }
-  function saveActions(changed, onDiscard, label) {
+  function saveActions(changed, onDiscard, label, key) {
+    const pending = savingKey === key;
+    const confirmed = !changed && feedback[key]?.saved && !feedback[key]?.error;
     return <div className="discount-admin__save-actions">
       {changed && <button type="button" onClick={onDiscard}><RotateCcw size={15} /> Discard edits</button>}
-      <button className="discount-admin__save-item" disabled={!changed}><Save size={16} /> {label}</button>
+      <button className={`discount-admin__save-item ${confirmed ? "resources-admin__saved-button" : ""}`} disabled={!changed || pending} aria-label={confirmed ? label + " (saved)" : label}>
+        {pending ? <LoaderCircle className="resources-admin__saving-icon" size={16} aria-hidden="true" /> : confirmed ? <CircleCheck size={18} aria-hidden="true" /> : <Save size={16} aria-hidden="true" />}
+        {pending ? "Saving..." : confirmed ? "Saved" : label}
+      </button>
     </div>;
   }
   if (loading) return <main className="faq-admin resources-admin"><p>Loading Resources editor...</p></main>;
@@ -185,7 +193,7 @@ export default function ResourcesAdmin() {
             <label>Find Support introduction<textarea required rows={3} maxLength={1200} value={draft.supportIntro} onChange={event => updatePage("supportIntro", event.target.value)} /></label>
           </div>
           {status("page")}
-          {saveActions(!same(pageFields(draft), pageFields(saved)), () => { setDraft(current => ({ ...current, ...clone(pageFields(saved)) })); clearFeedback("page"); }, "Save page text")}
+          {saveActions(!same(pageFields(draft), pageFields(saved)), () => { setDraft(current => ({ ...current, ...clone(pageFields(saved)) })); clearFeedback("page"); }, "Save page text", "page")}
         </form>
       </section>
       {draft.categories.map((category, categoryIndex) => {
@@ -204,7 +212,7 @@ export default function ResourcesAdmin() {
           <form className="resources-admin__category-fields" onSubmit={event => saveCategory(event, category)}>
             <label>Category title<input required maxLength={140} value={category.title} onChange={event => updateTitle(category.id, event.target.value)} /></label>
             {status("category:" + category.id)}
-            {saveActions(!stored || category.title !== stored.title, () => discardCategory(category), "Save category")}
+            {saveActions(!stored || category.title !== stored.title, () => discardCategory(category), "Save category", "category:" + category.id)}
           </form>
           <div className="faq-admin__questions">
             {category.links.map((resource, index) => {
@@ -224,7 +232,7 @@ export default function ResourcesAdmin() {
                   <label>Website address<input type="url" required maxLength={2000} placeholder="https://example.org" value={resource.url} onChange={event => updateLink(category.id, resource.id, "url", event.target.value)} /></label>
                   <label>Label (optional)<input maxLength={60} placeholder="For example: Video, Study, or Organization" value={resource.tag} onChange={event => updateLink(category.id, resource.id, "tag", event.target.value)} /></label>
                   {status("resource:" + resource.id)}
-                  {saveActions(!savedResource || !same(resource, savedResource), () => discardResource(category.id, resource), "Save resource")}
+                  {saveActions(!savedResource || !same(resource, savedResource), () => discardResource(category.id, resource), "Save resource", "resource:" + resource.id)}
                 </form>
               </article>;
             })}
