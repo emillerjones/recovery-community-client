@@ -20,6 +20,12 @@
 .registration-check a { color: #405842; }
 .registration-primary { min-height: 49px; border: 0; border-radius: 11px; padding: 0 22px; background: #2c3a2d; color: #fff; font: inherit; font-weight: 700; cursor: pointer; }
 .registration-primary:disabled { opacity: .55; cursor: wait; }
+.registration-email-help { margin: 22px 0; padding: 16px 18px; border: 1px solid rgba(44,58,45,.14); border-radius: 12px; background: #f5f7f2; color: #526454; font-size: 14px; line-height: 1.65; text-align: left; overflow-wrap: anywhere; }
+.registration-email-help p { margin: 0 0 12px; }
+.registration-email-help p:last-child { margin-bottom: 0; }
+.registration-resend { min-height: 44px; max-width: 100%; padding: 8px 0; border: 0; background: transparent; color: #2c3a2d; font: inherit; font-weight: 650; text-decoration: underline; cursor: pointer; text-align: left; }
+.registration-resend:disabled { opacity: .6; cursor: default; }
+.registration-resend:focus-visible { outline: 2px solid #829780; outline-offset: 3px; }
 .registration-primary--link { display: inline-flex; align-items: center; justify-content: center; text-decoration: none; margin-top: 18px; }
 .registration-back--centered { margin: 0; text-align: center; }
 .registration-error { color: #a3472f; line-height: 1.5; }

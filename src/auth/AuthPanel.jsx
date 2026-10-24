@@ -20,6 +20,7 @@ export default function AuthPanel({ mode, onClose, onSwitchMode }) {
   const [loading, setLoading] = useState(false);
   const [submittedEmail, setSubmittedEmail] = useState("");
   const [resendMessage, setResendMessage] = useState("");
+  const [resending, setResending] = useState(false);
   const [recovering, setRecovering] = useState(false);
   const [recoveryMessage, setRecoveryMessage] = useState("");
   const panelRef = useRef(null);
@@ -98,14 +99,23 @@ export default function AuthPanel({ mode, onClose, onSwitchMode }) {
   }
 
   async function resendVerification() {
+    if (resending) return;
+    setResending(true);
     setResendMessage("");
-    const response = await fetch(`${import.meta.env.VITE_API}/api/registration/resend-verification`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: submittedEmail }),
-    });
-    const data = await response.json();
-    setResendMessage(data.message || "Please try again later.");
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API}/api/registration/resend-verification`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: submittedEmail }),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message || "Please try again later.");
+      setResendMessage(`${data.message} Check Spam or Junk and use the newest link.`);
+    } catch (requestError) {
+      setResendMessage(requestError.message || "Could not request a new link. Please try again later.");
+    } finally {
+      setResending(false);
+    }
   }
 
   return (
@@ -228,7 +238,10 @@ export default function AuthPanel({ mode, onClose, onSwitchMode }) {
 
           {error && <p className="ap-error" role="alert">{error}</p>}
           {error?.includes("verify your email") && (
-            <button className="ap-switch-btn" type="button" onClick={resendVerification}>Send a new verification link</button>
+            <>
+              <p className="ap-sub">Check Spam or Junk for an email from Recovery With The Exit Drug. If you find it there, mark it as Not spam.</p>
+              <button className="ap-switch-btn" type="button" disabled={resending} onClick={resendVerification}>{resending ? "Requesting a new link…" : "Send a new verification link"}</button>
+            </>
           )}
           {resendMessage && <p className="ap-sub" role="status">{resendMessage}</p>}
           {recoveryMessage && <p className="ap-success" role="status">{recoveryMessage}</p>}

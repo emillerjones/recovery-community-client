@@ -15,6 +15,16 @@ export default function Register() {
   const [error, setError] = useState("");
   const [result, setResult] = useState(null);
   const [submitting, setSubmitting] = useState(false);
+  const [resending, setResending] = useState(false);
+  const [resendMessage, setResendMessage] = useState("");
+  const [resendError, setResendError] = useState("");
+  const [resendAvailableAt, setResendAvailableAt] = useState(0);
+
+  useEffect(() => {
+    if (!resendAvailableAt) return;
+    const timer = window.setTimeout(() => setResendAvailableAt(0), Math.max(0, resendAvailableAt - Date.now()));
+    return () => window.clearTimeout(timer);
+  }, [resendAvailableAt]);
   const returnTo = location.state?.returnTo || "/";
   const returnScrollY = Number.isFinite(location.state?.returnScrollY)
     ? location.state.returnScrollY
@@ -66,6 +76,28 @@ export default function Register() {
     }
   }
 
+  async function resendVerification() {
+    if (resending || resendAvailableAt) return;
+    setResending(true);
+    setResendMessage("");
+    setResendError("");
+    try {
+      const response = await fetch(`${API}/api/registration/resend-verification`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: result.email }),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message || "Could not request another link. Please try again later.");
+      setResendMessage(`${data.message} Use the newest email; earlier links will no longer work.`);
+      setResendAvailableAt(Date.now() + 60000);
+    } catch (requestError) {
+      setResendError(requestError.message || "Could not request another link. Please try again later.");
+    } finally {
+      setResending(false);
+    }
+  }
+
   if (result) {
     return (
       <main className="registration-page">
@@ -74,6 +106,15 @@ export default function Register() {
           <h1>{result.status === "approved" ? "Your account is ready." : "Check your email."}</h1>
           <p>{result.message}</p>
           {result.status !== "approved" && <p className="registration-muted">We sent the link to <strong>{result.email}</strong>. It expires in 24 hours.</p>}
+          {result.status !== "approved" && <div className="registration-email-help">
+            <p>Can't find it? Allow a few minutes, then check Spam or Junk and, in Gmail, Promotions. Look for an email from <strong>Recovery With The Exit Drug</strong>.</p>
+            <p>If it's in Spam, mark it as <strong>Not spam</strong> before opening the verification link.</p>
+            <button type="button" className="registration-resend" disabled={resending || Boolean(resendAvailableAt)} onClick={resendVerification}>
+              {resending ? "Requesting a new link…" : resendAvailableAt ? "Please wait before requesting another link" : "Send a new verification link"}
+            </button>
+            {resendMessage && <p role="status">{resendMessage}</p>}
+            {resendError && <p className="registration-error" role="alert">{resendError}</p>}
+          </div>}
           <button className="registration-primary" onClick={() => navigate("/login")}>Go to login</button>
         </section>
       </main>
