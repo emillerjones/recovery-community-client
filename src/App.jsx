@@ -1,6 +1,7 @@
 import { Navigate, Routes, Route } from "react-router-dom";
 import Home from "./pages/marketing/Home";
 import HomeTest from "./pages/marketing/HomeTest";
+import OurStoryAdmin from "./pages/admin/OurStoryAdmin";
 import HomeTestAdmin from "./pages/admin/HomeTestAdmin";
 import GuidelinesAdmin from "./pages/admin/GuidelinesAdmin";
 import Community from "./pages/marketing/Community";
@@ -99,6 +100,7 @@ export default function App() {
           }
         />
         <Route path="/admin/guidelines-editor" element={<RequireRole maxRoleId={1}><GuidelinesAdmin /></RequireRole>} />
+        <Route path="/admin/ourstory-editor" element={<RequireRole maxRoleId={1}><OurStoryAdmin /></RequireRole>} />
         <Route path="/admin/home-test-editor" element={<RequireRole maxRoleId={1}><HomeTestAdmin /></RequireRole>} />
         <Route path="/admin/resources-editor" element={<RequireRole maxRoleId={1}><ResourcesAdmin /></RequireRole>} />
         <Route

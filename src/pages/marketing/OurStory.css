@@ -126,3 +126,6 @@
     padding: 44px 7vw 64px;
   }
 }
+
+.ourstory :is(h1, h2, p) { overflow-wrap: anywhere; }
+.ourstory__section p { white-space: pre-line; }
