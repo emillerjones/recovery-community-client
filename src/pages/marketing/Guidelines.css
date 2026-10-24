@@ -45,6 +45,7 @@
 .guidelines-hero__copy {
   position: relative;
   z-index: 1;
+  container-type: inline-size;
 }
 
 .guidelines-eyebrow {
@@ -60,7 +61,7 @@
   margin: 0;
   color: #fffaf0;
   font-family: "Fraunces", serif;
-  font-size: clamp(4.2rem, 8vw, 7.25rem);
+  font-size: min(17cqi, 6.5rem);
   font-weight: 500;
   letter-spacing: -0.045em;
   line-height: 0.92;
@@ -387,10 +388,6 @@
     opacity: 0.36;
   }
 
-  .guidelines-title {
-    font-size: clamp(3.8rem, 16vw, 5.4rem);
-  }
-
   .guidelines-intro {
     max-width: 540px;
   }
@@ -649,10 +646,6 @@
     padding-left: 14px;
   }
 
-  .guidelines-page .guidelines-title {
-    font-size: clamp(3.25rem, 16vw, 4.35rem);
-  }
-
   .guidelines-page .guidelines-intro {
     margin-top: 20px;
     font-size: 0.94rem;
@@ -836,7 +829,8 @@
 }
 
 .guidelines-load-state { min-height:65vh; padding:140px max(20px,8vw) 80px; background:#faf9f5; color:#294b35; }
-.guidelines-page :is(h1,h2,p) { overflow-wrap:anywhere; }
+.guidelines-page :is(h2,p) { overflow-wrap:anywhere; }
+.guidelines-page .guidelines-title { overflow-wrap:normal; }
 .guideline-card__content p { white-space:pre-line; }
 
 .guidelines-index__label,.guidelines-contact-card > span { min-width:0; overflow-wrap:anywhere; }
