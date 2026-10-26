@@ -1,10 +1,20 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import MemberAvatar from "./MemberAvatar";
 import MentionText from "./MentionText";
 import "./Mentions.css";
 
 const API = import.meta.env.VITE_API;
 const MAX_MENTIONS = 5;
+
+function syncHighlight(textarea, highlight) {
+  if (!textarea || !highlight) return;
+  const style = window.getComputedStyle(textarea);
+  // The mirror has no scrollbar. Match the textarea's usable width so both
+  // layers wrap at the same character even with classic desktop scrollbars.
+  highlight.style.width = `${textarea.clientWidth + parseFloat(style.borderLeftWidth) + parseFloat(style.borderRightWidth)}px`;
+  highlight.scrollTop = textarea.scrollTop;
+  highlight.scrollLeft = textarea.scrollLeft;
+}
 
 export default function MentionTextarea({
   token,
@@ -24,6 +34,20 @@ export default function MentionTextarea({
   const [query, setQuery] = useState(null);
   const [suggestions, setSuggestions] = useState([]);
   const [activeIndex, setActiveIndex] = useState(0);
+
+  useLayoutEffect(() => {
+    if (!highlightMentions) return;
+    const textarea = textareaRef.current;
+    const sync = () => syncHighlight(textarea, highlightRef.current);
+    const observer = new ResizeObserver(sync);
+    observer.observe(textarea);
+    return () => observer.disconnect();
+  }, [highlightMentions]);
+
+  // Resync after React updates the visible text, before the browser paints.
+  useLayoutEffect(() => {
+    if (highlightMentions) syncHighlight(textareaRef.current, highlightRef.current);
+  }, [highlightMentions, value, mentions]);
 
   useEffect(() => {
     if (query === null || !token) return;
@@ -124,10 +148,7 @@ export default function MentionTextarea({
         ref={textareaRef}
         aria-label={ariaLabel}
         onScroll={(event) => {
-          if (highlightRef.current) {
-            highlightRef.current.scrollTop = event.currentTarget.scrollTop;
-            highlightRef.current.scrollLeft = event.currentTarget.scrollLeft;
-          }
+          syncHighlight(event.currentTarget, highlightRef.current);
         }}
         autoFocus={autoFocus}
         required
