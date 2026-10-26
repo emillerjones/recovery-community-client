@@ -7,10 +7,12 @@ import { LoungeProvider } from "./contexts/LoungeContext";
 import { StaffChatProvider } from "./contexts/StaffChatContext";
 import App from "./App.jsx";
 import AnalyticsTracker from "./components/AnalyticsTracker";
+import PageTitle from "./components/PageTitle";
 import "./index.css";
 
 createRoot(document.getElementById("root")).render(
   <BrowserRouter>
+    <PageTitle />
     <AuthProvider>
       <AnalyticsTracker />
       <NotificationsProvider>
