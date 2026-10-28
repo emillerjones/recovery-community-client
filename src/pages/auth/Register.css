@@ -17,7 +17,9 @@
 .registration-form small { font-weight: 400; color: rgba(27,34,28,.5); line-height: 1.4; }
 .registration-check { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; line-height: 1.45; }
 .registration-check input { margin-top: 3px; width: 17px; height: 17px; accent-color: #2c3a2d; }
-.registration-check a { color: #405842; }
+.registration-check a { color: #405842; text-decoration: underline; text-underline-offset: 2px; }
+.registration-check input { flex-shrink: 0; }
+.registration-check small { display: block; margin-top: 5px; font-size: 12px; }
 .registration-primary { min-height: 49px; border: 0; border-radius: 11px; padding: 0 22px; background: #2c3a2d; color: #fff; font: inherit; font-weight: 700; cursor: pointer; }
 .registration-primary:disabled { opacity: .55; cursor: wait; }
 .registration-email-help { margin: 22px 0; padding: 16px 18px; border: 1px solid rgba(44,58,45,.14); border-radius: 12px; background: #f5f7f2; color: #526454; font-size: 14px; line-height: 1.65; text-align: left; overflow-wrap: anywhere; }

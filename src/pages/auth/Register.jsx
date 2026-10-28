@@ -156,8 +156,8 @@ export default function Register() {
             </label>
           )}
 
-          <label className="registration-check"><input name="agreeRules" type="checkbox" required /><span>I agree to follow the <Link to="/guidelines" target="_blank">forum rules</Link>.</span></label>
-          <label className="registration-check"><input name="agreePrivacy" type="checkbox" required /><span>I agree to the community privacy policy.</span></label>
+          <label className="registration-check"><input name="agreeRules" type="checkbox" required aria-describedby="registration-guidelines-help" /><span>I agree to follow the <Link to="/guidelines" target="_blank" rel="noopener noreferrer">forum guidelines</Link>.<small id="registration-guidelines-help">Read the guidelines before agreeing. Opens in a new tab; your registration form stays here.</small></span></label>
+          <label className="registration-check"><input name="agreePrivacy" type="checkbox" required aria-describedby="registration-privacy-help" /><span>I agree to the community <Link to="/privacy" target="_blank" rel="noopener noreferrer">privacy policy</Link>.<small id="registration-privacy-help">Read the privacy policy before agreeing. Opens in a new tab; your registration form stays here.</small></span></label>
 
           {error && <p className="registration-error" role="alert">{error}</p>}
           <button className="registration-primary" disabled={submitting || invite?.loading || invite?.invalid}>
