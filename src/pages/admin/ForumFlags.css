@@ -65,6 +65,12 @@
 .forum-flags__author-row { display:flex; align-items:baseline; flex-wrap:wrap; gap:6px 12px; margin-bottom:4px; }
 .forum-flags__author { font-size:15px; }
 .forum-flags__kind { color:#6c776c; font-size:12px; text-transform:capitalize; }
+.forum-flags__message-user { display:grid; justify-items:start; gap:5px; margin-top:9px; min-width:0; }
+.forum-flags__message-user button { display:inline-flex; align-items:center; gap:6px; max-width:100%; padding:7px 10px; border:1px solid #a5b59e; border-radius:8px; background:transparent; color:#335640; font:650 11px/1.4 Inter,sans-serif; text-align:left; cursor:pointer; }
+.forum-flags__message-user button svg { flex-shrink:0; }
+.forum-flags__message-user button:disabled { opacity:.6; cursor:default; }
+.forum-flags__message-user small { margin:0; color:#677567; font-size:11px; line-height:1.4; }
+.forum-flags__message-user [role="alert"] { margin:0; color:#973d2f; font-size:12px; overflow-wrap:anywhere; }
 .forum-flags__meta { display:block; color:#6c776c; font-size:11px; }
 .forum-flags__body h3 { margin:16px 0 8px; font-size:17px; font-weight:700; line-height:1.45; }
 .forum-flags__reported-text { margin:14px 0 0; white-space:pre-wrap; color:#314438; font-size:15px; line-height:1.65; }

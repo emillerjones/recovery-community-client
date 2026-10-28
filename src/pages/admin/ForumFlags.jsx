@@ -1,12 +1,49 @@
-import { useEffect, useId, useState } from "react";
-import { ChevronDown, ChevronUp } from "lucide-react";
-import { Link } from "react-router-dom";
+import { useEffect, useId, useRef, useState } from "react";
+import { ChevronDown, ChevronUp, MessageCircle } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../auth/AuthContext";
 import { Toast, useToast } from "../../components/Toast";
 import MemberAvatar from "../../components/MemberAvatar";
 import "./ForumFlags.css";
 
 const API = import.meta.env.VITE_API;
+
+function MessageReportUser({ userId, username, label, purpose, imported = false }) {
+  const { token, user } = useAuth();
+  const navigate = useNavigate();
+  const lock = useRef(false);
+  const [opening, setOpening] = useState(false);
+  const [error, setError] = useState("");
+  const self = Number(userId) === Number(user?.id || user?.user_id);
+  const unavailable = imported || !userId || self;
+
+  async function openConversation() {
+    if (lock.current || unavailable) return;
+    lock.current = true; setOpening(true); setError("");
+    try {
+      const response = await fetch(`${API}/api/messages/conversations`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+        body: JSON.stringify({ username }),
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok || !data.conversation_id) throw new Error(data.message || "Could not open this private conversation. Please try again.");
+      navigate(`/messages/${data.conversation_id}`);
+    } catch (error) {
+      setError(error.message);
+      lock.current = false; setOpening(false);
+    }
+  }
+
+  return <div className="forum-flags__message-user">
+    <button type="button" disabled={unavailable || opening} onClick={openConversation}
+      title={`Open a direct message to ${username}`}>
+      <MessageCircle size={15} aria-hidden="true" />{opening ? "Opening…" : label}
+    </button>
+    <small>{imported ? "Imported author has no linked account." : self ? "This is your account." : !userId ? "No linked account available." : purpose}</small>
+    {error && <p role="alert">{error}</p>}
+  </div>;
+}
 
 function ReportCard({ item, isPost = false, onReview }) {
   const [expanded, setExpanded] = useState(false);
@@ -41,6 +78,8 @@ function ReportCard({ item, isPost = false, onReview }) {
       <div className="forum-flags__body">
         <div className="forum-flags__author-row"><strong className="forum-flags__author">{item.author_username}</strong><span className="forum-flags__kind">{kind}</span></div>
         <small className="forum-flags__meta">{item.created_at ? new Date(item.created_at).toLocaleString() : "Last reported " + new Date(item.last_flagged_at).toLocaleString()}</small>
+        <MessageReportUser userId={item.author_id} username={item.author_username} imported={item.is_imported}
+          label={isPost ? "Message post author (DM)" : "Message og commenter (DM)"} purpose="Discuss this content privately." />
         {isPost && <h3>{item.title}</h3>}
         <p id={contentId} className="forum-flags__reported-text">{visibleBody}</p>
         {long && <button type="button" className="forum-flags__expand" aria-expanded={expanded} aria-controls={contentId} onClick={() => setExpanded(current => !current)}>
@@ -53,7 +92,9 @@ function ReportCard({ item, isPost = false, onReview }) {
       <ul className="forum-flags__reports">{(item.reports || []).map(report => <li key={report.flag_id}>
         <div className="forum-flags__reporter">
           <MemberAvatar username={report.reporter_username} avatarUrl={report.reporter_avatar_url} size={36} />
-          <div><small>Reported by</small><strong>{report.reporter_username}</strong><small>{new Date(report.created_at).toLocaleString()}</small></div>
+          <div><small>Reported by</small><strong>{report.reporter_username}</strong><small>{new Date(report.created_at).toLocaleString()}</small>
+            <MessageReportUser userId={report.reporter_id} username={report.reporter_username} label="Message reporter (DM)" purpose="Discuss their report privately." />
+          </div>
         </div>
         <div className="forum-flags__reason"><small>Reason</small><p>{report.reason || "No explanation provided (earlier report)."}</p></div>
       </li>)}</ul>
