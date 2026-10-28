@@ -139,15 +139,6 @@ export default function Profile() {
             <label className="profile-field"><span>About me</span><textarea name="bio" value={form.bio} onChange={updateField} rows="6" maxLength="1000" placeholder="Share as much or as little as feels comfortable." /><small>{form.bio.length}/1000 · This may appear on a future member-facing profile.</small></label>
           </section>
 
-          <section className="profile-section">
-            <div className="profile-section__heading"><div><h2>Personal details</h2><p>These details are private and are not shown on posts, comments, or member listings.</p></div><span className="profile-private-badge">Private</span></div>
-            <div className="profile-fields-grid">
-              <label className="profile-field"><span>Phone number <em>optional</em></span><input name="phoneNumber" type="tel" value={form.phoneNumber} onChange={updateField} maxLength="30" autoComplete="tel" placeholder="(555) 555-0123" /></label>
-              <label className="profile-field"><span>Date of birth <em>optional</em></span><input name="dateOfBirth" type="date" value={form.dateOfBirth} onChange={updateField} max={new Date().toISOString().slice(0, 10)} autoComplete="bday" /></label>
-              <label className="profile-field profile-field--wide"><span>Gender <em>optional</em></span><input name="gender" value={form.gender} onChange={updateField} maxLength="50" autoComplete="sex" placeholder="Describe in your own words" /></label>
-            </div>
-          </section>
-
           {(message || error) && <div className={error ? "profile-status profile-status--error" : "profile-status"} role="status">{error || message}</div>}
           <div className="profile-actions" data-mobile-action-bar><button className="profile-save" disabled={saving}>{saving ? "Saving…" : "Save changes"}</button></div>
         </form>
