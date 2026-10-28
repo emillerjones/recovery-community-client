@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useId, useState } from "react";
+import { ChevronDown, ChevronUp } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../auth/AuthContext";
 import { Toast, useToast } from "../../components/Toast";
@@ -7,9 +8,58 @@ import "./ForumFlags.css";
 
 const API = import.meta.env.VITE_API;
 
-function snippet(text, max = 140) {
-  if (!text) return "";
-  return text.length > max ? `${text.slice(0, max).trim()}…` : text;
+function ReportCard({ item, isPost = false, onReview }) {
+  const [expanded, setExpanded] = useState(false);
+  const [reviewing, setReviewing] = useState(false);
+  const [reviewError, setReviewError] = useState("");
+  const contentId = useId();
+  const body = item.body || "";
+  const long = body.length > 140;
+  const kind = isPost ? "post" : item.parent_comment_id ? "reply" : "comment";
+  const visibleBody = expanded || !long ? body : body.slice(0, 140).trimEnd() + "…";
+  const threadLink = "/forum/" + item.post_id + (isPost ? "" : "#comment-" + item.comment_id);
+
+  async function review() {
+    if (reviewing) return;
+    setReviewing(true); setReviewError("");
+    try { await onReview(); }
+    catch { setReviewError("Could not mark these reports reviewed. Please try again."); }
+    finally { setReviewing(false); }
+  }
+
+  return <article className="forum-flags__card" aria-label={"Reported " + kind + " by " + item.author_username}>
+    <header className="forum-flags__card-heading">
+      <span>Reported {kind}</span>
+      <span className="forum-flags__count">{item.flag_count} {item.flag_count === 1 ? "report" : "reports"}</span>
+    </header>
+    <div className="forum-flags__content">
+      <MemberAvatar username={item.author_username} avatarUrl={item.author_avatar_url} size={44} />
+      <div className="forum-flags__body">
+        <strong className="forum-flags__author">{item.author_username}</strong>
+        <small className="forum-flags__meta">{item.created_at ? new Date(item.created_at).toLocaleString() : "Last reported " + new Date(item.last_flagged_at).toLocaleString()}</small>
+        {isPost && <h3>{item.title}</h3>}
+        <p id={contentId} className="forum-flags__reported-text">{visibleBody}</p>
+        {long && <button type="button" className="forum-flags__expand" aria-expanded={expanded} aria-controls={contentId} onClick={() => setExpanded(current => !current)}>
+          {expanded ? "Show less" : "Show full " + kind}{expanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+        </button>}
+      </div>
+    </div>
+    <section className="forum-flags__report-section" aria-label="Reports to Admin">
+      <h4>Reports to Admin</h4>
+      <ul className="forum-flags__reports">{(item.reports || []).map(report => <li key={report.flag_id}>
+        <div className="forum-flags__reporter">
+          <MemberAvatar username={report.reporter_username} avatarUrl={report.reporter_avatar_url} size={36} />
+          <div><small>Reported by</small><strong>{report.reporter_username}</strong><small>{new Date(report.created_at).toLocaleString()}</small></div>
+        </div>
+        <div className="forum-flags__reason"><small>Reason</small><p>{report.reason || "No explanation provided (earlier report)."}</p></div>
+      </li>)}</ul>
+    </section>
+    <footer className="forum-flags__actions">
+      {reviewError && <p role="alert">{reviewError}</p>}
+      <Link to={threadLink}>View thread</Link>
+      <button type="button" disabled={reviewing} onClick={review}>{reviewing ? "Saving…" : "Mark reviewed"}</button>
+    </footer>
+  </article>;
 }
 
 export default function ForumFlags() {
@@ -85,47 +135,13 @@ export default function ForumFlags() {
           <section className="forum-flags__section">
             <h2>Posts <span>{posts.length}</span></h2>
             {posts.length === 0 && <p className="forum-flags__empty">No posts are waiting for review.</p>}
-            {posts.map((post) => (
-              <div className="forum-flags__row" key={post.post_id}>
-                <div className="forum-flags__count">{post.flag_count}</div>
-                <MemberAvatar username={post.author_username} avatarUrl={post.author_avatar_url} size={38} />
-                <div className="forum-flags__body">
-                  <strong>{post.title}</strong>
-                  <p>{snippet(post.body)}</p>
-                  <ul className="forum-flags__reports">{(post.reports || []).map(report => <li key={report.flag_id}><strong>Reported by {report.reporter_username}</strong><small>{new Date(report.created_at).toLocaleString()}</small><p>{report.reason || "No explanation provided (earlier report)."}</p></li>)}</ul>
-                  <span className="forum-flags__meta">
-                    by {post.author_username} · last flagged {new Date(post.last_flagged_at).toLocaleDateString()}
-                  </span>
-                </div>
-                <div className="forum-flags__actions">
-                  <Link to={`/forum/${post.post_id}`}>View thread</Link>
-                  <button onClick={() => reviewPost(post.post_id)}>Mark reviewed</button>
-                </div>
-              </div>
-            ))}
+            {posts.map(post => <ReportCard key={post.post_id} item={post} isPost onReview={() => reviewPost(post.post_id)} />)}
           </section>
 
           <section className="forum-flags__section">
-            <h2>Replies <span>{comments.length}</span></h2>
+            <h2>Comments &amp; replies <span>{comments.length}</span></h2>
             {comments.length === 0 && <p className="forum-flags__empty">No replies are waiting for review.</p>}
-            {comments.map((comment) => (
-              <div className="forum-flags__row" key={comment.comment_id}>
-                <div className="forum-flags__count">{comment.flag_count}</div>
-                <MemberAvatar username={comment.author_username} avatarUrl={comment.author_avatar_url} size={38} />
-                <div className="forum-flags__body">
-                  <strong>Reply by {comment.author_username}</strong>
-                  <p>{snippet(comment.body)}</p>
-                  <ul className="forum-flags__reports">{(comment.reports || []).map(report => <li key={report.flag_id}><strong>Reported by {report.reporter_username}</strong><small>{new Date(report.created_at).toLocaleString()}</small><p>{report.reason || "No explanation provided (earlier report)."}</p></li>)}</ul>
-                  <span className="forum-flags__meta">
-                    last flagged {new Date(comment.last_flagged_at).toLocaleDateString()}
-                  </span>
-                </div>
-                <div className="forum-flags__actions">
-                  <Link to={`/forum/${comment.post_id}#comment-${comment.comment_id}`}>View thread</Link>
-                  <button onClick={() => reviewComment(comment.comment_id)}>Mark reviewed</button>
-                </div>
-              </div>
-            ))}
+            {comments.map(comment => <ReportCard key={comment.comment_id} item={comment} onReview={() => reviewComment(comment.comment_id)} />)}
           </section>
         </>
       )}
