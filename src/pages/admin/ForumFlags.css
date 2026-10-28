@@ -58,17 +58,18 @@
 }
 
 .forum-flags__card { margin-bottom:20px; overflow:hidden; border:1px solid #ccd4c7; border-radius:16px; background:#fffefb; box-shadow:0 8px 26px #1b221c09; }
-.forum-flags__card-heading { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; padding:16px 22px; border-bottom:1px solid #dbe0d5; background:#f8f9f4; color:#536357; }
-.forum-flags__card-heading > span:first-child { font-size:12px; font-weight:750; letter-spacing:.06em; text-transform:uppercase; }
+.forum-flags__card-heading { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; padding:10px 22px; border-bottom:1px solid #dbe0d5; background:#f8f9f4; color:#536357; }
 .forum-flags__count { padding:5px 12px; border:1px solid #80997e; border-radius:999px; color:#294634; font-size:12px; white-space:nowrap; }
 .forum-flags__content { display:grid; grid-template-columns:44px minmax(0,1fr); align-items:start; gap:14px; padding:24px 22px; }
 .forum-flags__body { min-width:0; overflow-wrap:anywhere; }
-.forum-flags__author { display:block; margin:0 0 4px; font-size:15px; }
+.forum-flags__author-row { display:flex; align-items:baseline; flex-wrap:wrap; gap:6px 12px; margin-bottom:4px; }
+.forum-flags__author { font-size:15px; }
+.forum-flags__kind { color:#6c776c; font-size:12px; text-transform:capitalize; }
 .forum-flags__meta { display:block; color:#6c776c; font-size:11px; }
 .forum-flags__body h3 { margin:16px 0 8px; font-size:17px; font-weight:700; line-height:1.45; }
 .forum-flags__reported-text { margin:14px 0 0; white-space:pre-wrap; color:#314438; font-size:15px; line-height:1.65; }
 .forum-flags__expand { display:inline-flex; align-items:center; gap:6px; margin-top:12px; padding:4px 0; border:0; background:transparent; color:#335640; font:700 13px Inter,sans-serif; text-align:left; cursor:pointer; }
-.forum-flags__report-section { padding:18px 22px; border-top:1px solid #d4ddcd; border-bottom:1px solid #d4ddcd; background:#eff3e9; }
+.forum-flags__report-section { padding:18px 22px; border-top:1px solid #d4ddcd; background:#eff3e9; }
 .forum-flags__report-section h4 { margin:0 0 16px; color:#536357; font-size:11px; letter-spacing:.07em; text-transform:uppercase; }
 .forum-flags__reports { margin:0; padding:0; list-style:none; }
 .forum-flags__reports li { display:grid; grid-template-columns:minmax(160px, .85fr) minmax(0,2fr); align-items:start; gap:20px; padding:16px 0; border-top:1px solid #d4ddcd; }
@@ -80,15 +81,17 @@
 .forum-flags__reporter strong { display:block; margin-bottom:5px; font-size:13px; overflow-wrap:anywhere; }
 .forum-flags__reason { min-width:0; padding-left:20px; border-left:1px solid #d4ddcd; }
 .forum-flags__reason p { margin:0; white-space:pre-wrap; overflow-wrap:anywhere; font-size:14px; line-height:1.6; color:#314438; }
-.forum-flags__actions { display:flex; justify-content:flex-end; align-items:center; flex-wrap:wrap; gap:10px; padding:16px 22px; }
+.forum-flags__actions { display:flex; justify-content:flex-end; align-items:center; flex-wrap:wrap; gap:8px; margin-left:auto; }
 .forum-flags__actions a,.forum-flags__actions button { padding:9px 16px; border:1px solid #335640; border-radius:10px; color:#335640; background:transparent; font:650 12px Inter,sans-serif; text-decoration:none; cursor:pointer; }
 .forum-flags__actions button { background:#335640; color:#fff; }
 .forum-flags__actions button:disabled { opacity:.6; cursor:wait; }
-.forum-flags__actions p { flex-basis:100%; margin:0; color:#973d2f; font-size:13px; }
+.forum-flags__review-error { flex-basis:100%; margin:0; color:#973d2f; font-size:13px; }
 .forum-flags :is(a,button):focus-visible { outline:2px solid #567a52; outline-offset:3px; }
 @media(max-width:640px) {
   .forum-flags { padding-top:120px; }
-  .forum-flags__card-heading,.forum-flags__report-section,.forum-flags__actions { padding:16px; }
+  .forum-flags__card-heading { padding:10px 12px; }
+  .forum-flags__report-section { padding:16px; }
+  .forum-flags__actions a,.forum-flags__actions button { padding:9px 10px; }
   .forum-flags__content { gap:10px; padding:20px 16px; }
   .forum-flags__reports li { grid-template-columns:minmax(0,1fr); gap:12px; }
   .forum-flags__reason { padding-left:46px; border:0; }

@@ -29,13 +29,17 @@ function ReportCard({ item, isPost = false, onReview }) {
 
   return <article className="forum-flags__card" aria-label={"Reported " + kind + " by " + item.author_username}>
     <header className="forum-flags__card-heading">
-      <span>Reported {kind}</span>
       <span className="forum-flags__count">{item.flag_count} {item.flag_count === 1 ? "report" : "reports"}</span>
+      <div className="forum-flags__actions">
+        <Link to={threadLink}>View thread</Link>
+        <button type="button" disabled={reviewing} onClick={review}>{reviewing ? "Saving…" : "Mark reviewed"}</button>
+      </div>
+      {reviewError && <p role="alert" className="forum-flags__review-error">{reviewError}</p>}
     </header>
     <div className="forum-flags__content">
       <MemberAvatar username={item.author_username} avatarUrl={item.author_avatar_url} size={44} />
       <div className="forum-flags__body">
-        <strong className="forum-flags__author">{item.author_username}</strong>
+        <div className="forum-flags__author-row"><strong className="forum-flags__author">{item.author_username}</strong><span className="forum-flags__kind">{kind}</span></div>
         <small className="forum-flags__meta">{item.created_at ? new Date(item.created_at).toLocaleString() : "Last reported " + new Date(item.last_flagged_at).toLocaleString()}</small>
         {isPost && <h3>{item.title}</h3>}
         <p id={contentId} className="forum-flags__reported-text">{visibleBody}</p>
@@ -45,7 +49,7 @@ function ReportCard({ item, isPost = false, onReview }) {
       </div>
     </div>
     <section className="forum-flags__report-section" aria-label="Reports to Admin">
-      <h4>Reports to Admin</h4>
+      <h4>Report details</h4>
       <ul className="forum-flags__reports">{(item.reports || []).map(report => <li key={report.flag_id}>
         <div className="forum-flags__reporter">
           <MemberAvatar username={report.reporter_username} avatarUrl={report.reporter_avatar_url} size={36} />
@@ -54,11 +58,6 @@ function ReportCard({ item, isPost = false, onReview }) {
         <div className="forum-flags__reason"><small>Reason</small><p>{report.reason || "No explanation provided (earlier report)."}</p></div>
       </li>)}</ul>
     </section>
-    <footer className="forum-flags__actions">
-      {reviewError && <p role="alert">{reviewError}</p>}
-      <Link to={threadLink}>View thread</Link>
-      <button type="button" disabled={reviewing} onClick={review}>{reviewing ? "Saving…" : "Mark reviewed"}</button>
-    </footer>
   </article>;
 }
 
