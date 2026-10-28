@@ -31,7 +31,7 @@ export default function ForumComposerModal({
 }) {
   const navigate = useNavigate();
   const [draft, setDraft] = useState(emptyDraft);
-  const canImport = user?.role_id === 1;
+  const canImport = [1, 10].includes(user?.role_id);
   const importing = canImport && draft.is_imported;
   const authorName = importing ? draft.imported_author_label.trim() || "Imported name" : user?.username;
   const [draftMentions, setDraftMentions] = useState([]);
@@ -258,7 +258,7 @@ export default function ForumComposerModal({
                 onChange={event => setDraft(current => ({ ...current, imported_author_label: event.target.value }))}
                 placeholder="Anonymous, Participant A, or another name" aria-describedby="forum-imported-name-help" />
               <small id="forum-imported-name-help" className="forum-imported-name-help">
-                Shown as {authorName}. Your Owner account records who published it.
+                Shown as {authorName}. Your account records who published it.
               </small>
             </label>
           )}

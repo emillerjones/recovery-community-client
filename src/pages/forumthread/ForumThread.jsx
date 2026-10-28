@@ -94,7 +94,7 @@ function ForumThreadContent() {
   const [reactingTo, setReactingTo] = useState(null);
   const headers = useMemo(() => ({ Authorization: `Bearer ${token}` }), [token]);
   const staffOnly = post?.category_slug === "staff-announcements";
-  const canChooseIdentity = user?.role_id === 1;
+  const canChooseIdentity = [1, 10].includes(user?.role_id);
   const replyTarget = comments.find((comment) => comment.comment_id === replyingTo);
   const activeIdentity = replyingTo ? replyIdentity : mainIdentity;
   const activeBody = replyingTo ? replyBody : mainReply;
