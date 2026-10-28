@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Public pages only. Keep in sync with PUBLIC_PAGES in src/components/PageMeta.jsx. -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://www.recoverywiththeexitdrug.org/</loc></url>
+  <url><loc>https://www.recoverywiththeexitdrug.org/ourstory</loc></url>
+  <url><loc>https://www.recoverywiththeexitdrug.org/community</loc></url>
+  <url><loc>https://www.recoverywiththeexitdrug.org/stories</loc></url>
+  <url><loc>https://www.recoverywiththeexitdrug.org/guidelines</loc></url>
+  <url><loc>https://www.recoverywiththeexitdrug.org/resources</loc></url>
+  <url><loc>https://www.recoverywiththeexitdrug.org/faq</loc></url>
+  <url><loc>https://www.recoverywiththeexitdrug.org/discountlinks</loc></url>
+  <url><loc>https://www.recoverywiththeexitdrug.org/donate</loc></url>
+  <url><loc>https://www.recoverywiththeexitdrug.org/contact</loc></url>
+  <url><loc>https://www.recoverywiththeexitdrug.org/privacy</loc></url>
+</urlset>

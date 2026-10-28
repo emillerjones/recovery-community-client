@@ -1,0 +1,9 @@
+User-agent: *
+Disallow: /admin
+Disallow: /forum
+Disallow: /messages
+Disallow: /profile
+Disallow: /today
+Disallow: /welcome
+
+Sitemap: https://www.recoverywiththeexitdrug.org/sitemap.xml

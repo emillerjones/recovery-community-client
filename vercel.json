@@ -6,20 +6,16 @@
     }
   ],
   "redirects": [
-    {
-      "source": "/home-test",
-      "destination": "/",
-      "permanent": true
-    },
-    {
-      "source": "/home",
-      "destination": "/",
-      "permanent": true
-    },
-    {
-      "source": "/admin/home-test-editor",
-      "destination": "/admin/home-editor",
-      "permanent": true
-    }
+    { "source": "/home-test", "destination": "/", "permanent": true },
+    { "source": "/home", "destination": "/", "permanent": true },
+    { "source": "/home3", "destination": "/", "permanent": true },
+    { "source": "/about", "destination": "/", "permanent": true },
+    { "source": "/about2", "destination": "/", "permanent": true },
+    { "source": "/mystory", "destination": "/ourstory", "permanent": true },
+    { "source": "/discountlinks2", "destination": "/discountlinks", "permanent": true },
+    { "source": "/resources2", "destination": "/resources", "permanent": true },
+    { "source": "/resources-old", "destination": "/resources", "permanent": true },
+    { "source": "/faq2", "destination": "/faq", "permanent": true },
+    { "source": "/admin/home-test-editor", "destination": "/admin/home-editor", "permanent": true }
   ]
 }
