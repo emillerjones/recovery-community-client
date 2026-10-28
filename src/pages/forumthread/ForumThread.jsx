@@ -4,6 +4,7 @@ import { ArrowLeft, Bell, Flag, Lock, Pencil, Pin, Send, ShieldCheck, Trash2 } f
 import { useAuth } from "../../auth/AuthContext";
 import { useNotifications } from "../../contexts/NotificationsContext";
 import { useStaffChat } from "../../contexts/StaffChatContext";
+import ReportContentDialog from "../../components/ReportContentDialog";
 import ReactionBar from "../../components/ReactionBar";
 import MentionText from "../../components/MentionText";
 import MentionTextarea from "../../components/MentionTextarea";
@@ -72,6 +73,8 @@ function ForumThreadContent() {
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [reportTarget, setReportTarget] = useState(null);
+  const [reportNotice, setReportNotice] = useState("");
   const [replyingTo, setReplyingTo] = useState(null);
   const [replyBody, setReplyBody] = useState("");
   const [replyMentions, setReplyMentions] = useState([]);
@@ -360,18 +363,8 @@ function ForumThreadContent() {
     return true;
   }
 
-  async function togglePostFlag() {
-    const isFlagged = post.flagged_by_me;
-    const response = await fetch(`${API}/api/forum/posts/${postId}/flag`, {
-      method: isFlagged ? "DELETE" : "POST",
-      headers: { ...headers, "Content-Type": "application/json" },
-    });
-    if (!response.ok) {
-      const result = await response.json().catch(() => ({}));
-      setError(result.message || "Could not update that flag.");
-      return;
-    }
-    setPost((current) => ({ ...current, flagged_by_me: !isFlagged }));
+  function togglePostFlag() {
+    if (!post.flagged_by_me) { setReportNotice(""); setReportTarget({ postId, commentId: null }); }
   }
 
   async function togglePostFollow() {
@@ -394,21 +387,24 @@ function ForumThreadContent() {
     }));
   }
 
-  async function toggleCommentFlag(commentId, isFlagged) {
-    const response = await fetch(`${API}/api/forum/posts/${postId}/comments/${commentId}/flag`, {
-      method: isFlagged ? "DELETE" : "POST",
-      headers: { ...headers, "Content-Type": "application/json" },
+  function toggleCommentFlag(commentId, isFlagged) {
+    if (!isFlagged) { setReportNotice(""); setReportTarget({ postId, commentId }); }
+  }
+
+  async function submitReport(reason) {
+    const target = reportTarget;
+    const suffix = target.commentId ? "/comments/" + target.commentId + "/flag" : "/flag";
+    const response = await fetch(API + "/api/forum/posts/" + target.postId + suffix, {
+      method: "POST", headers: { ...headers, "Content-Type": "application/json" },
+      body: JSON.stringify({ reason }),
     });
     if (!response.ok) {
       const result = await response.json().catch(() => ({}));
-      setError(result.message || "Could not update that flag.");
-      return;
+      throw new Error(result.message || "Your report could not be sent. Please try again.");
     }
-    setComments((current) =>
-      current.map((comment) =>
-        comment.comment_id === commentId ? { ...comment, flagged_by_me: !isFlagged } : comment
-      )
-    );
+    if (target.commentId) setComments(current => current.map(comment => comment.comment_id === target.commentId ? { ...comment, flagged_by_me: true } : comment));
+    else setPost(current => ({ ...current, flagged_by_me: true }));
+    setReportNotice("Report sent to the admin team.");
   }
 
   function applyReaction(current, reactionType) {
@@ -630,8 +626,8 @@ function ForumThreadContent() {
               )
             )}
             {!isAuthor && (
-              <button className={`forum-action-button ${post.flagged_by_me ? "is-flagged" : ""}`} onClick={togglePostFlag}>
-                <Flag size={15} /> {post.flagged_by_me ? "Flagged" : "Flag"}
+              <button className={`forum-action-button ${post.flagged_by_me ? "is-flagged" : ""}`} onClick={togglePostFlag} disabled={post.flagged_by_me}>
+                <Flag size={15} /> {post.flagged_by_me ? "Reported" : "Report to Admin"}
               </button>
             )}
             <button className={`forum-action-button ${post.followed_by_me ? "is-following" : ""}`} onClick={togglePostFollow}>
@@ -732,6 +728,8 @@ function ForumThreadContent() {
           </div>
         </form>
       )}
+      {reportNotice && <p role="status" className="forum-report-notice">{reportNotice}</p>}
+      {reportTarget?.postId === postId && <ReportContentDialog onClose={() => setReportTarget(null)} onSubmit={submitReport} />}
     </main>
   );
 }

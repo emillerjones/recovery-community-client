@@ -153,12 +153,13 @@ export default function ForumComment({
               {!isOwn && (
                 <button
                   className={`forum-reply-button ${comment.flagged_by_me ? "is-flagged" : ""}`}
+                  disabled={comment.flagged_by_me}
                   onClick={() => toggleCommentFlag(
                     comment.comment_id,
                     comment.flagged_by_me
                   )}
                 >
-                  <Flag size={14} /> {comment.flagged_by_me ? "Flagged" : "Flag"}
+                  <Flag size={14} /> {comment.flagged_by_me ? "Reported" : "Report to Admin"}
                 </button>
               )}
             </div>

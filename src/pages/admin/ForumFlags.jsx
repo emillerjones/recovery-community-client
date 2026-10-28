@@ -92,6 +92,7 @@ export default function ForumFlags() {
                 <div className="forum-flags__body">
                   <strong>{post.title}</strong>
                   <p>{snippet(post.body)}</p>
+                  <ul className="forum-flags__reports">{(post.reports || []).map(report => <li key={report.flag_id}><strong>Reported by {report.reporter_username}</strong><small>{new Date(report.created_at).toLocaleString()}</small><p>{report.reason || "No explanation provided (earlier report)."}</p></li>)}</ul>
                   <span className="forum-flags__meta">
                     by {post.author_username} · last flagged {new Date(post.last_flagged_at).toLocaleDateString()}
                   </span>
@@ -114,12 +115,13 @@ export default function ForumFlags() {
                 <div className="forum-flags__body">
                   <strong>Reply by {comment.author_username}</strong>
                   <p>{snippet(comment.body)}</p>
+                  <ul className="forum-flags__reports">{(comment.reports || []).map(report => <li key={report.flag_id}><strong>Reported by {report.reporter_username}</strong><small>{new Date(report.created_at).toLocaleString()}</small><p>{report.reason || "No explanation provided (earlier report)."}</p></li>)}</ul>
                   <span className="forum-flags__meta">
                     last flagged {new Date(comment.last_flagged_at).toLocaleDateString()}
                   </span>
                 </div>
                 <div className="forum-flags__actions">
-                  <Link to={`/forum/${comment.post_id}`}>View thread</Link>
+                  <Link to={`/forum/${comment.post_id}#comment-${comment.comment_id}`}>View thread</Link>
                   <button onClick={() => reviewComment(comment.comment_id)}>Mark reviewed</button>
                 </div>
               </div>

@@ -1,0 +1,13 @@
+.report-content-dialog { width:min(520px,calc(100vw - 32px)); max-height:calc(100dvh - 32px); overflow:auto; padding:26px; border:1px solid #ccd5c9; border-radius:20px; background:#faf9f5; color:#243128; box-shadow:0 24px 80px #15251a40; }
+.report-content-dialog::backdrop { background:#14231b99; }
+.report-content-dialog form { display:grid; gap:12px; width:100%; max-width:none; margin:0; }
+.report-content-dialog h2 { margin:0; font:500 26px Fraunces,Georgia,serif; }
+.report-content-dialog p { margin:0; font-size:14px; line-height:1.5; }
+.report-content-dialog label { font-size:14px; font-weight:700; }
+.report-content-dialog textarea { width:100%; min-width:0; padding:12px; border:1px solid #aebfac; border-radius:10px; font:16px/1.5 Inter,sans-serif; resize:vertical; }
+.report-content-dialog small { color:#637166; }
+.report-content-dialog [role="alert"] { color:#973d2f; }
+.report-content-dialog__actions { display:flex; justify-content:flex-end; flex-wrap:wrap; gap:10px; }
+.report-content-dialog button { padding:10px 16px; border:1px solid #c5cfc1; border-radius:999px; background:transparent; color:#335640; font:600 14px Inter,sans-serif; cursor:pointer; }
+.report-content-dialog button[type="submit"] { background:#335640; color:white; }
+.report-content-dialog button:disabled { opacity:.55; cursor:default; }

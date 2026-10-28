@@ -136,3 +136,9 @@
     margin-top: 4px;
   }
 }
+
+.forum-flags__reports { display:grid; gap:10px; margin:12px 0 0; padding:0; list-style:none; }
+.forum-flags__reports li { min-width:0; padding:12px; border:1px solid #d0dacb; border-radius:10px; background:#f2f5ee; overflow-wrap:anywhere; }
+.forum-flags__reports small { display:block; margin-top:4px; color:#647064; }
+.forum-flags__reports p { white-space:pre-wrap; }
+.forum-flags__body { min-width:0; }
