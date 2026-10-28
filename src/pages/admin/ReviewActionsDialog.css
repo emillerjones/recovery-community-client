@@ -1,0 +1,18 @@
+.review-actions-dialog { width:min(620px,calc(100vw - 28px)); max-height:calc(100dvh - 28px); overflow:auto; padding:26px; border:1px solid #c5d0be; border-radius:20px; background:#faf9f5; color:#243128; box-shadow:0 24px 80px #14231b40; }
+.review-actions-dialog::backdrop { background:#14231b99; }
+.review-actions-dialog h2 { margin:0 0 10px; font:600 27px/1.2 Inter,sans-serif; }
+.review-actions-dialog p { margin:8px 0 14px; font:14px/1.6 Inter,sans-serif; overflow-wrap:anywhere; }
+.review-actions-dialog__option { display:grid; grid-template-columns:24px minmax(0,1fr); gap:14px; margin-top:18px; padding:18px; border:1px solid #bfceb6; border-radius:12px; background:#eff3e9; }
+.review-actions-dialog__option--delete { background:#f8eeeb; border-color:#d8b5ab; }
+.review-actions-dialog h3 { margin:0 0 8px; font:700 17px/1.4 Inter,sans-serif; }
+.review-actions-dialog small { display:block; margin:8px 0; font:12px/1.5 Inter,sans-serif; color:#687366; }
+.review-actions-dialog button { padding:10px 14px; border:1px solid #335640; border-radius:9px; background:#335640; color:white; font:650 13px/1.4 Inter,sans-serif; cursor:pointer; }
+.review-actions-dialog button:disabled { opacity:.55; cursor:default; }
+.review-actions-dialog .review-actions-dialog__delete { border-color:#974a3a; background:#974a3a; }
+.review-actions-dialog .review-actions-dialog__cancel { background:transparent; color:#335640; }
+.review-actions-dialog footer { display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:12px; margin-top:22px; padding-top:14px; border-top:1px solid #d9dfd2; }
+.review-actions-dialog footer > div { display:flex; flex-wrap:wrap; gap:8px; margin-left:auto; }
+.review-actions-dialog blockquote { margin:16px 0; padding:14px; border-left:3px solid #b6c4ad; background:#eff3e9; overflow-wrap:anywhere; }
+.review-actions-dialog .review-actions-dialog__error { color:#973d2f; }
+.review-actions-dialog button:focus-visible { outline:2px solid #628356; outline-offset:3px; }
+@media(max-width:480px) { .review-actions-dialog { padding:20px 16px; } .review-actions-dialog__option { padding:14px; gap:10px; } }

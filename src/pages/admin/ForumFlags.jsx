@@ -3,6 +3,7 @@ import { ChevronDown, ChevronUp, MessageCircle } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../auth/AuthContext";
 import { Toast, useToast } from "../../components/Toast";
+import ReviewActionsDialog from "./ReviewActionsDialog";
 import MemberAvatar from "../../components/MemberAvatar";
 import "./ForumFlags.css";
 
@@ -45,10 +46,10 @@ function MessageReportUser({ userId, username, label, purpose, imported = false 
   </div>;
 }
 
-function ReportCard({ item, isPost = false, onReview }) {
+function ReportCard({ item, isPost = false, onReview, onDelete }) {
+  const { user } = useAuth();
+  const [actionsOpen, setActionsOpen] = useState(false);
   const [expanded, setExpanded] = useState(false);
-  const [reviewing, setReviewing] = useState(false);
-  const [reviewError, setReviewError] = useState("");
   const contentId = useId();
   const body = item.body || "";
   const long = body.length > 140;
@@ -56,22 +57,13 @@ function ReportCard({ item, isPost = false, onReview }) {
   const visibleBody = expanded || !long ? body : body.slice(0, 140).trimEnd() + "…";
   const threadLink = "/forum/" + item.post_id + (isPost ? "" : "#comment-" + item.comment_id);
 
-  async function review() {
-    if (reviewing) return;
-    setReviewing(true); setReviewError("");
-    try { await onReview(); }
-    catch { setReviewError("Could not mark these reports reviewed. Please try again."); }
-    finally { setReviewing(false); }
-  }
-
   return <article className="forum-flags__card" aria-label={"Reported " + kind + " by " + item.author_username}>
     <header className="forum-flags__card-heading">
       <span className="forum-flags__count">{item.flag_count} {item.flag_count === 1 ? "report" : "reports"}</span>
       <div className="forum-flags__actions">
         <Link to={threadLink}>View thread</Link>
-        <button type="button" disabled={reviewing} onClick={review}>{reviewing ? "Saving…" : "Mark reviewed"}</button>
+        <button type="button" onClick={() => setActionsOpen(true)}>Review Actions</button>
       </div>
-      {reviewError && <p role="alert" className="forum-flags__review-error">{reviewError}</p>}
     </header>
     <div className="forum-flags__content">
       <MemberAvatar username={item.author_username} avatarUrl={item.author_avatar_url} size={44} />
@@ -99,6 +91,7 @@ function ReportCard({ item, isPost = false, onReview }) {
         <div className="forum-flags__reason"><small>Reason</small><p>{report.reason || "No explanation provided (earlier report)."}</p></div>
       </li>)}</ul>
     </section>
+    {actionsOpen && <ReviewActionsDialog item={item} kind={kind} canDelete={[1, 10].includes(user?.role_id)} onClose={() => setActionsOpen(false)} onKeep={onReview} onDelete={onDelete} />}
   </article>;
 }
 
@@ -108,6 +101,7 @@ export default function ForumFlags() {
   const [posts, setPosts] = useState([]);
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [queueError, setQueueError] = useState("");
 
   useEffect(() => {
     let cancelled = false;
@@ -137,9 +131,9 @@ export default function ForumFlags() {
     });
     if (response.ok) {
       setPosts((current) => current.filter((post) => post.post_id !== postId));
-      showToast("Flags marked reviewed.");
+      showToast("Content kept. Reports cleared from the queue.");
     } else {
-      showToast("Could not mark those flags reviewed.");
+      throw new Error("Could not clear these reports. Please try again.");
     }
   }
 
@@ -156,6 +150,25 @@ export default function ForumFlags() {
     }
   }
 
+  async function deleteContent(item, isPost) {
+    const url = API + "/api/forum/posts/" + item.post_id + (isPost ? "" : "/comments/" + item.comment_id);
+    const response = await fetch(url, { method: "DELETE", headers: { Authorization: "Bearer " + token } });
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(result.message || "Could not delete this content. Please try again.");
+    // Reload to also remove reported descendants deleted with their parent.
+    try {
+      const refreshed = await fetch(API + "/api/forum/moderation/flags", { headers: { Authorization: "Bearer " + token } });
+      if (!refreshed.ok) throw new Error();
+      const data = await refreshed.json();
+      setPosts(data.posts || []); setComments(data.comments || []); setQueueError("");
+    } catch {
+      setPosts(current => current.filter(post => !isPost || post.post_id !== item.post_id));
+      setComments(current => current.filter(comment => isPost ? comment.post_id !== item.post_id : comment.comment_id !== item.comment_id));
+      setQueueError("Content was deleted, but the report queue could not refresh. Reload to see the latest reports.");
+    }
+    showToast("Content deleted from the forum.");
+  }
+
   return (
     <div className="forum-flags">
       <div className="forum-flags__header">
@@ -163,11 +176,12 @@ export default function ForumFlags() {
           <h1>Flagged Content</h1>
           <p className="forum-flags__subtitle">
             Member-flagged posts and replies, with the most-flagged content first.
-            Marking flags reviewed removes them from this queue but does not delete the content.
+            Use Review Actions to keep content and clear reports, or delete content if you are an Admin or Owner.
           </p>
         </div>
       </div>
 
+      {queueError && <p role="alert">{queueError} <button type="button" onClick={() => window.location.reload()}>Reload reports</button></p>}
       {loading ? (
         <p className="forum-flags__loading">Loading flagged content…</p>
       ) : (
@@ -175,13 +189,13 @@ export default function ForumFlags() {
           <section className="forum-flags__section">
             <h2>Posts <span>{posts.length}</span></h2>
             {posts.length === 0 && <p className="forum-flags__empty">No posts are waiting for review.</p>}
-            {posts.map(post => <ReportCard key={post.post_id} item={post} isPost onReview={() => reviewPost(post.post_id)} />)}
+            {posts.map(post => <ReportCard key={post.post_id} item={post} isPost onReview={() => reviewPost(post.post_id)} onDelete={() => deleteContent(post, true)} />)}
           </section>
 
           <section className="forum-flags__section">
             <h2>Comments &amp; replies <span>{comments.length}</span></h2>
             {comments.length === 0 && <p className="forum-flags__empty">No replies are waiting for review.</p>}
-            {comments.map(comment => <ReportCard key={comment.comment_id} item={comment} onReview={() => reviewComment(comment.comment_id)} />)}
+            {comments.map(comment => <ReportCard key={comment.comment_id} item={comment} onReview={() => reviewComment(comment.comment_id)} onDelete={() => deleteContent(comment, false)} />)}
           </section>
         </>
       )}
