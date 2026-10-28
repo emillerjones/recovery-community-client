@@ -1,8 +1,7 @@
 import { Navigate, Routes, Route } from "react-router-dom";
 import Home from "./pages/marketing/Home";
-import HomeTest from "./pages/marketing/HomeTest";
 import OurStoryAdmin from "./pages/admin/OurStoryAdmin";
-import HomeTestAdmin from "./pages/admin/HomeTestAdmin";
+import HomeAdmin from "./pages/admin/HomeAdmin";
 import GuidelinesAdmin from "./pages/admin/GuidelinesAdmin";
 import Community from "./pages/marketing/Community";
 import DiscountLinks from "./pages/marketing/DiscountLinks";
@@ -66,7 +65,8 @@ export default function App() {
         <Route path="discountlinks2" element={<Navigate to="/discountlinks" replace />} />
         <Route path="about" element={<Navigate to="/" replace />} />
         <Route path="about2" element={<Navigate to="/" replace />} />
-        <Route path="home-test" element={<HomeTest />} />
+        <Route path="home" element={<Navigate to="/" replace />} />
+        <Route path="home-test" element={<Navigate to="/" replace />} />
         <Route path="resources" element={<Resources />} />
         <Route path="resources-old" element={<Navigate to="/resources" replace />} />
         <Route path="resources2" element={<Navigate to="/resources" replace />} />
@@ -101,7 +101,8 @@ export default function App() {
         />
         <Route path="/admin/guidelines-editor" element={<RequireRole maxRoleId={1}><GuidelinesAdmin /></RequireRole>} />
         <Route path="/admin/ourstory-editor" element={<RequireRole maxRoleId={1}><OurStoryAdmin /></RequireRole>} />
-        <Route path="/admin/home-test-editor" element={<RequireRole maxRoleId={1}><HomeTestAdmin /></RequireRole>} />
+        <Route path="/admin/home-editor" element={<RequireRole maxRoleId={1}><HomeAdmin /></RequireRole>} />
+        <Route path="/admin/home-test-editor" element={<Navigate to="/admin/home-editor" replace />} />
         <Route path="/admin/resources-editor" element={<RequireRole maxRoleId={1}><ResourcesAdmin /></RequireRole>} />
         <Route
           path="/admin/faq-editor"

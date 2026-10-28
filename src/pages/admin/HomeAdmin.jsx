@@ -13,7 +13,7 @@ async function readResponse(response) {
   return data;
 }
 
-export default function HomeTestAdmin() {
+export default function HomeAdmin() {
   const { token } = useAuth();
   const [saved, setSaved] = useState(null);
   const [draft, setDraft] = useState(null);
@@ -29,7 +29,7 @@ export default function HomeTestAdmin() {
 
   useEffect(() => {
     const controller = new AbortController();
-    fetch(`${API}/api/home-test`, { signal: controller.signal }).then(readResponse)
+    fetch(`${API}/api/home`, { signal: controller.signal }).then(readResponse)
       .then(data => {
         setSaved(data.content); setDraft(structuredClone(data.content));
         setRevision(data.revision); setSections(data.sections);
@@ -59,26 +59,26 @@ export default function HomeTestAdmin() {
     savingLock.current = true; setSavingId(sectionId);
     setFeedback(current => ({ ...current, [sectionId]: null }));
     try {
-      const data = await fetch(`${API}/api/home-test/sections/${sectionId}`, {
+      const data = await fetch(`${API}/api/home/sections/${sectionId}`, {
         method: "PATCH",
         headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
         body: JSON.stringify({ fields: draft[sectionId], revision }),
       }).then(readResponse);
       setSaved(data.content); setRevision(data.revision);
       setDraft(current => ({ ...current, [sectionId]: structuredClone(data.content[sectionId]) }));
-      setFeedback(current => ({ ...current, [sectionId]: { saved: true, text: "Saved successfully. This section is now live on Home - Test." } }));
+      setFeedback(current => ({ ...current, [sectionId]: { saved: true, text: "Saved successfully. This section is now live on Home." } }));
     } catch (error) {
       setFeedback(current => ({ ...current, [sectionId]: { error: true, text: error.message } }));
     } finally { savingLock.current = false; setSavingId(null); }
   }
 
-  if (loading) return <main className="faq-admin resources-admin"><p>Loading Home - Test editor…</p></main>;
-  if (!draft) return <main className="faq-admin resources-admin"><p role="alert">{loadError || "Home - Test could not be loaded."}</p><button type="button" onClick={() => window.location.reload()}>Try again</button></main>;
+  if (loading) return <main className="faq-admin resources-admin"><p>Loading Home editor…</p></main>;
+  if (!draft) return <main className="faq-admin resources-admin"><p role="alert">{loadError || "Home could not be loaded."}</p><button type="button" onClick={() => window.location.reload()}>Try again</button></main>;
 
-  return <main className="faq-admin resources-admin home-test-admin">
+  return <main className="faq-admin resources-admin home-admin">
     <header className="faq-admin__header">
-      <div><span>Owner tool</span><h1>Edit Home - Test</h1><p>Save each section when you finish. Only Home - Test changes; the current Home page stays as it is. Buttons, links, images, and layout stay fixed.</p><small className="faq-admin__revision">Saved revision {revision}.{dirty ? " You have unfinished edits." : ""}</small></div>
-      <a href="/home-test" target="_blank" rel="noreferrer">Open Home - Test <ExternalLink size={16} /></a>
+      <div><span>Owner tool</span><h1>Edit Home</h1><p>Save each section when you finish. Changes are published on the Home page. Buttons, links, images, and layout stay fixed.</p><small className="faq-admin__revision">Saved revision {revision}.{dirty ? " You have unfinished edits." : ""}</small></div>
+      <a href="/home" target="_blank" rel="noreferrer">Open Home <ExternalLink size={16} /></a>
     </header>
     <fieldset className="resources-admin__fieldset" disabled={Boolean(savingId)}>
       {sections.map(section => {
@@ -86,8 +86,8 @@ export default function HomeTestAdmin() {
         const result = feedback[section.id];
         const pending = savingId === section.id;
         const confirmed = !isChanged && result?.saved;
-        return <section className="faq-admin__section" aria-label={section.title} key={section.id} data-home-test-section={section.id}>
-          <div className="faq-admin__section-heading"><span>Home - Test text</span><h2>{section.title}</h2></div>
+        return <section className="faq-admin__section" aria-label={section.title} key={section.id} data-home-section={section.id}>
+          <div className="faq-admin__section-heading"><span>Home text</span><h2>{section.title}</h2></div>
           <form onSubmit={event => save(event, section.id)}>
             <div className="faq-admin__fields">{section.fields.map(field => <label key={field.key}>{field.label}
               {field.multiline

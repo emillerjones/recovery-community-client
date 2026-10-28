@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
   ArrowRight,
   BookOpen,
@@ -19,59 +20,46 @@ import educationIcon from "../../assets/icons/education.png";
 import communityIcon from "../../assets/icons/community.png";
 import hopeIcon from "../../assets/icons/hope.png";
 import "./Home.css";
+import "./HomeContent.css";
+
+const API = import.meta.env.VITE_API;
 
 const PRINCIPLES = [
   {
     number: "01",
-    title: "Harm-Reduction Saves Lives",
-    text: "We promote harm-reduction that is an evidence-based approach to address substance use disorders through prevention, treatment, and recovery that ‘meets people where they are at’ with dignity, kindness and respect regardless of condition or circumstance.",
     icon: <ShieldCheck size={25} strokeWidth={1.5} />,
   },
   {
     number: "02",
-    title: "Recovery has Many Pathways",
-    text: "We recognize that recovery is deeply personal and what works for one person may not work for another. Approaching all recovery methods with openness and without judgment is far more effective than shaming someone because their path to recovery looks different from the traditional approach.",
     icon: <Network size={25} strokeWidth={1.5} />,
   },
   {
     number: "03",
-    title: "Medication-Assisted-Treatment (MAT) & Plant-Medicine is Health Care",
-    text: "These modalities are healthcare because they treat substance use disorders and mental health as real medical conditions. They use science, clinical evidence, and history to heal the brain and the body.",
     icon: <Stethoscope size={25} strokeWidth={1.5} />,
   },
   {
     number: "04",
-    title: "Connection & Compassion Heal; Shame & Stigma Hurt",
-    text: "By placing compassion and connection at the center of recovery, we can help foster healing while also contributing to a broader cultural shift from shame and stigma toward understanding and support.",
     icon: <HeartHandshake size={25} strokeWidth={1.5} />,
   },
 ];
 
 const PROVIDES = [
   {
-    title: "Peer support group",
-    text: "A first of its kind moderated community support forum of like-minded individuals sharing personal experience about cannabis and recovery.",
     action: "Join Our Support Community Here",
     icon: <MessagesSquare size={28} strokeWidth={1.4} />,
     register: true,
   },
   {
-    title: "Education",
-    text: "A list of informational articles, scientific research, and other resources to learn about cannabis, recovery and more.",
     action: "Find Resources Here",
     icon: <BookOpen size={28} strokeWidth={1.4} />,
     to: "/resources",
   },
   {
-    title: "Recovery Stories",
-    text: "Real voices publicly sharing their journeys of recovery with cannabis to help inspire others.",
     action: "Read Recovery Stories",
     icon: <Sparkles size={28} strokeWidth={1.4} />,
     to: "/stories",
   },
   {
-    title: "Future projects",
-    text: "We are always growing to add additional features that will benefit our community.",
     action: "Explore Our Community",
     icon: <Leaf size={28} strokeWidth={1.4} />,
     to: "/community",
@@ -79,26 +67,44 @@ const PROVIDES = [
 ];
 
 export default function Home() {
+  const [content, setContent] = useState(null);
+  const [error, setError] = useState("");
+  const [attempt, setAttempt] = useState(0);
+  useEffect(() => {
+    const controller = new AbortController();
+    fetch(`${API}/api/home`, { signal: controller.signal })
+      .then(async response => {
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.message || "Home could not be loaded.");
+        setContent(data.content);
+      }).catch(error => { if (error.name !== "AbortError") setError(error.message); });
+    return () => controller.abort();
+  }, [attempt]);
+  if (!content) return <main className="home-content-load" aria-live="polite"><h1>Home</h1><p>{error || "Loading Home..."}</p>{error && <button type="button" onClick={() => { setError(""); setAttempt(value => value + 1); }}>Try again</button>}</main>;
+  return <HomeContent content={content} />;
+}
+
+function HomeContent({ content }) {
   const { onRegister, onLogin } = useOutletContext();
   const { token } = useAuth();
 
   return (
-    <main className="home-page">
+    <main className="home-page home-content-page">
       <section className="home-hero" data-nav-theme="light">
         <div className="home-hero__glow" aria-hidden="true" />
         <div className="home-shell home-hero__inner">
           <div className="home-hero__crest">
-            <div className="home-hero__date" aria-label="Established"><span /><strong>EST.</strong><span /></div>
+            <div className="home-hero__date" aria-label="Established"><span /><strong>{content.hero.established}</strong><span /></div>
             <div className="home-hero__logo">
               <img src={logo} alt="Recovery With The Exit Drug" />
             </div>
-            <div className="home-hero__date" aria-label="2013"><span /><strong>2013</strong><span /></div>
+            <div className="home-hero__date" aria-label={content.hero.year}><span /><strong>{content.hero.year}</strong><span /></div>
           </div>
 
-          <h1><span>Recovery with</span><em>The Exit-Drug</em></h1>
-          <p className="home-hero__former">Formerly known as Maintaining My Recovery with Cannabis (MMRC)</p>
+          <h1><span>{content.hero.titleFirst}</span><em>{content.hero.titleSecond}</em></h1>
+          <p className="home-hero__former">{content.hero.former}</p>
           <div className="home-hero__divider" aria-hidden="true"><span /><img src={cannabisLeaf} alt="" /><span /></div>
-          <p className="home-hero__description">A recovery support community for people using cannabis to reduce or replace dangerous and addictive substances. Find peer support, educational resources, recovery stories, and connection without judgment.</p>
+          <p className="home-hero__description">{content.hero.description}</p>
 
           <div className="home-hero__actions">
             <button type="button" onClick={onRegister}>Join our community <ArrowRight size={20} /></button>
@@ -123,10 +129,10 @@ export default function Home() {
 
       <section className="home-purpose" id="home-purpose" data-nav-theme="light">
         <div className="home-shell home-purpose__inner">
-          <p className="home-kicker">Our founding purpose</p>
-          <blockquote>The mission of Recovery with The Exit-Drug (formerly known as Maintaining My Recovery with Cannabis/MMRC) is to develop a recovery support community of people who use cannabis as a form of harm-reduction therapy from dangerous or addictive substances. We provide support through personal experiences, educational resources, and peer support programs—while upholding a culture of inclusiveness and mutual respect.</blockquote>
+          <p className="home-kicker">{content.purpose.kicker}</p>
+          <blockquote>{content.purpose.mission}</blockquote>
           <section className="home-support" aria-label="Support our mission">
-            <p>Help support our nonprofit organization through monetary gifts, our Etsy store &amp; our affiliate discount codes.</p>
+            <p>{content.purpose.supportText}</p>
             <nav className="home-support__links" aria-label="Ways to support our mission">
               <Link className="home-support__link" to="/donate">Monetary Gifts <ArrowRight size={17} aria-hidden="true" /></Link>
               <a className="home-support__link" href="https://www.etsy.com/shop/TheExitDrugRecovery" target="_blank" rel="noopener noreferrer">Shop Our Etsy Store <ArrowRight size={17} aria-hidden="true" /></a>
@@ -139,15 +145,15 @@ export default function Home() {
       <section className="home-principles" id="home-principles" data-nav-theme="light">
         <div className="home-shell">
           <header className="home-section-head">
-            <p>What we are rooted in</p>
-            <div><h2>Principles We Uphold</h2><p>The following principles are what guide and shape our mission.</p></div>
+            <p>{content.principles.kicker}</p>
+            <div><h2>{content.principles.title}</h2><p>{content.principles.intro}</p></div>
           </header>
           <div className="home-principles__grid">
-            {PRINCIPLES.map(({ number, title, text, icon }) => (
+            {PRINCIPLES.map(({ number, icon }, index) => (
               <article key={number}>
                 <header><span>{number}</span>{icon}</header>
-                <h3>{title}</h3>
-                <p>{text}</p>
+                <h3>{content.principles[`title${index + 1}`]}</h3>
+                <p>{content.principles[`text${index + 1}`]}</p>
               </article>
             ))}
           </div>
@@ -157,17 +163,17 @@ export default function Home() {
       <section className="home-provides" id="home-provides">
         <div className="home-shell">
           <header className="home-section-head home-section-head--light">
-            <p>Creating an impact</p>
+            <p>{content.provides.kicker}</p>
             <div>
-              <h2>What We Provide</h2>
-              <p>The following resources offer compassionate support, meaningful connections, and helpful information.</p>
+              <h2>{content.provides.title}</h2>
+              <p>{content.provides.intro}</p>
             </div>
           </header>
           <div className="home-provides__grid">
-            {PROVIDES.map(({ title, text, action, icon, to, register }) => (
-              <article className="home-provide" key={title}>
+            {PROVIDES.map(({ action, icon, to, register }, index) => (
+              <article className="home-provide" key={index}>
                 {icon}
-                <div><h3>{title}</h3><p>{text}</p></div>
+                <div><h3>{content.provides[`title${index + 1}`]}</h3><p>{content.provides[`text${index + 1}`]}</p></div>
                 {register ? (
                   <button type="button" onClick={onRegister}>{action} <ArrowRight size={16} /></button>
                 ) : (
@@ -182,24 +188,24 @@ export default function Home() {
       <section className="home-social" aria-labelledby="home-social-title">
         <div className="home-shell">
           <header className="home-social__head">
-            <p className="home-social__kicker">Stay connected</p>
-            <h2 id="home-social-title">Help our community grow.</h2>
-            <p>Follow us for recovery encouragement, community updates, and stories worth sharing. Sharing our posts can help others find support here.</p>
+            <p className="home-social__kicker">{content.social.kicker}</p>
+            <h2 id="home-social-title">{content.social.title}</h2>
+            <p>{content.social.intro}</p>
           </header>
           <div className="home-social__grid">
             <a className="home-social__card" href="https://www.facebook.com/share/19ko3Rafju" target="_blank" rel="noopener noreferrer">
               <span className="home-social__icon home-social__icon--facebook" aria-hidden="true"><FaFacebookF /></span>
               <div>
-                <h3>Facebook</h3>
-                <p>Community updates and recovery encouragement.</p>
+                <h3>{content.social.facebookTitle}</h3>
+                <p>{content.social.facebookText}</p>
                 <span className="home-social__action">Follow on Facebook <ArrowRight size={16} aria-hidden="true" /></span>
               </div>
             </a>
             <a className="home-social__card" href="https://www.instagram.com/recoverywiththeexitdrug" target="_blank" rel="noopener noreferrer">
               <span className="home-social__icon home-social__icon--instagram" aria-hidden="true"><FaInstagram /></span>
               <div>
-                <h3>Instagram</h3>
-                <p>Stories, inspiration, and educational posts.</p>
+                <h3>{content.social.instagramTitle}</h3>
+                <p>{content.social.instagramText}</p>
                 <span className="home-social__action">Follow on Instagram <ArrowRight size={16} aria-hidden="true" /></span>
               </div>
             </a>
@@ -209,8 +215,8 @@ export default function Home() {
 
       <section className="home-disclaimer">
         <div className="home-shell home-disclaimer__inner">
-          <p className="home-disclaimer__label"><span /> Disclaimer <span /></p>
-          <p><strong>Recovery with The Exit Drug is a volunteer support group sharing practical information. This is not a professional or medical organization. The information provided is for informational and educational purposes only and is not a substitute for professional care.</strong></p>
+          <p className="home-disclaimer__label"><span /> {content.disclaimer.label} <span /></p>
+          <p><strong>{content.disclaimer.text}</strong></p>
         </div>
       </section>
     </main>

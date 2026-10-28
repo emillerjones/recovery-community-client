@@ -1,0 +1,4 @@
+/* All additional rules are scoped to editable Home; Home.css stays untouched. */
+.home-content-page :is(h1,h2,h3,p,blockquote) { overflow-wrap:anywhere; }
+.home-content-page :is(p,blockquote) { white-space:pre-line; }
+.home-content-load { min-height:65vh; padding:140px max(20px,8vw) 80px; background:#faf9f5; color:#294b35; }

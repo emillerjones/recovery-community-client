@@ -39,7 +39,6 @@ const SUPPORT_LINKS = [
 ];
 
 const ABOUT_LINKS = [
-  { to: "/home-test", label: "Home - Test", description: "Preview the editable Home page", icon: FilePenLine },
   { to: "/ourstory", label: "Our Story", description: "A message from our founder", icon: BookHeart },
   { to: "/contact", label: "Contact Us", description: "Reach the organization", icon: Mail },
 ];
@@ -59,7 +58,7 @@ const ADMIN_LINKS = [
   { to: "/admin/discount-editor", label: "Edit Discount Links", description: "Owner-managed discount brands", icon: BadgePercent, ownerOnly: true },
   { to: "/admin/guidelines-editor", label: "Edit Guidelines", description: "Owner-managed community guidelines", icon: ScrollText, ownerOnly: true },
   { to: "/admin/ourstory-editor", label: "Edit Our Story", description: "Owner-managed Our Story text", icon: FilePenLine, ownerOnly: true },
-  { to: "/admin/home-test-editor", label: "Edit Home - Test", description: "Owner-managed Home test text", icon: FilePenLine, ownerOnly: true },
+  { to: "/admin/home-editor", label: "Edit Home", description: "Owner-managed Home text", icon: FilePenLine, ownerOnly: true },
   { to: "/admin/resources-editor", label: "Edit Resources", description: "Owner-managed resource categories and links", icon: FilePenLine, ownerOnly: true },
   { to: "/admin/faq-editor", label: "Edit FAQ", description: "Owner-managed FAQ content", icon: FilePenLine, ownerOnly: true },
   { to: "/admin/stats", label: "Stats", description: "Private community activity", icon: BarChart3, ownerOnly: true },
