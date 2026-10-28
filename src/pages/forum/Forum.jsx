@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { Check, Plus } from "lucide-react";
 import { useAuth } from "../../auth/AuthContext";
+import { useStaffChat } from "../../contexts/StaffChatContext";
 import WelcomeOverlay from "../../components/WelcomeOverlay";
 import ForumComposerModal from "./ForumComposerModal";
 import ForumControls from "./ForumControls";
@@ -16,6 +17,7 @@ const SEARCH_DEBOUNCE_MS = 350;
 
 export default function Forum() {
   const { token, user } = useAuth();
+  const { refreshAnnouncementsUnread } = useStaffChat();
   const navigate = useNavigate();
   const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -209,6 +211,7 @@ export default function Forum() {
       if (!response.ok) throw new Error(result.message || "Could not mark conversations read.");
       setError("");
       setPosts((current) => current.map((post) => ({ ...post, is_unread: false })));
+      if (staffView) refreshAnnouncementsUnread();
       return true;
     } catch (requestError) {
       setError(requestError.message);

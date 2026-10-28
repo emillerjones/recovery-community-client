@@ -46,6 +46,16 @@ export function StaffChatProvider({ children }) {
       .catch(() => {});
   }, [canAccess, headers]);
 
+  const markAnnouncementsRead = useCallback(async () => {
+    if (!canAccess) return;
+    const response = await fetch(`${API}/api/forum/posts/read-all`, {
+      method: "PATCH",
+      headers: { ...headers, "Content-Type": "application/json" },
+      body: JSON.stringify({ section: "staff" }),
+    });
+    if (response.ok) setAnnouncementsUnread(0);
+  }, [canAccess, headers]);
+
   // Announcements are infrequent, so the badge refreshes on login/thread-read
   // rather than over a live socket event — see Staff Chat for the live case.
   useEffect(() => {
@@ -83,8 +93,10 @@ export function StaffChatProvider({ children }) {
     canAccess,
     openStaffChat,
     chatUnread,
+    markChatRead,
     announcementsUnread,
     refreshAnnouncementsUnread,
+    markAnnouncementsRead,
   };
 
   return <StaffChatContext.Provider value={value}>

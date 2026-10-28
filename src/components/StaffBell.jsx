@@ -5,7 +5,7 @@ import { useStaffChat } from "../contexts/StaffChatContext";
 import "./NotificationBell.css";
 
 export default function StaffBell() {
-  const { chatUnread, announcementsUnread, openStaffChat } = useStaffChat();
+  const { chatUnread, announcementsUnread, openStaffChat, markChatRead, markAnnouncementsRead } = useStaffChat();
   const [open, setOpen] = useState(false);
   const containerRef = useRef(null);
   const navigate = useNavigate();
@@ -35,6 +35,12 @@ export default function StaffBell() {
         <div className="notif-bell__panel" role="menu">
           <div className="notif-bell__header">
             <p>Staff</p>
+            {totalUnread > 0 && (
+              <button onClick={() => {
+                if (chatUnread > 0) markChatRead();
+                if (announcementsUnread > 0) markAnnouncementsRead().catch(() => {});
+              }}>Mark all read</button>
+            )}
           </div>
           <ul>
             <li>
