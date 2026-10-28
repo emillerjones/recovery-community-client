@@ -86,6 +86,7 @@ function ForumThreadContent() {
   const [replyIdentity, setReplyIdentity] = useState({ importing: false, name: "" });
   const composerRef = useRef(null);
   const replyDrafts = useRef(new Map());
+  const highlightedLink = useRef(null);
   const [submitting, setSubmitting] = useState(false);
   const [editingPost, setEditingPost] = useState(false);
   const [postDraft, setPostDraft] = useState({ title: "", body: "" });
@@ -223,8 +224,33 @@ function ForumThreadContent() {
   useEffect(() => {
     if (!comments.length || !location.hash.startsWith("#comment-")) return;
     const target = document.getElementById(location.hash.slice(1));
-    target?.scrollIntoView({ behavior: "smooth", block: "center" });
-  }, [comments, location.hash]);
+    const link = `${location.key}:${location.hash}`;
+    if (!target || highlightedLink.current === link) return;
+    target.scrollIntoView({ behavior: "smooth", block: "center" });
+
+    // Wait for scrolling to settle so the highlight is visible on arrival.
+    let frame;
+    let timer;
+    let previousTop = target.getBoundingClientRect().top;
+    let stableFrames = 0;
+    const started = performance.now();
+    function waitForScroll(now) {
+      const top = target.getBoundingClientRect().top;
+      stableFrames = Math.abs(top - previousTop) < 0.5 ? stableFrames + 1 : 0;
+      previousTop = top;
+      if ((now - started > 150 && stableFrames >= 3) || now - started > 2000) {
+        highlightedLink.current = link;
+        target.classList.add("forum-comment--arrival");
+        timer = window.setTimeout(() => target.classList.remove("forum-comment--arrival"), 2800);
+      } else frame = window.requestAnimationFrame(waitForScroll);
+    }
+    frame = window.requestAnimationFrame(waitForScroll);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.clearTimeout(timer);
+      target.classList.remove("forum-comment--arrival");
+    };
+  }, [comments, location.hash, location.key]);
 
 
 

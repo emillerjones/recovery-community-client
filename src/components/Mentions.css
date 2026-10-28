@@ -61,13 +61,21 @@
   -webkit-box-decoration-break: clone;
 }
 
-.forum-comment > article:target {
-  outline: 2px solid rgba(86, 128, 93, 0.32);
-  background: #f1f6ee;
-  animation: mention-target-fade 2.8s ease forwards;
+.forum-comment > article.forum-comment--arrival {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  animation: comment-arrival-pulse 2.8s ease forwards;
 }
 
-@keyframes mention-target-fade {
-  0%, 55% { outline-color: rgba(86, 128, 93, 0.38); }
-  100% { outline-color: transparent; }
+@keyframes comment-arrival-pulse {
+  0%, 45%, 100% { background-color: transparent; outline-color: transparent; }
+  20%, 65% { background-color: #e0edd8; outline-color: #78996a; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .forum-comment > article.forum-comment--arrival {
+    animation: none;
+    background-color: #e0edd8;
+    outline-color: #78996a;
+  }
 }
