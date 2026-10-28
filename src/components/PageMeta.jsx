@@ -125,10 +125,11 @@ export default function PageMeta() {
     setMeta("description", description);
     setMeta("og:title", title, "property");
     setMeta("og:description", description, "property");
-    setMeta("og:url", url || SITE_URL + "/", "property");
+    setMeta("og:url", url, "property");
     setCanonical(url);
     // Anything not listed as public (members area, admin, auth, unknown URLs)
-    // stays out of search results.
+    // stays out of search results. vercel.json also sends an X-Robots-Tag
+    // header for known private routes; this covers unknown URLs too.
     setMeta("robots", publicPage ? null : "noindex, nofollow");
   }, [pathname]);
 

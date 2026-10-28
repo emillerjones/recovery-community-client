@@ -1,9 +1,6 @@
+# Private routes are not blocked here on purpose: Google must be able to fetch
+# them to see their noindex header (set in vercel.json). They require login.
 User-agent: *
-Disallow: /admin
-Disallow: /forum
-Disallow: /messages
-Disallow: /profile
-Disallow: /today
-Disallow: /welcome
+Allow: /
 
 Sitemap: https://www.recoverywiththeexitdrug.org/sitemap.xml

@@ -5,6 +5,12 @@
       "destination": "/index.html"
     }
   ],
+  "headers": [
+    {
+      "source": "/(admin|forum|messages|profile|today|welcome|login|register|verify-email|reset-password)(/.*)?",
+      "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }]
+    }
+  ],
   "redirects": [
     { "source": "/home-test", "destination": "/", "permanent": true },
     { "source": "/home", "destination": "/", "permanent": true },
