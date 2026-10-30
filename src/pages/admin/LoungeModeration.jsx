@@ -84,18 +84,18 @@ function ResultCard({ item, request, canDelete, onChanged, showToast, reviewed }
     </div>
     {error&&!dialog&&<p role="alert" className="lounge-review__error">{error}</p>}
     <section className="lounge-review__report"><header><h2>AI report card</h2><small>Checked {date(item.checked_at)}</small></header>
-      <div className="lounge-review__table-wrap"><table><thead><tr><th>Category</th><th>Model score</th><th>OpenAI flagged?</th><th>Review threshold</th></tr></thead>
-        <tbody>{(item.triggered_categories||[]).map(key=><tr key={key}><th scope="row">{category(key)}</th><td title={String(scores[key])}>{scores[key]?.toFixed(4)}</td><td>{flagLabel(key)}</td><td>{item.thresholds_used?.[key]}</td></tr>)}</tbody></table></div>
+      <div className="lounge-review__table-wrap"><table><thead><tr><th>Category</th><th>Model score</th><th>Review threshold</th><th>OpenAI flagged?</th></tr></thead>
+        <tbody>{(item.triggered_categories||[]).map(key=><tr key={key}><th scope="row">{category(key)}</th><td title={String(scores[key])}>{scores[key]?.toFixed(4)}</td><td>{item.thresholds_used?.[key]}</td><td>{flagLabel(key)}</td></tr>)}</tbody></table></div>
       <p>These scores reached or exceeded the cutoffs saved for this check.</p>
       <small>AI signals support human review; they do not establish a guideline violation. Scores are rounded for display; decisions use the full values.</small>
       <small>“OpenAI flagged?” is OpenAI's category judgment. Our saved cutoffs determine whether the message enters this review queue.</small>
       <details><summary>View all categories and raw response</summary>
         <p>These are the cutoffs used when this message was checked. Later setting changes do not change this report card.</p>
         <div className="lounge-review__table-wrap"><table><caption>All category scores and cutoffs at check time</caption>
-          <thead><tr><th>Category</th><th>Model score</th><th>OpenAI flagged?</th><th>Cutoff at check</th><th>Our review decision</th></tr></thead>
+          <thead><tr><th>Category</th><th>Model score</th><th>Cutoff at check</th><th>Our review decision</th><th>OpenAI flagged?</th></tr></thead>
           <tbody>{Object.entries(scores).map(([key,score])=>{
             const cutoff=item.thresholds_used?.[key],configured=typeof cutoff==='number',crossed=configured&&score>=cutoff;
-            return <tr key={key} className={crossed?'is-triggered':'is-below'}><th scope="row">{category(key)}</th><td title={String(score)}>{Number(score).toFixed(4)}</td><td>{flagLabel(key)}</td><td>{configured?String(cutoff):'Not configured'}</td><td>{crossed?'Human review':configured?'Below cutoff':'Not evaluated'}</td></tr>;
+            return <tr key={key} className={crossed?'is-triggered':'is-below'}><th scope="row">{category(key)}</th><td title={String(score)}>{Number(score).toFixed(4)}</td><td>{configured?String(cutoff):'Not configured'}</td><td>{crossed?'Human review':configured?'Below cutoff':'Not evaluated'}</td><td>{flagLabel(key)}</td></tr>;
           })}</tbody></table></div>
         <small>Scores are rounded for display; decisions use the full values.</small>
         <p>Model: {item.model}</p><details><summary>Raw OpenAI response (technical details)</summary><pre>{JSON.stringify(item.response,null,2)}</pre></details>
