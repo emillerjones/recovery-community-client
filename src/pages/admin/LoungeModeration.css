@@ -5,6 +5,12 @@
 .lounge-review button{cursor:pointer}.lounge-review button:disabled{opacity:.55;cursor:default}
 .lounge-review button:focus-visible,.lounge-review input:focus-visible,.lounge-review summary:focus-visible{outline:2px solid #567a52;outline-offset:3px}
 .lounge-review__notice{display:grid;gap:7px;padding:16px 20px;background:#eff1e8;border-radius:12px;margin:24px 0}
+.lounge-review__controls{padding:18px 20px;border:1px solid #c5d0be;border-radius:12px;background:#fffefb;margin:20px 0}
+.lounge-review__controls label{display:flex;align-items:center;gap:10px;font-weight:700;cursor:pointer}
+.lounge-review__controls input[type=checkbox]{width:22px;height:22px;flex-shrink:0;accent-color:#335640;margin:0}
+.lounge-review__controls>strong{display:block;font-size:12px;margin-top:10px;color:#536357}
+.lounge-review__controls p{font-size:13px;line-height:1.6;margin:10px 0}
+.lounge-review__controls li{font-size:12px;line-height:1.7;overflow-wrap:anywhere}
 .lounge-review small{display:block;font-size:12px;color:#657265;line-height:1.5}
 .lounge-review__toolbar{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin:24px 0}
 .lounge-review__toolbar [role=group]{display:flex;gap:6px}.lounge-review__toolbar [aria-pressed=true],.lounge-review .lounge-review__primary{background:#335640;color:white}

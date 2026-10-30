@@ -116,6 +116,56 @@ function ResultCard({ item, request, canDelete, onChanged, showToast, reviewed }
   </article>;
 }
 
+function OwnerControls({ processing, request, onSaved, showToast }) {
+  const [change,setChange]=useState(null),[saving,setSaving]=useState(false),[error,setError]=useState('');
+  const [history,setHistory]=useState(null),[historyError,setHistoryError]=useState('');
+  const lock=useRef(false);
+  async function save() {
+    if(lock.current||!change)return;
+    lock.current=true;setSaving(true);setError('');
+    try {
+      const result=await request('/settings',{method:'PATCH',body:JSON.stringify(change)});
+      setChange(null);
+      if(history!==null)await loadHistory();
+      showToast(result.processing.enabled?'AI checks enabled.':result.processing.ownerEnabled?'Owner setting saved. Server configuration still prevents checks.':'AI checks paused. Messages will remain queued.');
+      await onSaved();
+    } catch(err){setError(err.message);} finally{lock.current=false;setSaving(false);}
+  }
+  async function loadHistory() {
+    setHistoryError('');
+    try{setHistory((await request('/settings')).history);}catch(err){setHistoryError(err.message);}
+  }
+  return <section className="lounge-review__controls" aria-label="Owner moderation controls">
+    <label><input type="checkbox" checked={Boolean(processing.ownerEnabled)} disabled={saving}
+      onChange={event=>{setError('');setChange({enabled:event.target.checked,revision:processing.settingsRevision});}}/>Enable AI checks</label>
+    <strong>Owner setting: {processing.ownerEnabled?'Enabled':'Paused'}</strong>
+    <p>Only Owners can change this. Paused messages stay queued; enabling checks processes the backlog, up to 90 days old. No AI notifications or automatic enforcement.</p>
+    <small>Changes take effect within about 15 seconds. A request already in progress may finish.</small>
+    {processing.updatedByUsername&&<small>Last changed by {processing.updatedByUsername} · {date(processing.updatedAt)}</small>}
+    <details onToggle={event=>{if(event.currentTarget.open)void loadHistory();}}><summary>Setting change history</summary>
+      {historyError&&<p role="alert">{historyError}</p>}
+      {history===null&&!historyError&&<p>Open to load recent changes.</p>}
+      {history?.length===0&&<p>No Owner changes recorded yet.</p>}
+      <ul>{history?.map(entry=><li key={entry.change_id}>{entry.enabled?'Enabled':'Paused'} by {entry.changed_by_username||'former Owner'} · {date(entry.created_at)}</li>)}</ul>
+    </details>
+    {change&&<Dialog title={change.enabled?'Enable AI checks?':'Pause AI checks?'} busy={saving} onClose={()=>{if(!lock.current)setChange(null);}}>
+      <p>{change.enabled?'New and queued Community Lounge text will be sent to OpenAI for automated checks when server configuration permits. AI concerns appear here for human review.':'Stops starting new checks. Messages stay visible and queued for when checks are enabled again. A request already in progress may finish.'}</p>
+      {change.enabled&&(processing.mode!=='testing'||!processing.keyConfigured||processing.error)&&<p className="lounge-review__error">This saves the Owner setting, but checks will remain paused until Render allows testing mode, an API key is configured, and any configuration errors are fixed.</p>}
+      <p>No AI notifications, automatic deletion, or automated replies are enabled by this setting.</p>
+      {error&&<p role="alert" className="lounge-review__error">{error}</p>}
+      <button type="button" disabled={saving} onClick={save}>{saving?'Saving…':change.enabled?'Confirm enable':'Confirm pause'}</button>
+    </Dialog>}
+  </section>;
+}
+
+function processingExplanation(processing) {
+  if(processing.error)return processing.error;
+  if(processing.enabled)return 'Checks are running. Messages remain visible; staff review concerns.';
+  if(processing.mode!=='testing')return 'Render override is off. Set LOUNGE_MODERATION_MODE=testing once on the Express service to allow the Owner toggle to run checks.';
+  if(!processing.keyConfigured)return 'The Express service needs an OpenAI API key before checks can run.';
+  return 'Paused by an Owner. New messages stay queued. An Owner can enable checks below.';
+}
+
 export default function LoungeModeration() {
   const {token,user}=useAuth();
   const {toast,showToast}=useToast();
@@ -146,10 +196,11 @@ export default function LoungeModeration() {
   function tab(next){setStatus(next);setPage(1);}
   return <main className="lounge-review">
     <h1>Lounge AI Review</h1><p>Review Community Lounge messages identified by automated checks.</p>
-    {data&&<div className="lounge-review__notice" role="status"><strong>{data.processing.enabled?'Testing mode':data.processing.error?'Configuration needs attention':'AI processing paused'}</strong>
-      <span>{data.processing.enabled?'Checks run without staff notifications. Messages remain visible.':data.processing.error||(!data.processing.keyConfigured?'A server API key and testing mode are required to start checks.':'Set Lounge moderation to testing mode on the server to start checks.')}</span>
+    {data&&<div className="lounge-review__notice" role="status"><strong>{data.processing.enabled?'AI checks running · Testing mode':data.processing.error?'Configuration needs attention':'AI processing paused'}</strong>
+      <span>{processingExplanation(data.processing)}</span>
       <small>{data.queued} checks queued · {data.failed} failed checks · No automatic enforcement</small>
     </div>}
+    {data&&user?.role_id===1&&<OwnerControls processing={data.processing} request={request} onSaved={load} showToast={showToast}/>}
     <div className="lounge-review__toolbar"><div role="group" aria-label="Review status">
       <button type="button" aria-pressed={status==='pending'} onClick={()=>tab('pending')}>Pending {data?.pending??''}</button>
       <button type="button" aria-pressed={status==='reviewed'} onClick={()=>tab('reviewed')}>Reviewed</button></div>
