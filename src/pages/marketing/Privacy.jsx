@@ -34,6 +34,11 @@ const SECTIONS = [
     text: "We keep information for as long as reasonably needed to operate the community, meet legal obligations, resolve disputes, enforce our rules, and maintain safety records. We use reasonable safeguards, but no online service can promise absolute security.",
   },
   {
+    id: "lounge-ai-moderation",
+    title: "Automated Lounge moderation",
+    text: "When automated moderation is enabled, new and edited Community Lounge message text is sent to OpenAI's Moderation API to identify potential safety concerns for authorized staff to review. We send the message text, without attaching account details such as your email, username, or profile; any personal information you include in the message itself is still part of that text. This feature does not check forum content, direct messages, Staff Chat, images, or historical Lounge messages from before its introduction. AI results do not automatically block, hide, delete, or change messages, and do not generate automated replies to members. Staff make moderation decisions. OpenAI's published data controls currently list the Moderation API as not using submitted data for model training and having no abuse-monitoring or application-state retention. Copies of checked text and raw AI report cards are removed from our active moderation records after 90 days, during scheduled cleanup while the server is running. Minimal processing and staff decision history may remain for accountability. Original Lounge messages follow our general retention policy; removing moderation copies does not delete those messages. Database backups may retain earlier copies until those backups expire.",
+  },
+  {
     id: "choices-and-requests",
     title: "Your choices and requests",
     text: "You can update certain profile information from your account. To request access, correction, or deletion of other personal information, contact us. Some information may be retained when required for safety, legal compliance, fraud prevention, or legitimate recordkeeping.",
@@ -58,7 +63,7 @@ export default function Privacy() {
               This policy explains what information Recovery With The Exit Drug
               collects, why we use it, and the choices available to you.
             </p>
-            <p className="privacy-effective">Effective August 6, 2026</p>
+            <p className="privacy-effective">Effective October 30, 2026</p>
           </div>
           <svg className="privacy-hero__art" viewBox="0 0 420 420" aria-hidden="true">
             <circle cx="210" cy="210" r="174" />
@@ -105,6 +110,7 @@ export default function Privacy() {
                   {section.id === "choices-and-requests" && (
                     <Link to="/contact">Contact us about your information →</Link>
                   )}
+                  {section.id === "lounge-ai-moderation" && <a href="https://developers.openai.com/api/docs/guides/your-data" target="_blank" rel="noreferrer">Read OpenAI's API data controls →</a>}
                 </div>
               </section>
             ))}

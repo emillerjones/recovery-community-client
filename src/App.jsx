@@ -17,6 +17,7 @@ import Register from "./pages/auth/Register";
 
 import UserManagement from "./pages/admin/UserManagement";
 import ForumFlags from "./pages/admin/ForumFlags";
+import LoungeModeration from "./pages/admin/LoungeModeration";
 import RequireRole from "./components/RequireRole";
 import MarketingLayout from "./layout/MarketingLayout";
 import AppLayout from "./layout/AppLayout";
@@ -100,6 +101,7 @@ export default function App() {
           }
         />
         <Route path="/admin/guidelines-editor" element={<RequireRole maxRoleId={1}><GuidelinesAdmin /></RequireRole>} />
+        <Route path="/admin/lounge-review" element={<RequireRole maxRoleId={50}><LoungeModeration /></RequireRole>} />
         <Route path="/admin/ourstory-editor" element={<RequireRole maxRoleId={1}><OurStoryAdmin /></RequireRole>} />
         <Route path="/admin/home-editor" element={<RequireRole maxRoleId={1}><HomeAdmin /></RequireRole>} />
         <Route path="/admin/home-test-editor" element={<Navigate to="/admin/home-editor" replace />} />

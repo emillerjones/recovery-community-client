@@ -65,6 +65,7 @@ const ADMIN_LINKS = [
   { to: "/admin/users", label: "Users", description: "Roles and member accounts", icon: UsersRound },
   { to: "/admin/membership", label: "Admissions", description: "Applications and invite codes", icon: UserCheck },
   { to: "/admin/forum-flags", label: "Flagged", description: "Review reported forum content", icon: Flag },
+  { to: "/admin/lounge-review", label: "Lounge AI Review", description: "Review automated Lounge concerns", icon: Flag },
 ];
 
 const MOBILE_EXPLORE_GROUPS = [
@@ -153,7 +154,8 @@ export default function MarketingNav({ onLogin, onRegister }) {
   const headerRef = useRef(null);
   const location = useLocation();
   const isForumThread = /^\/forum\/[^/]+\/?$/.test(location.pathname);
-  const visibleAdminLinks = ADMIN_LINKS.filter((link) => !link.ownerOnly || user?.role_id === 1);
+  const visibleAdminLinks = ADMIN_LINKS.filter((link) => (!link.ownerOnly || user?.role_id === 1)
+    && (user?.role_id !== 50 || ['/admin/forum-flags', '/admin/lounge-review'].includes(link.to)));
   const loungeAvailable = ["/today", "/forum", "/messages", "/profile", "/admin"].some(
     (path) => location.pathname === path || location.pathname.startsWith(`${path}/`),
   );
@@ -328,7 +330,7 @@ export default function MarketingNav({ onLogin, onRegister }) {
                 <Flame size={14} /><span>{loungeActivity.shortLabel}</span>
               </button>
             )}
-            {user?.role_id <= 10 && (
+            {user?.role_id <= 50 && (
               <NavDropdown label="Admin" links={visibleAdminLinks} closeMenu={closeMenu} align="right" icon={ShieldCheck} />
             )}
             <MessagesBell />
@@ -407,7 +409,7 @@ export default function MarketingNav({ onLogin, onRegister }) {
                 <ChevronRight size={18} />
               </NavLink>}
 
-              {user?.role_id <= 10 && (
+              {user?.role_id <= 50 && (
                 <section className={`mobile-nav__admin ${mobileExpanded === "Admin" ? "is-open" : ""}`}>
                   <button type="button" className="mobile-nav__section-trigger" onClick={() => setMobileExpanded((current) => current === "Admin" ? null : "Admin")} aria-expanded={mobileExpanded === "Admin"}>
                     <span className="mobile-nav__section-icon"><ShieldCheck size={20} /></span>

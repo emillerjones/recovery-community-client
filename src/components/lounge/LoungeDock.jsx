@@ -93,7 +93,7 @@ export default function LoungeDock({ hideMobileLauncher = false }) {
 
           {messages.map((message) => {
             const ownMessage = message.author_id === user?.id;
-            const canDelete = ownMessage || user?.role_id <= 50;
+            const canDelete = ownMessage || [1, 10].includes(user?.role_id);
             return (
               <article className={`lounge-message ${ownMessage ? "is-own" : ""}`} key={message.message_id}>
                 <MemberAvatar
