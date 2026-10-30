@@ -5,6 +5,7 @@ import MemberAvatar from '../../components/MemberAvatar';
 import { Toast, useToast } from '../../components/Toast';
 import './LoungeModeration.css';
 import './ReviewActionsDialog.css';
+import LoungeThresholds from './LoungeThresholds';
 
 const API=import.meta.env.VITE_API;
 const date=value=>new Date(value).toLocaleString();
@@ -82,12 +83,19 @@ function ResultCard({ item, request, canDelete, onChanged, showToast, reviewed }
     {error&&!dialog&&<p role="alert" className="lounge-review__error">{error}</p>}
     <section className="lounge-review__report"><header><h2>AI report card</h2><small>Checked {date(item.checked_at)}</small></header>
       <div className="lounge-review__table-wrap"><table><thead><tr><th>Category</th><th>Model score</th><th>Review threshold</th></tr></thead>
-        <tbody>{(item.triggered_categories||[]).map(key=><tr key={key}><th scope="row">{category(key)}</th><td>{scores[key]?.toFixed(3)}</td><td>{item.thresholds_used?.[key]?.toFixed(3)}</td></tr>)}</tbody></table></div>
-      <p>These categories exceeded the configured thresholds.</p>
-      <small>AI signals support human review; they do not establish a guideline violation.</small>
+        <tbody>{(item.triggered_categories||[]).map(key=><tr key={key}><th scope="row">{category(key)}</th><td title={String(scores[key])}>{scores[key]?.toFixed(4)}</td><td>{item.thresholds_used?.[key]}</td></tr>)}</tbody></table></div>
+      <p>These scores reached or exceeded the cutoffs saved for this check.</p>
+      <small>AI signals support human review; they do not establish a guideline violation. Scores are rounded for display; decisions use the full values.</small>
       <details><summary>View all categories and raw response</summary>
-        <dl>{Object.entries(scores).map(([key,score])=><div key={key}><dt>{category(key)}</dt><dd>{Number(score).toFixed(4)}</dd></div>)}</dl>
-        <p>Model: {item.model}</p><pre>{JSON.stringify(item.response,null,2)}</pre>
+        <p>These are the cutoffs used when this message was checked. Later setting changes do not change this report card.</p>
+        <div className="lounge-review__table-wrap"><table><caption>All category scores and cutoffs at check time</caption>
+          <thead><tr><th>Category</th><th>Model score</th><th>Cutoff at check</th><th>Outcome</th></tr></thead>
+          <tbody>{Object.entries(scores).map(([key,score])=>{
+            const cutoff=item.thresholds_used?.[key],configured=typeof cutoff==='number',crossed=configured&&score>=cutoff;
+            return <tr key={key} className={crossed?'is-triggered':'is-below'}><th scope="row">{category(key)}</th><td title={String(score)}>{Number(score).toFixed(4)}</td><td>{configured?String(cutoff):'Not configured'}</td><td>{crossed?'Human review':configured?'Below cutoff':'Not evaluated'}</td></tr>;
+          })}</tbody></table></div>
+        <small>Scores are rounded for display; decisions use the full values.</small>
+        <p>Model: {item.model}</p><details><summary>Raw OpenAI response (technical details)</summary><pre>{JSON.stringify(item.response,null,2)}</pre></details>
       </details>
       {reviewed&&<ul className="lounge-review__history">{(item.actions||[]).map((action,index)=><li key={index}>{action.action==='delete'?'Deleted':'Kept and cleared'} by {action.reviewer_username||'former staff member'} · {date(action.created_at)}</li>)}</ul>}
     </section>
@@ -201,6 +209,7 @@ export default function LoungeModeration() {
       <small>{data.queued} checks queued · {data.failed} failed checks · No automatic enforcement</small>
     </div>}
     {data&&user?.role_id===1&&<OwnerControls processing={data.processing} request={request} onSaved={load} showToast={showToast}/>}
+    <LoungeThresholds request={request} canEdit={user?.role_id===1}/>
     <div className="lounge-review__toolbar"><div role="group" aria-label="Review status">
       <button type="button" aria-pressed={status==='pending'} onClick={()=>tab('pending')}>Pending {data?.pending??''}</button>
       <button type="button" aria-pressed={status==='reviewed'} onClick={()=>tab('reviewed')}>Reviewed</button></div>
