@@ -8,6 +8,7 @@ import './ReviewActionsDialog.css';
 import LoungeThresholds from './LoungeThresholds';
 import LoungeReviewMode from './LoungeReviewMode';
 import { reviewModeLabel } from './loungeReviewModes';
+import LoungeModerationTest from './LoungeModerationTest';
 
 const API=import.meta.env.VITE_API;
 const date=value=>new Date(value).toLocaleString();
@@ -222,12 +223,16 @@ export default function LoungeModeration() {
     <header className="lounge-review__page-heading"><span className="lounge-review__eyebrow">Community care · Staff tools</span><h1>Lounge AI Review</h1><p>AI spots potential concerns. Your team decides what needs attention.</p></header>
     {data&&<div className="lounge-review__notice" role="status"><strong>{data.processing.enabled?'AI checks running · Testing mode':data.processing.error?'Configuration needs attention':'AI processing paused'}</strong>
       <span>{processingExplanation(data.processing)}</span>
-      <small>{data.queued} checks queued · {data.failed} failed checks · No automatic enforcement</small>
+      <small>No AI notifications · No automatic enforcement</small>
     </div>}
-    {data&&user?.role_id===1&&<OwnerControls processing={data.processing} request={request} onSaved={load} showToast={showToast}/>}
-    {data&&<LoungeReviewMode processing={data.processing} request={request} canEdit={user?.role_id===1} onSaved={processing=>setData(current=>({...current,processing}))}/>}
-    <LoungeThresholds request={request} canEdit={user?.role_id===1} reviewMode={data?.processing.reviewMode||'cutoffs'}/>
-    <div className="lounge-review__queue-heading"><div><span className="lounge-review__eyebrow">Human review</span><h2>Messages to review</h2></div><small>Community Lounge text only · No automatic enforcement</small></div>
+    {data&&<div className="lounge-review__overview" aria-label="Review overview"><div><strong>{data.pending}</strong><span>Awaiting review</span></div><div><strong>{data.queued}</strong><span>Checks queued</span></div><div><strong>{data.failed}</strong><span>Failed checks</span></div><div><strong>{reviewModeLabel(data.processing.reviewMode)}</strong><span>Saved review rule</span></div></div>}
+    <details className="lounge-review__configuration" id="lounge-settings"><summary><span className="lounge-review__summary-icon" aria-hidden="true">☷</span><span><strong>Review settings &amp; category guide</strong><small>{data?`${data.processing.ownerEnabled?'Enabled':'Paused'} · ${reviewModeLabel(data.processing.reviewMode)}`:'Review rules, category definitions and cutoffs'}</small></span><span className="lounge-review__summary-hint">{user?.role_id===1?'Configure':'View guide'}</span></summary><div>
+      {data&&user?.role_id===1&&<OwnerControls processing={data.processing} request={request} onSaved={load} showToast={showToast}/>}
+      {data&&<LoungeReviewMode processing={data.processing} request={request} canEdit={user?.role_id===1} onSaved={processing=>setData(current=>({...current,processing}))}/>}
+      <LoungeThresholds request={request} canEdit={user?.role_id===1} reviewMode={data?.processing.reviewMode||'cutoffs'}/>
+    </div></details>
+    {data&&user?.role_id===1&&<LoungeModerationTest request={request} processing={data.processing}/>}
+    <div className="lounge-review__queue-heading" id="lounge-queue"><div><span className="lounge-review__eyebrow">Human review</span><h2>Messages to review</h2></div><small>Community Lounge text only · No automatic enforcement</small></div>
     <div className="lounge-review__toolbar"><div role="group" aria-label="Review status">
       <button type="button" aria-pressed={status==='pending'} onClick={()=>tab('pending')}>Pending {data?.pending??''}</button>
       <button type="button" aria-pressed={status==='reviewed'} onClick={()=>tab('reviewed')}>Reviewed</button></div>
