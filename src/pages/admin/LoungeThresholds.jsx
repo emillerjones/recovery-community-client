@@ -1,6 +1,6 @@
 import { useId, useRef, useState } from 'react';
 
-function ThresholdRow({ category, canEdit, revision, request, onSaved, blocked }) {
+function ThresholdRow({ category, canEdit, revision, request, onSaved, blocked, active }) {
   const [editing,setEditing]=useState(false),[draft,setDraft]=useState('');
   const [saving,setSaving]=useState(false),[error,setError]=useState(''),[saved,setSaved]=useState(false);
   const lock=useRef(false),id=useId();
@@ -28,7 +28,7 @@ function ThresholdRow({ category, canEdit, revision, request, onSaved, blocked }
         <label htmlFor={id}>Review threshold for {category.label}</label>
         <input id={id} type="number" min="0" max="1" step="any" required value={draft} disabled={saving}
           aria-describedby={`${id}-description ${id}-preview`} onChange={event=>{setDraft(event.target.value);setError('');}}/>
-        <p id={`${id}-preview`}>{valid?`Scores of ${value} or higher will send the message for review.`:'Enter a number from 0 to 1.'}</p>
+        <p id={`${id}-preview`}>{!active?'Saved for when Our cutoffs or Either one is selected.':valid?`Scores of ${value} or higher will send the message for review.`:'Enter a number from 0 to 1.'}</p>
         {valid&&value!==category.value&&<small>{value<category.value?'Lower cutoff: more messages may enter the queue.':'Higher cutoff: fewer messages may enter the queue.'}</small>}
         {valid&&value===0&&<small>A cutoff of 0 sends every successfully checked message for review.</small>}
         {valid&&value===1&&<small>A cutoff of 1 only catches scores that reach exactly 1.</small>}
@@ -42,7 +42,7 @@ function ThresholdRow({ category, canEdit, revision, request, onSaved, blocked }
   </article>;
 }
 
-export default function LoungeThresholds({ request, canEdit }) {
+export default function LoungeThresholds({ request, canEdit, reviewMode='cutoffs' }) {
   const [data,setData]=useState(null),[loading,setLoading]=useState(false),[error,setError]=useState('');
   const [history,setHistory]=useState(null),[historyError,setHistoryError]=useState('');
   const loadLock=useRef(false);
@@ -59,13 +59,14 @@ export default function LoungeThresholds({ request, canEdit }) {
     <summary><strong>AI review thresholds</strong><span>Understand every category and what sends a message for review</span></summary>
     <div className="lounge-thresholds__inside">
       <h2>How a message gets here</h2>
-      <ol><li>OpenAI checks one Community Lounge message and returns a score for each category.</li>
-        <li>Our server compares every score with the cutoff shown below.</li>
-        <li>If <strong>any score is at or above its cutoff</strong>, the message enters this queue for a person to review.</li></ol>
+      <ol><li>OpenAI checks one Community Lounge message and returns category scores and an overall flagged judgment.</li>
+        <li>{reviewMode==='openai'?"The saved rule uses OpenAI’s overall flagged judgment. Cutoffs below are inactive.":reviewMode==='either'?"The saved rule accepts either a score reaching our cutoff OR OpenAI’s overall flagged judgment.":'The saved rule compares every score with our category cutoffs.'}</li>
+        <li>A matching concern enters this queue for a person to review. AI takes no action on the message.</li></ol>
       <div className="lounge-thresholds__example"><strong>Example, using an illustrative cutoff</strong>
         <p>Harassment score <b>0.97</b> ≥ cutoff <b>0.95</b> → human review.<br/>Score <b>0.80</b> &lt; cutoff <b>0.95</b> → this category does not send it for review. Another category still could.</p>
       </div>
-      <p><strong>A score is an AI signal from 0 to 1.</strong> It is not a percentage proving someone broke a rule. OpenAI's overall flagged label does not decide our queue; these cutoffs do.</p>
+      <p><strong>A score is an AI signal from 0 to 1.</strong> It is not a percentage proving someone broke a rule. The example shows how cutoffs work when Our cutoffs or Either one is selected.</p>
+      {reviewMode==='openai'&&<p className="lounge-thresholds__example"><strong>Cutoffs are currently inactive.</strong> You can prepare changes here, but they will not control the queue while OpenAI’s evaluation is selected.</p>}
       <p><strong>Lower cutoff = more potential reviews. Higher cutoff = fewer.</strong> Staff make the decision; AI never removes a message or sends a reply.</p>
       <p>Recovery discussions can include drugs, overdose, trauma and mental health. A concern may need support rather than deletion. These categories do not cover every community guideline, and a low score does not guarantee safety.</p>
       <p>{canEdit?'Owners can edit and save one category at a time.':'You can view these settings. Only Owners can change them.'} Changes apply to checks that start afterward, including queued messages. In-progress checks and older report cards keep their original cutoffs. Earlier messages are not automatically checked again.</p>
@@ -75,7 +76,7 @@ export default function LoungeThresholds({ request, canEdit }) {
       {loading&&<p role="status">Loading thresholds…</p>}
       {error&&<p role="alert" className="lounge-review__error">{error}</p>}
       {data?.error&&<p role="alert" className="lounge-review__error">{data.error} Changes are disabled until the configuration is fixed.</p>}
-      {data?.categories.map(category=><ThresholdRow key={category.key} category={category} canEdit={canEdit} revision={data.revision} request={request} onSaved={saved} blocked={Boolean(data.error)||category.source==='render'}/>) }
+      {data?.categories.map(category=><ThresholdRow key={category.key} category={category} canEdit={canEdit} revision={data.revision} request={request} onSaved={saved} active={reviewMode!=='openai'} blocked={Boolean(data.error)||category.source==='render'}/>) }
       {data?.updatedByUsername&&<small>Last cutoff change by {data.updatedByUsername} · {new Date(data.updatedAt).toLocaleString()}</small>}
       {canEdit&&<details className="lounge-thresholds__history" onToggle={event=>{event.stopPropagation();if(event.currentTarget.open)void loadHistory();}}><summary>Threshold change history</summary>
         {historyError&&<p role="alert">{historyError}</p>}

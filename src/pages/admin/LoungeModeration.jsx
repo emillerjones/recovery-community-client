@@ -6,6 +6,8 @@ import { Toast, useToast } from '../../components/Toast';
 import './LoungeModeration.css';
 import './ReviewActionsDialog.css';
 import LoungeThresholds from './LoungeThresholds';
+import LoungeReviewMode from './LoungeReviewMode';
+import { reviewModeLabel } from './loungeReviewModes';
 
 const API=import.meta.env.VITE_API;
 const date=value=>new Date(value).toLocaleString();
@@ -34,6 +36,12 @@ function ResultCard({ item, request, canDelete, onChanged, showToast, reviewed }
   const targetRef=useRef(null);
   const scores=item.response?.results?.[0]?.category_scores||{};
   const flags=item.response?.results?.[0]?.categories||{};
+  const overallFlag=item.response?.results?.[0]?.flagged;
+  const reviewMode=item.review_mode||'cutoffs';
+  const reasons=item.review_reasons??((item.triggered_categories||[]).length?['cutoffs']:[]);
+  const why=reasons.length===2?'Both signals':reasons.includes('openai')?"OpenAI’s evaluation":'Our cutoffs';
+  const cutoffActive=reviewMode!=='openai',openaiActive=reviewMode!=='cutoffs';
+  const concernKeys=[...new Set([...(cutoffActive?item.triggered_categories||[]:[]),...(openaiActive&&overallFlag?Object.keys(flags).filter(key=>flags[key]):[])])];
   const flagLabel=key=>flags[key]===true?'Yes':flags[key]===false?'No':'Not available';
   useEffect(()=>{ if(context&&dialog==='context')targetRef.current?.scrollIntoView({block:'center'}); },[context,dialog]);
 
@@ -84,18 +92,22 @@ function ResultCard({ item, request, canDelete, onChanged, showToast, reviewed }
     </div>
     {error&&!dialog&&<p role="alert" className="lounge-review__error">{error}</p>}
     <section className="lounge-review__report"><header><h2>AI report card</h2><small>Checked {date(item.checked_at)}</small></header>
+      <div className="lounge-review__decision"><strong>Why it entered review: {why}</strong><span>Rule used: {reviewModeLabel(reviewMode)}</span>
+        <span>OpenAI overall flagged: {overallFlag===true?'Yes':overallFlag===false?'No':'Not available'}</span></div>
+      {concernKeys.length>0&&
       <div className="lounge-review__table-wrap"><table><thead><tr><th>Category</th><th>Model score</th><th>Review threshold</th><th>OpenAI flagged?</th></tr></thead>
-        <tbody>{(item.triggered_categories||[]).map(key=><tr key={key}><th scope="row">{category(key)}</th><td title={String(scores[key])}>{scores[key]?.toFixed(4)}</td><td>{item.thresholds_used?.[key]}</td><td>{flagLabel(key)}</td></tr>)}</tbody></table></div>
-      <p>These scores reached or exceeded the cutoffs saved for this check.</p>
+        <tbody>{concernKeys.map(key=><tr key={key}><th scope="row">{category(key)}</th><td title={String(scores[key])}>{scores[key]?.toFixed(4)}</td><td>{cutoffActive?item.thresholds_used?.[key]:'Not used'}</td><td>{flagLabel(key)}</td></tr>)}</tbody></table></div>}
+      <p>{reviewMode==='cutoffs'?'These scores reached or exceeded the cutoffs saved for this check.':reviewMode==='openai'?"OpenAI’s overall flagged judgment sent this message for review. Saved cutoffs did not control this decision.":'Our cutoffs or OpenAI’s overall flagged judgment can send a message for review. The reason above records which signals did.'}</p>
       <small>AI signals support human review; they do not establish a guideline violation. Scores are rounded for display; decisions use the full values.</small>
-      <small>“OpenAI flagged?” is OpenAI's category judgment. Our saved cutoffs determine whether the message enters this review queue.</small>
+      <small>“OpenAI flagged?” is OpenAI's judgment for each category. The overall judgment above is the signal used by the OpenAI review option.</small>
       <details><summary>View all categories and raw response</summary>
-        <p>These are the cutoffs used when this message was checked. Later setting changes do not change this report card.</p>
+        <p>{cutoffActive?'These are the cutoffs used when this message was checked.':'These cutoffs were saved for reference; they were not used to decide this check.'} Later setting changes do not change this report card.</p>
         <div className="lounge-review__table-wrap"><table><caption>All category scores and cutoffs at check time</caption>
           <thead><tr><th>Category</th><th>Model score</th><th>Cutoff at check</th><th>Our review decision</th><th>OpenAI flagged?</th></tr></thead>
           <tbody>{Object.entries(scores).map(([key,score])=>{
-            const cutoff=item.thresholds_used?.[key],configured=typeof cutoff==='number',crossed=configured&&score>=cutoff;
-            return <tr key={key} className={crossed?'is-triggered':'is-below'}><th scope="row">{category(key)}</th><td title={String(score)}>{Number(score).toFixed(4)}</td><td>{configured?String(cutoff):'Not configured'}</td><td>{crossed?'Human review':configured?'Below cutoff':'Not evaluated'}</td><td>{flagLabel(key)}</td></tr>;
+            const cutoff=item.thresholds_used?.[key],configured=typeof cutoff==='number',crossed=cutoffActive&&configured&&score>=cutoff;
+            const contributes=crossed||(openaiActive&&overallFlag&&flags[key]===true);
+            return <tr key={key} className={contributes?'is-triggered':'is-below'}><th scope="row">{category(key)}</th><td title={String(score)}>{Number(score).toFixed(4)}</td><td>{configured?`${cutoff}${cutoffActive?'':' (not used)'}`:'Not configured'}</td><td>{contributes?'Review signal':cutoffActive?'Below cutoff':'No category flag'}</td><td>{flagLabel(key)}</td></tr>;
           })}</tbody></table></div>
         <small>Scores are rounded for display; decisions use the full values.</small>
         <p>Model: {item.model}</p><details><summary>Raw OpenAI response (technical details)</summary><pre>{JSON.stringify(item.response,null,2)}</pre></details>
@@ -147,6 +159,7 @@ function OwnerControls({ processing, request, onSaved, showToast }) {
     try{setHistory((await request('/settings')).history);}catch(err){setHistoryError(err.message);}
   }
   return <section className="lounge-review__controls" aria-label="Owner moderation controls">
+    <span className="lounge-review__eyebrow">Owner control</span><h2>AI checks</h2>
     <label><input type="checkbox" checked={Boolean(processing.ownerEnabled)} disabled={saving}
       onChange={event=>{setError('');setChange({enabled:event.target.checked,revision:processing.settingsRevision});}}/>Enable AI checks</label>
     <strong>Owner setting: {processing.ownerEnabled?'Enabled':'Paused'}</strong>
@@ -206,13 +219,15 @@ export default function LoungeModeration() {
   }
   function tab(next){setStatus(next);setPage(1);}
   return <main className="lounge-review">
-    <h1>Lounge AI Review</h1><p>Review Community Lounge messages identified by automated checks.</p>
+    <header className="lounge-review__page-heading"><span className="lounge-review__eyebrow">Community care · Staff tools</span><h1>Lounge AI Review</h1><p>AI spots potential concerns. Your team decides what needs attention.</p></header>
     {data&&<div className="lounge-review__notice" role="status"><strong>{data.processing.enabled?'AI checks running · Testing mode':data.processing.error?'Configuration needs attention':'AI processing paused'}</strong>
       <span>{processingExplanation(data.processing)}</span>
       <small>{data.queued} checks queued · {data.failed} failed checks · No automatic enforcement</small>
     </div>}
     {data&&user?.role_id===1&&<OwnerControls processing={data.processing} request={request} onSaved={load} showToast={showToast}/>}
-    <LoungeThresholds request={request} canEdit={user?.role_id===1}/>
+    {data&&<LoungeReviewMode processing={data.processing} request={request} canEdit={user?.role_id===1} onSaved={processing=>setData(current=>({...current,processing}))}/>}
+    <LoungeThresholds request={request} canEdit={user?.role_id===1} reviewMode={data?.processing.reviewMode||'cutoffs'}/>
+    <div className="lounge-review__queue-heading"><div><span className="lounge-review__eyebrow">Human review</span><h2>Messages to review</h2></div><small>Community Lounge text only · No automatic enforcement</small></div>
     <div className="lounge-review__toolbar"><div role="group" aria-label="Review status">
       <button type="button" aria-pressed={status==='pending'} onClick={()=>tab('pending')}>Pending {data?.pending??''}</button>
       <button type="button" aria-pressed={status==='reviewed'} onClick={()=>tab('reviewed')}>Reviewed</button></div>
