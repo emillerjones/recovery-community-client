@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { RefreshCw, Search } from 'lucide-react';
 import { useAuth } from '../../auth/AuthContext';
 import MemberAvatar from '../../components/MemberAvatar';
 import { Toast, useToast } from '../../components/Toast';
@@ -236,8 +237,8 @@ export default function LoungeModeration() {
     <div className="lounge-review__toolbar"><div role="group" aria-label="Review status">
       <button type="button" aria-pressed={status==='pending'} onClick={()=>tab('pending')}>Pending {data?.pending??''}</button>
       <button type="button" aria-pressed={status==='reviewed'} onClick={()=>tab('reviewed')}>Reviewed</button></div>
-      <form onSubmit={event=>{event.preventDefault();setSearch(draft.trim());setPage(1);}}><input aria-label="Search review messages" placeholder="Search review messages" value={draft} maxLength={200} onChange={event=>setDraft(event.target.value)}/><button>Search</button></form>
-      <button type="button" onClick={load} disabled={loading}>Refresh</button>
+      <form onSubmit={event=>{event.preventDefault();setSearch(draft.trim());setPage(1);}}><input aria-label="Search review messages" placeholder="Search review messages" value={draft} maxLength={200} onChange={event=>setDraft(event.target.value)}/><button aria-label="Search"><Search aria-hidden="true" size={18}/><span>Search</span></button></form>
+      <button className="lounge-review__refresh" type="button" aria-label="Refresh" title="Refresh review queue" onClick={load} disabled={loading}><RefreshCw aria-hidden="true" size={18}/><span>Refresh</span></button>
     </div>
     {error&&<p role="alert" className="lounge-review__error">{error}</p>}
     {loading?<p role="status">Loading review queue…</p>:!error&&<>

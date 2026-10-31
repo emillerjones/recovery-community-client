@@ -13,6 +13,7 @@
 .lounge-review__controls li{font-size:12px;line-height:1.7;overflow-wrap:anywhere}
 .lounge-review small{display:block;font-size:12px;color:#657265;line-height:1.5}
 .lounge-review__toolbar{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin:24px 0}
+.lounge-review__toolbar form button svg,.lounge-review__refresh svg{display:none}
 .lounge-review__toolbar [role=group]{display:flex;gap:6px}.lounge-review__toolbar [aria-pressed=true],.lounge-review .lounge-review__primary{background:#335640;color:white}
 .lounge-review__toolbar form{display:flex;gap:6px;margin-left:auto;min-width:0}.lounge-review__toolbar input{width:230px;max-width:100%;min-width:0}
 .lounge-review__card{border:1px solid #c5d0be;border-radius:16px;overflow:hidden;background:#fffefb;box-shadow:0 6px 22px #20352208;margin:0 0 22px}
@@ -109,5 +110,18 @@
 .lounge-test__result-meta{display:flex;flex-wrap:wrap;gap:14px 30px;padding:18px 0;font-size:12px}.lounge-test__result-meta b{display:block;font-size:10px;letter-spacing:.04em;text-transform:uppercase;color:#6b7863;margin-bottom:5px;font-weight:600}
 .lounge-test__result>p{font-size:13px;line-height:1.6}.lounge-test__result>small{margin-top:12px}.lounge-test blockquote{white-space:pre-wrap;overflow-wrap:anywhere;margin:8px 0;padding:12px 16px;background:#f1f4ea;border-left:3px solid #a5b897;border-radius:0 8px 8px 0;font-size:13px;line-height:1.7}
 .lounge-test .lounge-review__table-wrap{margin-top:16px}.lounge-test caption{background:#f2f5ea;padding:12px}.lounge-test pre{white-space:pre;max-width:100%}
+@media(max-width:650px){
+  .lounge-review__toolbar{display:grid;grid-template-columns:minmax(0,1fr) 44px;gap:12px;padding:12px;border-radius:12px;align-items:center}
+  .lounge-review__toolbar [role=group]{grid-column:1;grid-row:1;justify-self:start;gap:0;padding:0;border-radius:9px;max-width:100%;overflow:hidden}
+  .lounge-review__toolbar [role=group] button{min-height:44px;padding:10px 14px;border-radius:9px;white-space:nowrap;font-size:12px}
+  .lounge-review__toolbar .lounge-review__refresh{grid-column:2;grid-row:1;display:grid;place-items:center;width:44px;height:44px;padding:0;border-radius:9px;border-color:#d3dcd0}
+  .lounge-review__toolbar .lounge-review__refresh svg,.lounge-review__toolbar form button svg{display:block}
+  .lounge-review__toolbar .lounge-review__refresh span,.lounge-review__toolbar form button span{display:none}
+  .lounge-review__toolbar form{grid-column:1/-1;grid-row:2;display:flex;width:100%;margin:0;gap:0;border:1px solid #cdd8c7;border-radius:9px;background:#fafbf7;overflow:hidden}
+  .lounge-review__toolbar form:focus-within{outline:2px solid #567a52;outline-offset:2px}
+  .lounge-review__toolbar form input{flex:1;min-width:0;width:0;min-height:44px;box-sizing:border-box;padding:10px 12px;border:0;border-radius:0;background:transparent;font-size:16px}
+  .lounge-review__toolbar form input:focus-visible{outline:none}
+  .lounge-review__toolbar form button{display:grid;place-items:center;flex:0 0 44px;min-height:44px;padding:0;border:0;border-left:1px solid #dce3d4;border-radius:0;background:transparent}
+}
 @media(max-width:850px){.lounge-test__submit{align-items:start;flex-direction:column;gap:12px}.lounge-review__overview>div{padding:16px}}
 @media(max-width:650px){.lounge-review{padding-top:105px}.lounge-review__overview{grid-template-columns:repeat(2,minmax(0,1fr))}.lounge-review__overview>div:nth-child(2){border-right:0}.lounge-review__overview>div:nth-child(-n+2){border-bottom:1px solid #e4e8df}.lounge-review__overview strong{font-size:23px}.lounge-review__overview>div:last-child strong{font-size:14px}.lounge-review .lounge-review__configuration>summary,.lounge-review .lounge-test>summary{gap:10px;padding:16px 14px}.lounge-review__summary-hint{font-size:0;gap:0}.lounge-review__summary-hint:after{font-size:20px}.lounge-review__configuration>div{padding:0 10px 2px}.lounge-review__configuration .lounge-review__controls,.lounge-review__configuration .lounge-review-mode{padding:16px 14px}.lounge-test__inside{padding:16px}.lounge-test__submit>div{width:100%;flex-wrap:wrap}.lounge-test__submit button{flex:1;padding:11px 12px}.lounge-test__outcome{padding:14px 12px}.lounge-test__outcome strong{font-size:14px}.lounge-review__summary-icon{width:30px;height:30px;font-size:18px}.lounge-review__configuration>summary strong,.lounge-test>summary strong{font-size:13px}}
